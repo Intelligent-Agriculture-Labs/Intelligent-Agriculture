@@ -33,7 +33,8 @@
 - **AI management zones** are statistical. Their causes (soil, water, pests, management) need ground truth; zones on small (< 1 ha) fields are noisy.
 - **AI drought classifier.** Trained and validated only for the contiguous U.S. (USDM labels). Elsewhere the rule-based status is used.
 - **SMAP and ECOSTRESS series** exist only for the pre-extracted demo fields (asynchronous AppEEARS batch with Earthdata Login). New fields get MODIS/POWER-based indicators.
-- **Farm sync** has no accounts. Anyone with the farm code can see and edit that farm's fields, so keep it private. There is no end-to-end encryption.
+- **Accounts** have no e-mail verification and no self-service password reset (no mail server in this self-hosted deployment).
+- **Farm sync by code** has no accounts. Anyone with the farm code can see and edit that farm's fields, so keep it private. There is no end-to-end encryption.
 
 ## Product
 - The step-by-step "Why?" reasoning and pest event labels are English; card titles and details and the whole UI are translated into 6 languages.

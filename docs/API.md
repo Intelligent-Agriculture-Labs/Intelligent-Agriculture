@@ -18,6 +18,10 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | POST | `/api/satellite` | Sentinel-2 field analysis (async; poll until `status: done`): NDVI series, phenology, AI zones, Kcb, latest images |
 | GET | `/api/satellite/png/{key}/{zones,ndvi,truecolor}.png` | Satellite overlays aligned with `bounds` |
 | POST | `/api/farms` · POST `/api/farms/join` · GET/PUT `/api/farms/{farm_id}` | Account-free farm sync between devices |
+| POST | `/api/auth/register` · `/api/auth/login` · `/api/auth/logout` · GET `/api/auth/me` · POST `/api/auth/password` · DELETE `/api/auth/me` | Accounts (Bearer token) |
+| GET / PUT | `/api/me/farm` | The account's farm (fields, plans, settings), merged per field |
+| POST | `/api/rotations/plan` | Per-field multi-year rotation plan: per-year biological + agronomic check, suggestions, optimised plan |
+| GET | `/api/glossary?lang=` | Plain-language explanations of the app's terms |
 | GET | `/api/export/advice.csv` | Tidy CSV of every series behind the advice |
 | GET | `/api/export/field.geojson` | Point feature with the advice summary |
 

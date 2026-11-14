@@ -80,6 +80,15 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - An LLM is deliberately **not** used to generate advice. Every number stays traceable to data and published methods.
 - A foundation-model segmenter (SAM) for field boundaries is on the roadmap as an optional GPU service.
 
+## ADR-017 Accounts (20:00, user request "the account system needs to work")
+- E-mail + password accounts with server-side sessions (no external identity provider: the deployment must run offline and self-hosted).
+- **Alternatives:** OAuth (needs public callback URLs and provider apps); magic links (need a mail server).
+- **Limitation:** no e-mail verification or password-reset mail. Documented in LIMITATIONS.md; a reset needs the owner/admin.
+
+## ADR-018 Rotation planning grounded in a cited knowledge base (20:00, user request "biologically based, insanely science based")
+- Rotation biology comes from a YAML knowledge base compiled from extension services and peer-reviewed reviews (`docs/ROTATION_SCIENCE.md`), not from hand-tuned code. The checker explains every issue in plain language with its source.
+- The optimiser is constrained to the farm type, so it does not tell an arable farmer to become a vegetable grower.
+
 ## ADR-014 No public hosting (18:15, user decision)
 - The user chose to keep the demo private: no tunnel or public URL.
 - Judges get the 30 s video, the screenshots, and `docker compose up --build` (or the offline mode).

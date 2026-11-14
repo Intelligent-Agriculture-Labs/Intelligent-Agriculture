@@ -207,7 +207,41 @@ That is why the polygon always stays editable.
 ## <a id="sync"></a>14. Farm sync
 An account-free farm document (SQLite) is addressed by a random 128-bit id, which stays secret on each device, plus an 8-character pairing code (alphabet without 0/O/1/I). Fields merge per id by `updated_at` (last writer wins); deletions are tombstones. The client pushes 2 s after a change and pulls on start, on focus and every 60 s.
 
-## 15. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
+## <a id="rotation-plan"></a>15. Per-field multi-year rotation plan (`science/rotation_plan.py`, `engine/plan_service.py`)
+**Inputs.** Field location, outline and irrigation, the farmer's crop history (past years) and plan (next 1–8 years, main crop plus optional cover crop), and priorities.
+
+**Knowledge base** (`config/rotation_knowledge.yaml`, documented in `docs/ROTATION_SCIENCE.md` with references):
+- per-crop minimum return interval, self-tolerance and family interval;
+- residual N effect and preceding-crop value;
+- good/poor predecessors and allelopathy;
+- soil-borne pathogens and pests with host lists, survival and recommended break years;
+- general rules with yield effects (e.g. cereal after cereal).
+
+**Per year:**
+1. **Return interval:** a gap below the minimum is a *problem* if ≤ half the minimum, otherwise a *caution*. Yield effect from the rule table (default −10 %).
+2. **Family interval.**
+3. **Pathogen pressure:** P = Σ exp(−Δt · ln 2 / (survival/3)) over earlier host years in the sequence. Low < 0.25 ≤ medium < 0.6 ≤ high. Yield effect −5 % (medium) or −12 % (high), weighted by pathogen severity.
+4. **Predecessor effect:** +5 % after good predecessors or high-value preceding crops, −5 % after poor ones. Allelopathy notes.
+5. **N carry-over:** the previous crop's residual N plus 50 % of the cover crop's fixation. Fertiliser saving is valued at $1.3/kg N.
+6. **Simulation:** the season model over 15 seasons at the field (median and p10 yield, irrigation, ET, failure share), scaled by the rotation effect (clipped to −45…+15 %). Perennial establishment year at 70 %.
+7. **Bare-soil days:** 365 − (crop season + cover-crop season). RUSLE soil loss uses the field's R·K·LS (from the terrain analysis of the drawn outline) times the crop's C (×0.6 with a cover crop).
+8. **Water:** irrigation need vs. allocation; rain-fed failure share.
+9. **Climate fit:** feasibility from frost share, complete seasons and yield level.
+
+**Score** = priority-weighted mean of five 0–100 components (pests and diseases, soil, water, income, climate risk), minus 0.4 × (25 per problem, 10 per caution).
+
+**Suggestions:** for every year that is not "good", the best single-crop replacement among climate-feasible crops, plus "add a cover crop" where the soil lies bare. Only gains are shown.
+
+**Optimiser:** beam search (width 24, at most 3 states per last crop) over climate-feasible candidates. A cover crop is added automatically after short-season crops, chosen so it shares no family or pathogen with the next cash crop. The **farm-type constraint**: perennial forage, vegetables and roots/tubers are only proposed if the farm already grows that kind of crop, because of markets, machinery and labour.
+
+## 16. Accounts and sync
+- E-mail + password accounts: scrypt (n = 2¹⁴, r = 8, p = 1) with a 16-byte salt; constant-time verification.
+- Sessions are random 256-bit tokens stored as SHA-256 hashes, valid 90 days.
+- Login is rate-limited (8 failures per 15 min per e-mail).
+- Each account owns one farm document (fields, history, plans, settings), merged per field by `updated_at`.
+- The account-free sync code remains for sharing a farm.
+
+## 17. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
 Each module emits zero or more cards, each with risk, due date and a Why block (summary, steps with numbers, series, model, confidence, caveats, sources). Cards are ranked by risk, then due date. Thresholds are versioned in `rules.yaml`, and texts in six languages are in `messages.yaml`.
 
 **Confidence** is a documented heuristic, not a calibrated probability:
