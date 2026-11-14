@@ -46,8 +46,18 @@ Docker Desktop (WSL 2 backend): run `docker compose up --build` from PowerShell 
 ## Verification log
 | Date (CET) | Platform | Command | Result |
 |---|---|---|---|
+| 2026-11-14 20:15 | Windows 11 (SALE), native | `uv venv --python 3.13` + `pytest`, `ruff`, `mypy`; `npm ci`, `tsc`, `jest` | 47/47 backend, lint/types clean; 39/39 client tests |
+| 2026-11-14 20:15 | Windows 11 (SALE), WSL Fedora 43 (Python 3.14) | `python3 -m venv` + `pytest` | 47/47 |
+| 2026-11-14 20:15 | Windows 11 (SALE), Podman as `docker` | `docker compose build` | Failed: npm downloads timed out inside Podman's build network (the same `npm ci` works on the host). Mitigated with npm fetch retries/timeouts in the Dockerfile; see Troubleshooting |
 | 2026-11-14 19:40 | Linux (Fedora, podman 5.8 + podman-compose) | `FIELDSHIFT_OFFLINE=1 PORT=8090 podman-compose up -d --build` | Image built; `/api/health` → `offline_mode: true`; web app 200; `/api/advice` for the Fallon field answered from the bundled demo cache |
 | 2026-11-14 18:12 | Linux (Fedora, podman) | `PORT=8090 podman-compose up -d` (live mode) | Web app, deep links, `/docs`, advice OK |
 | 2026-11-14 19:45 | macOS (Apple Silicon) | Dev setup: `uv` venv + `uvicorn`; `npx expo export -p web`; Playwright E2E | 47 backend tests, 39 client unit tests, 14/14 E2E (desktop + Pixel 7) |
 | 2026-11-14 19:30 | iOS Simulator (Xcode 27 beta, iOS 27) | `app/scripts/capture-native.sh ios` | Release build runs the full tour; 11 screenshots + flow video |
 | 2026-11-14 19:35 | Android emulator (API 35) | `CAPTURE=1 app/scripts/build-android-remote.sh && app/scripts/capture-native.sh android` | APK built on the VPS; full tour on the emulator; 11 screenshots + flow video |
+
+## Troubleshooting
+- **`npm error Exit handler never called!` / `ETIMEDOUT` during `docker compose build`:** package downloads time out inside the container build network (seen with Podman on Windows). The Dockerfile already retries with long timeouts. If it still fails:
+  - check the Podman machine's DNS/proxy settings; or
+  - build on a machine with Docker Desktop; or
+  - run without containers (DEV_ENVIRONMENT.md: `uv` + `uvicorn`, then `npx expo export -p web` and set `FIELDSHIFT_WEB_DIR=app/dist`).
+- **Python version:** the project targets 3.13 (`uv venv --python 3.13` downloads it). The tests also pass on 3.14.

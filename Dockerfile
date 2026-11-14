@@ -3,7 +3,8 @@
 FROM node:22-alpine AS web
 WORKDIR /app
 COPY app/package.json app/package-lock.json ./
-RUN npm ci --no-audit --no-fund
+RUN npm config set fetch-retries 6 && npm config set fetch-retry-mintimeout 20000 && npm config set fetch-retry-maxtimeout 180000 && npm config set maxsockets 4 \
+ && npm ci --no-audit --no-fund
 COPY app/ ./
 RUN npx expo export -p web --output-dir dist
 
