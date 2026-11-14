@@ -59,13 +59,20 @@ android)
   $ADB shell settings put global hide_error_dialogs 1 || true   # no ANR popups over captures (slow cold start on emulator)
   $ADB shell settings put global sysui_demo_allowed 1 || true
   $ADB shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0941 >/dev/null || true
-  $ADB shell screenrecord --time-limit 180 --bit-rate 6000000 /sdcard/fs-flow.mp4 & REC=$!
+  # screenrecord stops at 180 s; the tour is longer, so record two back-to-back segments and join them
+  $ADB shell rm -f /sdcard/fs-flow1.mp4 /sdcard/fs-flow2.mp4 >/dev/null 2>&1 || true
+  ( $ADB shell screenrecord --time-limit 180 --bit-rate 6000000 /sdcard/fs-flow1.mp4; \
+    $ADB shell screenrecord --time-limit 180 --bit-rate 6000000 /sdcard/fs-flow2.mp4 ) & REC=$!
   sleep 2; $ADB shell am start -W -n org.fieldshift.app/.MainActivity >/dev/null; t0=$(date +%s)
   for s in "${SHOTS[@]}"; do off=${s%%:*}; name=${s#*:}
     while [ $(( $(date +%s) - t0 )) -lt "$off" ]; do sleep 0.5; done
     $ADB exec-out screencap -p > "$MEDIA/android-$name.png"; echo "android-$name.png"; done
   while [ $(( $(date +%s) - t0 )) -lt "$TOTAL" ]; do sleep 0.5; done
-  $ADB shell pkill -INT screenrecord || kill -INT $REC || true; sleep 3; $ADB pull /sdcard/fs-flow.mp4 "$TMP/android-raw.mp4" >/dev/null
+  $ADB shell pkill -INT screenrecord || true; sleep 3; kill $REC 2>/dev/null || true
+  $ADB pull /sdcard/fs-flow1.mp4 "$TMP/android-raw1.mp4" >/dev/null
+  printf "file '%s'\n" "$TMP/android-raw1.mp4" > "$TMP/android-list.txt"
+  if $ADB pull /sdcard/fs-flow2.mp4 "$TMP/android-raw2.mp4" >/dev/null 2>&1; then printf "file '%s'\n" "$TMP/android-raw2.mp4" >> "$TMP/android-list.txt"; fi
+  ffmpeg -y -loglevel error -f concat -safe 0 -i "$TMP/android-list.txt" -c copy "$TMP/android-raw.mp4"
   compress "$TMP/android-raw.mp4" android-flow; echo "Android capture done" ;;
 *) echo "usage: $0 ios|ios-release|android"; exit 2 ;;
 esac
