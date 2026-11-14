@@ -557,6 +557,24 @@ export interface RotationPlanResponse {
   };
   suggestions: { title: string; explanation: string; plan: RotationYear[]; score: number; score_gain: number }[];
   optimized: { plan: RotationYear[]; score: number; explanation: string } | null;
+  /** current plan vs. improved (optimised or best suggestion) plan */
+  impact: {
+    vs: string;
+    years: number;
+    per_ha: {
+      water_saved_mm_per_yr: number;
+      water_saved_m3_per_ha_per_yr: number;
+      n_fertiliser_saved_kg_ha: number;
+      co2e_avoided_kg_ha: number;
+      soil_kept_t_ha: number;
+      margin_gain_usd_ha: number;
+      bare_days_fewer_per_yr: number;
+    };
+    field_area_ha: number | null;
+    field_total: { water_saved_m3_per_yr: number; n_fertiliser_saved_kg: number; co2e_avoided_kg: number; soil_kept_t: number; margin_gain_usd: number } | null;
+    headline: string; // plain language incl. trade-offs
+    method: string;
+  } | null;
   crops_available: string[]; // crops that fit this field's climate
   sources: SourceRef[];
   disclaimer: string;
@@ -569,4 +587,11 @@ export interface GlossaryEntry {
   term: string; // "ET₀"
   plain: string; // "How much water a well-watered lawn would lose to the air today — the weather's thirst."
   why_it_matters: string;
+}
+
+/* ---------- Low-bandwidth text advice: POST /api/advice/text?name=&max_chars=320 (body: FieldInput) ---------- */
+export interface AdviceText {
+  text: string; // <= max_chars, header + top actions + rain, in FieldInput.lang
+  chars: number;
+  sms_parts: number;
 }

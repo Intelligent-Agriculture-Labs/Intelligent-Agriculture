@@ -485,6 +485,42 @@ def glossary_ep(lang: Lang = "en") -> list[dict[str, Any]]:
     return out
 
 
+TEXT_LABELS = {
+    "en": ("This week", "Rain next 7 days", "Details in the FieldShift app."),
+    "es": ("Esta semana", "Lluvia 7 días", "Detalles en la app FieldShift."),
+    "fr": ("Cette semaine", "Pluie 7 jours", "Détails dans l'appli FieldShift."),
+    "sw": ("Wiki hii", "Mvua siku 7", "Maelezo zaidi kwenye FieldShift."),
+    "hi": ("इस सप्ताह", "अगले 7 दिन वर्षा", "विवरण FieldShift ऐप में।"),
+    "de": ("Diese Woche", "Regen 7 Tage", "Details in der FieldShift-App."),
+}
+
+
+@app.post("/api/advice/text")
+def advice_text_ep(
+    inp: FieldInput, name: str | None = None, max_chars: int = Query(320, ge=120, le=1000)
+) -> dict[str, Any]:
+    """Low-bandwidth weekly advice as plain text (SMS / WhatsApp / radio scripts), in the farmer's language."""
+    _check_crop(inp.crop)
+    a = service.advice(inp.model_dump())
+    head, rain_l, tail = TEXT_LABELS.get(inp.lang, TEXT_LABELS["en"])
+    lines = [f"FieldShift{(' · ' + name) if name else ''} — {head} ({a['as_of']}):"]
+    for k, c in enumerate(a["cards"][:3], 1):
+        lines.append(f"{k}) {c['title']}")
+    lines.append(f"{rain_l}: {a['water'].get('forecast_rain_7d_mm', 0):.0f} mm. {tail}")
+    text = "\n".join(lines)
+    if len(text) > max_chars:  # drop the least urgent cards first, keep the header and footer
+        while len(lines) > 3 and len("\n".join(lines)) > max_chars:
+            lines.pop(-2)
+        text = "\n".join(lines)[:max_chars]
+    return {
+        "text": text,
+        "chars": len(text),
+        "sms_parts": (len(text.encode("utf-16-le")) // 2 + 69) // 70
+        if not text.isascii()
+        else (len(text) + 159) // 160,
+    }
+
+
 class PlannerRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)

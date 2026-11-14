@@ -156,6 +156,93 @@ def farm_type_filter(cands: list[str], own: list[str]) -> list[str]:
     ]
 
 
+CO2E_PER_KG_N = (
+    0.01 * 44 / 28 * 273
+)  # IPCC 2019 EF1 direct N2O × GWP100 (AR6) = 4.29 kg CO2e per kg N not applied
+
+
+def _area_ha(poly: list[list[float]] | None) -> float | None:
+    if not poly or len(poly) < 3:
+        return None
+    lat0 = np.radians(np.mean([p[1] for p in poly]))
+    xs = [np.radians(p[0]) * 6371000 * np.cos(lat0) for p in poly]
+    ys = [np.radians(p[1]) * 6371000 for p in poly]
+    a = 0.5 * abs(sum(xs[i] * ys[(i + 1) % len(xs)] - xs[(i + 1) % len(xs)] * ys[i] for i in range(len(xs))))
+    return float(a / 10000)
+
+
+def plan_impact(
+    cur: list[dict[str, Any]], new: list[dict[str, Any]], poly: list[list[float]] | None, label: str
+) -> dict[str, Any]:
+    """Current plan vs. improved plan over the planning horizon (per hectare and, with an outline, for the field)."""
+    n = max(1, len(cur))
+
+    def tot(ys: list[dict[str, Any]], key: str) -> float:
+        return float(sum((y["sim"].get(key) or 0.0) for y in ys))
+
+    water = (tot(cur, "irrigation_mm") - tot(new, "irrigation_mm")) / n
+    n_saved = sum(max(0.0, y["sim"]["n_balance_kg_ha"]) for y in new) - sum(
+        max(0.0, y["sim"]["n_balance_kg_ha"]) for y in cur
+    )
+    soil = tot(cur, "erosion_t_ha") - tot(new, "erosion_t_ha")
+    margin = tot(new, "margin_usd_ha") - tot(cur, "margin_usd_ha")
+    bare = (tot(cur, "bare_days") - tot(new, "bare_days")) / n
+    area = _area_ha(poly)
+    per_ha = {
+        "water_saved_mm_per_yr": round(water),
+        "water_saved_m3_per_ha_per_yr": round(water * 10),
+        "n_fertiliser_saved_kg_ha": round(n_saved),
+        "co2e_avoided_kg_ha": round(n_saved * CO2E_PER_KG_N),
+        "soil_kept_t_ha": round(soil, 1),
+        "margin_gain_usd_ha": round(margin),
+        "bare_days_fewer_per_yr": round(bare),
+    }
+    field_total: dict[str, int] | None = None
+    if area:
+        field_total = {
+            "water_saved_m3_per_yr": round(water * 10 * area),
+            "n_fertiliser_saved_kg": round(n_saved * area),
+            "co2e_avoided_kg": round(n_saved * CO2E_PER_KG_N * area),
+            "soil_kept_t": round(soil * area),
+            "margin_gain_usd": round(margin * area),
+        }
+    gains: list[str] = []
+    costs: list[str] = []
+    if water > 5:
+        gains.append(f"{water:.0f} mm less irrigation per year")
+    elif water < -5:
+        costs.append(f"{-water:.0f} mm more irrigation per year")
+    if n_saved > 5:
+        gains.append(f"{n_saved:.0f} kg less fertiliser N per ha (≈ {n_saved * CO2E_PER_KG_N:.0f} kg CO₂e)")
+    elif n_saved < -5:
+        costs.append(f"{-n_saved:.0f} kg more fertiliser N per ha")
+    if soil > 0.5:
+        gains.append(f"{soil:.1f} t/ha more topsoil kept")
+    elif soil < -0.5:
+        costs.append(f"{-soil:.1f} t/ha more soil loss")
+    if margin > 20:
+        gains.append(f"+${margin:.0f}/ha indicative margin")
+    elif margin < -20:
+        costs.append(f"${-margin:.0f}/ha less indicative margin")
+    headline = (
+        ("Over these years the " + label + " would give " + "; ".join(gains) + ".")
+        if gains
+        else "The improved plan mainly lowers disease and pest risk."
+    )
+    if costs:
+        headline += " Trade-off: " + "; ".join(costs) + "."
+    return {
+        "vs": label,
+        "years": len(cur),
+        "per_ha": per_ha,
+        "field_area_ha": round(area, 2) if area else None,
+        "field_total": field_total,
+        "headline": headline,
+        "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the "
+        "direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted.",
+    }
+
+
 def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     lat, lon = float(req["lat"]), float(req["lon"])
     today = dt.date.fromisoformat(req["as_of"]) if req.get("as_of") else dt.date.today()
@@ -304,7 +391,19 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     if optimized and optimized["score"] - base >= 5:
         headline += f" The optimised plan scores {optimized['score']:.0f} vs {base:.0f}."
     summary["headline"] = headline
+    impact = None
+    better: list[dict[str, Any]] | None = None
+    if optimized:
+        better = list(optimized["plan"])  # type: ignore[call-overload]
+    elif sugg:
+        better = list(sugg[0]["plan"])
+    if better:
+        y2, _ = rp.evaluate_plan(history, better, stats, field, pri)
+        impact = plan_impact(
+            years, y2, req.get("polygon"), "optimised plan" if optimized else "suggested change"
+        )
     return {
+        "impact": impact,
         "years": years,
         "summary": summary,
         "suggestions": sugg,

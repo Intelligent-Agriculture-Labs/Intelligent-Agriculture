@@ -230,3 +230,24 @@ def test_rotation_plan_flags_short_return_and_optimizes():
     assert j["summary"]["headline"] and j["crops_available"]
     assert j["optimized"] is None or j["optimized"]["score"] >= j["summary"]["score"]
     assert all(c not in ("alfalfa",) for p in (j["optimized"] or {"plan": []})["plan"] for c in [p["crop"]])
+
+
+def test_advice_text_is_short_and_translated():
+    r = client.post("/api/advice/text", json={**FIELD, "lang": "sw"}, params={"name": "Shamba 1"}).json()
+    assert r["chars"] <= 320 and r["text"].startswith("FieldShift · Shamba 1 — Wiki hii")
+
+
+def test_rotation_plan_reports_impact():
+    body = {
+        "lat": 39.47,
+        "lon": -118.78,
+        "irrigation": "drip",
+        "history": [{"year": 2025, "crop": "maize"}],
+        "plan": [
+            {"year": 2026, "crop": "maize"},
+            {"year": 2027, "crop": "maize"},
+            {"year": 2028, "crop": "maize"},
+        ],
+    }
+    j = client.post("/api/rotations/plan", json=body).json()
+    assert j["impact"] is None or ("per_ha" in j["impact"] and j["impact"]["headline"])
