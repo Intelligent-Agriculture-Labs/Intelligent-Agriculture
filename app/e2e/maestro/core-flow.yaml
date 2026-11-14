@@ -1,0 +1,87 @@
+# FieldShift core flow — mobile E2E (Maestro). Runs on iOS Simulator and Android emulator.
+#   maestro test app/e2e/maestro/core-flow.yaml -e PLATFORM=ios     (from the media/ dir to collect screenshots)
+# Requires the FieldShift API reachable from the device (localhost:8000 on iOS, 10.0.2.2:8000 on Android).
+appId: org.fieldshift.app
+env:
+  PLATFORM: ios
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: "preset-fallon_nv"
+    timeout: 60000
+- takeScreenshot: ${PLATFORM}-01-onboarding
+- tapOn:
+    id: "preset-fallon_nv"
+- scrollUntilVisible:
+    element:
+      id: "start"
+    direction: DOWN
+- tapOn:
+    id: "start"
+- extendedWaitUntil:
+    visible:
+      id: "mode-replay"
+    timeout: 180000
+- extendedWaitUntil:
+    visible:
+      id: "action-card-0"
+    timeout: 180000
+- takeScreenshot: ${PLATFORM}-02-home-today
+- tapOn:
+    id: "mode-replay"
+- extendedWaitUntil:
+    visible:
+      text: ".*Irrigate.*"
+    timeout: 240000
+- assertVisible:
+    id: "drought-chip"
+- takeScreenshot: ${PLATFORM}-03-home-replay
+- tapOn:
+    id: "action-card-0"
+- extendedWaitUntil:
+    visible:
+      id: "why"
+    timeout: 30000
+- takeScreenshot: ${PLATFORM}-04-why
+- scrollUntilVisible:
+    element:
+      id: "confidence"
+    direction: DOWN
+    timeout: 20000
+- takeScreenshot: ${PLATFORM}-05-why-confidence
+- back
+- tapOn:
+    id: "tab-rotations"
+- extendedWaitUntil:
+    visible:
+      id: "strategy-0"
+    timeout: 240000
+- takeScreenshot: ${PLATFORM}-06-rotations
+- scrollUntilVisible:
+    element:
+      id: "strategy-1"
+    direction: DOWN
+    timeout: 20000
+- takeScreenshot: ${PLATFORM}-07-rotations-compare
+- tapOn:
+    id: "tab-whatif"
+- extendedWaitUntil:
+    visible:
+      id: "whatif"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "stat-yield"
+    timeout: 240000
+- takeScreenshot: ${PLATFORM}-08-whatif
+- tapOn:
+    id: "tab-climate"
+- extendedWaitUntil:
+    visible:
+      id: "climate"
+    timeout: 120000
+- waitForAnimationToEnd:
+    timeout: 15000
+- takeScreenshot: ${PLATFORM}-09-climate
