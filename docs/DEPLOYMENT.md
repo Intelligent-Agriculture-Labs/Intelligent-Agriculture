@@ -42,3 +42,12 @@ Then expose port 8080 through a reverse proxy or a tunnel (e.g. Tailscale Funnel
 
 ## Windows
 Docker Desktop (WSL 2 backend): run `docker compose up --build` from PowerShell or WSL in the repo folder. For backend development without Docker, use WSL (Ubuntu) and follow the Linux steps. Native Windows also works with `uv venv` and `.venv\Scripts\uvicorn`.
+
+## Verification log
+| Date (CET) | Platform | Command | Result |
+|---|---|---|---|
+| 2026-11-14 19:40 | Linux (Fedora, podman 5.8 + podman-compose) | `FIELDSHIFT_OFFLINE=1 PORT=8090 podman-compose up -d --build` | Image built; `/api/health` → `offline_mode: true`; web app 200; `/api/advice` for the Fallon field answered from the bundled demo cache |
+| 2026-11-14 18:12 | Linux (Fedora, podman) | `PORT=8090 podman-compose up -d` (live mode) | Web app, deep links, `/docs`, advice OK |
+| 2026-11-14 19:45 | macOS (Apple Silicon) | Dev setup: `uv` venv + `uvicorn`; `npx expo export -p web`; Playwright E2E | 47 backend tests, 39 client unit tests, 14/14 E2E (desktop + Pixel 7) |
+| 2026-11-14 19:30 | iOS Simulator (Xcode 27 beta, iOS 27) | `app/scripts/capture-native.sh ios` | Release build runs the full tour; 11 screenshots + flow video |
+| 2026-11-14 19:35 | Android emulator (API 35) | `CAPTURE=1 app/scripts/build-android-remote.sh && app/scripts/capture-native.sh android` | APK built on the VPS; full tour on the emulator; 11 screenshots + flow video |
