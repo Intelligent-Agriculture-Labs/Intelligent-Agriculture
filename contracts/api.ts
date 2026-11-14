@@ -593,12 +593,13 @@ export interface RotationPlanResponse {
 
 /* ---------- Plain-language glossary (GET /api/glossary?lang=en) ---------- */
 export interface GlossaryEntry {
+  id?: string; // stable key, e.g. "et0"
   term: string; // "ET₀"
   plain: string; // "How much water a well-watered lawn would lose to the air today — the weather's thirst."
   why_it_matters: string;
 }
 
-/* ---------- Low-bandwidth text advice: POST /api/advice/text?name=&max_chars=320 (body: FieldInput) ---------- */
+/* ---------- Low-bandwidth text advice: POST /api/advice/text?name=&max_chars=320&max_parts=2 (body: FieldInput; Latin scripts normalised to GSM-7, sms_parts per GSM 03.38) ---------- */
 export interface AdviceText {
   text: string; // <= max_chars, header + top actions + rain, in FieldInput.lang
   chars: number;

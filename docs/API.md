@@ -22,6 +22,7 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | GET / PUT | `/api/me/farm` | The account's farm (fields, plans, settings), merged per field |
 | POST | `/api/rotations/plan` | Per-field multi-year rotation plan: per-year biological + agronomic check, suggestions, optimised plan |
 | GET | `/api/glossary?lang=` | Plain-language explanations of the app's terms |
+| POST | `/api/advice/text?name=&max_chars=320&max_parts=2` | This week's advice as SMS/WhatsApp text in the farmer's language. Latin scripts are normalised to the GSM-7 alphabet; the least urgent cards are dropped until it fits `max_parts` SMS (GSM 03.38 part sizes: 160/153 GSM-7, 70/67 UCS-2) |
 | GET | `/api/export/advice.csv` | Tidy CSV of every series behind the advice |
 | GET | `/api/export/field.geojson` | Point feature with the advice summary |
 

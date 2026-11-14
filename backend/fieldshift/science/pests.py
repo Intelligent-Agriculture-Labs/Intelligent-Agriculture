@@ -92,7 +92,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "crops": ["maize", "sorghum", "pearl_millet", "teff"],
         "t_low": 10.9,
         "t_high": 35.0,
-        "events": [(350, "One generation completed (egg→adult)", "Scout whorls for windowpane damage")],
+        "events": [(350, "New generation of moths", "Scout whorls for windowpane damage")],
         "recurring": True,  # continuous generations where it does not overwinter (tropics)
         "ref": "Hogg et al. 1982; FAO FAW guidance",
     },

@@ -495,32 +495,82 @@ TEXT_LABELS = {
 }
 
 
+# GSM 03.38 default alphabet (+ extension table chars, which count double). Text that stays inside it costs
+# 160 chars per SMS (153 per part when concatenated); anything else forces UCS-2: 70 (67 per part).
+_GSM = set(
+    "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿"
+    "abcdefghijklmnopqrstuvwxyzäöñüà"
+)
+_GSM_EXT = set("^{}\\[~]|€")
+
+
+def _to_gsm(text: str) -> str:
+    """Replace characters outside GSM-7 by their closest GSM-7 form (á->a, °->' ', -- -> -); leaves other scripts alone."""
+    import unicodedata
+
+    rep = {
+        "—": "-",
+        "–": "-",
+        "·": "-",
+        "≈": "~",
+        "°": "",
+        "’": "'",
+        "‘": "'",
+        "“": '"',
+        "”": '"',
+        "…": "...",
+        "₂": "2",
+        "•": "-",
+    }
+    out = []
+    for ch in text:
+        if ch in _GSM or ch in _GSM_EXT:
+            out.append(ch)
+        elif ch in rep:
+            out.append(rep[ch])
+        else:
+            base = unicodedata.normalize("NFKD", ch)[0]
+            out.append(base if base in _GSM and base.isascii() else ch)
+    return "".join(out)
+
+
+def sms_parts(text: str) -> int:
+    if all(c in _GSM or c in _GSM_EXT for c in text):
+        n = sum(2 if c in _GSM_EXT else 1 for c in text)
+        return 1 if n <= 160 else -(-n // 153)
+    n = len(text.encode("utf-16-le")) // 2
+    return 1 if n <= 70 else -(-n // 67)
+
+
 @app.post("/api/advice/text")
 def advice_text_ep(
-    inp: FieldInput, name: str | None = None, max_chars: int = Query(320, ge=120, le=1000)
+    inp: FieldInput,
+    name: str | None = None,
+    max_chars: int = Query(320, ge=120, le=1000),
+    max_parts: int = Query(2, ge=1, le=6),
 ) -> dict[str, Any]:
-    """Low-bandwidth weekly advice as plain text (SMS / WhatsApp / radio scripts), in the farmer's language."""
+    """Low-bandwidth weekly advice as plain text (SMS / WhatsApp / radio scripts), in the farmer's language.
+
+    Latin-script text is normalised to the GSM-7 alphabet; the least urgent cards are dropped until the
+    message fits `max_parts` SMS and `max_chars` (header, the most urgent card and the footer are always kept)."""
     _check_crop(inp.crop)
     a = service.advice(inp.model_dump())
     head, rain_l, tail = TEXT_LABELS.get(inp.lang, TEXT_LABELS["en"])
-    lines = [f"FieldShift{(' - ' + name) if name else ''}: {head} ({a['as_of']})"]
+    lines = [_to_gsm(f"FieldShift{(' - ' + name) if name else ''}: {head} ({a['as_of']})")]
     for k, c in enumerate(a["cards"][:3], 1):
-        lines.append(
-            f"{k}) " + c["title"].replace("—", "-").replace("–", "-").replace("·", "-").replace("≈", "~")
-        )
-    lines.append(f"{rain_l}: {a['water'].get('forecast_rain_7d_mm', 0):.0f} mm. {tail}")
-    text = "\n".join(lines)
-    if len(text) > max_chars:  # drop the least urgent cards first, keep the header and footer
-        while len(lines) > 3 and len("\n".join(lines)) > max_chars:
-            lines.pop(-2)
-        text = "\n".join(lines)[:max_chars]
-    return {
-        "text": text,
-        "chars": len(text),
-        "sms_parts": (len(text.encode("utf-16-le")) // 2 + 69) // 70
-        if not text.isascii()
-        else (len(text) + 159) // 160,
-    }
+        lines.append(_to_gsm(f"{k}) " + c["title"]))
+    lines.append(_to_gsm(f"{rain_l}: {a['water'].get('forecast_rain_7d_mm', 0):.0f} mm. {tail}"))
+
+    def too_long(ls: list[str]) -> bool:
+        t = "\n".join(ls)
+        return len(t) > max_chars or sms_parts(t) > max_parts
+
+    while len(lines) > 3 and too_long(lines):  # drop the least urgent cards first
+        lines.pop(-2)
+    while len(lines) == 3 and too_long(lines) and " " in lines[1][4:]:  # shorten the one card at a word
+        lines[1] = lines[1].removesuffix("..").rsplit(" ", 1)[0].rstrip(".,;:") + ".."
+    text = "\n".join(lines)[:max_chars]
+    return {"text": text, "chars": len(text), "sms_parts": sms_parts(text)}
 
 
 class PlannerRequest(BaseModel):

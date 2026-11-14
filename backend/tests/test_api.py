@@ -251,3 +251,19 @@ def test_rotation_plan_reports_impact():
     }
     j = client.post("/api/rotations/plan", json=body).json()
     assert j["impact"] is None or ("per_ha" in j["impact"] and j["impact"]["headline"])
+
+
+def test_sms_parts_gsm7_and_ucs2():
+    from fieldshift.main import _to_gsm, sms_parts
+
+    assert sms_parts("a" * 160) == 1 and sms_parts("a" * 161) == 2 and sms_parts("a" * 306) == 2
+    assert sms_parts("é" * 160) == 1  # é is in GSM-7
+    assert sms_parts("ó" * 70) == 1 and sms_parts("ó" * 71) == 2  # ó is not -> UCS-2
+    assert _to_gsm("Riego — 25 °C, días") == "Riego - 25 C, dias"
+    assert _to_gsm("सिंचाई") == "सिंचाई"
+
+
+def test_advice_text_fits_two_sms_for_latin_languages():
+    for lang in ("en", "es", "fr", "sw", "de", "hi"):
+        r = client.post("/api/advice/text", json={**FIELD, "lang": lang}).json()
+        assert r["sms_parts"] <= 2, (lang, r)
