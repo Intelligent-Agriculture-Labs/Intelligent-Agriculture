@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { StoreProvider } from "@/state/store";
 import { useTheme } from "@/lib/theme";
+import { CaptureTour } from "@/lib/captureTour";
 
 function RootStack() {
   const t = useTheme();
@@ -36,6 +37,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StoreProvider>
         <RootStack />
+        <CaptureTour />
       </StoreProvider>
     </SafeAreaProvider>
   );

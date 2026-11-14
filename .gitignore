@@ -20,3 +20,4 @@ app/playwright-report/
 *.aab
 *.ipa
 /data_raw/
+app/build-artifacts/

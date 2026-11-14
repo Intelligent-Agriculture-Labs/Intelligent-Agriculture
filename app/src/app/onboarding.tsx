@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { api, type Origin } from "@/api/client";
 import type { IrrigationMethod, PresetLocation } from "@/api/types";
@@ -35,6 +35,8 @@ export default function Onboarding() {
   const { t: tr } = useTranslation();
   const { field, setField } = useStore();
   const crops = useCrops();
+  // deep link for demos / scripted captures: fieldshift://onboarding?preset=fallon_nv&replay=1
+  const params = useLocalSearchParams<{ preset?: string; replay?: string }>();
   const [presets, setPresets] = useState<PresetLocation[]>([]);
   const [replayDate, setReplayDate] = useState<string | null>(null);
   const [presetOrigin, setPresetOrigin] = useState<Origin | null>(null);
@@ -62,6 +64,24 @@ export default function Onboarding() {
       })
       .catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    const p = params.preset ? presets.find((x) => x.id === params.preset) : undefined;
+    if (!p) return;
+    setField({
+      lat: p.lat,
+      lon: p.lon,
+      crop: p.crop,
+      planting_date: p.planting_date,
+      irrigation: p.irrigation,
+      name: p.name,
+      presetId: p.id,
+      current_rotation: p.current_rotation,
+      replay_date: p.replay_date ?? null,
+      as_of: params.replay === "1" ? (p.replay_date ?? null) : null,
+    });
+    router.replace("/home");
+  }, [params.preset, params.replay, presets, setField]);
 
   const pick = (la: number, lo: number) => {
     if (drawing) {
