@@ -140,32 +140,45 @@ def exp_usdm() -> dict[str, Any]:
         w = ctx.weather
         n = ctx.idx(AS_OF) + 1
         dates = w.dates[:n]
-        dsci, spi90, spei90, lvl = [], [], [], []
+        dsci, spi90, spei90, lvl, lvl_v2 = [], [], [], [], []
+        extra: dict[str, list[float]] = {"spi180": [], "spi365": [], "spei180": [], "spei365": []}
         for r in rows:
             d = dt.date.fromisoformat(r["mapDate"][:10])
             score = sum(float(r[k]) for k in ("d0", "d1", "d2", "d3", "d4"))
             s9 = drought.spi_at(w.rain[:n], dates, d, 90)
             se = drought.standardized_at((w.rain - w.et0)[:n], dates, d, 90)
             s3 = drought.spi_at(w.rain[:n], dates, d, 30)
-            s180 = drought.spi_at(w.rain[:n], dates, d, 180)
-            if s9 is None or se is None:
+            s18 = drought.spi_at(w.rain[:n], dates, d, 180)
+            s36 = drought.spi_at(w.rain[:n], dates, d, 365)
+            e18 = drought.standardized_at((w.rain - w.et0)[:n], dates, d, 180)
+            e36 = drought.standardized_at((w.rain - w.et0)[:n], dates, d, 365)
+            if None in (s9, se, s18, s36, e18, e36):
                 continue
             dsci.append(score)
             spi90.append(s9)
             spei90.append(se)
-            lvl.append(drought.combined_level(s3, s9, se, None, None)[0] + 0.0 * (s180 or 0))
+            for k, v in (("spi180", s18), ("spi365", s36), ("spei180", e18), ("spei365", e36)):
+                extra[k].append(v)
+            lvl.append(drought.combined_level(s3, s9, se, None, None)[0])
+            lvl_v2.append(drought.combined_level(s3, s9, se, None, None, spei365=e36)[0])
         dsci_a = np.array(dsci)
         rho_spi = stats.spearmanr(-np.array(spi90), dsci_a)
         rho_spei = stats.spearmanr(-np.array(spei90), dsci_a)
         rho_lvl = stats.spearmanr(np.array(lvl), dsci_a)
-        usdm_d1 = dsci_a >= 200  # ≥ D1 over (roughly) the whole county
-        fs_d1 = np.array(lvl) >= 2
-        tp = int(np.sum(usdm_d1 & fs_d1))
-        fp = int(np.sum(~usdm_d1 & fs_d1))
-        fn = int(np.sum(usdm_d1 & ~fs_d1))
+        rho_v2 = stats.spearmanr(np.array(lvl_v2), dsci_a)
+
+        def det(levels: list[int]) -> dict[str, Any]:
+            usdm_d1 = dsci_a >= 200  # ≥ D1 over (roughly) the whole county
+            fs_d1 = np.array(levels) >= 2
+            tp = int(np.sum(usdm_d1 & fs_d1))
+            fp = int(np.sum(~usdm_d1 & fs_d1))
+            fn = int(np.sum(usdm_d1 & ~fs_d1))
+            return {"hit_rate": round(tp / max(1, tp + fn), 3), "false_alarm_ratio": round(fp / max(1, tp + fp), 3), "tp": tp, "fp": fp, "fn": fn}
+
         res[sid] = {"weeks": len(dsci), "spearman_spi90": round(float(rho_spi.statistic), 3), "spearman_spei90": round(float(rho_spei.statistic), 3),
-                    "spearman_level": round(float(rho_lvl.statistic), 3),
-                    "d1_detection": {"hit_rate": round(tp / max(1, tp + fn), 3), "false_alarm_ratio": round(fp / max(1, tp + fp), 3), "tp": tp, "fp": fp, "fn": fn}}
+                    "spearman_level_v1": round(float(rho_lvl.statistic), 3), "spearman_level_v2": round(float(rho_v2.statistic), 3),
+                    **{f"spearman_{k}": round(float(stats.spearmanr(-np.array(v), dsci_a).statistic), 3) for k, v in extra.items()},
+                    "d1_detection_v1": det(lvl), "d1_detection_v2": det(lvl_v2)}
         if plt is not None:
             fig, ax = plt.subplots(figsize=(8, 3))
             dd = [dt.date.fromisoformat(r["mapDate"][:10]) for r in rows][: len(dsci)]

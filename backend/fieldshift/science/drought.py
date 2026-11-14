@@ -124,6 +124,8 @@ def combined_level(
         parts.append((level_from_spi(spei90), 0.25, f"SPEI-90 = {spei90:+.2f}"))
     if spi30 is not None:
         parts.append((level_from_spi(spi30), 0.15, f"SPI-30 = {spi30:+.2f}"))
+    if spei365 is not None:
+        parts.append((level_from_spi(spei365), 0.3, f"SPEI-12 months = {spei365:+.2f}"))
     if sm_pct is not None:
         parts.append((level_from_pct(sm_pct), 0.2, f"soil-moisture percentile = {sm_pct:.0f}"))
     if vhi is not None:

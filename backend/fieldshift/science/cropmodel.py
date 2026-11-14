@@ -257,10 +257,16 @@ def simulate(
             g_sum += g
             frac = min(1.0, g_sum / gdd_req)
             kc, stage, root_frac = kc_at(c, frac)
-            if np.isfinite(tmin) and tmin <= c["t_kill"] and 0.05 < frac < 0.95:
+            if np.isfinite(tmin) and tmin <= c["t_kill"] and frac > 0.02:
                 frost += 1
-                frost_penalty += 0.15 if stage in ("initial", "development") else 0.3
                 events.append({"date": d.isoformat(), "type": "frost", "tmin": round(float(tmin), 1)})
+                if frac >= 0.8:
+                    # killing frost late in the season ends it: the crop is harvested at its current completion
+                    end_idx = i
+                    matured = True
+                else:
+                    # early frost: small loss (growing point protected / replant); mid-season frost at flowering is costly
+                    frost_penalty += {"initial": 0.05, "development": 0.15}.get(stage, 0.35)
             if np.isfinite(tmax) and tmax >= c["t_heat"] and stage == "mid-season":
                 heat += 1
             if frac >= 1.0:
@@ -346,7 +352,7 @@ def simulate(
         completion = min(1.0, g_sum / gdd_req) if gdd_req > 0 else 1.0
         ym = c["typical_yield_t_ha"] * (completion**2)
     heat_factor = max(0.5, 1 - 0.03 * heat)
-    frost_factor = max(0.0, 1 - frost_penalty)
+    frost_factor = max(0.2, 1 - frost_penalty)
     ya = ym * water_factor * heat_factor * frost_factor
     biomass = c["wp"] * tr_norm * c.get("calib", 1.0) / 100.0  # g/m2 -> t/ha
 
