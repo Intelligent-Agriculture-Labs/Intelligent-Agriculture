@@ -361,3 +361,98 @@ export interface PlannerResponse {
   why: string;
   sources: string[];
 }
+
+/* ---------- Farm & multi-field sync (phone <-> PC), no account ----------
+ * A farm is identified by a random farm_id (secret, stored on each device) and a short human sync_code
+ * (e.g. "K7QF-2M9X") that another device can enter to join. Server merges fields per id by updated_at
+ * (last writer wins; deletions are tombstones with deleted=true). */
+export interface FieldRecord {
+  id: string; // uuid generated on the device
+  name: string;
+  lat: number;
+  lon: number;
+  polygon?: [number, number][] | null; // [lon, lat] ring drawn on satellite imagery
+  area_ha?: number | null;
+  crop: string;
+  planting_date: string;
+  irrigation: IrrigationMethod;
+  current_rotation: string[];
+  water_allocation_mm?: number | null;
+  last_irrigation_date?: string | null;
+  last_irrigation_mm?: number | null;
+  notes?: string | null;
+  preset_id?: string | null;
+  replay_date?: string | null;
+  updated_at: string; // ISO datetime, set by the device on every change
+  deleted?: boolean;
+}
+export interface FarmSettings {
+  lang?: Lang;
+  units?: "metric" | "imperial";
+  expert?: boolean;
+  active_field_id?: string | null;
+}
+export interface Farm {
+  farm_id: string;
+  sync_code: string;
+  name: string;
+  fields: FieldRecord[]; // includes tombstones (deleted=true) so other devices learn about deletions
+  settings: FarmSettings;
+  version: number; // increments on every server write
+  updated_at: string;
+}
+// POST /api/farms {name?, fields?, settings?} -> Farm            (create)
+// GET  /api/farms/{farm_id} -> Farm                               (pull)
+// PUT  /api/farms/{farm_id} {name?, fields, settings?} -> Farm    (push; server merges per field by updated_at)
+// POST /api/farms/join {sync_code} -> Farm                        (pair another device)
+
+/* ---------- Field satellite analysis (POST /api/satellite) — Sentinel-2 L2A 10 m ----------
+ * Asynchronous: the first call starts a job and returns {status:"processing", progress}; poll the same
+ * request every ~3 s until status === "done" (results are cached per field). */
+export interface SatelliteRequest {
+  lat: number;
+  lon: number;
+  polygon?: [number, number][] | null;
+  crop?: string;
+  start?: string | null; // default: 365 days before end
+  end?: string | null; // default: today (or as_of)
+}
+export interface SatelliteScene {
+  id: string;
+  date: string;
+  cloud_pct: number; // scene cloud cover (metadata)
+  valid_pct: number; // share of field pixels clear (SCL mask)
+  ndvi_mean: number | null;
+  ndvi_p10: number | null;
+  ndvi_p90: number | null;
+}
+export interface SatelliteResponse {
+  status: "processing" | "done" | "error";
+  progress?: number; // 0..1
+  message?: string;
+  field_key?: string;
+  bounds?: { south: number; west: number; north: number; east: number };
+  scenes?: SatelliteScene[];
+  timeseries?: SeriesPoint[]; // field-mean NDVI per clear scene
+  smoothed?: SeriesPoint[]; // gap-filled, Savitzky–Golay smoothed daily NDVI
+  latest?: { date: string; truecolor_png: string; ndvi_png: string } | null; // relative URLs, aligned with bounds
+  phenology?: {
+    greenup: string | null;
+    peak: string | null;
+    peak_ndvi: number | null;
+    senescence: string | null;
+    bare_periods: { start: string; end: string }[];
+    season_type: string; // e.g. "single season", "double crop", "perennial / irrigated", "bare / fallow"
+  };
+  zones?: {
+    png: string;
+    k: number;
+    method: string; // "k-means on multi-date NDVI + terrain (standardized)"
+    silhouette: number | null;
+    legend: { color: string; label: string; share_pct: number; ndvi_mean: number }[];
+    advice: string[];
+  } | null;
+  kcb_now?: number | null; // satellite-derived basal crop coefficient (NDVI -> Kcb)
+  sources?: SourceRef[];
+  caveats?: string[];
+}
