@@ -278,7 +278,12 @@ export function RotationPlanner({ field }: { field: Field }) {
           {result.optimized || result.suggestions.length || result.impact ? (
             <Section title={tr("plan.years.improve")}>
               {result.impact ? (
-                <View ref={(v) => { captureHooks.targets.impact = v; }} collapsable={false}>
+                <View
+                  ref={(v) => {
+                    captureHooks.targets.impact = v;
+                  }}
+                  collapsable={false}
+                >
                   <ImpactCard impact={result.impact} />
                 </View>
               ) : null}

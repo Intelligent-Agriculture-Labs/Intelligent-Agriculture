@@ -64,7 +64,7 @@ Equations and references: [`docs/MODELS.md`](docs/MODELS.md).
 
 **Validation** against independent data ([`docs/VALIDATION.md`](docs/VALIDATION.md)):
 - ET₀ vs. ERA5: monthly r up to 0.997.
-- Water balance vs. ERA5-Land and SMAP.
+- Water balance vs. ERA5-Land. The SMAP and ECOSTRESS/MOD16 checks are pending; see VALIDATION.md (V3, V6).
 - Drought vs. USDM.
 - The documented droughts of 2012 and 1988 come out as the two worst of 40 simulated Iowa seasons.
 

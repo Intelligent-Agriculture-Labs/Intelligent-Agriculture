@@ -27,10 +27,7 @@ _run: 2026-11-14T18:26:35+00:00_
 | Machakos, KE | maize | 9 | 0.49 | 0.30 |
 
 ### V3 · Rain-fed root-zone water vs. NASA SMAP L4 root-zone soil moisture (0–100 cm)
-_run: –_
-
-| Site | crop | seasons | median r per season | pooled standardized r |
-|---|---|---|---|---|
+_Pending at v1.0.0: the NASA AppEEARS point-extraction requests for this check (submitted 14 Nov 2026) were still queued or processing at NASA when the release was cut. `scripts/appeears_smap.py` and `scripts/validate.py` reproduce it once they finish. No result is claimed until then._
 
 ### V4 · Drought status vs. U.S. Drought Monitor (weekly 2005–2024, county DSCI)
 _run: 2026-11-14T18:28:15+00:00_
@@ -53,7 +50,7 @@ _run: 2026-11-14T18:28:15+00:00_
 ### V6 · Irrigated alfalfa ET at the Fallon field: model vs NASA ECOSTRESS (70 m) and MODIS MOD16 (500 m)
 _run: 2026-11-14T15:44:56+00:00_
 
-*unavailable: no live data and no cache for https://modis.ornl.gov/rst/api/v1/MOD16A2GF/dates*
+_Pending at v1.0.0: the NASA AppEEARS point-extraction requests for this check (submitted 14 Nov 2026) were still queued or processing at NASA when the release was cut. `scripts/appeears_smap.py` and `scripts/validate.py` reproduce it once they finish. No result is claimed until then._
 
 ### V7 · Late-blight weather risk (Hutton criteria, NASA POWER hourly), Ithaca NY, Jun–Aug
 _run: 2026-11-14T18:28:15+00:00_

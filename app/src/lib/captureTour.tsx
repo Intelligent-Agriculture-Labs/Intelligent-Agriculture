@@ -32,7 +32,12 @@ export function CaptureTour() {
     const scrollTo = async (target: string, top = 140) => {
       const el = captureHooks.targets[target];
       if (!el || !captureHooks.scrollBy) return;
-      await new Promise<void>((res) => el.measureInWindow((_x: number, y: number) => { captureHooks.scrollBy?.(y - top); res(); }));
+      await new Promise<void>((res) =>
+        el.measureInWindow((_x: number, y: number) => {
+          captureHooks.scrollBy?.(y - top);
+          res();
+        }),
+      );
       await sleep(1200);
     };
     (async () => {
@@ -40,15 +45,29 @@ export function CaptureTour() {
       const field = (id: string, replay: boolean) => {
         const p = presets.find((x) => x.id === id) ?? presets[0];
         return {
-          lat: p.lat, lon: p.lon, crop: p.crop, planting_date: p.planting_date, irrigation: p.irrigation, name: p.name,
-          presetId: p.id, current_rotation: p.current_rotation,
+          lat: p.lat,
+          lon: p.lon,
+          crop: p.crop,
+          planting_date: p.planting_date,
+          irrigation: p.irrigation,
+          name: p.name,
+          presetId: p.id,
+          current_rotation: p.current_rotation,
           polygon: p.polygon && p.polygon.length >= 3 ? p.polygon : undefined,
-          replay_date: p.replay_date ?? null, as_of: replay ? (p.replay_date ?? null) : null,
+          replay_date: p.replay_date ?? null,
+          as_of: replay ? (p.replay_date ?? null) : null,
         };
       };
       setSettings({ lang: "en" });
       await shot("welcome", () => router.replace("/welcome"), 4000);
-      await shot("home", () => { setField(field("fallon_nv", true)); router.replace("/home"); }, 22000);
+      await shot(
+        "home",
+        () => {
+          setField(field("fallon_nv", true));
+          router.replace("/home");
+        },
+        22000,
+      );
       await shot("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "irrigate" } }), 7000);
       await shot("satellite", () => router.replace({ pathname: "/map", params: { view: "satellite" } }), 20000);
       await shot("plan-years", () => router.replace({ pathname: "/plan", params: { tab: "years" } }), 32000);
@@ -59,10 +78,24 @@ export function CaptureTour() {
       await shot("field-editor", () => router.replace("/field-editor"), 9000);
       await shot("account", () => router.push("/account"), 5000);
       for (const lang of ["sw", "hi", "es"] as const) {
-        await shot(`home-${lang}`, () => { setSettings({ lang }); router.replace("/home"); }, 14000);
+        await shot(
+          `home-${lang}`,
+          () => {
+            setSettings({ lang });
+            router.replace("/home");
+          },
+          14000,
+        );
       }
       setSettings({ lang: "en" });
-      await shot("terrain-ke", () => { setField(field("machakos_ke", false)); router.replace({ pathname: "/map", params: { view: "terrain" } }); }, 24000);
+      await shot(
+        "terrain-ke",
+        () => {
+          setField(field("machakos_ke", false));
+          router.replace({ pathname: "/map", params: { view: "terrain" } });
+        },
+        24000,
+      );
       await shot("home-ke", () => router.replace("/home"), 16000);
       console.log("[shot] done");
     })();

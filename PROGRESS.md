@@ -1,6 +1,6 @@
 # PROGRESS
 
-## FINAL SUMMARY (2026-11-14 ~19:50 CET; deadline Sun 2026-11-15 23:59)
+## FINAL SUMMARY (v1.0.0, 2026-11-15 ~00:30 CET; deadline Sun 2026-11-15 23:59)
 **What was built:** FieldShift, an app on web, iOS and Android, with a FastAPI backend, that turns NASA Earth observations into:
 - weekly farm actions (irrigation amount and date, drought, disease, pests, frost/heat) with a "Why?" for every number;
 - per-field maps: computed terrain layers (erosion, wetness, frost, slope, zones); Sentinel-2 analytics (NDVI history, phenology, cuttings, AI zones); satellite-model data fusion;
@@ -9,7 +9,18 @@
 - What-if scenarios and climate trends;
 - tap-to-detect field boundaries, multiple fields, and account-free phone ↔ PC sync;
 - an AI drought classifier, trained on USDM and validated on held-out counties;
-- six languages and offline mode.
+- six languages and offline mode;
+- accounts (phone ↔ PC), a minimalist 5-tab design with a first-run guide and a plain-language glossary;
+- a multi-year, science-based rotation plan per field (52 crops, 30 pathogens) with an optimiser and an impact card;
+- weekly advice as SMS text (≤ 2 SMS in 6 languages).
+
+**Presentation:**
+- `media/fieldshift-demo-30s.mp4`: a code-rendered cinematic film with an original score (`video/`);
+- `media/fieldshift-deck.pdf`: the 7-slide deck;
+- `site/`: the showcase page (`scripts/build_site.py`);
+- native iPhone 17 screenshots in `media/iphone-*.png`.
+
+**Pending at release:** validation checks V3 (SMAP) and V6 (ECOSTRESS/MOD16). Their NASA AppEEARS requests were still queued when v1.0.0 was cut; see VALIDATION.md.
 
 **Where everything is:**
 - `backend/`: API, science, ML model, committed offline demo cache.
@@ -26,7 +37,7 @@
 
 **What the human must still do** (see SUBMISSION.md checklist):
 1. Push the repo to a public host (e.g. GitHub mirror) and paste the link.
-2. Upload `media/fieldshift-demo-30s.mp4` (YouTube unlisted or Drive) and paste the link.
+2. Upload `media/fieldshift-demo-30s.mp4` (YouTube unlisted or Drive) and paste the link. Build the showcase page with `python3 scripts/build_site.py --repo <public URL>` and publish `site/dist`; this also puts the URL into the deck.
 3. Check team registration, tick both boxes, and submit before Sun 23:59 local time.
 4. Optional: public hosting (owner chose private, ADR-014).
 5. Optional: rotate or revoke the Gitea tokens created for this build (`fieldshift-mac-*`, `fieldshift-sale-readonly-*`) and the Earthdata password stored on the VPS (`~/.config/fieldshift/earthdata`).
