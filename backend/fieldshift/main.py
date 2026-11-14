@@ -8,7 +8,7 @@ import logging
 import os
 from typing import Any, Literal
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse, Response
@@ -327,6 +327,111 @@ def detect_ep(req: DetectRequest) -> dict[str, Any]:
     from .engine import fields
 
     return fields.detect_field(req.lat, req.lon, req.source)
+
+
+class RegisterRequest(BaseModel):
+    email: str = Field(min_length=3, max_length=200)
+    password: str = Field(min_length=1, max_length=200)
+    name: str | None = Field(None, max_length=120)
+    fields: list[dict[str, Any]] | None = None
+    settings: dict[str, Any] | None = None
+
+
+class LoginRequest(BaseModel):
+    email: str = Field(min_length=3, max_length=200)
+    password: str = Field(min_length=1, max_length=200)
+
+
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str = Field(max_length=200)
+
+
+class DeleteAccount(BaseModel):
+    password: str
+
+
+def _bearer(authorization: str | None) -> str | None:
+    if authorization and authorization.lower().startswith("bearer "):
+        return authorization[7:].strip()
+    return None
+
+
+def _auth_call(fn: Any, *a: Any) -> Any:
+    from .engine import accounts, farms
+
+    try:
+        return fn(*a)
+    except accounts.AuthError as e:
+        raise HTTPException(e.status, e.message) from e
+    except farms.FarmNotFound as e:
+        raise HTTPException(404, "farm not found") from e
+    except ValueError as e:
+        raise HTTPException(422, str(e)) from e
+
+
+@app.post("/api/auth/register")
+def auth_register(req: RegisterRequest) -> dict[str, Any]:
+    from .engine import accounts
+
+    return dict(_auth_call(accounts.register, req.email, req.password, req.name, req.fields, req.settings))
+
+
+@app.post("/api/auth/login")
+def auth_login(req: LoginRequest) -> dict[str, Any]:
+    from .engine import accounts
+
+    return dict(_auth_call(accounts.login, req.email, req.password))
+
+
+@app.post("/api/auth/logout")
+def auth_logout(authorization: str | None = Header(None)) -> dict[str, Any]:
+    from .engine import accounts
+
+    tok = _bearer(authorization)
+    if tok:
+        accounts.logout(tok)
+    return {"ok": True}
+
+
+@app.get("/api/auth/me")
+def auth_me(authorization: str | None = Header(None)) -> dict[str, Any]:
+    from .engine import accounts, farms
+
+    user, farm_id = _auth_call(accounts.user_for_token, _bearer(authorization))
+    return {"user": user, "farm": _auth_call(farms.get, farm_id)}
+
+
+@app.post("/api/auth/password")
+def auth_password(req: PasswordChange, authorization: str | None = Header(None)) -> dict[str, Any]:
+    from .engine import accounts
+
+    _auth_call(accounts.change_password, _bearer(authorization) or "", req.old_password, req.new_password)
+    return {"ok": True}
+
+
+@app.delete("/api/auth/me")
+def auth_delete(req: DeleteAccount, authorization: str | None = Header(None)) -> dict[str, Any]:
+    from .engine import accounts
+
+    _auth_call(accounts.delete_account, _bearer(authorization) or "", req.password)
+    return {"ok": True}
+
+
+@app.get("/api/me/farm")
+def me_farm(authorization: str | None = Header(None)) -> dict[str, Any]:
+    from .engine import accounts, farms
+
+    _, farm_id = _auth_call(accounts.user_for_token, _bearer(authorization))
+    return dict(_auth_call(farms.get, farm_id))
+
+
+@app.put("/api/me/farm")
+def me_farm_push(req: FarmPush, authorization: str | None = Header(None)) -> dict[str, Any]:
+    from .engine import accounts, farms
+
+    _, farm_id = _auth_call(accounts.user_for_token, _bearer(authorization))
+    return dict(_auth_call(farms.push, farm_id, req.name, req.fields, req.settings))
 
 
 class PlannerRequest(BaseModel):
