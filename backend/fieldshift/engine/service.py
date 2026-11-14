@@ -27,6 +27,14 @@ from .context import FieldContext, build, enrichment
 from .messages import day_label, risk_word, t
 
 log = logging.getLogger("fieldshift.service")
+
+
+def norm_cdf(z: float) -> float:
+    from scipy.stats import norm
+
+    return float(norm.cdf(z))
+
+
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 RISKS = ["low", "moderate", "high", "severe"]
 _pool = ThreadPoolExecutor(max_workers=4)
@@ -686,7 +694,16 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 "risk": risk,
                 "icon": "flame",
                 "title": t("drought_title", lang, label=drt.LABELS[level]),
-                "detail": t("drought_detail", lang, pct=max(1, rank_pct or 50)),
+                "detail": (
+                    t(
+                        "drought_detail_12m",
+                        lang,
+                        pct=max(1, rank_pct or 50),
+                        pct12=max(1, round(100 * float(norm_cdf(spei365)))),
+                    )
+                    if spei365 is not None
+                    else t("drought_detail", lang, pct=max(1, rank_pct or 50))
+                ),
                 "due": None,
                 "amount": None,
                 "why": drought["why"],

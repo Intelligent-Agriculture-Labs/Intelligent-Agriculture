@@ -168,3 +168,10 @@ rainfed_ok_title:
   sw: "Hakuna msongo wa maji unaotarajiwa kwa siku {days}"
   hi: "{days} दिनों तक जल तनाव की आशंका नहीं"
   de: "{days} Tage kein Wasserstress erwartet"
+drought_detail_12m:
+  en: "Rain over the last 90 days is in the driest {pct}% of years since 1984, and the 12-month water balance (rain − crop demand) in the driest {pct12}%. Plan water use carefully."
+  es: "La lluvia de los últimos 90 días está entre el {pct}% de años más secos desde 1984, y el balance hídrico de 12 meses entre el {pct12}%. Planifique el agua."
+  fr: "La pluie des 90 derniers jours figure parmi les {pct}% d'années les plus sèches depuis 1984, et le bilan hydrique sur 12 mois parmi les {pct12}%."
+  sw: "Mvua ya siku 90 iko kati ya {pct}% ya miaka kavu zaidi tangu 1984, na mizani ya maji ya miezi 12 kati ya {pct12}%. Panga matumizi ya maji."
+  hi: "पिछले 90 दिनों की वर्षा 1984 के बाद के सबसे सूखे {pct}% वर्षों में है, और 12 महीने का जल संतुलन सबसे सूखे {pct12}% में।"
+  de: "Der Regen der letzten 90 Tage gehört zu den trockensten {pct}% der Jahre seit 1984, die 12-Monats-Wasserbilanz zu den trockensten {pct12}%."
