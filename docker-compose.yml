@@ -9,14 +9,14 @@ services:
     volumes:
       - cache:/data
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
     restart: unless-stopped
   web:
     build: ./app
     depends_on:
       - api
     ports:
-      - "8080:80"
+      - "${WEB_PORT:-8080}:80"
     restart: unless-stopped
 volumes:
   cache:
