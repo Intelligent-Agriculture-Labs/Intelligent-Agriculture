@@ -191,3 +191,18 @@ def test_planner_contract():
     )
     assert j["water"]["full_need_median_mm"] >= j["water"]["season_irrigation_median_mm"]
     assert j["water"]["coverage_pct"] is not None and j["water"]["coverage_pct"] <= 100
+
+
+def test_planner_allocation_note_present_when_short():
+    j = client.post(
+        "/api/planner",
+        json={
+            "lat": 39.47,
+            "lon": -118.78,
+            "crop": "maize",
+            "planting_date": "2020-05-01",
+            "irrigation": "drip",
+            "water_allocation_mm": 100,
+        },
+    ).json()
+    assert j["water"]["note"] and "%" in j["water"]["note"]

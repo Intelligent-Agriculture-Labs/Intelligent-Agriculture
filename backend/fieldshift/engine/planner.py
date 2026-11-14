@@ -267,8 +267,9 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
         "coverage_pct": round(100 * min(1.0, alloc / full_need)) if (alloc and full_need > 0) else None,
         "efficiency": eff,
         "note": (
-            f"Your allocation covers ~{round(100 * min(1.0, alloc / season_irr))} % of the full-irrigation need; consider deficit irrigation or a shorter-season crop."
-            if alloc and season_irr > 0 and alloc < season_irr
+            f"Your allocation covers ~{round(100 * min(1.0, alloc / full_need))} % of the full-irrigation need ({round(full_need)} mm); "
+            "plan deficit irrigation, a split season, or a shorter-season crop."
+            if alloc and full_need > 0 and alloc < full_need
             else None
         ),
     }

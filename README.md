@@ -35,7 +35,7 @@ The challenge photo shows a Nevada alfalfa farmer, so FieldShift's hero demo is 
 
 FieldShift turns that into action:
 - **Weekly:** when and how much to irrigate. In the July 2025 replay: "Irrigate … mm by Sun 20 · moderate drought (D1)".
-- **Season:** five alfalfa cuttings, the first in late May; a 1,100 mm water allocation covers ~74 % of full need, so the plan shows where to cut.
+- **Season:** five alfalfa cuttings, the first in late May; a 1,100 mm water allocation covers ~73 % of full need, so the plan shows where to cut.
 - **Strategy:** **split-season alfalfa** saves ~45 % of the water at a cost in income; a **teff → winter wheat** break disrupts pest cycles.
 
 The same engine serves a rain-fed smallholder in **Machakos, Kenya** (in Swahili), rain-fed wheat in **Córdoba, Spain**, and corn–soy in **Iowa**.
