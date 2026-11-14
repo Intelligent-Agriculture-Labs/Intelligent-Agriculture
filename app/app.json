@@ -25,7 +25,10 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "org.fieldshift.app",
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -66,7 +69,8 @@
             "usesCleartextTraffic": true
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "scheme": "fieldshift",
     "description": "NASA Earth observations turned into weekly farm decisions and crop-rotation strategies.",

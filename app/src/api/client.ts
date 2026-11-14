@@ -19,6 +19,11 @@ import type {
   SimulateResponse,
   TerrainRequest,
   TerrainResponse,
+  AuthResponse,
+  User,
+  RotationPlanRequest,
+  RotationPlanResponse,
+  GlossaryEntry,
 } from "./types";
 
 /**
@@ -51,13 +56,22 @@ export const API_BASE = defaultBase();
 const TIMEOUT_MS = 120000; // first uncached call can take ~1 min (NASA APIs)
 const CACHE_PREFIX = "fieldshift:cache:v1:";
 
-async function http<T>(path: string, body?: unknown, method?: "GET" | "POST" | "PUT", timeoutMs = TIMEOUT_MS): Promise<T> {
+/** Bearer token of the logged-in account (set by the store); sent with every request when present. */
+let authToken: string | null = null;
+export function setAuthToken(tok: string | null) {
+  authToken = tok;
+}
+
+async function http<T>(path: string, body?: unknown, method?: "GET" | "POST" | "PUT" | "DELETE", timeoutMs = TIMEOUT_MS): Promise<T> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (authToken) headers.Authorization = `Bearer ${authToken}`;
   try {
     const res = await fetch(`${API_BASE}${path}`, {
       method: method ?? (body === undefined ? "GET" : "POST"),
-      headers: body === undefined ? { Accept: "application/json" } : { "Content-Type": "application/json", Accept: "application/json" },
+      headers,
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: ctrl.signal,
     });
@@ -195,6 +209,27 @@ export const api = {
       http<Farm>(`/api/farms/${encodeURIComponent(farmId)}`, b, "PUT", 20000),
     join: (syncCode: string) => http<Farm>("/api/farms/join", { sync_code: syncCode }, "POST", 20000),
   },
+  /* ---- accounts (email + password); the account owns one farm ---- */
+  auth: {
+    register: (b: { email: string; password: string; name?: string; fields?: FieldRecord[]; settings?: FarmSettings }) =>
+      http<AuthResponse>("/api/auth/register", b, "POST", 20000),
+    login: (b: { email: string; password: string }) => http<AuthResponse>("/api/auth/login", b, "POST", 20000),
+    logout: () => http<{ ok: boolean }>("/api/auth/logout", {}, "POST", 15000),
+    me: () => http<{ user: User; farm: Farm }>("/api/auth/me", undefined, "GET", 20000),
+    changePassword: (b: { old_password: string; new_password: string }) => http<{ ok: boolean }>("/api/auth/password", b, "POST", 20000),
+    deleteAccount: (b: { password: string }) => http<{ ok: boolean }>("/api/auth/me", b, "DELETE", 20000),
+  },
+  me: {
+    getFarm: () => http<Farm>("/api/me/farm", undefined, "GET", 20000),
+    putFarm: (b: { name?: string; fields: FieldRecord[]; settings?: FarmSettings }) => http<Farm>("/api/me/farm", b, "PUT", 20000),
+  },
+  /** per-field multi-year rotation plan check (+ optimisation) */
+  rotationPlan: (r: RotationPlanRequest) =>
+    withCache<RotationPlanResponse>(
+      k("rplan", r.lat, r.lon, r.irrigation, r.lang, JSON.stringify([r.history, r.plan, r.polygon ?? null, r.water_allocation_mm ?? null])),
+      () => http("/api/rotations/plan", r, "POST", 180000),
+    ),
+  glossary: (lang: string) => withCache<GlossaryEntry[]>(k("glossary", lang), () => http(`/api/glossary?lang=${encodeURIComponent(lang)}`)),
   /** tap-to-delineate: field boundary from high-res imagery around a point (sub-metre Esri or US NAIP) */
   detectField: (b: { lat: number; lon: number; source?: "esri" | "naip" }) => http<FieldDetectResponse>("/api/fields/detect", b, "POST", 45000),
   /** one call of the async satellite job (start or poll); the caller polls until status === "done" */

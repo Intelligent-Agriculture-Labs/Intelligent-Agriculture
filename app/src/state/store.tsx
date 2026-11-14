@@ -2,8 +2,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppState } from "react-native";
 import i18n, { deviceLanguage } from "@/i18n";
-import { api, ApiError, type Origin } from "@/api/client";
-import type { AdviceResponse, Farm, FarmSettings, FieldInput, Lang } from "@/api/types";
+import { api, ApiError, setAuthToken, type Origin } from "@/api/client";
+import { session, type Session } from "@/lib/authStorage";
+import type { AdviceResponse, Farm, FarmSettings, FieldInput, Lang, User } from "@/api/types";
 import type { UnitSystem } from "@/lib/units";
 import {
   type Field,
@@ -54,8 +55,20 @@ interface FarmState {
   settings_dirty: boolean;
 }
 
+export interface AuthState {
+  user: User | null;
+  /** true while a login/register/logout request is running */
+  busy: boolean;
+}
+
 interface Store {
   ready: boolean;
+  auth: AuthState;
+  register: (b: { email: string; password: string; name?: string; uploadLocal: boolean }) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  changePassword: (oldPw: string, newPw: string) => Promise<void>;
+  deleteAccount: (password: string) => Promise<void>;
   settings: Settings;
   setSettings: (s: Partial<Settings>) => void;
   /** active field (null if the farm has none) */
@@ -151,12 +164,24 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const farmRef = useRef(farm);
   const settingsRef = useRef(settings);
+  const [auth, setAuth] = useState<AuthState>({ user: null, busy: false });
+  const sessionRef = useRef<Session | null>(null);
 
   // ---------- load + migrate the v1 single field
   useEffect(() => {
     (async () => {
       try {
-        const [s, f, legacy] = await Promise.all([AsyncStorage.getItem(SETTINGS_KEY), AsyncStorage.getItem(FARM_KEY), AsyncStorage.getItem(LEGACY_FIELD_KEY)]);
+        const [s, f, legacy, sess] = await Promise.all([
+          AsyncStorage.getItem(SETTINGS_KEY),
+          AsyncStorage.getItem(FARM_KEY),
+          AsyncStorage.getItem(LEGACY_FIELD_KEY),
+          session.load().catch(() => null),
+        ]);
+        if (sess) {
+          sessionRef.current = sess;
+          setAuthToken(sess.token);
+          setAuth({ user: sess.user, busy: false });
+        }
         if (s) {
           const parsed = JSON.parse(s) as Settings;
           settingsRef.current = parsed;
@@ -192,6 +217,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // ---------- sync engine
   const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const expireRef = useRef<() => void>(() => undefined);
   const busy = useRef(false);
   const pushRef = useRef<() => Promise<void>>(async () => undefined);
 
@@ -252,11 +278,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setSyncStatus({ status: "syncing", error: null });
     const startedAt = nowIso();
     try {
-      const remote = await api.farms.put(cur.farm_id, {
-        name: cur.name,
-        fields: cur.fields.map(toRecord),
-        settings: cur.settings_dirty ? farmSettings() : undefined,
-      });
+      const body = { name: cur.name, fields: cur.fields.map(toRecord), settings: cur.settings_dirty ? farmSettings() : undefined };
+      const remote = sessionRef.current ? await api.me.putFarm(body) : await api.farms.put(cur.farm_id, body);
       const next = adopt(remote, startedAt);
       setSyncStatus({ status: "ok", error: null });
       if (hasChangesSince(next.fields, startedAt)) schedulePush(); // edits made while the request was in flight
@@ -278,9 +301,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     busy.current = true;
     setSyncStatus({ status: "syncing", error: null });
     try {
-      adopt(await api.farms.get(cur.farm_id), null);
+      adopt(sessionRef.current ? await api.me.getFarm() : await api.farms.get(cur.farm_id), null);
       setSyncStatus({ status: "ok", error: null });
     } catch (e) {
+      if (e instanceof ApiError && e.status === 401 && sessionRef.current) expireRef.current();
       setSyncStatus({ status: isOffline(e) ? "offline" : "error", error: errMsg(e) });
     } finally {
       busy.current = false;
@@ -345,6 +369,102 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (hasChangesSince(cur.fields, cur.last_sync) || cur.settings_dirty) await push();
     else await pull();
   }, [pull, push]);
+
+  // ---------- accounts
+  const startSession = useCallback(async (r: { token: string; user: User }) => {
+    const sess: Session = { token: r.token, user: r.user };
+    sessionRef.current = sess;
+    setAuthToken(r.token);
+    await session.save(sess).catch(() => undefined);
+    setAuth({ user: r.user, busy: false });
+  }, []);
+
+  const endSession = useCallback(
+    (clearFarm: boolean) => {
+      sessionRef.current = null;
+      setAuthToken(null);
+      session.clear().catch(() => undefined);
+      setAuth({ user: null, busy: false });
+      if (clearFarm) {
+        // shared devices: the account's fields leave with the account
+        persist({ ...EMPTY_FARM });
+        resetAdvice();
+      }
+      setSyncStatus({ status: "off", error: null });
+    },
+    [persist],
+  );
+  useEffect(() => {
+    expireRef.current = () => endSession(false);
+  }, [endSession]);
+
+  const register = useCallback(
+    async (b: { email: string; password: string; name?: string; uploadLocal: boolean }) => {
+      setAuth((a) => ({ ...a, busy: true }));
+      try {
+        const cur = farmRef.current;
+        const r = await api.auth.register({
+          email: b.email.trim(),
+          password: b.password,
+          name: b.name?.trim() || undefined,
+          fields: b.uploadLocal ? cur.fields.map(toRecord) : [],
+          settings: farmSettings(),
+        });
+        await startSession(r);
+        if (!b.uploadLocal) persist({ ...EMPTY_FARM, active_field_id: null });
+        adopt(r.farm, nowIso());
+        setSyncStatus({ status: "ok", error: null });
+      } catch (e) {
+        setAuth((a) => ({ ...a, busy: false }));
+        throw e;
+      }
+    },
+    [adopt, persist, startSession],
+  );
+
+  const login = useCallback(
+    async (email: string, password: string) => {
+      setAuth((a) => ({ ...a, busy: true }));
+      try {
+        const localFields = farmRef.current.fields;
+        const r = await api.auth.login({ email: email.trim(), password });
+        await startSession(r);
+        const next = adopt(r.farm, null);
+        // fields that only existed on this device are added to the account (same as joining a farm)
+        if (localFields.some((f) => !r.farm.fields.some((x) => x.id === f.id))) {
+          persist({ ...next, last_sync: null });
+          await push();
+        } else setSyncStatus({ status: "ok", error: null });
+      } catch (e) {
+        setAuth((a) => ({ ...a, busy: false }));
+        throw e;
+      }
+    },
+    [adopt, persist, push, startSession],
+  );
+
+  const logout = useCallback(async () => {
+    setAuth((a) => ({ ...a, busy: true }));
+    try {
+      if (hasChangesSince(farmRef.current.fields, farmRef.current.last_sync)) await push();
+      await api.auth.logout();
+    } catch {
+      // offline logout still ends the session on this device
+    }
+    endSession(true);
+  }, [endSession, push]);
+
+  const changePassword = useCallback(async (oldPw: string, newPw: string) => {
+    await api.auth.changePassword({ old_password: oldPw, new_password: newPw });
+  }, []);
+
+  const deleteAccount = useCallback(
+    async (password: string) => {
+      await api.auth.deleteAccount({ password });
+      endSession(true);
+    },
+    [endSession],
+  );
 
   // ---------- settings (synced via farm.settings)
   const setSettings = useCallback(
@@ -492,6 +612,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(
     () => ({
       ready,
+      auth,
+      register,
+      login,
+      logout,
+      changePassword,
+      deleteAccount,
       settings,
       setSettings,
       field,
@@ -514,6 +640,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }),
     [
       ready,
+      auth,
+      register,
+      login,
+      logout,
+      changePassword,
+      deleteAccount,
       settings,
       setSettings,
       field,

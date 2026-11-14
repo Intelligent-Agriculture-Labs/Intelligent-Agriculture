@@ -565,6 +565,7 @@ export interface RotationPlanResponse {
 
 /* ---------- Plain-language glossary (GET /api/glossary?lang=en) ---------- */
 export interface GlossaryEntry {
+  id?: string; // stable key, e.g. "et0"
   term: string; // "ET₀"
   plain: string; // "How much water a well-watered lawn would lose to the air today — the weather's thirst."
   why_it_matters: string;

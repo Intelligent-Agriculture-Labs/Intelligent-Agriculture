@@ -2,7 +2,7 @@
  * Pure farm / multi-field logic (no React, no storage) so it can be unit-tested:
  * ids, legacy migration, FieldRecord <-> local Field conversion, per-field merge, sync-code formatting.
  */
-import type { FieldRecord, IrrigationMethod } from "@/api/types";
+import type { FieldRecord, IrrigationMethod, RotationYear } from "@/api/types";
 
 /** Field as used on the device. Superset of the synced FieldRecord: `as_of` (replay date) is device-local. */
 export interface Field {
@@ -24,6 +24,10 @@ export interface Field {
   replay_date?: string | null;
   /** replay date for demo farms (null = today) — device-local, never synced */
   as_of?: string | null;
+  /** crops grown on this field in past years (oldest first) */
+  history?: RotationYear[];
+  /** the farmer's multi-year rotation plan (consecutive years) */
+  plan?: RotationYear[];
   updated_at: string;
   deleted?: boolean;
 }
@@ -118,6 +122,8 @@ export function toRecord(f: Field): FieldRecord {
     notes: f.notes ?? null,
     preset_id: f.presetId ?? null,
     replay_date: f.replay_date ?? null,
+    history: f.history ?? [],
+    plan: f.plan ?? [],
     updated_at: f.updated_at,
     deleted: f.deleted ?? false,
   };
@@ -142,6 +148,8 @@ export function fromRecord(r: FieldRecord, local?: Field): Field {
     presetId: r.preset_id ?? null,
     replay_date: r.replay_date ?? null,
     as_of: local?.as_of ?? null, // device-local view state survives syncs
+    history: r.history ?? [],
+    plan: r.plan ?? [],
     updated_at: r.updated_at,
     deleted: r.deleted ?? false,
   };
@@ -233,4 +241,40 @@ export function edgeMidpoints(pts: LonLat[]): LonLat[] {
     const q = pts[(i + 1) % pts.length];
     return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2] as LonLat;
   });
+}
+
+/* ---------- multi-year rotation plan editing ---------- */
+
+/** Next `n` plan years starting after the current season (calendar year of harvest). */
+export function defaultPlanYears(today: Date, n = 4): number[] {
+  const y = today.getUTCFullYear() + (today.getUTCMonth() >= 8 ? 1 : 0); // after August, plan from next season
+  return Array.from({ length: n }, (_, i) => y + i);
+}
+
+/** Build/normalise a consecutive plan: keeps entries for the given years, fills gaps with `fallbackCrop`. */
+export function normalizePlan(plan: RotationYear[] | undefined, years: number[], fallbackCrop: string): RotationYear[] {
+  const by = new Map((plan ?? []).map((p) => [p.year, p]));
+  return years.map((y) => by.get(y) ?? { year: y, crop: fallbackCrop, cover_crop: null });
+}
+
+/** Set the crop (or cover crop) of one plan year, returning a new array. */
+export function setPlanCrop(plan: RotationYear[], year: number, crop: string, which: "crop" | "cover_crop" = "crop"): RotationYear[] {
+  return plan.map((p) => (p.year === year ? { ...p, [which]: which === "cover_crop" && !crop ? null : crop } : p));
+}
+
+/** Append one more year to the plan (copying nothing — the farmer chooses), max 8 years. */
+export function addPlanYear(plan: RotationYear[], crop: string): RotationYear[] {
+  if (plan.length >= 8) return plan;
+  const last = plan.length ? plan[plan.length - 1].year : new Date().getUTCFullYear();
+  return [...plan, { year: last + 1, crop, cover_crop: null }];
+}
+
+export function removeLastPlanYear(plan: RotationYear[]): RotationYear[] {
+  return plan.length > 1 ? plan.slice(0, -1) : plan;
+}
+
+/** History years (last `n` years before the first plan year), keeping known entries. */
+export function normalizeHistory(history: RotationYear[] | undefined, firstPlanYear: number, n: number, fallbackCrop: string): RotationYear[] {
+  const by = new Map((history ?? []).map((p) => [p.year, p]));
+  return Array.from({ length: n }, (_, i) => firstPlanYear - n + i).map((y) => by.get(y) ?? { year: y, crop: fallbackCrop, cover_crop: null });
 }
