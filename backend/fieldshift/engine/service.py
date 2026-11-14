@@ -93,9 +93,41 @@ def _series(
 def _season_start(c: dict[str, Any], planting: dt.date, today: dt.date) -> dt.date:
     """For perennials the user gives the stand green-up date; roll it to the current season."""
     if c["type"] != "perennial":
-        return planting
+        # annuals: pick the season instance that is running now or comes next (users enter last/next year's date)
+        span = int(1.3 * sum(c["stages"]))
+        p = dt.date(planting.year, planting.month, min(planting.day, 28))
+        while p + dt.timedelta(days=span) < today:
+            p = dt.date(p.year + 1, p.month, p.day)
+        while (p - today).days > 365 - span and p.year > 1985:
+            p = dt.date(p.year - 1, p.month, p.day)
+        return p
     s = dt.date(today.year, planting.month, min(planting.day, 28))
     return s if s <= today else dt.date(today.year - 1, planting.month, min(planting.day, 28))
+
+
+def _plan_card(c: dict[str, Any], lang: str, state_key: str) -> dict[str, Any]:
+    return {
+        "id": "plan_rotation",
+        "category": "planning",
+        "risk": "low",
+        "icon": "swap-horizontal",
+        "title": t("plan_title", lang),
+        "detail": t("plan_detail", lang, crop=c["name"].lower(), state=t(f"state_{state_key}", lang)),
+        "due": None,
+        "amount": None,
+        "why": _why(
+            "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives "
+            "over the last 15 seasons of NASA POWER weather at this location.",
+            ["Rotations are compared on water, income, soil health, erosion, pest cycles and climate risk."],
+            ["tmax", "tmin"],
+            "Season-state rule",
+            "rotations",
+            0.8,
+            "Season state follows directly from temperature and the season model.",
+            [],
+            ["nasa_power"],
+        ),
+    }
 
 
 def _clim_years(ctx: FieldContext, n: int = 15) -> list[int]:
@@ -387,6 +419,8 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "forecast_et0_7d_mm": round(float(np.nansum(w.et0[ctx.forecast_window(7)])), 1),
         }
         cards.extend(_planting_cards(ctx, cid, planting, method, lang))
+        if (planting - today).days > 30:
+            cards.append(_plan_card(c, lang, "harvested"))
 
     # ---------- off-season: dormant perennial or harvested annual -> rotation planning card (the Field Shift question)
     if planting <= today:
@@ -560,9 +594,14 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         cards.append(ndvi_card)
 
     # ---------- disease (hourly forecast)
-    cards.extend(_disease_cards(ctx, cid, today, lang, series))
+    in_season = planting <= today and (
+        c["type"] == "perennial" or not any(cd["id"] == "plan_rotation" for cd in cards)
+    )
+    if in_season:
+        cards.extend(_disease_cards(ctx, cid, today, lang, series))
     # ---------- pests
-    cards.extend(_pest_cards(ctx, cid, today, lang, lat, planting))
+    if in_season:
+        cards.extend(_pest_cards(ctx, cid, today, lang, lat, planting))
     # ---------- frost / heat
     cards.extend(_temp_cards(ctx, cid, today, lang, planting))
 
@@ -996,6 +1035,7 @@ def _planting_cards(
     best = max(results, key=lambda r: r[3])
     good = [r for r in results if r[3] >= 0.97 * best[3]]
     start, end = min(r[0] for r in good), max(r[0] for r in good)
+    end = max(end, start + dt.timedelta(days=7))  # candidates are a week apart: a window is at least one week
     return [
         {
             "id": "sowing",
@@ -1148,7 +1188,8 @@ def simulate_api(req: dict[str, Any]) -> dict[str, Any]:
             0.5,
             "Relative differences between scenarios are more reliable than absolute yields.",
             [
-                "Yields are scaled to typical irrigated yields; local varieties and management change absolute numbers.",
+                "Yields are water-limited potentials for good management (scaled to typical yields). Low-input farms often reach far less "
+                "(the 'yield gap'); compare scenarios, not absolute numbers.",
                 "Pests, diseases and nutrient limits are not simulated.",
             ],
             ["nasa_power", "soilgrids"],
