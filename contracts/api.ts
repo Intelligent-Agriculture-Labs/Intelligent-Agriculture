@@ -463,6 +463,7 @@ export interface SatelliteResponse {
     senescence: string | null;
     bare_periods: { start: string; end: string }[];
     season_type: string; // e.g. "single season", "double crop", "perennial / irrigated", "bare / fallow"
+    harvest_events?: string[]; // cuttings/harvests detected from space (NDVI drops)
   };
   zones?: {
     png: string;

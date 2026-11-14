@@ -210,3 +210,17 @@ def zone_advice(zones: list[dict[str, Any]], twi_field_mean: float | None) -> li
             "The weak zone is also the most variable over time — a sign of stress in dry spells (water-holding capacity)."
         )
     return adv
+
+
+def harvest_events(
+    dates: list[dt.date], values: list[float], min_drop: float = 0.2, max_gap_days: int = 25
+) -> list[str]:
+    """Cuttings/harvests seen from space: NDVI falls by >= min_drop between consecutive clear scenes <= max_gap_days apart
+    from a green canopy (NDVI >= 0.5). Returns the midpoint date of each drop."""
+    out = []
+    for (d0, v0), (d1, v1) in zip(
+        zip(dates, values, strict=True), zip(dates[1:], values[1:], strict=True), strict=False
+    ):
+        if v0 >= 0.5 and v0 - v1 >= min_drop and (d1 - d0).days <= max_gap_days:
+            out.append((d0 + (d1 - d0) / 2).isoformat())
+    return out

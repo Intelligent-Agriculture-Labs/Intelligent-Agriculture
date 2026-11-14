@@ -53,3 +53,11 @@ def test_kmeans_zones_recover_two_patches():
     assert z is not None and z["k"] == 2 and z["silhouette"] > 0.6
     assert z["zones"][0]["ndvi_mean"] > z["zones"][1]["ndvi_mean"]
     assert (z["labels"][:, :15] == 0).mean() > 0.95
+
+
+def test_harvest_events_detects_cuts():
+    d0 = dt.date(2026, 5, 1)
+    dates = [d0 + dt.timedelta(days=k) for k in (0, 10, 20, 30, 40, 50)]
+    vals = [0.5, 0.78, 0.40, 0.6, 0.85, 0.33]
+    ev = sat.harvest_events(dates, vals)
+    assert ev == [(d0 + dt.timedelta(days=15)).isoformat(), (d0 + dt.timedelta(days=45)).isoformat()]

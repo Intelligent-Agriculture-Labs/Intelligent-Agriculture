@@ -216,6 +216,7 @@ def _analyse(key: str, req: dict[str, Any], start: dt.date, end: dt.date) -> Non
     vals = [r["ndvi_mean"] for r in good_recs]
     days, sm = sat.smooth_series(dates, vals) if len(dates) >= 3 else (dates, np.array(vals, float))
     phen = sat.phenology(days, sm)
+    phen["harvest_events"] = sat.harvest_events(dates, vals)  # cuttings / harvests detected from space
 
     # terrain on the same mercator grid (sample the zoom-14 DEM analysis at our pixel centres)
     slope_g = twi_g = None
