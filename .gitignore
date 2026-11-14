@@ -22,3 +22,5 @@ app/playwright-report/
 /data_raw/
 app/build-artifacts/
 site/dist/
+video/build/
+video/assets/

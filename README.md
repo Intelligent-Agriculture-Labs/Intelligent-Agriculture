@@ -108,7 +108,7 @@ This project was built with substantial help from SI (AI) tools, as the Space Ap
 - It also did the data-source research and ran the validation and ML-training experiments.
 - The team defined the goals and product direction and reviewed the results.
 
-The in-app AI components (drought classifier, k-means zones, boundary detection) are classical machine-learning and computer-vision models trained or run on open data. No generative SI produces advice at runtime. No SI-generated images or video are used; all visuals are real screen captures. Any SI-generated media added later will carry a visible watermark and be labelled, per the rules.
+The in-app AI components (drought classifier, k-means zones, boundary detection) are classical machine-learning and computer-vision models trained or run on open data. No generative SI produces advice at runtime. No generative image, video, voice or music models are used. The demo film (`video/`) and its score were programmed with the SI coding assistant, and the end card states this. The film shows real app screens, NASA imagery and data, and music synthesised by code. Any SI-generated media added later will carry a visible watermark and be labelled, per the rules.
 
 ## License and attributions
 Code: [Apache-2.0](LICENSE).

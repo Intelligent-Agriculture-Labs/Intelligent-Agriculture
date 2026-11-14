@@ -5,7 +5,7 @@ Everything below is ready to paste into the project submission page. **Human ste
 ## ☐ Before you submit (checklist for the team owner)
 - ☐ Make the repository publicly reachable. The current source of truth is the private Gitea (`http://vps-home-node-1:3001/lino/fieldshift`). Push a mirror to GitHub: `git remote add github git@github.com:<you>/fieldshift.git && git push github main --tags`.
 - ☐ Build and publish the showcase page: `python3 scripts/build_site.py --repo https://github.com/<you>/fieldshift`, then publish `site/dist` with GitHub Pages. This also bakes the repository URL into the deck: `media/fieldshift-deck.pdf`.
-- ☐ Upload the 30-second video [`media/fieldshift-demo-30s.mp4`](media/fieldshift-demo-30s.mp4) to YouTube (unlisted is fine) or Google Drive (anyone with the link), and paste the link below. It has burned-in English captions and no voice, so it meets the subtitle rule.
+- ☐ Upload the 30-second video [`media/fieldshift-demo-30s.mp4`](media/fieldshift-demo-30s.mp4) to YouTube (unlisted is fine) or Google Drive (anyone with the link), and paste the link below. It has English on-screen text, an original synthesised score and no voice, so it meets the subtitle rule.
 - ☐ (Optional) Host the app publicly; see `docs/DEPLOYMENT.md#public-hosting-human-step`. Without hosting, judges can run `docker compose up --build` or watch the video.
 - ☐ All team members are registered for the same Local Event, and appear on the team page.
 - ☐ Tick both checkboxes on the submission page: the requirements/terms box and the original-work/references box.
@@ -100,7 +100,7 @@ We used an SI coding assistant (Anthropic Claude, via Claude Code / T3 Code) ext
 - to write most of the code, tests and documentation;
 - to run and analyse the validation experiments.
 
-The team set the goals, chose the direction and reviewed the outputs. The app itself uses no generative AI at runtime. Its ML models are classical and trained by us (gradient boosting for drought, k-means zones, image segmentation for field boundaries). All advice is computed deterministically from data with published, cited methods (FAO-56, FAO-33, SPI/SPEI, Hutton criteria). No SI-generated images, video or voice are used in the demo. All visuals are real screen captures of the app.
+The team set the goals, chose the direction and reviewed the outputs. The app itself uses no generative AI at runtime. Its ML models are classical and trained by us (gradient boosting for drought, k-means zones, image segmentation for field boundaries). All advice is computed deterministically from data with published, cited methods (FAO-56, FAO-33, SPI/SPEI, Hutton criteria). The demo film and its music were programmed with the SI coding assistant. That means code-driven motion design that composites real app screenshots, NASA Blue Marble and satellite imagery and NASA POWER data, plus music synthesised by code. No generative image, video, voice or music models were used, and the end card states this.
 
 ## Links
 - Repository: ☐ `<public GitHub URL>` (source of truth: private Gitea, see above)
@@ -114,18 +114,18 @@ The team set the goals, chose the direction and reviewed the outputs. The app it
 ## Demo video: script and storyboard (≤ 30 s, English captions, no voice)
 The rules allow a ≤ 30 s video, with English subtitles if any speech is not in English. Ours uses on-screen captions only. Any narration recorded later must be English or subtitled.
 
-Follows the official Space Apps template (0:00 team · 0:02 challenge · 0:05 title + tagline · 0:10 how it works + NASA data · 0:20 future vision). Built by `scripts/make_demo_video.py` from real screen captures.
+A motion-designed film with an original score. Both are made entirely in code; see `video/README.md`, and rebuild with `./video/build.sh`. It shows real app screens, real NASA data (Blue Marble, NASA POWER) and real satellite imagery, with English on-screen text and no voice. It follows the official template:
 
-| t (s) | Shot (real screen capture) | Caption |
+| t (s) | Scene | On-screen text |
 |---|---|---|
-| 0–2 | Title card | "Team FieldShift · NASA Space Apps Challenge 2026" |
-| 2–5 | Insights → climate trends, Fallon, Nevada | "Challenge: Field Shift. In Fallon, Nevada, days above 35 °C doubled since 1984" |
-| 5–10 | Welcome screen + This week | "FieldShift: 40 years of NASA data, turned into this week's farm decisions" |
-| 10–13.5 | Tap-to-detect field, Sentinel-2 AI zones, terrain zones | "Tap your field: AI finds it. Sentinel-2 zones, SRTM erosion and frost maps" |
-| 13.5–17 | This week + "Why?" | "3 actions a week, each one tap from its NASA POWER, SMAP and MODIS evidence" |
-| 17–20 | Plan → Next years: impact card, year check | "Rotation plan per field: disease, nitrogen, soil, water, and its impact" |
-| 20–25 | Share as text, iPhone, Android | "Web, iOS, Android, offline, SMS, 6 languages: for any farm on Earth" |
-| 25–30 | End card | "Next: co-design with farmers · extension services · GPM IMERG · GRACE-FO · on-farm trials" |
+| 0–2 | A lit 3D Earth from orbit (NASA Blue Marble) | "Team FieldShift · NASA Space Apps Challenge 2026" |
+| 2–5 | Continuous dive from orbit to the Fallon alfalfa field; the NASA POWER heat-day bars grow | "The challenge · Field Shift. Hotter summers. Less water. Days above 35 °C: 26 → 50 a year" |
+| 5–10 | Flash on the hit; the field outline draws itself; title resolves; the welcome screen rises on a phone | "FieldShift: 40 years of NASA Earth data. This week's farm decisions." |
+| 10–13.4 | Satellite card with the AI outline tracing its corners; phone with Sentinel-2 AI zones | "Tap your field. AI finds it." (Sentinel-2 · NASA SRTM · AI zones) |
+| 13.4–16.8 | This week and "Why?" on overlapping 3D phones | "Three actions. Every one explained." (NASA POWER · SMAP · MODIS · ECOSTRESS) |
+| 16.8–20 | Rotation plan phone; impact counters | "A rotation plan built on soil biology." 19,618 m³ · 652 t · −105 kg N/ha |
+| 20–25 | 3D carousel of nine real screens; the six languages cycle | "Every farm on Earth. Web · iOS · Android · Offline · Fits in 2 SMS · 6 languages" |
+| 25–30 | Climax: the Earth turns and pins light up over Nevada, Iowa, Andalusia and Kenya; end card | "FieldShift: Adapting every field with NASA data. Next: co-design with farmers · GPM IMERG · GRACE-FO · on-farm trials" |
 
 ## Slide deck outline (alternative format, 7 slides max)
 1. **Title.** FieldShift: 40 years of NASA data, turned into this week's farm decisions (team, challenge name).

@@ -42,7 +42,7 @@ def main() -> None:
     vid = MEDIA / "fieldshift-demo-30s.mp4"
     if vid.exists():
         shutil.copy(vid, OUT / "assets" / vid.name)
-    poster = next((MEDIA / v for v in ("web-home-desktop.png", "web-home.png") if (MEDIA / v).exists()), None)
+    poster = next((MEDIA / v for v in ("film-poster.jpg", "web-home-desktop.png", "web-home.png") if (MEDIA / v).exists()), None)
     if poster:
         shutil.copy(poster, OUT / "assets" / "poster.png")
     impact_items = []
