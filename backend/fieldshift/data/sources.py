@@ -393,7 +393,7 @@ def power_hourly(lat: float, lon: float, start: dt.date, end: dt.date) -> dict[s
 SMAP_DIR = Path(__file__).resolve().parent / "smap_points"
 
 
-def smap_points(lat: float, lon: float, max_km: float = 5.0) -> dict[str, Any] | None:
+def smap_points(lat: float, lon: float, max_km: float = 10.0) -> dict[str, Any] | None:
     """Pre-extracted SMAP (L3E + L4) daily series for the nearest demo site within max_km (AppEEARS batch job).
     Live SMAP extraction for arbitrary points needs Earthdata Login + an async AppEEARS task (ROADMAP)."""
     best = None
