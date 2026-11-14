@@ -14,7 +14,7 @@ dependencies = [
   "pyyaml>=6.0",
   "pillow>=10.0",
   "rasterio>=1.4",
-  "scikit-learn>=1.5",
+  "scikit-learn>=1.9,<1.10",  # pinned: the trained drought model (joblib) is version-specific
   "scikit-image>=0.24",
   "joblib>=1.4",
 ]

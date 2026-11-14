@@ -97,7 +97,9 @@ def main() -> None:
         sources.soil(p["lat"], p["lon"])
         from fieldshift.engine import maps, planner
 
-        t = maps.terrain_api({"lat": p["lat"], "lon": p["lon"], "crop": p["crop"]})
+        t = maps.terrain_api(
+            {"lat": p["lat"], "lon": p["lon"], "crop": p["crop"], "polygon": p.get("polygon")}
+        )
         print("   terrain", [(z["label"], z["share_pct"]) for z in t["zones"]], flush=True)
         pl = planner.planner_api(
             {
@@ -109,6 +111,22 @@ def main() -> None:
             }
         )
         print("   planner", pl["window"], len(pl["operations"]), "ops", flush=True)
+        from fieldshift.engine import satellite_service
+
+        sreq = {"lat": p["lat"], "lon": p["lon"], "polygon": p.get("polygon"), "crop": p["crop"]}
+        for _ in range(240):
+            sr = satellite_service.satellite_api(sreq)
+            if sr["status"] != "processing":
+                break
+            time.sleep(5)
+        print(
+            "   satellite",
+            sr["status"],
+            sr.get("phenology"),
+            (sr.get("zones") or {}).get("legend"),
+            sr.get("message"),
+            flush=True,
+        )
         print(f"   done in {time.time() - t0:.0f}s", flush=True)
 
     # copy cache -> demo_cache (only gz payloads + index); keep demo_cache small: skip files > 8 MB
@@ -121,8 +139,9 @@ def main() -> None:
             shutil.copy2(src, http.DEMO_DIR / src.name)
             kept[key] = meta
     (http.DEMO_DIR / "index.json").write_text(json.dumps(kept, default=str))
-    if (http.CACHE_DIR / "dem").exists():  # elevation tiles for the terrain maps (offline)
-        shutil.copytree(http.CACHE_DIR / "dem", http.DEMO_DIR / "dem", dirs_exist_ok=True)
+    for sub in ("dem", "satellite"):  # elevation tiles (terrain maps) and satellite analyses (offline)
+        if (http.CACHE_DIR / sub).exists():
+            shutil.copytree(http.CACHE_DIR / sub, http.DEMO_DIR / sub, dirs_exist_ok=True)
     total = sum(f.stat().st_size for f in http.DEMO_DIR.glob("*.gz"))
     print(f"demo_cache: {len(kept)} files, {total / 1e6:.1f} MB", flush=True)
 
