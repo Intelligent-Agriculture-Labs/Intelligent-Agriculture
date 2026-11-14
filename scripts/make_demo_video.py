@@ -42,7 +42,7 @@ SHOTS: list[tuple[list[str], str, float]] = [
     (["ios-why.png", "android-why.png"], "Every number is one tap from its NASA evidence", 3.0),
     (["ios-satellite.png", "web-satellite-desktop.png"], "Sentinel-2 + AI: management zones and cuttings seen from space", 4.0),
     (["ios-plan.png", "ios-rotations.png", "android-map.png"], "Plan the season, compare rotations, map erosion & frost", 4.5),
-    ([], "FieldShift|Web · iOS · Android · syncs phone ↔ PC · 6 languages · offline", 4.0),
+    ([], "FieldShift|Web · iOS · Android · syncs phone ↔ PC · 6 languages · offline", 3.5),
 ]
 
 
