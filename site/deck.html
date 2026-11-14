@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>FieldShift deck</title>
+<style>
+@page{size:1280px 720px;margin:0}
+*{box-sizing:border-box}body{margin:0;font:22px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#17231a;background:#fff}
+.s{width:1280px;height:720px;padding:56px 72px;position:relative;overflow:hidden;page-break-after:always;background:#f6f7f2}
+.s.dark{background:#17231a;color:#eef3ec}
+.k{font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#5c6d60;font-weight:700}
+.dark .k{color:#9fc5a6}
+h1{font-size:76px;line-height:1;margin:18px 0 22px;letter-spacing:-.02em}
+h2{font-size:44px;line-height:1.1;margin:10px 0 22px;letter-spacing:-.01em}
+p{margin:0 0 14px}.m{color:#55635a}.dark .m{color:#b9c9bc}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{flex:1}
+.ph{height:500px;width:250px;object-fit:cover;object-position:top;border-radius:22px;border:1px solid #dfe5da;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+ul{margin:0;padding-left:24px}li{margin:0 0 10px}
+.big{font-size:54px;font-weight:800;color:#2f6b3a;line-height:1}
+.grid2 .tile{margin:0}.tile{background:#fff;border:1px solid #e1e7dc;border-radius:16px;padding:18px 20px;margin-bottom:14px}
+.tile b{display:block;font-size:34px;color:#2f6b3a}.tile span{font-size:18px;color:#55635a}
+.flow{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:center;margin-top:16px}
+.box{background:#fff;border:1px solid #dfe5da;border-radius:14px;padding:12px 16px;margin:8px 0;font-size:19px}
+.box small{display:block;color:#5c6d60;font-size:15px}
+.arrow{text-align:center;font-size:32px;color:#2f6b3a}
+.foot{position:absolute;bottom:26px;left:72px;right:72px;font-size:14px;color:#7b897e;display:flex;justify-content:space-between}
+.dark .foot{color:#8fa293}
+</style></head><body>
+
+<section class="s dark">
+ <div class="k">NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data</div>
+ <div class="row" style="margin-top:40px">
+  <div class="col" style="flex:1.4">
+   <h1>FieldShift</h1>
+   <p style="font-size:30px">40 years of NASA Earth observations, turned into this week's farm decisions and a science-based rotation plan for every field.</p>
+   <p class="m" style="margin-top:30px">Web · iOS · Android · offline · 6 languages</p>
+  </div>
+  <div class="col"><img class="ph" src="{{welcome}}"></div>
+ </div>
+ <div class="foot"><span>Team FieldShift</span><span>Apache-2.0 · {{REPO}}</span></div>
+</section>
+
+<section class="s">
+ <div class="k">The problem</div>
+ <h2>Farms are changing faster than farmers' records</h2>
+ <div class="row">
+  <div class="col">
+   <div class="tile"><b>26 → 50</b><span>days ≥ 35 °C a year in Fallon, Nevada, 1984 → 2025 (NASA POWER)</span></div>
+   <div class="tile"><b>95 → 55 mm</b><span>warm-season rain at the same farm</span></div>
+   <div class="tile"><b>1 decision</b><span>a wrong rotation choice costs years of yield, soil and water</span></div>
+  </div>
+  <div class="col">
+   <ul>
+    <li>Satellite and climate data exist, but as raw rasters, not decisions.</li>
+    <li>Rotation advice is generic and ignores the field's own weather, slope and disease history.</li>
+    <li>Many farmers use cheap phones, patchy networks and other languages than English.</li>
+   </ul>
+  </div>
+ </div>
+ <div class="foot"><span>FieldShift</span><span>2</span></div>
+</section>
+
+<section class="s">
+ <div class="k">The solution</div>
+ <h2>One simple app, deep science underneath</h2>
+ <div class="row">
+  <div class="col"><img class="ph" src="{{home}}"></div>
+  <div class="col" style="flex:1.5">
+   <p><b>This week</b> — at most three actions: irrigate how much and when, drought, disease, pests, frost and heat. Each has a plain-language <b>Why?</b> with the NASA evidence.</p>
+   <p><b>My fields</b> — tap a field on sub-metre imagery and AI draws its boundary; you can edit it. Sentinel-2 history, AI management zones, erosion, wetness and frost maps.</p>
+   <p><b>Plan</b> — multi-year rotation plan per field, checked against cited agronomy, with an optimised alternative and its impact.</p>
+   <p><b>Everywhere</b> — accounts that sync phone and PC, offline mode, SMS-length summaries, 6 languages.</p>
+  </div>
+ </div>
+ <div class="foot"><span>FieldShift</span><span>3</span></div>
+</section>
+
+<section class="s">
+ <div class="k">How it works</div>
+ <h2>NASA data → models → decisions</h2>
+ <div class="flow">
+  <div>
+   <div class="box">NASA POWER 1984 → today<small>weather, radiation</small></div>
+   <div class="box">SMAP L3E / L4<small>soil moisture</small></div>
+   <div class="box">MODIS · ECOSTRESS<small>NDVI, ET, LST</small></div>
+   <div class="box">SRTM · GIBS<small>terrain, imagery</small></div>
+   <div class="box">Partners: Sentinel-2, ERA5<small>10 m fields, validation</small></div>
+  </div>
+  <div class="arrow">→</div>
+  <div>
+   <div class="box">FAO-56 water balance<small>+ satellite crop coefficient</small></div>
+   <div class="box">SPI / SPEI + AI drought classifier<small>trained on U.S. Drought Monitor</small></div>
+   <div class="box">Disease, pest & phenology models</div>
+   <div class="box">RUSLE erosion, wetness, frost hollows</div>
+   <div class="box">Rotation engine<small>52 crops · 30 pathogens · 22 cited rules</small></div>
+  </div>
+  <div class="arrow">→</div>
+  <div>
+   <div class="box">This week's 3 cards</div>
+   <div class="box">"Why?" evidence view</div>
+   <div class="box">Field maps & AI zones</div>
+   <div class="box">Multi-year rotation plan</div>
+   <div class="box">Impact: water, N, CO₂e, soil, income</div>
+  </div>
+ </div>
+ <div class="foot"><span>FieldShift</span><span>4</span></div>
+</section>
+
+<section class="s">
+ <div class="k">Field Shift: plan the next years</div>
+ <h2>Every field gets a rotation that fits its biology and climate</h2>
+ <div class="row">
+  <div class="col"><img class="ph" src="{{plan}}"></div>
+  <div class="col" style="flex:1.5">
+   <p>The farmer enters past and planned crops. FieldShift checks each year: disease and pest carry-over, nitrogen from legumes, bare soil and erosion, water need — and says what to change.</p>
+   <p>A beam-search optimiser proposes a better plan within the region's cropping system, and simulates both on the field's own NASA weather.</p>
+   {{IMPACT}}
+  </div>
+ </div>
+ <div class="foot"><span>FieldShift</span><span>5</span></div>
+</section>
+
+<section class="s">
+ <div class="k">Does it work?</div>
+ <h2>Validated, weak spots included</h2>
+ <div class="row">
+  <div class="col" style="flex:1.3;display:grid;grid-template-columns:1fr 1fr;gap:14px" class="grid2">{{VALIDATION}}</div>
+  <div class="col">
+   <p class="m">Reported openly in VALIDATION.md and LIMITATIONS.md:</p>
+   <ul>
+    <li>Soil-water dynamics weaker in Kenya than in Iowa.</li>
+    <li>Drought status agrees less in irrigated Nevada.</li>
+    <li>Field detection struggles on terraced plots — the outline is always editable.</li>
+    <li>Impact numbers are model estimates, not yet measured on farms.</li>
+   </ul>
+  </div>
+ </div>
+ <div class="foot"><span>FieldShift</span><span>6</span></div>
+</section>
+
+<section class="s dark">
+ <div class="k">Impact and next steps</div>
+ <h2>From Nevada alfalfa to Kenyan maize — with any phone</h2>
+ <div class="row">
+  <div class="col">
+   <ul>
+    <li>Global by design: every input exists for every field on Earth.</li>
+    <li>Works offline, in Swahili, Hindi, Spanish, French, German and English; advice fits in one or two SMS.</li>
+    <li>Open source; one command to run.</li>
+   </ul>
+  </div>
+  <div class="col">
+   <p><b>Next</b></p>
+   <ul>
+    <li>Co-design with extension services and farmer groups.</li>
+    <li>GPM IMERG rainfall and GRACE-FO groundwater.</li>
+    <li>On-farm trials to measure the impact.</li>
+   </ul>
+  </div>
+ </div>
+ <p style="margin-top:40px;font-size:28px">Run it: <code>docker compose up</code> · {{REPO}}</p>
+ <div class="foot"><span>FieldShift supports, and does not replace, farmer judgement and local advice.</span><span>7</span></div>
+</section>
+</body></html>

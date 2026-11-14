@@ -68,7 +68,38 @@ def main() -> None:
     html = html.replace("{{SHOTS}}", "\n".join(figs)).replace("{{IMPACT}}", "\n".join(impact_items)).replace("{{VALIDATION}}", "\n".join(val))
     html = html.replace("{{REPO_URL}}", repo)
     (OUT / "index.html").write_text(html)
+    build_deck(repo, impact_items, val)
     print("built", OUT / "index.html", f"{len(figs)} screenshots")
+
+
+DECK_SHOTS = {
+    "welcome": ["web-welcome-mobile.png", "web-onboarding-mobile.png"],
+    "home": ["web-home-mobile.png", "web-home.png", "web-replay-home-mobile.png"],
+    "plan": ["web-plan-years-mobile.png", "web-plan-mobile.png"],
+}
+
+
+def build_deck(repo: str, impact_items: list[str], val: list[str]) -> None:
+    """site/deck.html -> site/dist/deck.html and media/fieldshift-deck.pdf (7 slides, 16:9) via headless Chrome."""
+    import subprocess
+
+    html = (SITE / "deck.html").read_text()
+    for key, variants in DECK_SHOTS.items():
+        f = next((MEDIA / v for v in variants if (MEDIA / v).exists()), None)
+        if f:
+            shutil.copy(f, OUT / "assets" / f.name)
+            html = html.replace("{{" + key + "}}", f"assets/{f.name}")
+    tiles = [t.replace('class="stat"', 'class="tile"') for t in impact_items[:2]]
+    html = html.replace("{{IMPACT}}", "\n".join(tiles)).replace("{{VALIDATION}}", "\n".join(t.replace('class="stat"', 'class="tile"') for t in val))
+    html = html.replace("{{REPO}}", repo.replace("https://", ""))
+    (OUT / "deck.html").write_text(html)
+    chrome = next((c for c in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", shutil.which("chromium") or "", shutil.which("google-chrome") or "") if c and Path(c).exists()), None)
+    if not chrome:
+        print("no Chrome found; deck.html built, PDF skipped")
+        return
+    pdf = MEDIA / "fieldshift-deck.pdf"
+    subprocess.run([chrome, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", (OUT / "deck.html").as_uri()], check=True, capture_output=True)
+    print("deck", pdf)
 
 
 if __name__ == "__main__":
