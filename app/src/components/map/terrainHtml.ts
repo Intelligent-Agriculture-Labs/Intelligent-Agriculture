@@ -1,3 +1,5 @@
+import { ESRI_ATTRIBUTION, ESRI_IMAGERY_URL, NAIP_ATTRIBUTION, NAIP_URL, S2_CLOUDLESS_ATTRIBUTION, S2_CLOUDLESS_URL } from "./leafletHtml";
+
 /**
  * Leaflet page for the Map tab (web: iframe srcDoc, native: WebView).
  * Base layers: OpenStreetMap, NASA GIBS MODIS true colour, NASA GIBS MODIS 8-day NDVI.
@@ -18,9 +20,12 @@ export function terrainHtml(initial: { lat: number; lon: number }): string {
     if(window.ReactNativeWebView){window.ReactNativeWebView.postMessage(s);}
     else if(window.parent&&window.parent!==window){window.parent.postMessage({__fieldshift:true,payload:o},"*");}}
   function isoDaysAgo(n){var d=new Date(Date.now()-n*864e5);return d.toISOString().slice(0,10);}
-  var map=L.map("m",{zoomControl:true,attributionControl:true}).setView([${initial.lat},${initial.lon}],13);
+  var map=L.map("m",{zoomControl:true,attributionControl:true,maxZoom:20}).setView([${initial.lat},${initial.lon}],13);
   var bases={
     street:L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}),
+    esri:L.tileLayer("${ESRI_IMAGERY_URL}",{maxNativeZoom:19,maxZoom:20,attribution:"${ESRI_ATTRIBUTION}"}),
+    naip:L.tileLayer("${NAIP_URL}",{maxNativeZoom:16,maxZoom:20,attribution:"${NAIP_ATTRIBUTION}"}),
+    s2:L.tileLayer("${S2_CLOUDLESS_URL}",{maxNativeZoom:15,maxZoom:20,attribution:'${S2_CLOUDLESS_ATTRIBUTION}'}),
     truecolor:L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/"+isoDaysAgo(2)+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg",{maxNativeZoom:9,maxZoom:17,attribution:"NASA GIBS / MODIS Terra"}),
     ndvi:L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/"+isoDaysAgo(20)+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",{maxNativeZoom:9,maxZoom:17,opacity:0.85,attribution:"NASA GIBS / MODIS NDVI 8-day"})
   };
@@ -30,11 +35,13 @@ export function terrainHtml(initial: { lat: number; lon: number }): string {
     if(id==="ndvi"){ndviUnder=bases.street.addTo(map);}
     base=(bases[id]||bases.street).addTo(map); base.bringToBack(); if(ndviUnder)ndviUnder.bringToBack();
   }
-  function setOverlay(url,bounds,op){
+  var attrib=null;
+  function setOverlay(url,bounds,op,at){
+    attrib=at||null;
     if(overlay){map.removeLayer(overlay);overlay=null;}
     if(!url)return;
     if(op!==undefined&&op!==null)opacity=op;
-    overlay=L.imageOverlay(url,bounds,{opacity:opacity,interactive:false,attribution:"Terrain: NASA SRTM / USGS 3DEP via AWS Terrain Tiles"}).addTo(map);
+    overlay=L.imageOverlay(url,bounds,{opacity:opacity,interactive:false,attribution:attrib||"Terrain: NASA SRTM / USGS 3DEP via AWS Terrain Tiles"}).addTo(map);
     overlay.on("error",function(){send({type:"overlayError"});});
     if(field)field.bringToFront();
     if(!fitted){map.fitBounds(bounds,{padding:[4,4]});map.setZoom(Math.max(map.getZoom(),13));fitted=true;}
@@ -47,7 +54,8 @@ export function terrainHtml(initial: { lat: number; lon: number }): string {
   }
   function handle(m){ if(!m||!m.type)return;
     if(m.type==="base")setBase(m.id);
-    if(m.type==="overlay")setOverlay(m.url,m.bounds,m.opacity);
+    if(m.type==="overlay")setOverlay(m.url,m.bounds,m.opacity,m.attribution);
+    if(m.type==="fit"&&field){map.fitBounds(field.getBounds(),{padding:[20,20],maxZoom:17});}
     if(m.type==="opacity"){opacity=m.value; if(overlay)overlay.setOpacity(m.value);}
     if(m.type==="field")setField(m.lat,m.lon,m.polygon);
   }
@@ -59,13 +67,15 @@ export function terrainHtml(initial: { lat: number; lon: number }): string {
 </script></body></html>`;
 }
 
-export type BaseLayer = "street" | "truecolor" | "ndvi";
+export type BaseLayer = "esri" | "naip" | "s2" | "street" | "truecolor" | "ndvi";
 export interface TerrainMapProps {
   lat: number;
   lon: number;
   polygon?: [number, number][];
   base: BaseLayer;
-  overlay: { url: string; bounds: [[number, number], [number, number]] } | null;
+  overlay: { url: string; bounds: [[number, number], [number, number]]; attribution?: string } | null;
+  /** increment to zoom to the field outline */
+  fitNonce?: number;
   opacity: number;
   onOverlayError?: () => void;
   height?: number;

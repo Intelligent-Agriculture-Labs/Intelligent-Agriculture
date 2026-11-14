@@ -16,7 +16,7 @@ const WebView = RNWebView as unknown as React.ComponentType<{
 }>;
 
 /** Native terrain map (iOS/Android): Leaflet inside a WebView. Web uses TerrainMap.web.tsx. */
-export default function TerrainMap({ lat, lon, polygon, base, overlay, opacity, onOverlayError, height = 380, accessibilityLabel }: TerrainMapProps) {
+export default function TerrainMap({ lat, lon, polygon, base, overlay, opacity, onOverlayError, fitNonce, height = 380, accessibilityLabel }: TerrainMapProps) {
   const ref = useRef<WebViewHandle>(null);
   const [ready, setReady] = useState(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,12 +29,15 @@ export default function TerrainMap({ lat, lon, polygon, base, overlay, opacity, 
     if (ready) post({ type: "base", id: base });
   }, [ready, base]);
   useEffect(() => {
-    if (ready) post({ type: "overlay", url: overlay?.url ?? null, bounds: overlay?.bounds, opacity });
+    if (ready) post({ type: "overlay", url: overlay?.url ?? null, bounds: overlay?.bounds, opacity, attribution: overlay?.attribution });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, overlay?.url]);
   useEffect(() => {
     if (ready) post({ type: "opacity", value: opacity });
   }, [ready, opacity]);
+  useEffect(() => {
+    if (ready && fitNonce) post({ type: "fit" });
+  }, [ready, fitNonce]);
   const onMessage = (e: WebViewMessageEvent) => {
     try {
       const m = JSON.parse(e.nativeEvent.data) as { type: string };

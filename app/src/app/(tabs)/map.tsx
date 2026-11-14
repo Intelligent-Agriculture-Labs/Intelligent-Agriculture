@@ -12,10 +12,20 @@ import { Card, Chip, ChipRow, ErrorView, LabeledSlider, Loading, OriginBanner, S
 import { space, useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/units";
 import { useStore } from "@/state/store";
+import { SatellitePanel } from "@/components/SatellitePanel";
+import { isUS } from "@/components/map/leafletHtml";
 
 type LayerId = TerrainLayer["id"];
 const OVERLAYS: LayerId[] = ["zones", "erosion", "slope", "wetness", "frost", "elevation"];
-const BASES: BaseLayer[] = ["street", "truecolor", "ndvi"];
+const BASES: BaseLayer[] = ["esri", "naip", "s2", "street", "truecolor", "ndvi"];
+const BASE_ICON: Record<BaseLayer, "image" | "flag" | "planet" | "map" | "earth" | "leaf"> = {
+  esri: "image",
+  naip: "flag",
+  s2: "planet",
+  street: "map",
+  truecolor: "earth",
+  ndvi: "leaf",
+};
 
 function Swatch({ color }: { color: string }) {
   const t = useTheme();
@@ -29,12 +39,14 @@ export default function MapScreen() {
   const { field, settings } = useStore();
   const sys = settings.units;
   const [active, setActive] = useState<LayerId>("zones");
-  const [base, setBase] = useState<BaseLayer>("street");
+  const [base, setBase] = useState<BaseLayer>("esri");
+  const [view, setView] = useState<"terrain" | "satellite">("terrain");
   const [opacity, setOpacity] = useState(0.75);
   const [showSources, setShowSources] = useState(false);
   const retries = useRef(0);
-  const q = useQuery<TerrainResponse>(field ? `${field.lat},${field.lon},${field.crop},${JSON.stringify(field.polygon ?? null)}` : null, () =>
-    api.terrain({ lat: field!.lat, lon: field!.lon, crop: field!.crop, polygon: field!.polygon && field!.polygon.length >= 3 ? field!.polygon : null }),
+  const q = useQuery<TerrainResponse>(
+    field && view === "terrain" ? `${field.lat},${field.lon},${field.crop},${JSON.stringify(field.polygon ?? null)}` : null,
+    () => api.terrain({ lat: field!.lat, lon: field!.lon, crop: field!.crop, polygon: field!.polygon && field!.polygon.length >= 3 ? field!.polygon : null }),
   );
   const { data, origin, savedAt, error } = q;
   if (!field) return <Redirect href="/onboarding" />;
@@ -67,149 +79,168 @@ export default function MapScreen() {
       <Txt muted style={{ marginTop: 4 }}>
         {tr("map.subtitle")}
       </Txt>
-      <OriginBanner origin={origin} savedAt={savedAt} />
-      {origin === "cache" ? (
-        <Txt v="small" muted>
-          {tr("map.offlineNote")}
-        </Txt>
-      ) : null}
-
-      <Section title={tr("map.layers")}>
-        <ChipRow>
-          {OVERLAYS.map((id) => (
-            <Chip key={id} label={tr(`map.layer.${id}`)} selected={active === id} onPress={() => setActive(id)} testID={`layer-${id}`} />
-          ))}
-        </ChipRow>
-      </Section>
-
-      {!data && !error ? <Loading label={tr("map.loading")} /> : null}
-      {error && !data ? <ErrorView message={error} onRetry={q.refetch} /> : null}
-
-      {data ? (
-        <>
-          <View style={{ marginTop: space.md }}>
-            <TerrainMap
-              lat={field.lat}
-              lon={field.lon}
-              polygon={field.polygon}
-              base={base}
-              overlay={overlay}
-              opacity={opacity}
-              onOverlayError={onOverlayError}
-              height={width >= 900 ? 520 : 380}
-              accessibilityLabel={tr("map.a11y", { layer: layer ? tr(`map.layer.${layer.id}`) : "" })}
-            />
-          </View>
-          <ChipRow>
-            {BASES.map((b) => (
-              <Chip
-                key={b}
-                icon={b === "street" ? "map" : b === "truecolor" ? "earth" : "leaf"}
-                label={tr(`map.base.${b}`)}
-                selected={base === b}
-                onPress={() => setBase(b)}
-                testID={`base-${b}`}
-              />
-            ))}
-          </ChipRow>
-          <LabeledSlider
-            label={tr("map.opacity")}
-            value={opacity}
-            min={0.2}
-            max={1}
-            step={0.05}
-            onChange={setOpacity}
-            format={(v) => `${Math.round(v * 100)} %`}
-            testID="opacity"
-          />
-
-          {layer ? (
-            <Card testID="layer-legend">
-              <Txt v="h3">{tr(`map.layer.${layer.id}`)}</Txt>
-              <View style={{ marginTop: space.sm, gap: 6 }}>
-                {layer.legend.map((li, i) => (
-                  <View key={i} style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
-                    <Swatch color={li.color} />
-                    <Txt style={{ flex: 1 }}>{li.label}</Txt>
-                    {li.share_pct !== undefined ? (
-                      <Txt v="small" muted>
-                        {tr("map.ofField", { pct: li.share_pct })}
-                      </Txt>
-                    ) : null}
-                  </View>
-                ))}
-              </View>
-              {layer.stats.mean !== undefined ? (
-                <View style={{ flexDirection: "row", gap: space.lg, marginTop: space.md, flexWrap: "wrap" }} testID="layer-stats">
-                  <Txt v="small">
-                    {tr("map.fieldMean")}:{" "}
-                    <Txt v="small" style={{ fontWeight: "700" }}>
-                      {fmtStat(layer.stats.mean)}
-                    </Txt>
-                  </Txt>
-                  <Txt v="small">
-                    {tr("map.fieldP90")}:{" "}
-                    <Txt v="small" style={{ fontWeight: "700" }}>
-                      {fmtStat(layer.stats.p90)}
-                    </Txt>
-                  </Txt>
-                </View>
-              ) : null}
-              <Txt v="small" muted style={{ marginTop: space.md }}>
-                {layer.why}
+      <View accessibilityRole="tablist" style={{ flexDirection: "row", backgroundColor: t.cardAlt, borderRadius: 12, padding: 4, gap: 4, marginTop: space.md }}>
+        {(["terrain", "satellite"] as const).map((v) => {
+          const sel = view === v;
+          return (
+            <Pressable
+              key={v}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: sel }}
+              accessibilityLabel={tr(`map.view.${v}`)}
+              onPress={() => setView(v)}
+              testID={`map-view-${v}`}
+              style={{ flex: 1, minHeight: 44, borderRadius: 9, alignItems: "center", justifyContent: "center", backgroundColor: sel ? t.card : "transparent" }}
+            >
+              <Txt v="label" color={sel ? t.primary : t.textMuted}>
+                {tr(`map.view.${v}`)}
               </Txt>
-            </Card>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {view === "satellite" ? <SatellitePanel field={field} expert={settings.expert} mapHeight={width >= 900 ? 520 : 380} /> : null}
+      {view === "terrain" ? (
+        <>
+          <OriginBanner origin={origin} savedAt={savedAt} />
+          {origin === "cache" ? (
+            <Txt v="small" muted>
+              {tr("map.offlineNote")}
+            </Txt>
           ) : null}
 
-          <Section title={tr("map.adviceTitle")}>
-            <Txt v="small" muted>
-              {tr("map.fieldInfo", {
-                area: fmt(data.field.area_ha, "ha", sys, 1),
-                texture: data.field.texture,
-                rain: fmt(data.field.annual_precip_mm, "mm", sys, 0),
-                how: data.field.polygon ? tr("map.byOutline") : tr("map.byRadius"),
-              })}
-            </Txt>
-            {data.zone_advice.map((z) => (
-              <Card key={z.id} testID={`zone-${z.id}`}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
-                  <Swatch color={z.color} />
-                  <Txt v="h3" style={{ flex: 1 }}>
-                    {z.label}
-                  </Txt>
-                  <Txt v="label" color={t.primary}>
-                    {tr("map.ofField", { pct: z.share_pct })}
-                  </Txt>
-                </View>
-                <Txt style={{ marginTop: space.sm }}>{z.advice}</Txt>
-              </Card>
-            ))}
+          <Section title={tr("map.layers")}>
+            <ChipRow>
+              {OVERLAYS.map((id) => (
+                <Chip key={id} label={tr(`map.layer.${id}`)} selected={active === id} onPress={() => setActive(id)} testID={`layer-${id}`} />
+              ))}
+            </ChipRow>
           </Section>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ expanded: showSources }}
-            accessibilityLabel={tr("map.sources")}
-            onPress={() => setShowSources((v) => !v)}
-            style={{ minHeight: 44, flexDirection: "row", alignItems: "center", gap: space.sm, marginTop: space.lg }}
-            testID="map-sources-toggle"
-          >
-            <Ionicons name={showSources ? "chevron-down" : "chevron-forward"} size={18} color={t.link} />
-            <Txt color={t.link}>{tr("map.sources")}</Txt>
-          </Pressable>
-          {showSources ? (
-            <Card alt>
-              {data.sources.map((s) => (
-                <Txt key={s.id} v="small" style={{ marginBottom: 4 }}>
-                  • {s.name} — {s.provider} · {s.resolution}
+          {!data && !error ? <Loading label={tr("map.loading")} /> : null}
+          {error && !data ? <ErrorView message={error} onRetry={q.refetch} /> : null}
+
+          {data ? (
+            <>
+              <View style={{ marginTop: space.md }}>
+                <TerrainMap
+                  lat={field.lat}
+                  lon={field.lon}
+                  polygon={field.polygon}
+                  base={base}
+                  overlay={overlay}
+                  opacity={opacity}
+                  onOverlayError={onOverlayError}
+                  height={width >= 900 ? 520 : 380}
+                  accessibilityLabel={tr("map.a11y", { layer: layer ? tr(`map.layer.${layer.id}`) : "" })}
+                />
+              </View>
+              <ChipRow>
+                {BASES.filter((b) => b !== "naip" || isUS(field.lat, field.lon)).map((b) => (
+                  <Chip key={b} icon={BASE_ICON[b]} label={tr(`map.base.${b}`)} selected={base === b} onPress={() => setBase(b)} testID={`base-${b}`} />
+                ))}
+              </ChipRow>
+              <LabeledSlider
+                label={tr("map.opacity")}
+                value={opacity}
+                min={0.2}
+                max={1}
+                step={0.05}
+                onChange={setOpacity}
+                format={(v) => `${Math.round(v * 100)} %`}
+                testID="opacity"
+              />
+
+              {layer ? (
+                <Card testID="layer-legend">
+                  <Txt v="h3">{tr(`map.layer.${layer.id}`)}</Txt>
+                  <View style={{ marginTop: space.sm, gap: 6 }}>
+                    {layer.legend.map((li, i) => (
+                      <View key={i} style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
+                        <Swatch color={li.color} />
+                        <Txt style={{ flex: 1 }}>{li.label}</Txt>
+                        {li.share_pct !== undefined ? (
+                          <Txt v="small" muted>
+                            {tr("map.ofField", { pct: li.share_pct })}
+                          </Txt>
+                        ) : null}
+                      </View>
+                    ))}
+                  </View>
+                  {layer.stats.mean !== undefined ? (
+                    <View style={{ flexDirection: "row", gap: space.lg, marginTop: space.md, flexWrap: "wrap" }} testID="layer-stats">
+                      <Txt v="small">
+                        {tr("map.fieldMean")}:{" "}
+                        <Txt v="small" style={{ fontWeight: "700" }}>
+                          {fmtStat(layer.stats.mean)}
+                        </Txt>
+                      </Txt>
+                      <Txt v="small">
+                        {tr("map.fieldP90")}:{" "}
+                        <Txt v="small" style={{ fontWeight: "700" }}>
+                          {fmtStat(layer.stats.p90)}
+                        </Txt>
+                      </Txt>
+                    </View>
+                  ) : null}
+                  <Txt v="small" muted style={{ marginTop: space.md }}>
+                    {layer.why}
+                  </Txt>
+                </Card>
+              ) : null}
+
+              <Section title={tr("map.adviceTitle")}>
+                <Txt v="small" muted>
+                  {tr("map.fieldInfo", {
+                    area: fmt(data.field.area_ha, "ha", sys, 1),
+                    texture: data.field.texture,
+                    rain: fmt(data.field.annual_precip_mm, "mm", sys, 0),
+                    how: data.field.polygon ? tr("map.byOutline") : tr("map.byRadius"),
+                  })}
                 </Txt>
-              ))}
-              {data.caveats.map((c, i) => (
-                <Txt key={i} v="small" muted style={{ marginTop: 4 }}>
-                  ⚠ {c}
-                </Txt>
-              ))}
-            </Card>
+                {data.zone_advice.map((z) => (
+                  <Card key={z.id} testID={`zone-${z.id}`}>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
+                      <Swatch color={z.color} />
+                      <Txt v="h3" style={{ flex: 1 }}>
+                        {z.label}
+                      </Txt>
+                      <Txt v="label" color={t.primary}>
+                        {tr("map.ofField", { pct: z.share_pct })}
+                      </Txt>
+                    </View>
+                    <Txt style={{ marginTop: space.sm }}>{z.advice}</Txt>
+                  </Card>
+                ))}
+              </Section>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ expanded: showSources }}
+                accessibilityLabel={tr("map.sources")}
+                onPress={() => setShowSources((v) => !v)}
+                style={{ minHeight: 44, flexDirection: "row", alignItems: "center", gap: space.sm, marginTop: space.lg }}
+                testID="map-sources-toggle"
+              >
+                <Ionicons name={showSources ? "chevron-down" : "chevron-forward"} size={18} color={t.link} />
+                <Txt color={t.link}>{tr("map.sources")}</Txt>
+              </Pressable>
+              {showSources ? (
+                <Card alt>
+                  {data.sources.map((s) => (
+                    <Txt key={s.id} v="small" style={{ marginBottom: 4 }}>
+                      • {s.name} — {s.provider} · {s.resolution}
+                    </Txt>
+                  ))}
+                  {data.caveats.map((c, i) => (
+                    <Txt key={i} v="small" muted style={{ marginTop: 4 }}>
+                      ⚠ {c}
+                    </Txt>
+                  ))}
+                </Card>
+              ) : null}
+            </>
           ) : null}
         </>
       ) : null}
