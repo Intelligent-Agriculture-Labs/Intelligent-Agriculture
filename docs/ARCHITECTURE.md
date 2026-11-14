@@ -18,6 +18,12 @@ flowchart LR
   H --> G[(SoilGrids)]
   H --> M[(Open-Meteo forecast / ERA5)]
   H --> DC[(demo_cache/<br/>committed, offline)]
+  E --> ML[ML & CV<br/>drought classifier · k-means zones · field detection]
+  E --> SATJ[Async satellite jobs<br/>Sentinel-2 COG reads]
+  SATJ --> S2[(Earth Search STAC<br/>Sentinel-2 L2A COGs)]
+  E --> FARM[(Farm sync<br/>SQLite)]
+  E --> IMG[(Sub-metre imagery<br/>Esri / NAIP)]
+  E --> AE[(AppEEARS batch extracts<br/>SMAP, ECOSTRESS, MOD16)]
   Client -- JSON (gzip) --> R
   W -. map tiles .-> GIBS[(NASA GIBS)]
 ```
@@ -39,6 +45,18 @@ flowchart LR
    - season state → off-season rotation-planning card.
 4. **Ranking and response.** Cards are ranked by risk, then due date. Each carries a Why block. The response also has the time series for the charts, the sources with status and last date, a `mock` flag (always false) and an `offline` flag.
 
+## Field mapping and satellite analytics
+- `POST /api/fields/detect`: fetches sub-metre tiles around the tap, runs field-scale segmentation and returns an editable polygon (~1 s).
+- `POST /api/satellite` (asynchronous):
+  1. STAC search, then parallel windowed COG reads (red/NIR/SCL) onto a mercator grid matching the map.
+  2. Cloud masking.
+  3. NDVI series, phenology and harvest events.
+  4. k-means zones (with terrain sampled onto the same grid) and satellite Kcb.
+  5. PNG overlays.
+  6. Results cached as JSON on disk.
+  The client polls until done. Advice reuses a cached analysis for data fusion (Kcb → water balance).
+- `POST/PUT/GET /api/farms`: account-free sync. Each device keeps a farm id; fields merge per id by `updated_at`.
+
 ## Rotation explorer: `POST /api/rotations`
 The context comes first, then 1991–2020 normals. Next, each unique crop slot is simulated over 15 seasons, with results cached per crop, planting date and irrigation cut-off within the request. Then the feasibility filter, metrics and priority-weighted scores, and finally the current rotation plus the top 4 alternatives with their texts. Runtime is ~1–3 s on a warm cache.
 
@@ -55,12 +73,13 @@ One image (root `Dockerfile`). Stage 1 exports the Expo web bundle; stage 2 is t
 ```
 backend/            FastAPI app (fieldshift/), tests/, demo_cache/, Dockerfile
   fieldshift/data/      http.py (cache/fallbacks), sources.py (adapters)
-  fieldshift/science/   et0, soil, cropmodel, drought, disease, pests, climate, rotation
-  fieldshift/engine/    context, service, messages
+  fieldshift/science/   et0, soil, cropmodel, drought, drought_ml, disease, pests, climate, rotation, terrain, satellite, fielddetect
+  fieldshift/models/    trained drought classifier (joblib + metadata)
+  fieldshift/engine/    context, service, messages, maps (terrain), planner, satellite_service, fields (detect), farms (sync)
   fieldshift/config/    crops.yaml, rotations.yaml, rules.yaml, messages.yaml, presets.yaml
 app/                Expo client (src/app = routes, src/components, src/i18n, src/api), e2e/, Dockerfile
 contracts/api.ts    API contract shared by client and server
-scripts/            build_demo_cache.py, validate.py (run on the data box)
+scripts/            build_demo_cache.py, validate.py, validation_report.py, train_drought_ml.py, appeears_smap.py (SMAP/ECOSTRESS/MOD16), make_demo_video.py
 docs/               all documentation, validation figures, openapi.json
 media/              screenshots, screen recordings, build notes
 ```
