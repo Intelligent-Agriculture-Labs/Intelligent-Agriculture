@@ -48,6 +48,13 @@ KEYS = {
     "Geophysical_Data_sm_rootzone": "l4_rootzone",
     "Geophysical_Data_sm_rootzone_pctl": "l4_rootzone_pctl",
 }
+# `--set et`: ECOSTRESS daily ET (70 m, PT-JPL ensemble) + MODIS MOD16A2GF 8-day ET (500 m) for the demo FIELDS
+ET_LAYERS = [
+    {"product": "ECO_L3T_JET.002", "layer": "ETdaily"},
+    {"product": "MOD16A2GF.061", "layer": "ET_500m"},
+]
+ET_KEYS = {"ETdaily": "eco_et_daily", "ET_500m": "mod16_et_8day"}
+ET_START = "01-01-2015"
 
 
 def creds() -> tuple[str, str]:
@@ -60,6 +67,15 @@ def creds() -> tuple[str, str]:
 
 
 def main() -> None:
+    global LAYERS, KEYS, OUT, SITES
+    et_mode = "--set" in sys.argv and sys.argv[sys.argv.index("--set") + 1] == "et"
+    if et_mode:
+        sys.path.insert(0, str(ROOT / "backend"))
+        from fieldshift.engine import service
+
+        LAYERS, KEYS = ET_LAYERS, ET_KEYS
+        OUT = ROOT / "backend" / "fieldshift" / "data" / "et_points"
+        SITES = {p["id"]: (p["lat"], p["lon"]) for p in service.presets()}
     user, pw = creds()
     c = httpx.Client(timeout=120)
     tok = c.post(f"{API}/login", auth=(user, pw)).json()["token"]
@@ -67,9 +83,9 @@ def main() -> None:
     end = (dt.date.today() - dt.timedelta(days=3)).strftime("%m-%d-%Y")
     task = {
         "task_type": "point",
-        "task_name": f"fieldshift-smap-{dt.date.today().isoformat()}",
+        "task_name": f"fieldshift-{'et' if et_mode else 'smap'}-{dt.date.today().isoformat()}",
         "params": {
-            "dates": [{"startDate": "03-31-2015", "endDate": end}],
+            "dates": [{"startDate": ET_START if et_mode else "03-31-2015", "endDate": end}],
             "layers": LAYERS,
             "coordinates": [
                 {"id": k, "latitude": v[0], "longitude": v[1], "category": "demo"} for k, v in SITES.items()
@@ -111,7 +127,7 @@ def main() -> None:
                             v = float(val)
                         except ValueError:
                             continue
-                        if -9000 < v < 9000 and v >= 0:
+                        if -9000 < v < 9000 and v >= 0 and not (key == "mod16_et_8day" and v > 3000):
                             rows[site][date][key].append(v)
         print("parsed", f["file_name"], flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
