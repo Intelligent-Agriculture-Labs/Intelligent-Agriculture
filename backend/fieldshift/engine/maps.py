@@ -39,9 +39,14 @@ LOSS_CLASSES = [
 ]
 ZONES = {
     "erosion": (
-        "#d7301f",
+        "#b2182b",
         "Erosion hotspot",
-        "Keep soil covered (perennial strips, cover crops, residue); farm along the contour; on steep parts use terraces or contour bunds.",
+        "The worst-eroding part of the field: start here. Grass strips or contour bunds across the slope, terraces (e.g. fanya juu) on steep parts, permanent cover on the steepest spots.",
+    ),
+    "erosion_risk": (
+        "#f4a259",
+        "Erosion risk",
+        "Soil loss above the tolerable ~5 t/ha a year: keep the soil covered (residue, cover crops), plough and plant along the contour.",
     ),
     "wet": (
         "#2c7fb8",
@@ -155,7 +160,13 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
     zone = np.full(dem.shape, "core", dtype=object)
     zone[L["frost_zone"] >= 0.5] = "frost"
     zone[(L["twi_zone"] >= twi_hi) & (L["slope_pct"] < 3)] = "wet"
-    zone[L["soil_loss_zone"] >= 5] = "erosion"
+    # erosion: above the ~5 t/ha/yr tolerance = risk; hotspot = severe (>= 10) or the worst quarter of the at-risk
+    # part of this field, so a uniformly erosive field still shows where to act first
+    loss_z = L["soil_loss_zone"]
+    zone[loss_z >= 5] = "erosion_risk"
+    at_risk = loss_z[mask & (loss_z >= 5)]
+    hot_thr = max(5.0, min(10.0, float(np.percentile(at_risk, 75)))) if at_risk.size else 10.0
+    zone[loss_z >= hot_thr] = "erosion"
 
     # ---- render layers
     hs = L["hillshade"]
@@ -310,7 +321,7 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
                 {"color": z["color"], "label": f"{z['label']} ({z['share_pct']} %)"} for z in zone_shares
             ],
             "stats": {},
-            "why": "Zones combine the maps: erosion hotspots (RUSLE ≥ 5 t/ha/yr), wet spots (top 10 % wetness on < 3 % slope), frost hollows (index ≥ 0.5); the rest is the productive core.",
+            "why": "Zones combine the maps: erosion risk (RUSLE ≥ 5 t/ha/yr, about the tolerable soil loss) and erosion hotspots (≥ 10 t/ha/yr, or the worst quarter of the at-risk part of this field), wet spots (top 10 % wetness on < 3 % slope), frost hollows (index ≥ 0.5); the rest is the productive core.",
         },
         {
             "id": "hillshade",

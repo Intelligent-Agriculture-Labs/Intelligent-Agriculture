@@ -124,7 +124,7 @@ Candidates are the farmer's current rotation plus ten templates (`config/rotatio
 | Wetness | Topographic wetness index TWI = ln(a / tan β) (Beven & Kirkby 1979), with a = specific catchment area |
 | Frost-prone hollows | Topographic position index TPI = z − mean(z within ~300 m) (Weiss 2001). Cold-air-pooling index = clip(−TPI / 8 m) × clip(1 − slope / 8°) |
 | **Erosion (RUSLE)** | A = R · K · LS · C · P (Renard et al. 1997) |
-| Management zones | Erosion hotspot (A ≥ 5 t/ha/yr) > wet (top-10 % TWI on < 3 % slope) > frost hollow (index ≥ 0.5) > productive core, classified on ~90 m-smoothed indices |
+| Management zones | Erosion hotspot (A ≥ 10 t/ha/yr, or the worst quarter of the field's at-risk area, so a uniformly erosive field still shows where to act first) > erosion risk (A ≥ 5 t/ha/yr, ≈ tolerable soil loss) > wet (top-10 % TWI on < 3 % slope) > frost hollow (index ≥ 0.5) > productive core, classified on ~90 m-smoothed indices |
 
 RUSLE inputs:
 - **R** from NASA POWER mean annual precipitation (Renard & Freimund 1994): R = 0.0483 P¹·⁶¹ for P ≤ 850 mm, else 587.8 − 1.219 P + 0.004105 P².

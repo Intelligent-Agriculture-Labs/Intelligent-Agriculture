@@ -326,7 +326,7 @@ export interface TerrainLayer {
   why: string;
 }
 export interface TerrainZone {
-  id: "erosion" | "wet" | "frost" | "core";
+  id: "erosion" | "erosion_risk" | "wet" | "frost" | "core";
   color: string;
   label: string;
   share_pct: number;

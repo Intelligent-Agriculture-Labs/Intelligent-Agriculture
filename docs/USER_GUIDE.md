@@ -51,7 +51,7 @@ The **Map** tab shows your field on a satellite or NDVI background (NASA GIBS), 
 - **Frost-prone hollows**
 - **Management zones:** all of the above combined.
 
-Below the map, **Planning advice for your field** lists each zone, how much of your field it covers, and what to do about it. Example: "Erosion hotspot, 32 %: keep soil covered, farm along the contour". Draw your field outline during setup for exact numbers.
+Below the map, **Planning advice for your field** lists each zone, how much of your field it covers, and what to do about it. Example: "Erosion risk, 64 %: keep the soil covered, plant along the contour" and "Erosion hotspot, 36 %: start here with grass strips or contour bunds". Draw your field outline during setup for exact numbers.
 
 ## 3b-2. Your field from space (Map → Satellite)
 FieldShift reads every clear **Sentinel-2** image of your field from the past year (10 m pixels) and shows:
