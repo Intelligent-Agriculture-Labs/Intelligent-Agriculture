@@ -181,3 +181,14 @@ Deep-rooted crops such as sunflower and safflower also dry out the subsoil, so t
 - Weston L.A. 1996. Utilization of allelopathy for weed management in agroecosystems. *Agron. J.* 88:860–866. https://doi.org/10.2134/agronj1996.00021962003600060004x
 - Weston L.A., Duke S.O. 2003. Weed and crop allelopathy. *Crit. Rev. Plant Sci.* 22:367–389. https://doi.org/10.1080/713610861
 - Whitehead A.G. 1995. Decline of potato cyst nematodes in spring barley microplots. *Plant Pathology* 44:191–195. https://doi.org/10.1111/j.1365-3059.1995.tb02728.x
+
+## How the planner applies this knowledge (implementation choices)
+These choices were made while calibrating the checker on four real farms (Iowa corn–soy, Nevada alfalfa, Kenyan smallholder maize, Andalusian wheat–sunflower). They avoid alarming farmers about textbook rotations while still flagging real problems.
+
+1. **Only rotation-controllable organisms count.** Generalists (Rhizoctonia, Pythium, root-knot nematodes) and the migratory fall armyworm are excluded: changing the crop sequence barely changes them. Wireworms are handled by the cited "after grass/ley" rule rather than their host list.
+2. **Regional ranges.** Striga only in Africa/Asia, western corn rootworm only in North America/Europe, broomrape in the Mediterranean, Africa and Asia, cereal stem borers in Africa/Asia, black-grass in Europe.
+3. **Risk follows the published break.** *High* means a host grew last year or twice within `break_years`; *medium* means one host year within the break. Only high-severity organisms at high pressure make a year red.
+4. **No double counting.** A cited sequence rule (e.g. continuous maize −13 %) replaces the generic return-interval and predecessor-value effects. The combined yield effect is capped at −30 … +15 %.
+5. **Perennial stands.** Alfalfa continuing as the same stand is not "alfalfa after alfalfa". Autotoxicity applies when re-seeding. Stands older than five years get a stand-age warning.
+6. **Realistic alternatives.** The optimiser only proposes crops of the field's cropping system (temperate, irrigated arid, Mediterranean, tropical), plus the farmer's own crops. It keeps the farm's staple crop in the rotation, and only suggests vegetables, roots/tubers or perennial forage if the farm already grows that kind of crop.
+7. **Cover crops by climate.** Rye/vetch, phacelia or mustard in temperate climates; quick legumes (mung bean, cowpea) in the tropics. A cover never shares a family or pathogen with the next cash crop (e.g. no mustard before canola: clubroot and blackleg).
