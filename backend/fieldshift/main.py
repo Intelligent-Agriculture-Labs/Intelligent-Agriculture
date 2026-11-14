@@ -503,9 +503,11 @@ def advice_text_ep(
     _check_crop(inp.crop)
     a = service.advice(inp.model_dump())
     head, rain_l, tail = TEXT_LABELS.get(inp.lang, TEXT_LABELS["en"])
-    lines = [f"FieldShift{(' · ' + name) if name else ''} — {head} ({a['as_of']}):"]
+    lines = [f"FieldShift{(' - ' + name) if name else ''}: {head} ({a['as_of']})"]
     for k, c in enumerate(a["cards"][:3], 1):
-        lines.append(f"{k}) {c['title']}")
+        lines.append(
+            f"{k}) " + c["title"].replace("—", "-").replace("–", "-").replace("·", "-").replace("≈", "~")
+        )
     lines.append(f"{rain_l}: {a['water'].get('forecast_rain_7d_mm', 0):.0f} mm. {tail}")
     text = "\n".join(lines)
     if len(text) > max_chars:  # drop the least urgent cards first, keep the header and footer

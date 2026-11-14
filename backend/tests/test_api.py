@@ -234,7 +234,7 @@ def test_rotation_plan_flags_short_return_and_optimizes():
 
 def test_advice_text_is_short_and_translated():
     r = client.post("/api/advice/text", json={**FIELD, "lang": "sw"}, params={"name": "Shamba 1"}).json()
-    assert r["chars"] <= 320 and r["text"].startswith("FieldShift · Shamba 1 — Wiki hii")
+    assert r["chars"] <= 320 and r["text"].startswith("FieldShift - Shamba 1: Wiki hii")
 
 
 def test_rotation_plan_reports_impact():
