@@ -23,7 +23,7 @@ Every number is one tap from its evidence. The **Why?** view shows:
 
 | This week | Field from space | Plan | Field Shift (rotations) |
 |---|---|---|---|
-| ![home](media/web-home-mobile.png) | ![satellite](media/web-satellite-mobile.png) | ![plan](media/web-plan-mobile.png) | ![rotations](media/web-rotations-mobile.png) |
+| ![home](media/web-home.png) | ![satellite](media/web-satellite-mobile.png) | ![plan](media/web-plan-mobile.png) | ![rotations](media/web-rotations-mobile.png) |
 
 More: [iOS](media/) and [Android](media/) captures, web screenshots of the [map](media/web-map-desktop.png), [field editor](media/web-fields-desktop.png) and [sync](media/web-sync-mobile.png), and [`media/BUILDS.md`](media/BUILDS.md).
 

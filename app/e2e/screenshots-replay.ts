@@ -16,7 +16,10 @@ for (const [label, ctxOpts] of [
   await page.getByTestId("preset-fallon_nv").click();
   await page.getByTestId("start").click();
   await page.getByTestId("mode-replay").click({ timeout: 180_000 });
-  await page.getByText(/Irrigate/).first().waitFor({ timeout: 240_000 });
+  await page
+    .getByText(/Irrigate/)
+    .first()
+    .waitFor({ timeout: 240_000 });
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${out}/web-replay-home-${label}.png`, fullPage: label === "desktop" });
   await page.getByTestId("action-card-0").click();

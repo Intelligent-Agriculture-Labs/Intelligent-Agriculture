@@ -21,7 +21,7 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 - **Phone and computer in sync:** Settings → **Sync across devices** → **Enable sync** shows a farm code (e.g. `K7QF-2M9X`) and a QR code. On the other device, choose **Join a farm** and enter the code or scan the QR. Fields, irrigation logs and settings then stay in sync. No account or e-mail is needed; keep the code private.
 
 ## 2. This week
-<img src="../media/web-home-mobile.png" width="260" align="right" alt="This week screen">
+<img src="../media/web-home.png" width="260" align="right" alt="This week screen">
 
 - Up to **3 action cards**, most urgent first. The colour is the risk: green = low, yellow = moderate, orange = high, red = severe.
 - Each card says *what* to do and *by when*, e.g. "Irrigate 38 mm by Thu 16".

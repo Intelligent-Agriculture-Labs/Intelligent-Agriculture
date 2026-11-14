@@ -40,10 +40,14 @@ export function CaptureTour() {
         polygon: p.polygon && p.polygon.length >= 3 ? p.polygon : undefined,
         replay_date: p.replay_date ?? null,
       };
-      await step("home-today", () => {
-        setField({ ...base, as_of: null });
-        router.replace("/home");
-      }, 12000);
+      await step(
+        "home-today",
+        () => {
+          setField({ ...base, as_of: null });
+          router.replace("/home");
+        },
+        12000,
+      );
       await step("home-replay", () => setField({ ...base, as_of: p.replay_date ?? null }), 14000);
       await step("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "irrigate" } }), 9000);
       await step("rotations", () => router.replace("/rotations"), 30000);
