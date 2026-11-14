@@ -14,6 +14,7 @@ import type { RotationPlanResponse, RotationYear, RotationYearCheck } from "@/ap
 import { cropName, useCrops } from "@/components/domain";
 import { CropPicker, Disclosure, InfoButton, Stat, StatRow, cropIcon } from "@/components/kit";
 import { ImpactCard } from "@/components/ImpactCard";
+import { captureHooks } from "@/lib/captureHooks";
 import { Button, Card, ErrorView, Loading, Section, Txt } from "@/components/ui";
 import { radius, space, useTheme } from "@/lib/theme";
 import { fmt, tHaToTonAc } from "@/lib/units";
@@ -276,7 +277,11 @@ export function RotationPlanner({ field }: { field: Field }) {
           {/* ---------- improvements ---------- */}
           {result.optimized || result.suggestions.length || result.impact ? (
             <Section title={tr("plan.years.improve")}>
-              {result.impact ? <ImpactCard impact={result.impact} /> : null}
+              {result.impact ? (
+                <View ref={(v) => { captureHooks.targets.impact = v; }} collapsable={false}>
+                  <ImpactCard impact={result.impact} />
+                </View>
+              ) : null}
               {result.optimized && result.optimized.score > result.summary.score + 0.5 ? (
                 <Card testID="rplan-optimized">
                   <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>

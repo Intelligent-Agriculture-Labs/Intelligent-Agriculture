@@ -9,14 +9,69 @@ import { router } from "expo-router";
 import { api } from "@/api/client";
 import { useStore } from "@/state/store";
 
-export const CAPTURE_TOUR = process.env.EXPO_PUBLIC_CAPTURE_TOUR === "1";
+import { CAPTURE_MODE as MODE, CAPTURE_TOUR, captureHooks } from "./captureHooks";
+
+export { CAPTURE_TOUR, captureHooks };
 const PRESET = process.env.EXPO_PUBLIC_CAPTURE_PRESET ?? "fallon_nv";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export function CaptureTour() {
-  const { ready, setField } = useStore();
+  const { ready, setField, setSettings } = useStore();
   useEffect(() => {
-    if (!CAPTURE_TOUR || !ready) return;
+    if (!CAPTURE_TOUR || !ready || MODE !== "film") return;
+    let cancelled = false;
+    // Film tour: each screen is given time to load real data, then "[shot] <name>" tells the host
+    // (app/scripts/capture-film-ios.sh) to take the screenshot right away.
+    const shot = async (name: string, go: () => void, waitMs: number) => {
+      if (cancelled) return;
+      go();
+      await sleep(waitMs);
+      console.log(`[shot] ${name}`);
+      await sleep(2500);
+    };
+    const scrollTo = async (target: string, top = 140) => {
+      const el = captureHooks.targets[target];
+      if (!el || !captureHooks.scrollBy) return;
+      await new Promise<void>((res) => el.measureInWindow((_x: number, y: number) => { captureHooks.scrollBy?.(y - top); res(); }));
+      await sleep(1200);
+    };
+    (async () => {
+      const presets = (await api.presets()).data;
+      const field = (id: string, replay: boolean) => {
+        const p = presets.find((x) => x.id === id) ?? presets[0];
+        return {
+          lat: p.lat, lon: p.lon, crop: p.crop, planting_date: p.planting_date, irrigation: p.irrigation, name: p.name,
+          presetId: p.id, current_rotation: p.current_rotation,
+          polygon: p.polygon && p.polygon.length >= 3 ? p.polygon : undefined,
+          replay_date: p.replay_date ?? null, as_of: replay ? (p.replay_date ?? null) : null,
+        };
+      };
+      setSettings({ lang: "en" });
+      await shot("welcome", () => router.replace("/welcome"), 4000);
+      await shot("home", () => { setField(field("fallon_nv", true)); router.replace("/home"); }, 22000);
+      await shot("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "irrigate" } }), 7000);
+      await shot("satellite", () => router.replace({ pathname: "/map", params: { view: "satellite" } }), 20000);
+      await shot("plan-years", () => router.replace({ pathname: "/plan", params: { tab: "years" } }), 32000);
+      await scrollTo("impact");
+      await shot("impact", () => undefined, 1500);
+      await shot("insights", () => router.replace("/insights"), 5000);
+      await shot("climate", () => router.replace("/climate"), 14000);
+      await shot("field-editor", () => router.replace("/field-editor"), 9000);
+      await shot("account", () => router.push("/account"), 5000);
+      for (const lang of ["sw", "hi", "es"] as const) {
+        await shot(`home-${lang}`, () => { setSettings({ lang }); router.replace("/home"); }, 14000);
+      }
+      setSettings({ lang: "en" });
+      await shot("terrain-ke", () => { setField(field("machakos_ke", false)); router.replace({ pathname: "/map", params: { view: "terrain" } }); }, 24000);
+      await shot("home-ke", () => router.replace("/home"), 16000);
+      console.log("[shot] done");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, setField, setSettings]);
+  useEffect(() => {
+    if (!CAPTURE_TOUR || !ready || MODE === "film") return;
     let cancelled = false;
     const step = async (name: string, go: () => void, waitMs: number) => {
       if (cancelled) return;

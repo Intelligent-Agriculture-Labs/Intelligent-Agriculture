@@ -39,15 +39,16 @@ canvas{position:absolute;left:0;top:0}
 .title .ch{display:inline-block;will-change:transform,filter,opacity}
 .chip{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font:600 22px/1 Inter;color:#dfeae2;backdrop-filter:blur(8px)}
 .chip i{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
-.phone{position:absolute;width:372px;height:800px;border-radius:58px;padding:12px;
+.phone{position:absolute;width:372px;height:781px;border-radius:62px;padding:12px;
   background:linear-gradient(145deg,#3a423d 0%,#141917 40%,#0b0e0c 100%);
   box-shadow:0 70px 140px rgba(0,0,0,.6),0 20px 40px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,255,255,.10);
   transform-origin:50% 50%;will-change:transform,opacity}
-.phone .scr{width:100%;height:100%;border-radius:46px;overflow:hidden;background:#f4f5f0 top center/100% auto no-repeat}
-.phone::after{content:"";position:absolute;inset:12px;border-radius:46px;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05) 100%);pointer-events:none}
+.phone .scr{width:100%;height:100%;border-radius:50px;overflow:hidden;background:#f4f5f0 center/cover no-repeat}
+.phone .island{position:absolute;left:50%;top:24px;width:104px;height:31px;margin-left:-52px;border-radius:20px;background:#000}
+.phone::after{content:"";position:absolute;inset:12px;border-radius:50px;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05) 100%);pointer-events:none}
 .card{position:absolute;border-radius:28px;overflow:hidden;box-shadow:0 60px 120px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.1)}
 .stat{position:absolute;padding:26px 30px;border-radius:24px;background:rgba(10,20,14,.72);border:1px solid rgba(134,220,152,.25);backdrop-filter:blur(10px);min-width:430px}
-.stat b{display:block;font:800 64px/1 Manrope;letter-spacing:-.02em;color:#fff}
+.stat b{display:block;font:800 72px/1 Manrope;letter-spacing:-.02em;color:#fff}
 .stat span{display:block;margin-top:10px;font:500 22px/1.35 Inter;color:var(--muted)}
 .lang{position:absolute;left:0;right:0;text-align:center;font:800 64px/1 Manrope;letter-spacing:-.02em}
 .small{font:500 20px/1.4 Inter;color:#8fa596}
@@ -74,16 +75,16 @@ canvas{position:absolute;left:0;top:0}
   <!-- S2 challenge -->
   <div id="s2" class="full" style="opacity:0">
     <div style="position:absolute;left:120px;top:210px;width:900px">
-      <div class="eyebrow" id="s2e">The challenge · Field Shift</div>
+      <div class="eyebrow" id="s2e">The challenge</div>
       <div class="h1" id="s2h" style="margin-top:28px">Hotter summers.<br>Less water.</div>
-      <div class="body" id="s2b" style="margin-top:26px;width:760px">Fallon, Nevada. NASA POWER, 1984 to 2025.</div>
+      <div class="body" id="s2b" style="margin-top:26px;width:760px">Fallon, Nevada</div>
     </div>
     <div id="chart" style="position:absolute;left:120px;top:690px;width:760px;height:240px">
-      <div class="small" style="color:#cbd8ce;font-weight:600">Days above 35 °C per year</div>
+      <div class="small" style="color:#cbd8ce;font-weight:600">Days above 35 °C · NASA POWER</div>
       <div id="bars" style="position:absolute;left:0;top:44px;width:620px;height:170px"></div>
       <svg id="trend" width="620" height="170" style="position:absolute;left:0;top:44px;overflow:visible"><path id="trendp" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 9"/></svg>
       <div id="heatnum" style="position:absolute;left:650px;top:70px;font:800 64px/1 Manrope;color:var(--heat);white-space:nowrap"></div>
-      <div class="small" style="position:absolute;left:652px;top:150px;white-space:nowrap">days a year, then → now</div>
+      <div class="small" style="position:absolute;left:652px;top:150px;white-space:nowrap">days a year</div>
       <div class="small" style="position:absolute;left:0;top:222px">1984</div>
       <div class="small" style="position:absolute;left:578px;top:222px">2025</div>
     </div>
@@ -93,9 +94,9 @@ canvas{position:absolute;left:0;top:0}
   <div id="s3" class="full" style="opacity:0">
     <div id="titlewrap" style="position:absolute;left:0;right:0;top:340px;text-align:center">
       <div class="title" id="title">FieldShift</div>
-      <div class="body" id="tag" style="margin-top:28px;font-size:36px;color:#dbe7de">40 years of NASA Earth data. This week's farm decisions.</div>
+      <div class="body" id="tag" style="margin-top:28px;font-size:36px;color:#dbe7de">NASA data. Better farm decisions.</div>
     </div>
-    <div id="fieldlabel" class="chip" style="position:absolute;left:0;top:0;opacity:0"><i></i>Your field · 5.5 ha · outlined by AI</div>
+    <div id="fieldlabel" class="chip" style="position:absolute;left:0;top:0;opacity:0"><i></i>Found by AI</div>
   </div>
 
   <!-- S4/S5 studio -->
@@ -103,21 +104,18 @@ canvas{position:absolute;left:0;top:0}
 
   <div id="s4" class="full" style="opacity:0">
     <div id="b1" class="abs" style="left:120px;top:250px;width:760px">
-      <div class="eyebrow">01 · Your field from space</div>
-      <div class="h2" style="margin-top:26px">Tap your field.<br>AI finds it.</div>
-      <div class="body" style="margin-top:24px">Sub-metre imagery, 10 m Sentinel-2 history, AI management zones and terrain maps from NASA SRTM.</div>
-      <div class="chips" style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap"><span class="chip"><i></i>Sentinel-2 · 10 m</span><span class="chip"><i></i>NASA SRTM</span><span class="chip"><i></i>AI zones</span></div>
+      <div class="eyebrow">01 · Your field</div>
+      <div class="h2" style="margin-top:26px">Tap your field.<br>AI maps it.</div>
+      <div class="chips" style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap"><span class="chip"><i></i>Sentinel-2</span><span class="chip"><i></i>AI zones</span></div>
     </div>
     <div id="b2" class="abs" style="left:120px;top:250px;width:760px">
       <div class="eyebrow">02 · This week</div>
-      <div class="h2" style="margin-top:26px">Three actions.<br>Every one explained.</div>
-      <div class="body" style="margin-top:24px">When and how much to irrigate, drought, disease, pests, frost. One tap shows the NASA evidence.</div>
-      <div class="chips" style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap"><span class="chip"><i></i>NASA POWER</span><span class="chip"><i></i>SMAP</span><span class="chip"><i></i>MODIS</span><span class="chip"><i></i>ECOSTRESS</span></div>
+      <div class="h2" style="margin-top:26px">3 actions<br>this week.</div>
+      <div class="chips" style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap"><span class="chip"><i></i>NASA POWER</span><span class="chip"><i></i>SMAP</span><span class="chip"><i></i>ECOSTRESS</span></div>
     </div>
     <div id="b3" class="abs" style="left:120px;top:230px;width:760px">
-      <div class="eyebrow">03 · The next years</div>
-      <div class="h2" style="margin-top:26px">A rotation plan<br>built on soil biology.</div>
-      <div class="body" style="margin-top:24px">52 crops, 30 soil-borne diseases and pests, nitrogen, erosion and water, simulated on NASA weather at your field.</div>
+      <div class="eyebrow">03 · Rotations</div>
+      <div class="h2" style="margin-top:26px">Plan the<br>next years.</div>
     </div>
     <div id="satcard" class="card" style="left:930px;top:180px;width:660px;height:720px;opacity:0">
       <div id="satimg" class="full" style="background-repeat:no-repeat"></div>
@@ -129,10 +127,10 @@ canvas{position:absolute;left:0;top:0}
 
   <div id="s5" class="full" style="opacity:0">
     <div style="position:absolute;left:0;right:0;top:92px;text-align:center">
-      <div class="eyebrow">Every farm on Earth</div>
+      <div class="eyebrow" style="font-size:24px">Every farm on Earth</div>
     </div>
     <div id="langs"></div>
-    <div style="position:absolute;left:0;right:0;bottom:84px;text-align:center" class="body" id="s5b">Web · iOS · Android · Offline · Fits in 2 SMS · 6 languages</div>
+    <div style="position:absolute;left:0;right:0;bottom:84px;text-align:center" class="body" id="s5b">iPhone · Android · Web · Offline · SMS</div>
   </div>
 
   <div id="s6" class="full" style="opacity:0">
@@ -142,7 +140,7 @@ canvas{position:absolute;left:0;top:0}
         <div style="font:800 110px/1 Manrope;letter-spacing:-.04em">FieldShift</div>
       </div>
       <div class="body" id="s6t" style="margin-top:30px;font-size:40px;color:#e6efe8;font-weight:600">Adapting every field with NASA data.</div>
-      <div class="body" id="s6n" style="margin-top:22px;font-size:26px">Next: co-design with farmers and extension services · GPM IMERG rain · GRACE-FO groundwater · on-farm trials</div>
+      <div class="body" id="s6n" style="margin-top:22px;font-size:28px">Next: field trials with farmers</div>
     </div>
     <div class="abs small" id="s6f" style="left:130px;top:960px;width:1660px;font-size:17px;color:#6f8676">NASA Space Apps Challenge 2026 · Team FieldShift · Real app screens · Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, Blue Marble (GIBS); Copernicus Sentinel-2 · Imagery: Esri, Maxar, Earthstar Geographics · Animation and score programmed with an SI coding assistant (no generative image, video, voice or music models)</div>
   </div>
@@ -248,7 +246,7 @@ async function init() {
   window.W_tag = wordsify($("tag"));
   $("title").innerHTML = [..."FieldShift"].map(c => `<span class="ch">${c}</span>`).join("");
   window.W_b = ["b1", "b2", "b3"].map(id => ({
-    eb: wordsify($(id).querySelector(".eyebrow")), h: wordsify($(id).querySelector(".h2")), b: wordsify($(id).querySelector(".body")),
+    eb: wordsify($(id).querySelector(".eyebrow")), h: wordsify($(id).querySelector(".h2")), b: $(id).querySelector(".body") ? wordsify($(id).querySelector(".body")) : [],
     chips: [...$(id).querySelectorAll(".chip")]
   }));
   window.W_s6 = { t: wordsify($("s6t")), n: wordsify($("s6n")) };
@@ -268,24 +266,22 @@ async function init() {
 
   // phones
   const ph = $("phones");
-  const mk = (id, src) => { const d = document.createElement("div"); d.className = "phone"; d.id = id; d.style.opacity = 0; d.innerHTML = `<div class="scr" style="background-image:url(../media/${src})"></div>`; ph.appendChild(d); return d; };
+  const mk = (id, src) => { const d = document.createElement("div"); d.className = "phone"; d.id = id; d.style.opacity = 0; d.innerHTML = `<div class="scr" style="background-image:url(../media/${src})"></div><div class="island"></div>`; ph.appendChild(d); return d; };
   window.P = {
-    welcome: mk("p_welcome", "web-welcome-mobile.png"),
-    sat: mk("p_sat", "web-satellite-mobile.png"),
-    home: mk("p_home", "android-home-today.png"),
-    why: mk("p_why", "android-why.png"),
-    plan: mk("p_plan", "web-plan-years-mobile.png"),
+    welcome: mk("p_welcome", "iphone-welcome.png"),
+    sat: mk("p_sat", "iphone-satellite.png"),
+    home: mk("p_home", "iphone-home.png"),
+    why: mk("p_why", "iphone-why.png"),
+    plan: mk("p_plan", "iphone-impact.png"),
   };
-  const car = ["android-home-today.png", "android-satellite.png", "web-share-text-mobile.png", "android-plan-years.png", "android-insights.png", "web-map-mobile.png", "web-account-mobile.png", "android-field-editor.png", "android-welcome.png"];
+  const car = ["iphone-climate.png", "iphone-home-sw.png", "iphone-satellite.png", "iphone-home-hi.png", "iphone-home.png", "iphone-home-es.png", "iphone-terrain-ke.png", "iphone-plan-years.png", "iphone-field-editor.png"];
   window.CAR = car.map((s, i) => mk("car" + i, s));
   await Promise.all([...document.querySelectorAll(".scr")].map(e => loadImg(e.style.backgroundImage.slice(5, -2))));
 
   // stats
   const st = $("stats");
   window.STATS = [
-    { v: 19618, fmt: v => Math.round(v).toLocaleString("en-US") + " m³", l: "less irrigation water a year · Nevada alfalfa, 5.5 ha" },
-    { v: 652, fmt: v => Math.round(v).toLocaleString("en-US") + " t", l: "topsoil kept over 4 years · Iowa, 48 ha" },
-    { v: 105, fmt: v => "−" + Math.round(v) + " kg N/ha", l: "fertiliser over 4 years · Kenya smallholder" },
+    { v: 29075, fmt: v => Math.round(v).toLocaleString("en-US") + " m³", l: "water saved a year · this field" },
   ].map((s, i) => { const d = document.createElement("div"); d.className = "stat"; d.innerHTML = `<b></b><span>${s.l}</span>`; st.appendChild(d); return { ...s, el: d }; });
 
   // languages
@@ -510,7 +506,7 @@ window.render = function (t) {
     const a = 17.3 + i * .32;
     const p = eOut5(seg(t, a, a + .7));
     s.el.style.left = "120px";
-    s.el.style.top = (650 + i * 128) + "px";
+    s.el.style.top = (560 + i * 150) + "px";
     s.el.style.transform = `translateX(${(1 - p) * -60}px)`;
     s.el.style.opacity = p * b3o;
     s.el.querySelector("b").textContent = s.fmt(s.v * eOut(seg(t, a, a + 1.3)));

@@ -13,9 +13,11 @@ FieldShift is a free app for farmers that turns NASA Earth observations into pla
 
 It is built for real farms. **Accounts** sync phone and PC, and it works **offline**. Each week's advice fits in **two SMS** in six languages: English, Spanish, French, Swahili, Hindi and German. A **glossary** explains every term in plain words.
 
-| Welcome | This week | Field from space | Plan the next years |
-|---|---|---|---|
-| ![welcome](media/web-welcome-mobile.png) | ![home](media/web-home.png) | ![satellite](media/web-satellite-mobile.png) | ![plan years](media/web-plan-years-mobile.png) |
+| Welcome | This week | Why? | Field from space | Next years: impact | Swahili |
+|---|---|---|---|---|---|
+| ![welcome](media/iphone-welcome.png) | ![home](media/iphone-home.png) | ![why](media/iphone-why.png) | ![satellite](media/iphone-satellite.png) | ![impact](media/iphone-impact.png) | ![swahili](media/iphone-home-sw.png) |
+
+iPhone 17 simulator, native Release build, real data (`app/scripts/capture-film-ios.sh`). More iPhone screens: [plan](media/iphone-plan-years.png), [insights](media/iphone-insights.png), [climate](media/iphone-climate.png), [field editor](media/iphone-field-editor.png), [account](media/iphone-account.png), [Hindi](media/iphone-home-hi.png), [Spanish](media/iphone-home-es.png), [Kenya terrain zones](media/iphone-terrain-ke.png), [Kenya this week](media/iphone-home-ke.png).
 
 More:
 - web: [terrain zones](media/web-map-mobile.png), [layers](media/web-layers-mobile.png), [field editor](media/web-fields-desktop.png), [insights](media/web-insights-mobile.png), [account](media/web-account-mobile.png), [share as text](media/web-share-text-mobile.png);

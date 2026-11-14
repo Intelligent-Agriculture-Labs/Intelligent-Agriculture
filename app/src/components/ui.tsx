@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 import type { Risk } from "@/api/types";
 import type { Origin } from "@/api/client";
+import { CAPTURE_TOUR, captureHooks } from "@/lib/captureHooks";
 
 /** Content rendered at the top of every <Screen> inside the tab navigator (the field switcher). */
 export const ScreenHeaderContext = React.createContext<React.ReactNode>(null);
@@ -14,6 +15,16 @@ export const ScreenHeaderContext = React.createContext<React.ReactNode>(null);
 export function Screen({ children, scroll = true, testID }: { children: React.ReactNode; scroll?: boolean; testID?: string }) {
   const t = useTheme();
   const header = React.useContext(ScreenHeaderContext);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const offset = React.useRef(0);
+  React.useEffect(() => {
+    if (!CAPTURE_TOUR || !scroll) return;
+    const fn = (dy: number) => ref.current?.scrollTo({ y: Math.max(0, offset.current + dy), animated: false });
+    captureHooks.scrollBy = fn;
+    return () => {
+      if (captureHooks.scrollBy === fn) captureHooks.scrollBy = null;
+    };
+  }, [scroll]);
   const inner = (
     <View style={styles.column}>
       {header}
@@ -23,7 +34,13 @@ export function Screen({ children, scroll = true, testID }: { children: React.Re
   return (
     <SafeAreaView edges={["top", "left", "right"]} style={{ flex: 1, backgroundColor: t.bg }} testID={testID}>
       {scroll ? (
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          ref={ref}
+          onScroll={CAPTURE_TOUR ? (e) => (offset.current = e.nativeEvent.contentOffset.y) : undefined}
+          scrollEventThrottle={CAPTURE_TOUR ? 16 : undefined}
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+        >
           {inner}
         </ScrollView>
       ) : (

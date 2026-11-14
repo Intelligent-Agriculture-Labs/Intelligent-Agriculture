@@ -16,14 +16,15 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 OUT = SITE / "dist"
 MEDIA = ROOT / "media"
-SHOTS = [  # (file, caption) — first existing variant wins
-    (["web-welcome-mobile.png", "web-onboarding-mobile.png"], "Start in under a minute"),
-    (["web-home.png", "web-home-mobile.png"], "This week: three clear actions"),
-    (["web-detect-mobile.png", "web-fields-desktop.png"], "Tap your field — AI finds the boundary"),
-    (["web-satellite-mobile.png", "ios-satellite.png"], "Sentinel-2 + AI management zones"),
-    (["web-plan-years-mobile.png", "web-plan-mobile.png"], "Multi-year rotation plan with impact"),
-    (["ios-home-replay.png"], "iPhone"),
-    (["android-home-replay.png"], "Android"),
+SHOTS = [  # (file, caption): first existing variant wins
+    (["iphone-welcome.png", "web-welcome-mobile.png"], "Start in under a minute"),
+    (["iphone-home.png", "web-home.png"], "This week: clear actions"),
+    (["iphone-why.png"], "Every number explained"),
+    (["iphone-satellite.png", "web-satellite-mobile.png"], "Sentinel-2 + AI zones"),
+    (["iphone-impact.png", "web-plan-years-mobile.png"], "Rotation plan with impact"),
+    (["iphone-home-sw.png"], "Kiswahili and 5 more languages"),
+    (["iphone-terrain-ke.png", "web-map-mobile.png"], "Erosion risk and hotspots"),
+    (["android-home-today.png"], "Android"),
 ]
 
 
@@ -73,9 +74,9 @@ def main() -> None:
 
 
 DECK_SHOTS = {
-    "welcome": ["web-welcome-mobile.png", "web-onboarding-mobile.png"],
-    "home": ["web-home-mobile.png", "web-home.png", "web-replay-home-mobile.png"],
-    "plan": ["web-plan-years-mobile.png", "web-plan-mobile.png"],
+    "welcome": ["iphone-welcome.png", "web-welcome-mobile.png"],
+    "home": ["iphone-home.png", "web-home.png"],
+    "plan": ["iphone-impact.png", "web-plan-years-mobile.png"],
 }
 
 
