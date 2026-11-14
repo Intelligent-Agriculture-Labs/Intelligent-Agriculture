@@ -4,13 +4,14 @@
     "tagline": "Data za NASA → maamuzi ya shamba wiki hii"
   },
   "tabs": {
-    "home": "Wiki hii",
+    "home": "Leo",
     "rotations": "Mzunguko wa mazao",
     "whatif": "Je, kama?",
     "climate": "Hali ya hewa",
-    "settings": "Mipangilio",
-    "map": "Ramani",
-    "plan": "Mpango"
+    "settings": "Zaidi",
+    "map": "Shamba",
+    "plan": "Panga",
+    "insights": "Uchambuzi"
   },
   "common": {
     "loading": "Inapakia data za NASA…",
@@ -34,7 +35,10 @@
     "moderate": "Wastani",
     "high": "Juu",
     "severe": "Hatari kubwa",
-    "none": "Hakuna"
+    "none": "Hakuna",
+    "gotIt": "Nimeelewa",
+    "showAll": "Onyesha zote {{n}}",
+    "showLess": "Onyesha chache"
   },
   "banner": {
     "mock": "DATA YA MFANO — seva ya FieldShift haipatikani. Namba zilizo hapa chini ni za mfano, si data za NASA.",
@@ -55,7 +59,7 @@
     "layer": "Tabaka la ramani",
     "layerStreet": "Ramani",
     "layerSatellite": "Rangi halisi za NASA",
-    "layerNdvi": "Uoto wa NASA (NDVI)",
+    "layerNdvi": "Ukijani wa NASA",
     "drawField": "Chora mpaka wa shamba",
     "drawHint": "Gusa ramani kuongeza pembe za shamba",
     "clearField": "Futa mpaka",
@@ -78,11 +82,11 @@
     "moreActions": "Ishara nyingine",
     "drought": "Ukame",
     "water": "Maji",
-    "rootZone": "Maji yaliyotumika eneo la mizizi",
+    "rootZone": "Maji ya udongo ambayo zao lako limetumia",
     "nextIrrigation": "Umwagiliaji unaofuata",
     "noIrrigationNeeded": "Bado hauhitajiki",
     "rain7d": "Mvua siku 7 zijazo",
-    "et7d": "Mahitaji ya maji ya zao siku 7 zijazo",
+    "et7d": "Mahitaji ya maji ya zao, siku 7",
     "updated": "Imesasishwa {{date}}",
     "why": "Kwa nini?",
     "changeField": "Badilisha shamba",
@@ -93,7 +97,13 @@
     "seasonIrr": "Umwagiliaji",
     "modeToday": "Leo",
     "modeReplay": "Rudia {{date}}",
-    "replayNote": "Inaonyesha data halisi ya NASA ya {{date}} — wiki ndani ya msimu wa kilimo."
+    "replayNote": "Inaonyesha data halisi ya NASA ya {{date}} — wiki ndani ya msimu wa kilimo.",
+    "moreTitle": "Zaidi kuhusu shamba lako wiki hii",
+    "moreSubtitle": "Ukame, maji ya udongo, mvua na jumla za msimu",
+    "allClearTitle": "Hakuna jambo la haraka wiki hii",
+    "allClearText": "Shamba lako liko vizuri. Rudi baada ya siku chache — FieldShift husasishwa kila utabiri mpya unapotoka.",
+    "waterUsed": "{{used}} kati ya {{total}} yametumika",
+    "noIrrigationNeededShort": "Haihitajiki"
   },
   "why": {
     "title": "Kwa nini ushauri huu?",
@@ -190,7 +200,7 @@
     "insights": "Hii ina maana gani"
   },
   "settings": {
-    "title": "Mipangilio",
+    "title": "Zaidi",
     "language": "Lugha",
     "units": "Vipimo",
     "metric": "Metriki (mm, °C, ha)",
@@ -210,7 +220,9 @@
     "clearCache": "Futa data zilizohifadhiwa",
     "cleared": "Data zilizohifadhiwa zimefutwa",
     "rawSeries": "Data ghafi",
-    "field": "Shamba lako"
+    "field": "Shamba lako",
+    "preferences": "Mapendeleo",
+    "help": "Msaada"
   },
   "risk": {
     "low": "Chini",
@@ -234,17 +246,18 @@
     "logged": "Umwagiliaji wa mwisho: {{amount}} tarehe {{date}}"
   },
   "tabsShort": {
-    "home": "Wiki",
-    "map": "Ramani",
-    "plan": "Mpango",
+    "home": "Leo",
+    "map": "Shamba",
+    "plan": "Panga",
     "rotations": "Mzunguko",
     "whatif": "Je kama?",
     "climate": "Tabianchi",
-    "settings": "Mipangilio"
+    "settings": "Zaidi",
+    "insights": "Uchambuzi"
   },
   "map": {
     "title": "Shamba lako kutoka angani",
-    "subtitle": "Ramani za ardhi zilizokokotolewa kwa mwinuko wa NASA SRTM: wapi udongo unamomonyoka, maji yanakusanyika na hewa baridi inatuama.",
+    "subtitle": "Ramani kutoka data ya miinuko ya NASA: wapi udongo husombwa, maji hukusanyika na hewa baridi hutuama.",
     "layers": "Tabaka la ramani",
     "loading": "Inakokotoa ramani za ardhi kutoka mwinuko wa NASA SRTM…",
     "offlineNote": "Nje ya mtandao: picha za ramani zinahitaji mtandao; ufunguo, takwimu na ushauri hapa chini ni wa upakuaji wako wa mwisho.",
@@ -260,7 +273,7 @@
     "base": {
       "street": "Ramani ya barabara",
       "truecolor": "Setilaiti (NASA)",
-      "ndvi": "Ukijani (NDVI)",
+      "ndvi": "Ukijani (NASA)",
       "esri": "Setilaiti (picha safi)",
       "naip": "USDA NAIP (Marekani)",
       "s2": "Sentinel-2 2023"
@@ -279,7 +292,10 @@
       "terrain": "Mwinuko",
       "satellite": "Setilaiti"
     },
-    "subtitleSatellite": "Picha za Sentinel-2 za mita 10 za shamba lako kwa miezi 12 iliyopita: ukijani, ukataji na mavuno, na kanda za usimamizi kwa AI."
+    "subtitleSatellite": "Picha za Sentinel-2 za mita 10 za shamba lako kwa miezi 12 iliyopita: ukijani, ukataji na mavuno, na kanda za usimamizi kwa AI.",
+    "layersButton": "Tabaka",
+    "baseTitle": "Ramani ya nyuma",
+    "legendTitle": "Maana ya rangi"
   },
   "plan": {
     "title": "Mpangaji wa msimu",
@@ -309,7 +325,44 @@
     "risks": "Hatari za hali ya hewa kwa mwezi",
     "riskA11y": "Hatari ya baridi kali na joto kwa mwezi",
     "riskLegend": "❄ sehemu ya miaka yenye baridi kali yenye madhara mwezi huo · ☀ yenye siku 3 au zaidi za msongo wa joto.",
-    "sources": "Data: NASA POWER (hali ya hewa 1984→leo), SoilGrids (udongo), modeli ya msimu ya FieldShift."
+    "sources": "Data: NASA POWER (hali ya hewa 1984→leo), SoilGrids (udongo), modeli ya msimu ya FieldShift.",
+    "tabSeason": "Msimu huu",
+    "tabYears": "Miaka ijayo",
+    "waterSubtitle": "Mahitaji ya maji ya kila mwezi, mvua na umwagiliaji",
+    "risksSubtitle": "Uwezekano wa baridi kali na joto kila mwezi",
+    "years": {
+      "none": "Hakuna",
+      "checking": "Tunakagua mpango wako kwa sayansi ya udongo na misimu 15 ya hali ya hewa…",
+      "stale": "Umebadilisha mpango — ukague tena.",
+      "check": "Kagua mpango wangu",
+      "yearA11y": "{{year}}: {{crop}}, {{verdict}}",
+      "verdict": {
+        "good": "nzuri",
+        "caution": "kagua",
+        "problem": "badilisha"
+      },
+      "noIssues": "Hakuna matatizo yaliyopatikana kwa mwaka huu.",
+      "source": "Chanzo",
+      "yield": "Mavuno yanayotarajiwa",
+      "water": "Maji",
+      "nitrogen": "Naitrojeni iliyobaki",
+      "expert": "Faida ≈ {{margin}} USD/ha · udongo mtupu siku {{bare}} · athari ya mzunguko {{effect}} % · mmomonyoko {{erosion}} t/ha",
+      "tapYear": "Gusa mwaka kuona kilicho kizuri na cha kubadilisha.",
+      "diseaseTitle": "Kuongezeka kwa magonjwa na wadudu",
+      "diseaseSubtitle": "Matatizo gani ya udongoni huongezeka kwa miaka",
+      "improve": "Jinsi ya kuboresha",
+      "optimized": "Mpango ulioboreshwa na AI",
+      "apply": "Tumia mpango huu",
+      "yourPlan": "Mpango wako",
+      "mainCrop": "Zao kuu {{year}}",
+      "coverCrop": "Zao la kufunika baada ya {{year}}",
+      "addYear": "Ongeza mwaka",
+      "removeYear": "Ondoa mwaka wa mwisho",
+      "coverHint": "Safu ya kulia: zao la kufunika udongo baada ya mavuno (si lazima) — hulinda udongo na linaweza kuongeza naitrojeni.",
+      "history": "Kilichopandwa awali",
+      "historyHint": "Mazao ya zamani ni muhimu kwa magonjwa na naitrojeni",
+      "pastCrop": "Zao la {{year}}"
+    }
   },
   "fields": {
     "title": "Mashamba yako",
@@ -381,14 +434,14 @@
     "mapA11y": "Ramani ya setilaiti ya shamba lako ikionyesha {{layer}}",
     "overlay": {
       "zones": "Kanda za AI",
-      "ndvi": "NDVI (ya karibuni)",
+      "ndvi": "Ukijani (karibuni)",
       "truecolor": "Rangi halisi (ya karibuni)",
       "none": "Bila tabaka"
     },
     "latestScene": "Picha safi ya karibuni ya Sentinel-2: {{date}}",
     "zonesTitle": "Kanda za usimamizi kwa AI",
     "zonesIntro": "Modeli ya kujifunza kwa mashine isiyosimamiwa (k-means) imegawa shamba lako katika kanda zilizotenda kwa namna moja kwenye picha zote safi za mwaka huu, pamoja na mwinuko wa ardhi.",
-    "zoneStats": "{{pct}} % · NDVI {{ndvi}}",
+    "zoneStats": "{{pct}} % · ukijani {{ndvi}}",
     "method": "Mbinu: {{method}} · k = {{k}} · silhouette {{s}}",
     "seriesTitle": "Ukijani wa zao katika msimu",
     "seasonType": "Msimu uliogunduliwa",
@@ -397,15 +450,17 @@
     "senescence": "Kukomaa/kukauka",
     "bare": "Udongo mtupu: {{periods}}",
     "seriesHint": "Vitone: wastani wa shamba kwa kila picha safi ya Sentinel-2 ya mita 10. Mstari: mkunjo uliolainishwa. Kivuli: vipindi vya udongo mtupu.",
-    "kcbTitle": "Kigezo cha zao kutoka setilaiti (Kcb)",
+    "kcbTitle": "Kipimo cha maji cha zao kutoka angani",
     "kcbHint": "Kiasi cha maji ambacho zao lako linatumia ukilinganisha na nyasi ya marejeo, kinachokadiriwa kutokana na ukijani wake wa sasa. FieldShift inakitumia kusahihisha mizani ya maji kwa kile setilaiti inachoona hasa.",
     "scenes": "Picha zilizotumika",
     "sceneRow": "mawingu {{cloud}} % · shamba safi {{valid}} %",
     "refresh": "Onyesha upya uchambuzi wa setilaiti",
-    "chartA11y": "Chati ya ukijani kutoka picha {{n}} za setilaiti. NDVI ya juu {{peak}}. Msimu: {{type}}.",
+    "chartA11y": "Chati ya ukijani kutoka picha {{n}} za satelaiti. Ukijani wa juu {{peak}}. Msimu: {{type}}.",
     "chartA11yShort": "Chati ya ukijani kutoka picha {{n}} za setilaiti.",
     "harvestLegend": "Ukataji / mavuno yanayoonekana kutoka angani",
-    "harvests": "Ukataji / mavuno {{count}} yamegunduliwa: {{dates}}"
+    "harvests": "Ukataji / mavuno {{count}} yamegunduliwa: {{dates}}",
+    "seasonDetails": "Maelezo ya msimu: kuchipua, kilele, mavuno",
+    "greennessShort": "ukijani"
   },
   "detect": {
     "mode": "Tambua shamba kiotomatiki",
@@ -423,5 +478,221 @@
     "again": "Jaribu tena (gusa shamba lako)",
     "border": "Mpaka unafika ukingoni mwa eneo lililochambuliwa — huenda shamba lako ni kubwa zaidi. Punguza kuza na ukague.",
     "onboardingDone": "Shamba limepatikana: ha {{area}} (uhakika {{pct}} %). Unaweza kurekebisha mpaka baadaye katika Hariri shamba."
+  },
+  "tips": {
+    "today": "Hizi ni kazi muhimu zaidi za wiki hii, ya haraka zaidi kwanza. Gusa kadi kuona sababu — kila namba ina ushahidi wake kutoka NASA.",
+    "planSeason": "Msimu wako kwa mtazamo mmoja: lini kupanda, nini kinatokea lini, na zao litahitaji maji kiasi gani.",
+    "planYears": "Panga utakachopanda miaka ijayo. FieldShift hukagua kila mwaka magonjwa, naitrojeni, maji na udongo — na kupendekeza njia bora zaidi.",
+    "insights": "Chunguza zaidi: jaribu hali za 'itakuwaje kama', ona jinsi hali ya hewa yako imebadilika, na linganisha mikakati ya mzunguko wa mazao."
+  },
+  "account": {
+    "title": "Akaunti",
+    "loginTitle": "Ingia",
+    "registerTitle": "Fungua akaunti yako ya bure",
+    "why": "Ukiwa na akaunti, mashamba na mipango yako yote yako kwenye simu na kompyuta yako — ingia popote.",
+    "login": "Ingia",
+    "register": "Fungua akaunti",
+    "name": "Jina lako (si lazima)",
+    "email": "Barua pepe",
+    "password": "Nenosiri",
+    "passwordNew": "Nenosiri (angalau herufi 8)",
+    "uploadLocal": "Ongeza shamba {{count}} lililo kwenye kifaa hiki kwenye akaunti yangu",
+    "privacy": "Tunahifadhi shamba lako tu (mashamba, mipango, mipangilio). Manenosiri huhifadhiwa kama hash salama. Hakuna matangazo, hakuna kuuza data.",
+    "nudge": "Fungua akaunti ya bure kutumia FieldShift kwenye simu na kompyuta yako.",
+    "signInRow": "Ingia au fungua akaunti",
+    "signInRowSub": "Mashamba yako kwenye kila kifaa",
+    "syncInfo": "Shamba lako limehifadhiwa kwenye akaunti yako",
+    "since": "Mwanachama tangu {{date}}",
+    "logout": "Toka",
+    "changePassword": "Badilisha nenosiri",
+    "oldPassword": "Nenosiri la sasa",
+    "newPassword": "Nenosiri jipya (angalau herufi 8)",
+    "passwordChanged": "Nenosiri limebadilishwa.",
+    "delete": "Futa akaunti",
+    "deleteHint": "Hii inafuta akaunti yako na mashamba na mipango yote iliyohifadhiwa nayo. Haiwezi kurudishwa.",
+    "deleteConfirm": "Ndiyo, futa kila kitu",
+    "errWrong": "Barua pepe au nenosiri si sahihi.",
+    "errExists": "Tayari kuna akaunti yenye barua pepe hii. Jaribu kuingia.",
+    "errTooMany": "Majaribio mengi mno. Tafadhali subiri dakika moja kisha ujaribu tena.",
+    "errGeneric": "Kuna tatizo. Tafadhali jaribu tena.",
+    "errOffline": "Hakuna muunganisho na FieldShift. Kagua intaneti yako kisha ujaribu tena.",
+    "errEmail": "Tafadhali weka barua pepe sahihi.",
+    "errPassword": "Tafadhali weka nenosiri lako.",
+    "errPasswordShort": "Nenosiri linahitaji angalau herufi 8.",
+    "showPassword": "Onyesha nenosiri",
+    "hidePassword": "Ficha nenosiri"
+  },
+  "share": {
+    "title": "Shiriki shamba kwa msimbo",
+    "rowSub": "Kwa wanafamilia wasio na akaunti",
+    "intro": "Yeyote mwenye msimbo huona na kuhariri mashamba yale yale — bila akaunti. Weka msimbo kuwa siri."
+  },
+  "glossary": {
+    "title": "Kamusi",
+    "subtitle": "Kila neno kwa lugha rahisi",
+    "intro": "Maana ya maneno katika FieldShift, na kwa nini ni muhimu kwa shamba lako.",
+    "search": "Tafuta neno",
+    "explain": "Eleza {{term}}",
+    "items": {
+      "waterDemand": {
+        "term": "Mahitaji ya maji ya zao",
+        "plain": "Kiasi cha maji ambacho hali ya hewa huvuta kila siku kutoka kwa zao lenye afya na lenye maji ya kutosha — siku za joto, kavu, zenye upepo na jua huvuta zaidi. Wanasayansi huita evapotranspiration ya marejeo (ET₀).",
+        "why": "Huonyesha jinsi udongo wako unavyokauka haraka, ili FieldShift iseme lini na kiasi gani cha kumwagilia."
+      },
+      "soilWater": {
+        "term": "Maji ya udongo",
+        "plain": "Maji yaliyo kwenye udongo karibu na mizizi ambayo zao bado linaweza kunyonya. FieldShift huyafuatilia kila siku kama akaunti ya benki: mvua na umwagiliaji huweka, matumizi ya zao hutoa.",
+        "why": "Sehemu ya 'inayopatikana kwa urahisi' ikiisha, zao huteseka na mavuno hupungua."
+      },
+      "easyWater": {
+        "term": "Maji yanayopatikana kwa urahisi",
+        "plain": "Sehemu ya maji ya udongo ambayo zao huinyonya bila shida. Ikiisha, mmea hufunga vinyweleo vyake kuokoa maji na hukua kidogo.",
+        "why": "Wakati bora wa kumwagilia ni kabla tu sehemu hii haijaisha."
+      },
+      "greenness": {
+        "term": "Ukijani (NDVI)",
+        "plain": "Kipimo cha satelaiti cha jinsi mimea ilivyo ya kijani na minene, kutoka 0 (udongo mtupu) hadi karibu 0.9 (zao nene lenye afya).",
+        "why": "Huonyesha ukuaji, mavuno na sehemu dhaifu shambani mwako, hata kabla hujaziona."
+      },
+      "rainVsNormal": {
+        "term": "Mvua ikilinganishwa na kawaida (SPI)",
+        "plain": "Hulinganisha mvua ya wiki zilizopita na wiki zile zile za miaka 40 iliyopita. Chini ya sifuri ni kavu kuliko kawaida, chini ya −1.5 ni kavu sana.",
+        "why": "Huonyesha haraka kama unaelekea kwenye ukame."
+      },
+      "drought": {
+        "term": "Kiwango cha ukame",
+        "plain": "Jinsi eneo lako lilivyo kavu ikilinganishwa na kawaida, kwa kuunganisha mvua, mahitaji ya maji, unyevu wa udongo na ukijani wa mimea. Viwango hufuata U.S. Drought Monitor: D0 (kavu isivyo kawaida) hadi D4 (ukame wa kipekee).",
+        "why": "Husaidia kupanga matumizi ya maji na kuchagua mapema mazao yanayostahimili ukame."
+      },
+      "cropWaterFactor": {
+        "term": "Kipimo cha maji cha zao",
+        "plain": "Kiasi cha maji ambacho zao lako hutumia ikilinganishwa na 'mahitaji ya maji' ya hali ya hewa. Mimea michanga hutumia kidogo, zao lililofunika shamba hutumia zaidi. Wanasayansi huita Kc.",
+        "why": "FieldShift huzidisha kwa hali ya hewa kujua matumizi halisi ya maji ya zao lako — na kukirekebisha kwa picha za satelaiti za shamba lako."
+      },
+      "zones": {
+        "term": "Kanda za usimamizi",
+        "plain": "Sehemu za shamba lako ambazo hukua vizuri zaidi au vibaya zaidi kila mara, zilizopatikana na modeli ya AI kutoka picha nyingi za satelaiti na umbo la ardhi.",
+        "why": "Shughulikia kila kanda peke yake: pima udongo, rekebisha mbegu au mbolea, kagua mifereji."
+      },
+      "erosion": {
+        "term": "Hatari ya mmomonyoko",
+        "plain": "Kiasi cha udongo ambacho mvua kubwa inaweza kusomba kila mwaka, kinachokadiriwa kutoka mteremko, mvua, udongo na kifuniko cha mimea (njia ya RUSLE).",
+        "why": "Udongo mtupu kwenye mteremko hupoteza rutuba haraka; mazao ya kufunika udongo na kulima kwa kufuata kontua huulinda."
+      },
+      "wetness": {
+        "term": "Unyevunyevu",
+        "plain": "Mahali maji hukusanyika shambani kwa sababu ya umbo lake — sehemu za chini na tambarare zinazopokea maji kutoka eneo kubwa.",
+        "why": "Sehemu hizi hubaki na maji, zinaweza kutuamisha maji, na zinafaa kukaguliwa kwa mifereji."
+      },
+      "frostHollow": {
+        "term": "Bonde la baridi kali",
+        "plain": "Sehemu ya chini ambapo hewa baridi hushuka na kukusanyika usiku usio na mawingu wala upepo.",
+        "why": "Baridi kali za mwishoni mwa masika na mwanzo wa vuli hufika hapa kwanza — epuka mazao yasiyostahimili baridi hapo."
+      },
+      "rotation": {
+        "term": "Mzunguko wa mazao",
+        "plain": "Kupanda mazao tofauti kwenye shamba moja mwaka hadi mwaka badala ya zao lile lile tena.",
+        "why": "Huvunja mzunguko wa wadudu na magonjwa, huongeza naitrojeni (kwa mikunde) na hujenga udongo wenye afya — mara nyingi kwa mavuno zaidi."
+      },
+      "nitrogen": {
+        "term": "Mizani ya naitrojeni",
+        "plain": "Naitrojeni ambayo zao linalofuata hupata kutoka kwa lililotangulia (mikunde kama njegere, maharagwe na alfalfa huacha naitrojeni) ukitoa ile ambayo bado linahitaji.",
+        "why": "Mizani chanya inamaanisha unaweza kutumia mbolea kidogo."
+      },
+      "breakCrop": {
+        "term": "Zao la kuvunja mzunguko",
+        "plain": "Zao kutoka familia nyingine ya mimea ambalo wadudu na magonjwa ya zao lako kuu hawawezi kuishi juu yake.",
+        "why": "Mwaka mmoja au miwili ya zao hili huwanyima chakula magonjwa na wadudu wa udongoni."
+      },
+      "returnInterval": {
+        "term": "Muda wa kurudia",
+        "plain": "Idadi ya chini ya miaka kabla zao lile lile (au familia yake) kupandwa tena shambani.",
+        "why": "Kurudia mapema mno huruhusu magonjwa na wadudu wa udongoni kuongezeka."
+      },
+      "confidence": {
+        "term": "Uhakika",
+        "plain": "Jinsi FieldShift ilivyo na uhakika kuhusu ushauri, kulingana na ubora na undani wa data iliyo nyuma yake.",
+        "why": "Uhakika mdogo unamaanisha: kagua shamba mwenyewe kabla ya kuchukua hatua."
+      },
+      "satellite": {
+        "term": "Data ya satelaiti",
+        "plain": "Satelaiti za NASA na Ulaya hupima mvua, joto, unyevu wa udongo na ukijani wa mimea kila baada ya siku chache duniani kote.",
+        "why": "Humpa kila mkulima — hata bila vihisi — mtazamo wa maji na ukuaji wa shamba lake."
+      },
+      "yieldBadYear": {
+        "term": "Mavuno ya kawaida na ya mwaka mbaya",
+        "plain": "FieldShift huiga zao lako kwa hali halisi ya hewa ya miaka 15+ iliyopita shambani kwako. 'Kawaida' ni matokeo ya kati, 'mwaka mbaya' ni yale ya mwaka 1 kati ya 10.",
+        "why": "Panga kwa mwaka wa kawaida, lakini hakikisha unaweza kustahimili mwaka mbaya."
+      }
+    }
+  },
+  "welcome": {
+    "skip": "Ruka",
+    "next": "Endelea",
+    "addField": "Ongeza shamba langu",
+    "demo": "Jaribu shamba la mfano",
+    "haveAccount": "Tayari nina akaunti",
+    "again": "Onyesha utangulizi tena",
+    "stepOf": "Hatua {{n}} kati ya {{total}}",
+    "s1": {
+      "title": "Shamba lako likionekana kutoka angani",
+      "text": "FieldShift hugeuza miaka 40 ya data ya satelaiti na hali ya hewa ya NASA kuwa ushauri rahisi kwa shamba lako.",
+      "p1": "Leo: kazi 3 muhimu zaidi za wiki hii — maji, wadudu, magonjwa, baridi kali.",
+      "p2": "Shamba: picha za satelaiti, kanda zenye matatizo na ramani za mmomonyoko za shamba lako.",
+      "p3": "Panga: lini kupanda, na mazao gani ya kupanda miaka ijayo."
+    },
+    "s2": {
+      "title": "Ongeza shamba lako kwa sekunde",
+      "text": "Huhitaji akaunti kuanza.",
+      "p1": "Kuza ramani ya satelaiti na gusa ndani ya shamba lako.",
+      "p2": "FieldShift hupata mpaka wa shamba yenyewe.",
+      "p3": "Rekebisha kona yoyote kwa mkono ikihitajika, kisha chagua zao na tarehe ya kupanda."
+    },
+    "s3": {
+      "title": "Ushauri wazi unaoweza kuukagua",
+      "text": "Kila pendekezo huja kwa maneno rahisi — na mguso mmoja huonyesha data iliyo nyuma yake.",
+      "p1": "Gusa 'Kwa nini?' au alama za ? kwa maelezo rahisi.",
+      "p2": "Fungua akaunti ya bure kuitumia kwenye simu na kompyuta.",
+      "p3": "Ushauri wako wa mwisho unabaki hata bila intaneti."
+    }
+  },
+  "insights": {
+    "title": "Uchambuzi",
+    "subtitle": "Angalia kwa undani shamba lako, hali ya hewa yako na chaguo zako.",
+    "whatif": "Itakuwaje kama?",
+    "whatifSub": "Jaribu tarehe za kupanda, umwagiliaji, +°C na mvua kidogo",
+    "climate": "Hali ya hewa yako inabadilika",
+    "climateSub": "Jinsi msimu wako umebadilika tangu 1984",
+    "alternatives": "Chunguza mikakati ya mzunguko",
+    "alternativesSub": "Linganisha mikakati kwa misimu 15 ya hali ya hewa ya NASA",
+    "learn": "Jifunze",
+    "planYears": "Panga miaka ijayo",
+    "planYearsSub": "Kagua mpango wako wa mazao mwaka kwa mwaka"
+  },
+  "crops": {
+    "search": "Tafuta mazao",
+    "noMatch": "Hakuna zao linalolingana.",
+    "fixesN": "huongeza naitrojeni",
+    "perennial": "la kudumu",
+    "cover": "zao la kufunika",
+    "family": {
+      "Poaceae": "Nafaka na nyasi",
+      "Fabaceae": "Mikunde",
+      "Brassicaceae": "Familia ya kabichi",
+      "Solanaceae": "Familia ya viazi na nyanya",
+      "Asteraceae": "Familia ya alizeti",
+      "Amaranthaceae": "Familia ya beetroot na kinwa",
+      "Cucurbitaceae": "Maboga na matikiti",
+      "Apiaceae": "Familia ya karoti",
+      "Amaryllidaceae": "Familia ya vitunguu",
+      "Convolvulaceae": "Viazi vitamu",
+      "Euphorbiaceae": "Muhogo",
+      "Linaceae": "Kitani",
+      "Polygonaceae": "Buckwheat",
+      "Malvaceae": "Pamba na familia yake",
+      "Cannabaceae": "Katani",
+      "Boraginaceae": "Familia ya phacelia",
+      "Mixed": "Michanganyiko"
+    }
   }
 }

@@ -4,13 +4,14 @@
     "tagline": "NASA Earth data → this week's farm decisions"
   },
   "tabs": {
-    "home": "This week",
+    "home": "Today",
     "rotations": "Rotations",
     "whatif": "What if?",
     "climate": "Climate",
-    "settings": "Settings",
-    "map": "Map",
-    "plan": "Plan"
+    "settings": "More",
+    "map": "Field",
+    "plan": "Plan",
+    "insights": "Insights"
   },
   "common": {
     "loading": "Loading NASA data…",
@@ -34,7 +35,10 @@
     "moderate": "Moderate",
     "high": "High",
     "severe": "Severe",
-    "none": "None"
+    "none": "None",
+    "gotIt": "Got it",
+    "showAll": "Show all {{n}}",
+    "showLess": "Show less"
   },
   "banner": {
     "mock": "MOCK DATA — the FieldShift server could not be reached. Numbers below are placeholders, not NASA data.",
@@ -55,7 +59,7 @@
     "layer": "Map layer",
     "layerStreet": "Map",
     "layerSatellite": "NASA true colour",
-    "layerNdvi": "NASA vegetation (NDVI)",
+    "layerNdvi": "NASA greenness",
     "drawField": "Outline field",
     "drawHint": "Tap the map to add field corners",
     "clearField": "Clear outline",
@@ -78,11 +82,11 @@
     "moreActions": "More signals",
     "drought": "Drought",
     "water": "Water",
-    "rootZone": "Root-zone water used",
+    "rootZone": "Soil water your crop has used",
     "nextIrrigation": "Next irrigation",
     "noIrrigationNeeded": "Not needed yet",
     "rain7d": "Rain next 7 days",
-    "et7d": "Crop water demand next 7 days",
+    "et7d": "Crop water demand, 7 days",
     "updated": "Updated {{date}}",
     "why": "Why?",
     "changeField": "Change field",
@@ -93,7 +97,13 @@
     "seasonIrr": "Irrigation",
     "modeToday": "Today",
     "modeReplay": "Replay {{date}}",
-    "replayNote": "Replaying real NASA data for {{date}} — a week inside the growing season."
+    "replayNote": "Replaying real NASA data for {{date}} — a week inside the growing season.",
+    "moreTitle": "More about your field this week",
+    "moreSubtitle": "Drought, soil water, rain and season totals",
+    "allClearTitle": "Nothing urgent this week",
+    "allClearText": "Your field looks fine. Check back in a few days — FieldShift updates with every new forecast.",
+    "waterUsed": "{{used}} of {{total}} used",
+    "noIrrigationNeededShort": "Not needed"
   },
   "why": {
     "title": "Why this advice?",
@@ -190,7 +200,7 @@
     "insights": "What this means"
   },
   "settings": {
-    "title": "Settings",
+    "title": "More",
     "language": "Language",
     "units": "Units",
     "metric": "Metric (mm, °C, ha)",
@@ -210,7 +220,9 @@
     "clearCache": "Clear saved data",
     "cleared": "Saved data cleared",
     "rawSeries": "Raw series",
-    "field": "Your field"
+    "field": "Your field",
+    "preferences": "Preferences",
+    "help": "Help"
   },
   "risk": {
     "low": "Low",
@@ -234,17 +246,18 @@
     "logged": "Last irrigation: {{amount}} on {{date}}"
   },
   "tabsShort": {
-    "home": "Week",
-    "map": "Map",
+    "home": "Today",
+    "map": "Field",
     "plan": "Plan",
     "rotations": "Rotate",
     "whatif": "What if",
     "climate": "Climate",
-    "settings": "Settings"
+    "settings": "More",
+    "insights": "Insights"
   },
   "map": {
     "title": "Your field from space",
-    "subtitle": "Terrain maps computed from NASA SRTM elevation: where soil erodes, water collects and cold air pools.",
+    "subtitle": "Maps made from NASA height data: where soil washes away, water collects and cold air pools.",
     "layers": "Map layer",
     "loading": "Computing terrain maps from NASA SRTM elevation…",
     "offlineNote": "Offline: map images need a connection; the legend, statistics and advice below are from your last download.",
@@ -260,7 +273,7 @@
     "base": {
       "street": "Street map",
       "truecolor": "Satellite (NASA)",
-      "ndvi": "Greenness (NDVI)",
+      "ndvi": "Greenness (NASA)",
       "esri": "Satellite (high-res)",
       "naip": "USDA NAIP (US)",
       "s2": "Sentinel-2 2023"
@@ -279,7 +292,10 @@
       "terrain": "Terrain",
       "satellite": "Satellite"
     },
-    "subtitleSatellite": "10 m Sentinel-2 images of your field over the last 12 months: greenness, cuttings and harvests, and AI management zones."
+    "subtitleSatellite": "10 m Sentinel-2 images of your field over the last 12 months: greenness, cuttings and harvests, and AI management zones.",
+    "layersButton": "Layers",
+    "baseTitle": "Background map",
+    "legendTitle": "What the colours mean"
   },
   "plan": {
     "title": "Season planner",
@@ -309,7 +325,44 @@
     "risks": "Weather risk by month",
     "riskA11y": "Frost and heat risk per month",
     "riskLegend": "❄ share of past years with a damaging frost in that month · ☀ share with 3 or more heat-stress days.",
-    "sources": "Data: NASA POWER (weather 1984→today), SoilGrids (soil), FieldShift season model."
+    "sources": "Data: NASA POWER (weather 1984→today), SoilGrids (soil), FieldShift season model.",
+    "tabSeason": "This season",
+    "tabYears": "Next years",
+    "waterSubtitle": "Monthly water need, rain and irrigation",
+    "risksSubtitle": "Chance of frost and heat each month",
+    "years": {
+      "none": "None",
+      "checking": "Checking your plan with soil science and 15 seasons of weather…",
+      "stale": "You changed the plan — check it again.",
+      "check": "Check my plan",
+      "yearA11y": "{{year}}: {{crop}}, {{verdict}}",
+      "verdict": {
+        "good": "good",
+        "caution": "check",
+        "problem": "change needed"
+      },
+      "noIssues": "No problems found for this year.",
+      "source": "Source",
+      "yield": "Expected yield",
+      "water": "Water",
+      "nitrogen": "Nitrogen left",
+      "expert": "Margin ≈ {{margin}} USD/ha · bare soil {{bare}} days · rotation effect {{effect}} % · erosion {{erosion}} t/ha",
+      "tapYear": "Tap a year to see what is good and what to change.",
+      "diseaseTitle": "Disease and pest build-up",
+      "diseaseSubtitle": "Which soil-borne problems grow over the years",
+      "improve": "How to improve",
+      "optimized": "AI-optimised plan",
+      "apply": "Use this plan",
+      "yourPlan": "Your plan",
+      "mainCrop": "Main crop {{year}}",
+      "coverCrop": "Cover crop after {{year}}",
+      "addYear": "Add a year",
+      "removeYear": "Remove last year",
+      "coverHint": "Right column: an optional cover crop after the harvest — protects soil and can add nitrogen.",
+      "history": "What grew before",
+      "historyHint": "Past crops matter for disease and nitrogen",
+      "pastCrop": "Crop in {{year}}"
+    }
   },
   "fields": {
     "title": "Your fields",
@@ -381,14 +434,14 @@
     "mapA11y": "Satellite map of your field showing {{layer}}",
     "overlay": {
       "zones": "AI zones",
-      "ndvi": "NDVI (latest)",
+      "ndvi": "Greenness (latest)",
       "truecolor": "True colour (latest)",
       "none": "No overlay"
     },
     "latestScene": "Latest clear Sentinel-2 image: {{date}}",
     "zonesTitle": "AI management zones",
     "zonesIntro": "An unsupervised machine-learning model (k-means) grouped your field into zones that behaved alike across all clear images this year, combined with terrain.",
-    "zoneStats": "{{pct}} % · NDVI {{ndvi}}",
+    "zoneStats": "{{pct}} % · greenness {{ndvi}}",
     "method": "Method: {{method}} · k = {{k}} · silhouette {{s}}",
     "seriesTitle": "Crop greenness over the season",
     "seasonType": "Season detected",
@@ -397,15 +450,17 @@
     "senescence": "Senescence",
     "bare": "Bare soil: {{periods}}",
     "seriesHint": "Dots: field average of each clear 10 m Sentinel-2 image. Line: smoothed curve. Shaded: bare-soil periods.",
-    "kcbTitle": "Satellite crop coefficient (Kcb)",
+    "kcbTitle": "Crop water factor seen from space",
     "kcbHint": "How much water your crop is using compared with a reference grass, estimated from its current greenness. FieldShift uses it to correct the water balance with what the satellite actually sees.",
     "scenes": "Images used",
     "sceneRow": "clouds {{cloud}} % · field clear {{valid}} %",
     "refresh": "Refresh satellite analysis",
-    "chartA11y": "Greenness chart from {{n}} satellite images. Peak NDVI {{peak}}. Season: {{type}}.",
+    "chartA11y": "Greenness chart from {{n}} satellite images. Peak greenness {{peak}}. Season: {{type}}.",
     "chartA11yShort": "Greenness chart from {{n}} satellite images.",
     "harvestLegend": "Cutting / harvest seen from space",
-    "harvests": "{{count}} cuttings / harvests detected: {{dates}}"
+    "harvests": "{{count}} cuttings / harvests detected: {{dates}}",
+    "seasonDetails": "Season details: green-up, peak, harvests",
+    "greennessShort": "greenness"
   },
   "detect": {
     "mode": "Detect field automatically",
@@ -423,5 +478,221 @@
     "again": "Try again (tap your field)",
     "border": "The outline reaches the edge of the analysed area — your field may be larger. Zoom out and check it.",
     "onboardingDone": "Field found: {{area}} ha ({{pct}} % confidence). You can fine-tune the outline later in Edit field."
+  },
+  "tips": {
+    "today": "These are this week's most important jobs, most urgent first. Tap a card to see why — every number comes with its NASA evidence.",
+    "planSeason": "Your season at a glance: when to sow, what happens when, and how much water the crop will need.",
+    "planYears": "Plan what you will grow in the next years. FieldShift checks every year for disease, nitrogen, water and soil — and suggests better options.",
+    "insights": "Go deeper: test 'what if' scenarios, see how your climate has changed, and compare rotation strategies."
+  },
+  "account": {
+    "title": "Account",
+    "loginTitle": "Log in",
+    "registerTitle": "Create your free account",
+    "why": "With an account, all your fields and plans are on your phone and your computer — log in anywhere.",
+    "login": "Log in",
+    "register": "Create account",
+    "name": "Your name (optional)",
+    "email": "E-mail",
+    "password": "Password",
+    "passwordNew": "Password (at least 8 characters)",
+    "uploadLocal": "Add the {{count}} field(s) on this device to my account",
+    "privacy": "We only store your farm (fields, plans, settings). Passwords are stored as a secure hash. No ads, no selling of data.",
+    "nudge": "Create a free account to use FieldShift on your phone and your computer.",
+    "signInRow": "Log in or create an account",
+    "signInRowSub": "Your fields on every device",
+    "syncInfo": "Your farm is saved to your account",
+    "since": "Member since {{date}}",
+    "logout": "Log out",
+    "changePassword": "Change password",
+    "oldPassword": "Current password",
+    "newPassword": "New password (at least 8 characters)",
+    "passwordChanged": "Password changed.",
+    "delete": "Delete account",
+    "deleteHint": "This deletes your account and all fields and plans stored with it. It cannot be undone.",
+    "deleteConfirm": "Yes, delete everything",
+    "errWrong": "E-mail or password is not correct.",
+    "errExists": "An account with this e-mail already exists. Try logging in.",
+    "errTooMany": "Too many attempts. Please wait a minute and try again.",
+    "errGeneric": "Something went wrong. Please try again.",
+    "errOffline": "No connection to FieldShift. Check your internet and try again.",
+    "errEmail": "Please enter a valid e-mail address.",
+    "errPassword": "Please enter your password.",
+    "errPasswordShort": "The password needs at least 8 characters.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "share": {
+    "title": "Share farm with a code",
+    "rowSub": "For family members without an account",
+    "intro": "Anyone with the code sees and edits the same fields — no account needed. Keep the code private."
+  },
+  "glossary": {
+    "title": "Glossary",
+    "subtitle": "Every term in plain words",
+    "intro": "What the words in FieldShift mean, and why they matter for your field.",
+    "search": "Search a word",
+    "explain": "Explain {{term}}",
+    "items": {
+      "waterDemand": {
+        "term": "Crop water demand",
+        "plain": "How much water the weather pulls out of a healthy, well-watered crop each day — hot, dry, windy and sunny days pull more. Scientists call it reference evapotranspiration (ET₀).",
+        "why": "It tells you how fast your soil dries out, so FieldShift can say when to irrigate and how much."
+      },
+      "soilWater": {
+        "term": "Soil water",
+        "plain": "The water held in the soil around the roots that the crop can still take up. FieldShift tracks it every day like a bank account: rain and irrigation pay in, the crop's water use pays out.",
+        "why": "When the 'easily available' part is used up, the crop starts to suffer and yield is lost."
+      },
+      "easyWater": {
+        "term": "Easily available water",
+        "plain": "The part of the soil water a crop can take up without effort. Once it is used, the plant closes its pores to save water and grows less.",
+        "why": "The best moment to irrigate is just before this part is used up."
+      },
+      "greenness": {
+        "term": "Greenness (NDVI)",
+        "plain": "A satellite measure of how green and dense the plants are, from 0 (bare soil) to about 0.9 (thick, healthy crop).",
+        "why": "It shows growth, harvests and weak spots in your field, even before you see them."
+      },
+      "rainVsNormal": {
+        "term": "Rain vs. normal (SPI)",
+        "plain": "Compares the rain of the last weeks with the same weeks in the past 40 years. Below zero means drier than usual, below −1.5 means very dry.",
+        "why": "It shows quickly whether you are heading into a drought."
+      },
+      "drought": {
+        "term": "Drought level",
+        "plain": "How dry your area is compared with normal, combining rain, crop water demand, soil moisture and plant greenness. Levels follow the U.S. Drought Monitor: D0 (abnormally dry) to D4 (exceptional).",
+        "why": "It helps you plan water use and choose drought-tolerant crops early."
+      },
+      "cropWaterFactor": {
+        "term": "Crop water factor",
+        "plain": "How much water your crop uses compared with the 'crop water demand' of the weather. Small young plants use less, a full green canopy uses more. Scientists call it Kc.",
+        "why": "FieldShift multiplies it with the weather to know your crop's real water use — and corrects it with satellite images of your field."
+      },
+      "zones": {
+        "term": "Management zones",
+        "plain": "Parts of your field that always grow better or worse than the rest, found by an AI model from many satellite images and the terrain.",
+        "why": "Treat each zone on its own: sample soil, adjust seed or fertiliser, check drainage."
+      },
+      "erosion": {
+        "term": "Erosion risk",
+        "plain": "How much soil heavy rain could wash away each year, estimated from slope, rain, soil and crop cover (the RUSLE method).",
+        "why": "Bare soil on slopes loses fertility fast; cover crops and contour farming protect it."
+      },
+      "wetness": {
+        "term": "Wetness",
+        "plain": "Where water collects in your field because of its shape — low, flat spots that drain a big area.",
+        "why": "These spots stay wet, can waterlog, and are worth checking for drainage."
+      },
+      "frostHollow": {
+        "term": "Frost hollow",
+        "plain": "A low spot where cold air sinks and collects on clear, calm nights.",
+        "why": "Late spring and early autumn frosts hit here first — avoid frost-sensitive crops there."
+      },
+      "rotation": {
+        "term": "Crop rotation",
+        "plain": "Growing different crops on the same field from year to year instead of the same crop again.",
+        "why": "It breaks pest and disease cycles, adds nitrogen (with legumes) and builds healthier soil — often with higher yields."
+      },
+      "nitrogen": {
+        "term": "Nitrogen balance",
+        "plain": "Nitrogen the next crop gets from the previous one (legumes like peas, beans and alfalfa leave nitrogen) minus what it still needs.",
+        "why": "A positive balance means you can use less fertiliser."
+      },
+      "breakCrop": {
+        "term": "Break crop",
+        "plain": "A crop from a different plant family that pests and diseases of your main crop cannot live on.",
+        "why": "One or two years of a break crop starve soil-borne diseases and pests."
+      },
+      "returnInterval": {
+        "term": "Return interval",
+        "plain": "The minimum number of years before the same crop (or its family) should be grown again on a field.",
+        "why": "Growing it again too soon lets soil-borne diseases and pests build up."
+      },
+      "confidence": {
+        "term": "Confidence",
+        "plain": "How sure FieldShift is about a piece of advice, from the quality and resolution of the data behind it.",
+        "why": "Low confidence means: check the field yourself before you act."
+      },
+      "satellite": {
+        "term": "Satellite data",
+        "plain": "NASA and European satellites measure rain, temperature, soil moisture and plant greenness every few days for the whole world.",
+        "why": "It gives every farmer — even without sensors — a view of their field's water and growth."
+      },
+      "yieldBadYear": {
+        "term": "Typical and bad-year yield",
+        "plain": "FieldShift simulates your crop on the real weather of the last 15+ years at your field. 'Typical' is the middle result, 'bad year' is what 1 year in 10 gave.",
+        "why": "Plan for the typical year, but make sure you can live with the bad one."
+      }
+    }
+  },
+  "welcome": {
+    "skip": "Skip",
+    "next": "Next",
+    "addField": "Add my field",
+    "demo": "Try a demo farm",
+    "haveAccount": "I already have an account",
+    "again": "Show the welcome tour",
+    "stepOf": "Step {{n}} of {{total}}",
+    "s1": {
+      "title": "Your farm, seen from space",
+      "text": "FieldShift turns 40 years of NASA satellite and weather data into simple advice for your field.",
+      "p1": "Today: the 3 most important jobs this week — water, pests, disease, frost.",
+      "p2": "Field: satellite images, problem zones and erosion maps of your own field.",
+      "p3": "Plan: when to sow, and which crops to grow in the next years."
+    },
+    "s2": {
+      "title": "Add your field in seconds",
+      "text": "No account needed to start.",
+      "p1": "Zoom in on the satellite map and tap inside your field.",
+      "p2": "FieldShift finds the field boundary automatically.",
+      "p3": "Fix any corner by hand if needed, then pick your crop and sowing date."
+    },
+    "s3": {
+      "title": "Clear advice you can check",
+      "text": "Every recommendation comes in plain words — and one tap shows the data behind it.",
+      "p1": "Tap 'Why?' or the ? icons for simple explanations.",
+      "p2": "Create a free account to use it on phone and computer.",
+      "p3": "Your last advice stays available without internet."
+    }
+  },
+  "insights": {
+    "title": "Insights",
+    "subtitle": "Look deeper into your field, your climate and your options.",
+    "whatif": "What if?",
+    "whatifSub": "Test sowing dates, irrigation, +°C and less rain",
+    "climate": "Your changing climate",
+    "climateSub": "How your season has changed since 1984",
+    "alternatives": "Explore rotation strategies",
+    "alternativesSub": "Compare strategies on 15 seasons of NASA weather",
+    "learn": "Learn",
+    "planYears": "Plan the next years",
+    "planYearsSub": "Check your crop plan year by year"
+  },
+  "crops": {
+    "search": "Search crops",
+    "noMatch": "No crop matches.",
+    "fixesN": "adds nitrogen",
+    "perennial": "perennial",
+    "cover": "cover crop",
+    "family": {
+      "Poaceae": "Cereals & grasses",
+      "Fabaceae": "Legumes",
+      "Brassicaceae": "Cabbage family",
+      "Solanaceae": "Potato & tomato family",
+      "Asteraceae": "Sunflower family",
+      "Amaranthaceae": "Beet & quinoa family",
+      "Cucurbitaceae": "Squash & melon family",
+      "Apiaceae": "Carrot family",
+      "Amaryllidaceae": "Onion family",
+      "Convolvulaceae": "Sweet potato",
+      "Euphorbiaceae": "Cassava",
+      "Linaceae": "Flax",
+      "Polygonaceae": "Buckwheat",
+      "Malvaceae": "Cotton & mallow family",
+      "Cannabaceae": "Hemp",
+      "Boraginaceae": "Phacelia family",
+      "Mixed": "Mixtures"
+    }
   }
 }

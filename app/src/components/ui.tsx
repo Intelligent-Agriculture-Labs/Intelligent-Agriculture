@@ -218,7 +218,7 @@ export function ErrorView({ message, onRetry }: { message: string; onRetry?: () 
 
 export function Section({ title, children, right }: { title: string; children: React.ReactNode; right?: React.ReactNode }) {
   return (
-    <View style={{ marginTop: space.xl }}>
+    <View style={{ marginTop: space.xxl }}>
       <View style={styles.sectionHead}>
         <Txt v="h3" accessibilityRole="header">
           {title}
@@ -346,13 +346,13 @@ export function KV({ k, v, testID }: { k: string; v: string; testID?: string }) 
 export const styles = StyleSheet.create({
   scroll: { paddingBottom: 48 },
   column: { width: "100%", maxWidth: 760, alignSelf: "center", paddingHorizontal: space.lg, paddingTop: space.md, flex: 1 },
-  h1: { fontSize: 28, fontWeight: "800", letterSpacing: -0.4 },
-  h2: { fontSize: 22, fontWeight: "700" },
-  h3: { fontSize: 18, fontWeight: "700" },
-  body: { fontSize: 16, lineHeight: 23 },
-  small: { fontSize: 13, lineHeight: 18 },
+  h1: { fontSize: 26, fontWeight: "700", letterSpacing: -0.3, lineHeight: 32 },
+  h2: { fontSize: 20, fontWeight: "700", lineHeight: 26 },
+  h3: { fontSize: 17, fontWeight: "600", lineHeight: 23 },
+  body: { fontSize: 16, lineHeight: 24 },
+  small: { fontSize: 13, lineHeight: 19 },
   label: { fontSize: 15, fontWeight: "600" },
-  card: { borderRadius: radius.lg, padding: space.lg, borderWidth: StyleSheet.hairlineWidth, marginTop: space.md },
+  card: { borderRadius: radius.lg, padding: space.lg, borderWidth: 1, marginTop: space.md },
   button: {
     minHeight: MIN_TOUCH + 4,
     borderRadius: radius.md,
@@ -365,7 +365,7 @@ export const styles = StyleSheet.create({
   },
   buttonText: { fontSize: 16, fontWeight: "700" },
   chip: {
-    minHeight: MIN_TOUCH,
+    minHeight: 40,
     paddingHorizontal: space.md,
     borderRadius: 999,
     borderWidth: 1,

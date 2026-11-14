@@ -3,12 +3,12 @@ import type { Risk } from "@/api/types";
 
 /** Colour tokens. All text/background pairs are WCAG AA (>= 4.5:1) in both schemes. */
 const light = {
-  bg: "#f6f8f3",
+  bg: "#f5f6f2",
   card: "#ffffff",
-  cardAlt: "#eef3e8",
-  text: "#17241a",
-  textMuted: "#4a5a4d",
-  border: "#d5dfcf",
+  cardAlt: "#eef1ea",
+  text: "#18211b",
+  textMuted: "#526056",
+  border: "#e2e7de",
   primary: "#2f6b3a",
   primaryText: "#ffffff",
   accent: "#b5651d",
@@ -25,12 +25,12 @@ const light = {
 };
 
 const dark: typeof light = {
-  bg: "#0f1611",
-  card: "#18221b",
-  cardAlt: "#1f2c23",
-  text: "#e9f1e6",
-  textMuted: "#a9b8ab",
-  border: "#2d3b31",
+  bg: "#101511",
+  card: "#18201a",
+  cardAlt: "#202a22",
+  text: "#e9efe7",
+  textMuted: "#aab6ac",
+  border: "#2a352d",
   primary: "#7fc48a",
   primaryText: "#0f1611",
   accent: "#e3a15e",
@@ -52,6 +52,6 @@ export function useTheme(): Theme {
   return useColorScheme() === "dark" ? dark : light;
 }
 
-export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };
-export const radius = { sm: 8, md: 12, lg: 18 };
+export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 };
+export const radius = { sm: 8, md: 12, lg: 16, xl: 22 };
 export const MIN_TOUCH = 44;

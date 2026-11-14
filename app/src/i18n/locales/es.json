@@ -4,13 +4,14 @@
     "tagline": "Datos de la NASA → decisiones para tu finca esta semana"
   },
   "tabs": {
-    "home": "Esta semana",
+    "home": "Hoy",
     "rotations": "Rotaciones",
     "whatif": "¿Y si…?",
     "climate": "Clima",
-    "settings": "Ajustes",
-    "map": "Mapa",
-    "plan": "Plan"
+    "settings": "Más",
+    "map": "Parcela",
+    "plan": "Planificar",
+    "insights": "Análisis"
   },
   "common": {
     "loading": "Cargando datos de la NASA…",
@@ -34,7 +35,10 @@
     "moderate": "Moderado",
     "high": "Alto",
     "severe": "Grave",
-    "none": "Ninguno"
+    "none": "Ninguno",
+    "gotIt": "Entendido",
+    "showAll": "Ver los {{n}}",
+    "showLess": "Ver menos"
   },
   "banner": {
     "mock": "DATOS DE PRUEBA — no se pudo contactar con el servidor de FieldShift. Las cifras son de ejemplo, no son datos de la NASA.",
@@ -55,7 +59,7 @@
     "layer": "Capa del mapa",
     "layerStreet": "Mapa",
     "layerSatellite": "Color real NASA",
-    "layerNdvi": "Vegetación NASA (NDVI)",
+    "layerNdvi": "Verdor NASA",
     "drawField": "Dibujar parcela",
     "drawHint": "Toca el mapa para añadir las esquinas de la parcela",
     "clearField": "Borrar contorno",
@@ -72,17 +76,17 @@
     "flood": "Inundación"
   },
   "home": {
-    "title": "Esta semana en tu finca",
+    "title": "Esta semana en su finca",
     "subtitle": "{{crop}} · {{place}}",
     "topActions": "Acciones principales",
     "moreActions": "Otras señales",
     "drought": "Sequía",
     "water": "Agua",
-    "rootZone": "Agua usada en la zona de raíces",
+    "rootZone": "Agua del suelo que su cultivo ha usado",
     "nextIrrigation": "Próximo riego",
     "noIrrigationNeeded": "Aún no es necesario",
     "rain7d": "Lluvia próximos 7 días",
-    "et7d": "Demanda de agua del cultivo en 7 días",
+    "et7d": "Demanda de agua del cultivo, 7 días",
     "updated": "Actualizado {{date}}",
     "why": "¿Por qué?",
     "changeField": "Cambiar parcela",
@@ -93,7 +97,13 @@
     "seasonIrr": "Riego",
     "modeToday": "Hoy",
     "modeReplay": "Repetir {{date}}",
-    "replayNote": "Reproduciendo datos reales de la NASA del {{date}}, una semana de la temporada de cultivo."
+    "replayNote": "Reproduciendo datos reales de la NASA del {{date}}, una semana de la temporada de cultivo.",
+    "moreTitle": "Más sobre su parcela esta semana",
+    "moreSubtitle": "Sequía, agua del suelo, lluvia y totales de la campaña",
+    "allClearTitle": "Nada urgente esta semana",
+    "allClearText": "Su parcela se ve bien. Vuelva en unos días: FieldShift se actualiza con cada nuevo pronóstico.",
+    "waterUsed": "{{used}} de {{total}} usados",
+    "noIrrigationNeededShort": "No hace falta"
   },
   "why": {
     "title": "¿Por qué este consejo?",
@@ -190,7 +200,7 @@
     "insights": "Qué significa"
   },
   "settings": {
-    "title": "Ajustes",
+    "title": "Más",
     "language": "Idioma",
     "units": "Unidades",
     "metric": "Métrico (mm, °C, ha)",
@@ -210,7 +220,9 @@
     "clearCache": "Borrar datos guardados",
     "cleared": "Datos guardados borrados",
     "rawSeries": "Series de datos",
-    "field": "Tu parcela"
+    "field": "Tu parcela",
+    "preferences": "Preferencias",
+    "help": "Ayuda"
   },
   "risk": {
     "low": "Bajo",
@@ -234,17 +246,18 @@
     "logged": "Último riego: {{amount}} el {{date}}"
   },
   "tabsShort": {
-    "home": "Semana",
-    "map": "Mapa",
+    "home": "Hoy",
+    "map": "Parcela",
     "plan": "Plan",
     "rotations": "Rotar",
     "whatif": "¿Y si?",
     "climate": "Clima",
-    "settings": "Ajustes"
+    "settings": "Más",
+    "insights": "Análisis"
   },
   "map": {
     "title": "Su campo desde el espacio",
-    "subtitle": "Mapas del terreno calculados con la elevación NASA SRTM: dónde se erosiona el suelo, se acumula el agua y se estanca el aire frío.",
+    "subtitle": "Mapas hechos con datos de altura de la NASA: dónde se pierde suelo, se acumula agua y se estanca el aire frío.",
     "layers": "Capa del mapa",
     "loading": "Calculando mapas del terreno con la elevación NASA SRTM…",
     "offlineNote": "Sin conexión: las imágenes del mapa necesitan internet; la leyenda, estadísticas y consejos son de su última descarga.",
@@ -260,7 +273,7 @@
     "base": {
       "street": "Mapa de calles",
       "truecolor": "Satélite (NASA)",
-      "ndvi": "Verdor (NDVI)",
+      "ndvi": "Verdor (NASA)",
       "esri": "Satélite (alta resolución)",
       "naip": "USDA NAIP (EE. UU.)",
       "s2": "Sentinel-2 2023"
@@ -279,7 +292,10 @@
       "terrain": "Relieve",
       "satellite": "Satélite"
     },
-    "subtitleSatellite": "Imágenes Sentinel-2 de 10 m de su parcela de los últimos 12 meses: verdor, cortes y cosechas, y zonas de manejo con IA."
+    "subtitleSatellite": "Imágenes Sentinel-2 de 10 m de su parcela de los últimos 12 meses: verdor, cortes y cosechas, y zonas de manejo con IA.",
+    "layersButton": "Capas",
+    "baseTitle": "Mapa de fondo",
+    "legendTitle": "Qué significan los colores"
   },
   "plan": {
     "title": "Planificador de temporada",
@@ -309,7 +325,44 @@
     "risks": "Riesgo climático por mes",
     "riskA11y": "Riesgo de helada y calor por mes",
     "riskLegend": "❄ años pasados con helada dañina en ese mes · ☀ años con 3 o más días de estrés por calor.",
-    "sources": "Datos: NASA POWER (clima 1984→hoy), SoilGrids (suelo), modelo de temporada FieldShift."
+    "sources": "Datos: NASA POWER (clima 1984→hoy), SoilGrids (suelo), modelo de temporada FieldShift.",
+    "tabSeason": "Esta campaña",
+    "tabYears": "Próximos años",
+    "waterSubtitle": "Necesidad mensual de agua, lluvia y riego",
+    "risksSubtitle": "Probabilidad de helada y calor cada mes",
+    "years": {
+      "none": "Ninguno",
+      "checking": "Revisando su plan con ciencia del suelo y 15 campañas de clima…",
+      "stale": "Ha cambiado el plan: revíselo de nuevo.",
+      "check": "Revisar mi plan",
+      "yearA11y": "{{year}}: {{crop}}, {{verdict}}",
+      "verdict": {
+        "good": "bien",
+        "caution": "revisar",
+        "problem": "hay que cambiar"
+      },
+      "noIssues": "No se encontraron problemas para este año.",
+      "source": "Fuente",
+      "yield": "Rendimiento esperado",
+      "water": "Agua",
+      "nitrogen": "Nitrógeno restante",
+      "expert": "Margen ≈ {{margin}} USD/ha · suelo desnudo {{bare}} días · efecto de rotación {{effect}} % · erosión {{erosion}} t/ha",
+      "tapYear": "Toque un año para ver qué está bien y qué cambiar.",
+      "diseaseTitle": "Acumulación de enfermedades y plagas",
+      "diseaseSubtitle": "Qué problemas del suelo crecen con los años",
+      "improve": "Cómo mejorar",
+      "optimized": "Plan optimizado con IA",
+      "apply": "Usar este plan",
+      "yourPlan": "Su plan",
+      "mainCrop": "Cultivo principal {{year}}",
+      "coverCrop": "Cultivo de cobertura tras {{year}}",
+      "addYear": "Añadir un año",
+      "removeYear": "Quitar el último año",
+      "coverHint": "Columna derecha: un cultivo de cobertura opcional tras la cosecha; protege el suelo y puede aportar nitrógeno.",
+      "history": "Lo que creció antes",
+      "historyHint": "Los cultivos anteriores importan para enfermedades y nitrógeno",
+      "pastCrop": "Cultivo en {{year}}"
+    }
   },
   "fields": {
     "title": "Sus parcelas",
@@ -381,14 +434,14 @@
     "mapA11y": "Mapa de satélite de su parcela con {{layer}}",
     "overlay": {
       "zones": "Zonas IA",
-      "ndvi": "NDVI (última)",
+      "ndvi": "Verdor (reciente)",
       "truecolor": "Color real (última)",
       "none": "Sin capa"
     },
     "latestScene": "Última imagen Sentinel-2 despejada: {{date}}",
     "zonesTitle": "Zonas de manejo con IA",
     "zonesIntro": "Un modelo de aprendizaje automático no supervisado (k-means) agrupó su parcela en zonas que se comportaron igual en todas las imágenes despejadas del año, junto con el relieve.",
-    "zoneStats": "{{pct}} % · NDVI {{ndvi}}",
+    "zoneStats": "{{pct}} % · verdor {{ndvi}}",
     "method": "Método: {{method}} · k = {{k}} · silueta {{s}}",
     "seriesTitle": "Verdor del cultivo en la campaña",
     "seasonType": "Campaña detectada",
@@ -397,15 +450,17 @@
     "senescence": "Senescencia",
     "bare": "Suelo desnudo: {{periods}}",
     "seriesHint": "Puntos: media de la parcela en cada imagen Sentinel-2 despejada de 10 m. Línea: curva suavizada. Sombreado: periodos de suelo desnudo.",
-    "kcbTitle": "Coeficiente de cultivo por satélite (Kcb)",
+    "kcbTitle": "Factor de agua del cultivo visto desde el espacio",
     "kcbHint": "Cuánta agua usa su cultivo frente a un césped de referencia, estimado a partir de su verdor actual. FieldShift lo usa para corregir el balance hídrico con lo que realmente ve el satélite.",
     "scenes": "Imágenes utilizadas",
     "sceneRow": "nubes {{cloud}} % · parcela despejada {{valid}} %",
     "refresh": "Actualizar análisis de satélite",
-    "chartA11y": "Gráfico de verdor con {{n}} imágenes de satélite. NDVI máximo {{peak}}. Campaña: {{type}}.",
+    "chartA11y": "Gráfico de verdor de {{n}} imágenes satelitales. Verdor máximo {{peak}}. Campaña: {{type}}.",
     "chartA11yShort": "Gráfico de verdor con {{n}} imágenes de satélite.",
     "harvestLegend": "Corte / cosecha visto desde el espacio",
-    "harvests": "{{count}} cortes / cosechas detectados: {{dates}}"
+    "harvests": "{{count}} cortes / cosechas detectados: {{dates}}",
+    "seasonDetails": "Detalles de la campaña: brotación, pico, cosechas",
+    "greennessShort": "verdor"
   },
   "detect": {
     "mode": "Detectar parcela automáticamente",
@@ -423,5 +478,221 @@
     "again": "Reintentar (toque su parcela)",
     "border": "El contorno llega al borde de la zona analizada: su parcela puede ser mayor. Aleje el mapa y revíselo.",
     "onboardingDone": "Parcela encontrada: {{area}} ha ({{pct}} % de confianza). Puede ajustar el contorno después en Editar parcela."
+  },
+  "tips": {
+    "today": "Estas son las tareas más importantes de la semana, la más urgente primero. Toque una tarjeta para ver por qué: cada número viene con su evidencia de la NASA.",
+    "planSeason": "Su campaña de un vistazo: cuándo sembrar, qué pasa y cuándo, y cuánta agua necesitará el cultivo.",
+    "planYears": "Planifique qué sembrará en los próximos años. FieldShift revisa cada año enfermedades, nitrógeno, agua y suelo, y sugiere mejores opciones.",
+    "insights": "Profundice: pruebe escenarios '¿y si…?', vea cómo ha cambiado su clima y compare estrategias de rotación."
+  },
+  "account": {
+    "title": "Cuenta",
+    "loginTitle": "Iniciar sesión",
+    "registerTitle": "Cree su cuenta gratuita",
+    "why": "Con una cuenta tendrá todas sus parcelas y planes en el teléfono y en el ordenador: inicie sesión donde quiera.",
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "name": "Su nombre (opcional)",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordNew": "Contraseña (al menos 8 caracteres)",
+    "uploadLocal": "Añadir a mi cuenta las {{count}} parcela(s) de este dispositivo",
+    "privacy": "Solo guardamos su finca (parcelas, planes, ajustes). Las contraseñas se guardan como hash seguro. Sin publicidad y sin venta de datos.",
+    "nudge": "Cree una cuenta gratuita para usar FieldShift en el teléfono y en el ordenador.",
+    "signInRow": "Iniciar sesión o crear cuenta",
+    "signInRowSub": "Sus parcelas en todos sus dispositivos",
+    "syncInfo": "Su finca se guarda en su cuenta",
+    "since": "Miembro desde {{date}}",
+    "logout": "Cerrar sesión",
+    "changePassword": "Cambiar contraseña",
+    "oldPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña (al menos 8 caracteres)",
+    "passwordChanged": "Contraseña cambiada.",
+    "delete": "Eliminar cuenta",
+    "deleteHint": "Esto elimina su cuenta y todas las parcelas y planes guardados en ella. No se puede deshacer.",
+    "deleteConfirm": "Sí, eliminar todo",
+    "errWrong": "El correo o la contraseña no son correctos.",
+    "errExists": "Ya existe una cuenta con este correo. Pruebe a iniciar sesión.",
+    "errTooMany": "Demasiados intentos. Espere un minuto y vuelva a intentarlo.",
+    "errGeneric": "Algo salió mal. Vuelva a intentarlo.",
+    "errOffline": "Sin conexión con FieldShift. Compruebe su internet y vuelva a intentarlo.",
+    "errEmail": "Introduzca un correo electrónico válido.",
+    "errPassword": "Introduzca su contraseña.",
+    "errPasswordShort": "La contraseña necesita al menos 8 caracteres.",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
+  },
+  "share": {
+    "title": "Compartir la finca con un código",
+    "rowSub": "Para familiares sin cuenta",
+    "intro": "Quien tenga el código ve y edita las mismas parcelas, sin cuenta. Mantenga el código en privado."
+  },
+  "glossary": {
+    "title": "Glosario",
+    "subtitle": "Cada término en palabras sencillas",
+    "intro": "Qué significan las palabras de FieldShift y por qué importan para su parcela.",
+    "search": "Buscar una palabra",
+    "explain": "Explicar {{term}}",
+    "items": {
+      "waterDemand": {
+        "term": "Demanda de agua del cultivo",
+        "plain": "Cuánta agua extrae el tiempo cada día de un cultivo sano y bien regado: los días calurosos, secos, ventosos y soleados extraen más. Los científicos la llaman evapotranspiración de referencia (ET₀).",
+        "why": "Indica lo rápido que se seca su suelo, para que FieldShift diga cuándo y cuánto regar."
+      },
+      "soilWater": {
+        "term": "Agua del suelo",
+        "plain": "El agua del suelo alrededor de las raíces que el cultivo aún puede tomar. FieldShift la sigue cada día como una cuenta bancaria: la lluvia y el riego ingresan, el consumo del cultivo retira.",
+        "why": "Cuando se agota la parte 'fácilmente disponible', el cultivo sufre y se pierde cosecha."
+      },
+      "easyWater": {
+        "term": "Agua fácilmente disponible",
+        "plain": "La parte del agua del suelo que el cultivo toma sin esfuerzo. Cuando se acaba, la planta cierra sus poros para ahorrar agua y crece menos.",
+        "why": "El mejor momento para regar es justo antes de que se agote esta parte."
+      },
+      "greenness": {
+        "term": "Verdor (NDVI)",
+        "plain": "Una medida satelital de lo verdes y densas que están las plantas, de 0 (suelo desnudo) a unos 0,9 (cultivo denso y sano).",
+        "why": "Muestra el crecimiento, las cosechas y los puntos débiles de su parcela, incluso antes de que usted los vea."
+      },
+      "rainVsNormal": {
+        "term": "Lluvia frente a lo normal (SPI)",
+        "plain": "Compara la lluvia de las últimas semanas con las mismas semanas de los últimos 40 años. Por debajo de cero es más seco de lo habitual; por debajo de −1,5, muy seco.",
+        "why": "Muestra rápido si se acerca una sequía."
+      },
+      "drought": {
+        "term": "Nivel de sequía",
+        "plain": "Lo seca que está su zona frente a lo normal, combinando lluvia, demanda de agua, humedad del suelo y verdor de las plantas. Los niveles siguen el U.S. Drought Monitor: D0 (anormalmente seco) a D4 (excepcional).",
+        "why": "Ayuda a planificar el uso del agua y a elegir pronto cultivos tolerantes a la sequía."
+      },
+      "cropWaterFactor": {
+        "term": "Factor de agua del cultivo",
+        "plain": "Cuánta agua usa su cultivo comparado con la 'demanda de agua' del tiempo. Las plantas pequeñas usan menos; un cultivo verde y cerrado, más. Los científicos lo llaman Kc.",
+        "why": "FieldShift lo multiplica por el tiempo para conocer el consumo real de su cultivo, y lo corrige con imágenes satelitales de su parcela."
+      },
+      "zones": {
+        "term": "Zonas de manejo",
+        "plain": "Partes de su parcela que siempre crecen mejor o peor que el resto, halladas por un modelo de IA a partir de muchas imágenes satelitales y del relieve.",
+        "why": "Trate cada zona por separado: muestree el suelo, ajuste semilla o abono, revise el drenaje."
+      },
+      "erosion": {
+        "term": "Riesgo de erosión",
+        "plain": "Cuánto suelo podría arrastrar la lluvia fuerte cada año, estimado a partir de pendiente, lluvia, suelo y cobertura (método RUSLE).",
+        "why": "El suelo desnudo en pendiente pierde fertilidad rápido; los cultivos de cobertura y el laboreo en curvas de nivel lo protegen."
+      },
+      "wetness": {
+        "term": "Humedad",
+        "plain": "Dónde se acumula el agua en su parcela por su forma: zonas bajas y llanas que drenan una gran superficie.",
+        "why": "Estas zonas siguen mojadas, pueden encharcarse y conviene revisar su drenaje."
+      },
+      "frostHollow": {
+        "term": "Hondonada de helada",
+        "plain": "Una zona baja donde el aire frío baja y se acumula en noches despejadas y sin viento.",
+        "why": "Las heladas tardías de primavera y tempranas de otoño llegan aquí primero: evite allí cultivos sensibles."
+      },
+      "rotation": {
+        "term": "Rotación de cultivos",
+        "plain": "Sembrar cultivos distintos en la misma parcela año tras año en lugar de repetir el mismo.",
+        "why": "Rompe los ciclos de plagas y enfermedades, aporta nitrógeno (con leguminosas) y crea un suelo más sano, a menudo con más rendimiento."
+      },
+      "nitrogen": {
+        "term": "Balance de nitrógeno",
+        "plain": "El nitrógeno que el siguiente cultivo recibe del anterior (las leguminosas como guisante, frijol y alfalfa dejan nitrógeno) menos lo que aún necesita.",
+        "why": "Un balance positivo significa que puede usar menos abono."
+      },
+      "breakCrop": {
+        "term": "Cultivo de ruptura",
+        "plain": "Un cultivo de otra familia de plantas en el que no pueden vivir las plagas y enfermedades de su cultivo principal.",
+        "why": "Uno o dos años de cultivo de ruptura dejan sin alimento a las enfermedades y plagas del suelo."
+      },
+      "returnInterval": {
+        "term": "Intervalo de retorno",
+        "plain": "El número mínimo de años antes de volver a sembrar el mismo cultivo (o su familia) en una parcela.",
+        "why": "Volver demasiado pronto permite que aumenten las enfermedades y plagas del suelo."
+      },
+      "confidence": {
+        "term": "Confianza",
+        "plain": "Lo seguro que está FieldShift de un consejo, según la calidad y resolución de los datos.",
+        "why": "Confianza baja significa: revise la parcela usted mismo antes de actuar."
+      },
+      "satellite": {
+        "term": "Datos satelitales",
+        "plain": "Satélites de la NASA y europeos miden lluvia, temperatura, humedad del suelo y verdor de las plantas cada pocos días en todo el mundo.",
+        "why": "Da a cada agricultor, incluso sin sensores, una vista del agua y el crecimiento de su parcela."
+      },
+      "yieldBadYear": {
+        "term": "Rendimiento típico y de año malo",
+        "plain": "FieldShift simula su cultivo con el tiempo real de los últimos 15+ años en su parcela. 'Típico' es el resultado medio; 'año malo' es lo que dio 1 de cada 10 años.",
+        "why": "Planifique para el año típico, pero asegúrese de poder soportar el malo."
+      }
+    }
+  },
+  "welcome": {
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "addField": "Añadir mi parcela",
+    "demo": "Probar una finca de demostración",
+    "haveAccount": "Ya tengo una cuenta",
+    "again": "Ver la introducción otra vez",
+    "stepOf": "Paso {{n}} de {{total}}",
+    "s1": {
+      "title": "Su finca, vista desde el espacio",
+      "text": "FieldShift convierte 40 años de datos satelitales y meteorológicos de la NASA en consejos sencillos para su parcela.",
+      "p1": "Hoy: las 3 tareas más importantes de la semana: agua, plagas, enfermedades, heladas.",
+      "p2": "Parcela: imágenes satelitales, zonas problemáticas y mapas de erosión de su propia parcela.",
+      "p3": "Planificar: cuándo sembrar y qué cultivos poner en los próximos años."
+    },
+    "s2": {
+      "title": "Añada su parcela en segundos",
+      "text": "No necesita cuenta para empezar.",
+      "p1": "Acerque el mapa satelital y toque dentro de su parcela.",
+      "p2": "FieldShift encuentra el límite de la parcela automáticamente.",
+      "p3": "Corrija cualquier esquina a mano si hace falta y elija cultivo y fecha de siembra."
+    },
+    "s3": {
+      "title": "Consejos claros que puede comprobar",
+      "text": "Cada recomendación viene en palabras sencillas, y un toque muestra los datos que la respaldan.",
+      "p1": "Toque '¿Por qué?' o los iconos ? para ver explicaciones sencillas.",
+      "p2": "Cree una cuenta gratuita para usarla en el teléfono y el ordenador.",
+      "p3": "Su último consejo sigue disponible sin internet."
+    }
+  },
+  "insights": {
+    "title": "Análisis",
+    "subtitle": "Mire más a fondo su parcela, su clima y sus opciones.",
+    "whatif": "¿Y si…?",
+    "whatifSub": "Pruebe fechas de siembra, riego, +°C y menos lluvia",
+    "climate": "Su clima está cambiando",
+    "climateSub": "Cómo ha cambiado su campaña desde 1984",
+    "alternatives": "Explorar estrategias de rotación",
+    "alternativesSub": "Compare estrategias con 15 campañas de clima de la NASA",
+    "learn": "Aprender",
+    "planYears": "Planificar los próximos años",
+    "planYearsSub": "Revise su plan de cultivos año a año"
+  },
+  "crops": {
+    "search": "Buscar cultivos",
+    "noMatch": "Ningún cultivo coincide.",
+    "fixesN": "aporta nitrógeno",
+    "perennial": "perenne",
+    "cover": "cultivo de cobertura",
+    "family": {
+      "Poaceae": "Cereales y gramíneas",
+      "Fabaceae": "Leguminosas",
+      "Brassicaceae": "Familia de la col",
+      "Solanaceae": "Familia de la papa y el tomate",
+      "Asteraceae": "Familia del girasol",
+      "Amaranthaceae": "Familia de la remolacha y la quinua",
+      "Cucurbitaceae": "Calabazas y melones",
+      "Apiaceae": "Familia de la zanahoria",
+      "Amaryllidaceae": "Familia de la cebolla",
+      "Convolvulaceae": "Batata",
+      "Euphorbiaceae": "Yuca",
+      "Linaceae": "Lino",
+      "Polygonaceae": "Trigo sarraceno",
+      "Malvaceae": "Algodón y malvas",
+      "Cannabaceae": "Cáñamo",
+      "Boraginaceae": "Familia de la facelia",
+      "Mixed": "Mezclas"
+    }
   }
 }

@@ -4,13 +4,14 @@
     "tagline": "Données de la NASA → décisions agricoles de la semaine"
   },
   "tabs": {
-    "home": "Cette semaine",
+    "home": "Aujourd'hui",
     "rotations": "Rotations",
     "whatif": "Et si… ?",
     "climate": "Climat",
-    "settings": "Réglages",
-    "map": "Carte",
-    "plan": "Plan"
+    "settings": "Plus",
+    "map": "Parcelle",
+    "plan": "Planifier",
+    "insights": "Analyses"
   },
   "common": {
     "loading": "Chargement des données NASA…",
@@ -34,7 +35,10 @@
     "moderate": "Modéré",
     "high": "Élevé",
     "severe": "Sévère",
-    "none": "Aucun"
+    "none": "Aucun",
+    "gotIt": "Compris",
+    "showAll": "Tout afficher ({{n}})",
+    "showLess": "Afficher moins"
   },
   "banner": {
     "mock": "DONNÉES FICTIVES — le serveur FieldShift est injoignable. Les chiffres ci-dessous sont des exemples, pas des données NASA.",
@@ -55,7 +59,7 @@
     "layer": "Fond de carte",
     "layerStreet": "Carte",
     "layerSatellite": "Couleurs réelles NASA",
-    "layerNdvi": "Végétation NASA (NDVI)",
+    "layerNdvi": "Verdure NASA",
     "drawField": "Tracer la parcelle",
     "drawHint": "Touchez la carte pour ajouter les coins de la parcelle",
     "clearField": "Effacer le contour",
@@ -78,11 +82,11 @@
     "moreActions": "Autres signaux",
     "drought": "Sécheresse",
     "water": "Eau",
-    "rootZone": "Eau consommée dans la zone racinaire",
+    "rootZone": "Eau du sol déjà utilisée par la culture",
     "nextIrrigation": "Prochaine irrigation",
     "noIrrigationNeeded": "Pas encore nécessaire",
     "rain7d": "Pluie sur 7 jours",
-    "et7d": "Besoin en eau de la culture sur 7 jours",
+    "et7d": "Besoin en eau de la culture, 7 jours",
     "updated": "Mis à jour le {{date}}",
     "why": "Pourquoi ?",
     "changeField": "Changer de parcelle",
@@ -93,7 +97,13 @@
     "seasonIrr": "Irrigation",
     "modeToday": "Aujourd'hui",
     "modeReplay": "Rejouer {{date}}",
-    "replayNote": "Relecture des données réelles de la NASA du {{date}}, une semaine en pleine saison."
+    "replayNote": "Relecture des données réelles de la NASA du {{date}}, une semaine en pleine saison.",
+    "moreTitle": "Plus sur votre parcelle cette semaine",
+    "moreSubtitle": "Sécheresse, eau du sol, pluie et cumuls de saison",
+    "allClearTitle": "Rien d'urgent cette semaine",
+    "allClearText": "Votre parcelle va bien. Revenez dans quelques jours — FieldShift se met à jour à chaque nouvelle prévision.",
+    "waterUsed": "{{used}} sur {{total}} utilisés",
+    "noIrrigationNeededShort": "Pas nécessaire"
   },
   "why": {
     "title": "Pourquoi ce conseil ?",
@@ -190,7 +200,7 @@
     "insights": "Ce que cela signifie"
   },
   "settings": {
-    "title": "Réglages",
+    "title": "Plus",
     "language": "Langue",
     "units": "Unités",
     "metric": "Métrique (mm, °C, ha)",
@@ -210,7 +220,9 @@
     "clearCache": "Effacer les données enregistrées",
     "cleared": "Données enregistrées effacées",
     "rawSeries": "Séries brutes",
-    "field": "Votre parcelle"
+    "field": "Votre parcelle",
+    "preferences": "Préférences",
+    "help": "Aide"
   },
   "risk": {
     "low": "Faible",
@@ -234,17 +246,18 @@
     "logged": "Dernière irrigation : {{amount}} le {{date}}"
   },
   "tabsShort": {
-    "home": "Semaine",
-    "map": "Carte",
+    "home": "Auj.",
+    "map": "Parcelle",
     "plan": "Plan",
     "rotations": "Rotation",
     "whatif": "Et si ?",
     "climate": "Climat",
-    "settings": "Réglages"
+    "settings": "Plus",
+    "insights": "Analyses"
   },
   "map": {
     "title": "Votre parcelle vue de l'espace",
-    "subtitle": "Cartes du relief calculées avec l'altitude NASA SRTM : où le sol s'érode, où l'eau s'accumule et où l'air froid stagne.",
+    "subtitle": "Cartes issues des données d'altitude de la NASA : où le sol part, où l'eau s'accumule et où l'air froid stagne.",
     "layers": "Couche",
     "loading": "Calcul des cartes du relief à partir de l'altitude NASA SRTM…",
     "offlineNote": "Hors ligne : les images de carte nécessitent une connexion ; la légende, les statistiques et les conseils proviennent du dernier téléchargement.",
@@ -260,7 +273,7 @@
     "base": {
       "street": "Plan",
       "truecolor": "Satellite (NASA)",
-      "ndvi": "Verdure (NDVI)",
+      "ndvi": "Verdure (NASA)",
       "esri": "Satellite (haute résolution)",
       "naip": "USDA NAIP (É.-U.)",
       "s2": "Sentinel-2 2023"
@@ -279,7 +292,10 @@
       "terrain": "Relief",
       "satellite": "Satellite"
     },
-    "subtitleSatellite": "Images Sentinel-2 à 10 m de votre parcelle sur 12 mois : verdure, coupes et récoltes, et zones de gestion par IA."
+    "subtitleSatellite": "Images Sentinel-2 à 10 m de votre parcelle sur 12 mois : verdure, coupes et récoltes, et zones de gestion par IA.",
+    "layersButton": "Calques",
+    "baseTitle": "Fond de carte",
+    "legendTitle": "Ce que signifient les couleurs"
   },
   "plan": {
     "title": "Planificateur de saison",
@@ -309,7 +325,44 @@
     "risks": "Risque météo par mois",
     "riskA11y": "Risque de gel et de chaleur par mois",
     "riskLegend": "❄ part des années avec un gel dommageable ce mois-là · ☀ part avec 3 jours ou plus de stress thermique.",
-    "sources": "Données : NASA POWER (météo 1984→aujourd'hui), SoilGrids (sol), modèle de saison FieldShift."
+    "sources": "Données : NASA POWER (météo 1984→aujourd'hui), SoilGrids (sol), modèle de saison FieldShift.",
+    "tabSeason": "Cette saison",
+    "tabYears": "Prochaines années",
+    "waterSubtitle": "Besoin en eau mensuel, pluie et irrigation",
+    "risksSubtitle": "Risque de gel et de chaleur chaque mois",
+    "years": {
+      "none": "Aucune",
+      "checking": "Vérification de votre plan avec la science du sol et 15 saisons de météo…",
+      "stale": "Vous avez modifié le plan — vérifiez-le à nouveau.",
+      "check": "Vérifier mon plan",
+      "yearA11y": "{{year}} : {{crop}}, {{verdict}}",
+      "verdict": {
+        "good": "bien",
+        "caution": "à vérifier",
+        "problem": "à changer"
+      },
+      "noIssues": "Aucun problème trouvé pour cette année.",
+      "source": "Source",
+      "yield": "Rendement attendu",
+      "water": "Eau",
+      "nitrogen": "Azote restant",
+      "expert": "Marge ≈ {{margin}} USD/ha · sol nu {{bare}} jours · effet rotation {{effect}} % · érosion {{erosion}} t/ha",
+      "tapYear": "Touchez une année pour voir ce qui va bien et ce qu'il faut changer.",
+      "diseaseTitle": "Accumulation de maladies et ravageurs",
+      "diseaseSubtitle": "Quels problèmes du sol augmentent au fil des années",
+      "improve": "Comment améliorer",
+      "optimized": "Plan optimisé par IA",
+      "apply": "Utiliser ce plan",
+      "yourPlan": "Votre plan",
+      "mainCrop": "Culture principale {{year}}",
+      "coverCrop": "Couvert après {{year}}",
+      "addYear": "Ajouter une année",
+      "removeYear": "Retirer la dernière année",
+      "coverHint": "Colonne de droite : un couvert végétal facultatif après la récolte — protège le sol et peut apporter de l'azote.",
+      "history": "Ce qui a poussé avant",
+      "historyHint": "Les cultures passées comptent pour les maladies et l'azote",
+      "pastCrop": "Culture en {{year}}"
+    }
   },
   "fields": {
     "title": "Vos parcelles",
@@ -381,14 +434,14 @@
     "mapA11y": "Carte satellite de votre parcelle montrant {{layer}}",
     "overlay": {
       "zones": "Zones IA",
-      "ndvi": "NDVI (dernière)",
+      "ndvi": "Verdure (récente)",
       "truecolor": "Couleurs réelles (dernière)",
       "none": "Aucune couche"
     },
     "latestScene": "Dernière image Sentinel-2 claire : {{date}}",
     "zonesTitle": "Zones de gestion par IA",
     "zonesIntro": "Un modèle d'apprentissage automatique non supervisé (k-means) a regroupé votre parcelle en zones au comportement semblable sur toutes les images claires de l'année, en tenant compte du relief.",
-    "zoneStats": "{{pct}} % · NDVI {{ndvi}}",
+    "zoneStats": "{{pct}} % · verdure {{ndvi}}",
     "method": "Méthode : {{method}} · k = {{k}} · silhouette {{s}}",
     "seriesTitle": "Verdure de la culture au fil de la saison",
     "seasonType": "Saison détectée",
@@ -397,15 +450,17 @@
     "senescence": "Sénescence",
     "bare": "Sol nu : {{periods}}",
     "seriesHint": "Points : moyenne de la parcelle sur chaque image Sentinel-2 claire à 10 m. Ligne : courbe lissée. Zones grisées : périodes de sol nu.",
-    "kcbTitle": "Coefficient cultural satellite (Kcb)",
+    "kcbTitle": "Facteur d'eau de la culture vu de l'espace",
     "kcbHint": "Quantité d'eau utilisée par votre culture par rapport à un gazon de référence, estimée à partir de sa verdure actuelle. FieldShift l'utilise pour corriger le bilan hydrique avec ce que voit réellement le satellite.",
     "scenes": "Images utilisées",
     "sceneRow": "nuages {{cloud}} % · parcelle claire {{valid}} %",
     "refresh": "Actualiser l'analyse satellite",
-    "chartA11y": "Graphique de verdure à partir de {{n}} images satellite. NDVI maximal {{peak}}. Saison : {{type}}.",
+    "chartA11y": "Graphique de verdure à partir de {{n}} images satellites. Verdure maximale {{peak}}. Saison : {{type}}.",
     "chartA11yShort": "Graphique de verdure à partir de {{n}} images satellite.",
     "harvestLegend": "Coupe / récolte vue de l'espace",
-    "harvests": "{{count}} coupes / récoltes détectées : {{dates}}"
+    "harvests": "{{count}} coupes / récoltes détectées : {{dates}}",
+    "seasonDetails": "Détails de la saison : reverdissement, pic, récoltes",
+    "greennessShort": "verdure"
   },
   "detect": {
     "mode": "Détecter la parcelle automatiquement",
@@ -423,5 +478,221 @@
     "again": "Réessayer (touchez votre parcelle)",
     "border": "Le contour touche le bord de la zone analysée : votre parcelle est peut-être plus grande. Dézoomez et vérifiez.",
     "onboardingDone": "Parcelle trouvée : {{area}} ha ({{pct}} % de confiance). Vous pourrez ajuster le contour dans Modifier la parcelle."
+  },
+  "tips": {
+    "today": "Voici les tâches les plus importantes de la semaine, la plus urgente d'abord. Touchez une carte pour voir pourquoi — chaque chiffre est appuyé par des données de la NASA.",
+    "planSeason": "Votre saison en un coup d'œil : quand semer, que se passe-t-il et quand, et combien d'eau la culture demandera.",
+    "planYears": "Planifiez vos cultures des prochaines années. FieldShift vérifie chaque année maladies, azote, eau et sol — et propose de meilleures options.",
+    "insights": "Allez plus loin : testez des scénarios « et si », voyez comment votre climat a changé et comparez des stratégies de rotation."
+  },
+  "account": {
+    "title": "Compte",
+    "loginTitle": "Se connecter",
+    "registerTitle": "Créez votre compte gratuit",
+    "why": "Avec un compte, toutes vos parcelles et vos plans sont sur votre téléphone et votre ordinateur — connectez-vous partout.",
+    "login": "Se connecter",
+    "register": "Créer un compte",
+    "name": "Votre nom (facultatif)",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "passwordNew": "Mot de passe (au moins 8 caractères)",
+    "uploadLocal": "Ajouter à mon compte les {{count}} parcelle(s) de cet appareil",
+    "privacy": "Nous ne stockons que votre ferme (parcelles, plans, réglages). Les mots de passe sont stockés sous forme de hachage sécurisé. Pas de publicité, pas de revente de données.",
+    "nudge": "Créez un compte gratuit pour utiliser FieldShift sur téléphone et ordinateur.",
+    "signInRow": "Se connecter ou créer un compte",
+    "signInRowSub": "Vos parcelles sur tous vos appareils",
+    "syncInfo": "Votre ferme est enregistrée dans votre compte",
+    "since": "Membre depuis le {{date}}",
+    "logout": "Se déconnecter",
+    "changePassword": "Changer le mot de passe",
+    "oldPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe (au moins 8 caractères)",
+    "passwordChanged": "Mot de passe modifié.",
+    "delete": "Supprimer le compte",
+    "deleteHint": "Cela supprime votre compte et toutes les parcelles et plans qui y sont enregistrés. Action irréversible.",
+    "deleteConfirm": "Oui, tout supprimer",
+    "errWrong": "L'e-mail ou le mot de passe est incorrect.",
+    "errExists": "Un compte existe déjà avec cet e-mail. Essayez de vous connecter.",
+    "errTooMany": "Trop de tentatives. Attendez une minute puis réessayez.",
+    "errGeneric": "Un problème est survenu. Veuillez réessayer.",
+    "errOffline": "Pas de connexion à FieldShift. Vérifiez votre internet et réessayez.",
+    "errEmail": "Veuillez saisir une adresse e-mail valide.",
+    "errPassword": "Veuillez saisir votre mot de passe.",
+    "errPasswordShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
+  },
+  "share": {
+    "title": "Partager la ferme avec un code",
+    "rowSub": "Pour les proches sans compte",
+    "intro": "Toute personne ayant le code voit et modifie les mêmes parcelles — sans compte. Gardez le code privé."
+  },
+  "glossary": {
+    "title": "Glossaire",
+    "subtitle": "Chaque terme en mots simples",
+    "intro": "Ce que signifient les mots de FieldShift, et pourquoi ils comptent pour votre parcelle.",
+    "search": "Chercher un mot",
+    "explain": "Expliquer {{term}}",
+    "items": {
+      "waterDemand": {
+        "term": "Besoin en eau de la culture",
+        "plain": "La quantité d'eau que la météo retire chaque jour d'une culture saine et bien arrosée — les jours chauds, secs, venteux et ensoleillés en retirent plus. Les scientifiques parlent d'évapotranspiration de référence (ET₀).",
+        "why": "Il indique la vitesse à laquelle votre sol s'assèche, pour que FieldShift dise quand et combien irriguer."
+      },
+      "soilWater": {
+        "term": "Eau du sol",
+        "plain": "L'eau du sol autour des racines que la culture peut encore prélever. FieldShift la suit chaque jour comme un compte en banque : pluie et irrigation versent, la consommation de la culture retire.",
+        "why": "Quand la part « facilement disponible » est épuisée, la culture souffre et le rendement baisse."
+      },
+      "easyWater": {
+        "term": "Eau facilement disponible",
+        "plain": "La part de l'eau du sol que la culture prélève sans effort. Une fois épuisée, la plante ferme ses pores pour économiser l'eau et pousse moins.",
+        "why": "Le meilleur moment pour irriguer est juste avant que cette part soit épuisée."
+      },
+      "greenness": {
+        "term": "Verdure (NDVI)",
+        "plain": "Une mesure satellitaire de la verdure et de la densité des plantes, de 0 (sol nu) à environ 0,9 (culture dense et saine).",
+        "why": "Elle montre la croissance, les récoltes et les zones faibles de votre parcelle, avant même que vous les voyiez."
+      },
+      "rainVsNormal": {
+        "term": "Pluie par rapport à la normale (SPI)",
+        "plain": "Compare la pluie des dernières semaines aux mêmes semaines des 40 dernières années. Sous zéro : plus sec que d'habitude ; sous −1,5 : très sec.",
+        "why": "Elle montre vite si une sécheresse arrive."
+      },
+      "drought": {
+        "term": "Niveau de sécheresse",
+        "plain": "À quel point votre zone est sèche par rapport à la normale, en combinant pluie, besoin en eau, humidité du sol et verdure des plantes. Les niveaux suivent le U.S. Drought Monitor : D0 (anormalement sec) à D4 (exceptionnel).",
+        "why": "Il aide à planifier l'eau et à choisir tôt des cultures tolérantes à la sécheresse."
+      },
+      "cropWaterFactor": {
+        "term": "Facteur d'eau de la culture",
+        "plain": "La quantité d'eau utilisée par votre culture par rapport au « besoin en eau » de la météo. Les jeunes plantes en utilisent moins, un couvert vert fermé davantage. Les scientifiques l'appellent Kc.",
+        "why": "FieldShift le multiplie par la météo pour connaître la consommation réelle — et le corrige avec des images satellites de votre parcelle."
+      },
+      "zones": {
+        "term": "Zones de gestion",
+        "plain": "Les parties de votre parcelle qui poussent toujours mieux ou moins bien que le reste, trouvées par un modèle d'IA à partir de nombreuses images satellites et du relief.",
+        "why": "Traitez chaque zone à part : analysez le sol, ajustez semences ou engrais, vérifiez le drainage."
+      },
+      "erosion": {
+        "term": "Risque d'érosion",
+        "plain": "La quantité de sol que les fortes pluies pourraient emporter chaque année, estimée à partir de la pente, de la pluie, du sol et de la couverture (méthode RUSLE).",
+        "why": "Un sol nu en pente perd vite sa fertilité ; couverts végétaux et travail en courbes de niveau le protègent."
+      },
+      "wetness": {
+        "term": "Humidité",
+        "plain": "Les endroits où l'eau s'accumule dans votre parcelle à cause de sa forme — des zones basses et plates qui drainent une grande surface.",
+        "why": "Ces zones restent humides, peuvent s'engorger et méritent une vérification du drainage."
+      },
+      "frostHollow": {
+        "term": "Cuvette de gel",
+        "plain": "Un point bas où l'air froid descend et s'accumule par nuits claires et calmes.",
+        "why": "Les gelées tardives de printemps et précoces d'automne y frappent d'abord — évitez-y les cultures sensibles au gel."
+      },
+      "rotation": {
+        "term": "Rotation des cultures",
+        "plain": "Cultiver des plantes différentes sur la même parcelle d'une année à l'autre au lieu de répéter la même.",
+        "why": "Elle casse les cycles des ravageurs et maladies, apporte de l'azote (avec les légumineuses) et construit un sol plus sain — souvent avec de meilleurs rendements."
+      },
+      "nitrogen": {
+        "term": "Bilan azoté",
+        "plain": "L'azote que la culture suivante reçoit de la précédente (les légumineuses comme pois, haricots et luzerne laissent de l'azote) moins ce dont elle a encore besoin.",
+        "why": "Un bilan positif signifie que vous pouvez utiliser moins d'engrais."
+      },
+      "breakCrop": {
+        "term": "Culture de rupture",
+        "plain": "Une culture d'une autre famille de plantes sur laquelle les ravageurs et maladies de votre culture principale ne peuvent pas vivre.",
+        "why": "Un ou deux ans de culture de rupture affament les maladies et ravageurs du sol."
+      },
+      "returnInterval": {
+        "term": "Délai de retour",
+        "plain": "Le nombre minimum d'années avant de recultiver la même plante (ou sa famille) sur une parcelle.",
+        "why": "Revenir trop tôt laisse les maladies et ravageurs du sol se multiplier."
+      },
+      "confidence": {
+        "term": "Fiabilité",
+        "plain": "Le degré de certitude de FieldShift sur un conseil, selon la qualité et la résolution des données.",
+        "why": "Une faible fiabilité signifie : vérifiez la parcelle vous-même avant d'agir."
+      },
+      "satellite": {
+        "term": "Données satellitaires",
+        "plain": "Des satellites de la NASA et européens mesurent pluie, température, humidité du sol et verdure des plantes tous les quelques jours dans le monde entier.",
+        "why": "Ils donnent à chaque agriculteur — même sans capteurs — une vue de l'eau et de la croissance de sa parcelle."
+      },
+      "yieldBadYear": {
+        "term": "Rendement typique et de mauvaise année",
+        "plain": "FieldShift simule votre culture avec la météo réelle des 15+ dernières années sur votre parcelle. « Typique » est le résultat médian, « mauvaise année » ce qu'a donné 1 année sur 10.",
+        "why": "Prévoyez pour l'année typique, mais assurez-vous de pouvoir supporter la mauvaise."
+      }
+    }
+  },
+  "welcome": {
+    "skip": "Passer",
+    "next": "Suivant",
+    "addField": "Ajouter ma parcelle",
+    "demo": "Essayer une ferme de démonstration",
+    "haveAccount": "J'ai déjà un compte",
+    "again": "Revoir la présentation",
+    "stepOf": "Étape {{n}} sur {{total}}",
+    "s1": {
+      "title": "Votre ferme vue de l'espace",
+      "text": "FieldShift transforme 40 ans de données satellitaires et météo de la NASA en conseils simples pour votre parcelle.",
+      "p1": "Aujourd'hui : les 3 tâches les plus importantes de la semaine — eau, ravageurs, maladies, gel.",
+      "p2": "Parcelle : images satellites, zones à problèmes et cartes d'érosion de votre propre parcelle.",
+      "p3": "Planifier : quand semer et quelles cultures choisir les prochaines années."
+    },
+    "s2": {
+      "title": "Ajoutez votre parcelle en quelques secondes",
+      "text": "Aucun compte nécessaire pour commencer.",
+      "p1": "Zoomez sur la carte satellite et touchez l'intérieur de votre parcelle.",
+      "p2": "FieldShift trouve automatiquement la limite de la parcelle.",
+      "p3": "Corrigez un coin à la main si besoin, puis choisissez la culture et la date de semis."
+    },
+    "s3": {
+      "title": "Des conseils clairs et vérifiables",
+      "text": "Chaque recommandation est en mots simples — et un toucher montre les données derrière.",
+      "p1": "Touchez « Pourquoi ? » ou les icônes ? pour des explications simples.",
+      "p2": "Créez un compte gratuit pour l'utiliser sur téléphone et ordinateur.",
+      "p3": "Votre dernier conseil reste disponible sans internet."
+    }
+  },
+  "insights": {
+    "title": "Analyses",
+    "subtitle": "Explorez plus en détail votre parcelle, votre climat et vos options.",
+    "whatif": "Et si ?",
+    "whatifSub": "Testez dates de semis, irrigation, +°C et moins de pluie",
+    "climate": "Votre climat change",
+    "climateSub": "Comment votre saison a changé depuis 1984",
+    "alternatives": "Explorer des stratégies de rotation",
+    "alternativesSub": "Comparez des stratégies sur 15 saisons de météo NASA",
+    "learn": "Apprendre",
+    "planYears": "Planifier les prochaines années",
+    "planYearsSub": "Vérifiez votre plan de cultures année par année"
+  },
+  "crops": {
+    "search": "Rechercher une culture",
+    "noMatch": "Aucune culture ne correspond.",
+    "fixesN": "apporte de l'azote",
+    "perennial": "pérenne",
+    "cover": "couvert végétal",
+    "family": {
+      "Poaceae": "Céréales et graminées",
+      "Fabaceae": "Légumineuses",
+      "Brassicaceae": "Famille du chou",
+      "Solanaceae": "Famille de la pomme de terre et de la tomate",
+      "Asteraceae": "Famille du tournesol",
+      "Amaranthaceae": "Famille de la betterave et du quinoa",
+      "Cucurbitaceae": "Courges et melons",
+      "Apiaceae": "Famille de la carotte",
+      "Amaryllidaceae": "Famille de l'oignon",
+      "Convolvulaceae": "Patate douce",
+      "Euphorbiaceae": "Manioc",
+      "Linaceae": "Lin",
+      "Polygonaceae": "Sarrasin",
+      "Malvaceae": "Coton et mauves",
+      "Cannabaceae": "Chanvre",
+      "Boraginaceae": "Famille de la phacélie",
+      "Mixed": "Mélanges"
+    }
   }
 }
