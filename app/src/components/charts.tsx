@@ -8,14 +8,14 @@ import type { Series, SeriesPoint } from "@/api/types";
 import { Txt } from "./ui";
 
 const PAD = { l: 44, r: 10, t: 10, b: 26 };
-const BAR_SERIES = new Set(["precip", "rain", "irrigation", "forecast_precip"]);
+const BAR_SERIES = new Set(["precip", "rain", "irrigation", "irrigation_applied", "forecast_precip"]);
 
 function useWidth(): [number, (e: LayoutChangeEvent) => void] {
   const [w, setW] = useState(0);
   return [w, (e) => setW(Math.round(e.nativeEvent.layout.width))];
 }
 
-function niceTicks(min: number, max: number, n = 4): number[] {
+export function niceTicks(min: number, max: number, n = 4): number[] {
   if (!Number.isFinite(min) || !Number.isFinite(max)) return [];
   if (min === max) {
     max = min + 1;
@@ -25,7 +25,8 @@ function niceTicks(min: number, max: number, n = 4): number[] {
   const mag = 10 ** Math.floor(Math.log10(raw));
   const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) ?? raw;
   const out: number[] = [];
-  for (let v = Math.floor(min / step) * step; v <= max + step * 0.001; v += step) out.push(Math.round(v * 1e6) / 1e6);
+  const top = Math.ceil(max / step - 1e-9) * step; // always cover the data maximum
+  for (let v = Math.floor(min / step) * step; v <= top + step * 0.001; v += step) out.push(Math.round(v * 1e6) / 1e6);
   return out;
 }
 
@@ -41,7 +42,22 @@ function shortDate(iso: string, lang: string) {
 }
 
 /** One time series, with its climatological normal dashed underneath. Bars for rain-like variables. */
-export function SeriesChart({ s, system, height = 170, testID }: { s: Series; system: UnitSystem; height?: number; testID?: string }) {
+/** Series drawn as reference lines on top of a primary chart with the same unit (e.g. stress threshold on soil depletion). */
+export const OVERLAY_SERIES = new Set(["raw_threshold", "taw", "threshold", "normal_band"]);
+
+export function SeriesChart({
+  s,
+  system,
+  height = 170,
+  testID,
+  overlays = [],
+}: {
+  s: Series;
+  system: UnitSystem;
+  height?: number;
+  testID?: string;
+  overlays?: Series[];
+}) {
   const t = useTheme();
   const { t: tr, i18n } = useTranslation();
   const [w, onLayout] = useWidth();
@@ -49,8 +65,9 @@ export function SeriesChart({ s, system, height = 170, testID }: { s: Series; sy
   const unit = convert(1, s.unit, system).unit;
   const pts = s.points.map((p) => ({ d: p.date, v: conv(p) }));
   const nrm = (s.normal ?? []).map((p) => ({ d: p.date, v: conv(p) }));
-  const dates = Array.from(new Set([...pts.map((p) => p.d), ...nrm.map((p) => p.d)])).sort();
-  const vals = [...pts, ...nrm].map((p) => p.v).filter((v): v is number => v !== null);
+  const ovs = overlays.map((o) => ({ o, pts: o.points.map((p) => ({ d: p.date, v: p.value === null ? null : convert(p.value, o.unit, system).value })) }));
+  const dates = Array.from(new Set([...pts.map((p) => p.d), ...nrm.map((p) => p.d), ...ovs.flatMap((x) => x.pts.map((p) => p.d))])).sort();
+  const vals = [...pts, ...nrm, ...ovs.flatMap((x) => x.pts)].map((p) => p.v).filter((v): v is number => v !== null);
   const isBar = BAR_SERIES.has(s.id);
   const lo = isBar ? 0 : Math.min(...vals);
   const hi = Math.max(...vals);
@@ -105,6 +122,9 @@ export function SeriesChart({ s, system, height = 170, testID }: { s: Series; sy
             </G>
           ))}
           {nrm.length > 0 ? <Path d={path(nrm)} stroke={t.textMuted} strokeWidth={1.5} strokeDasharray="5,4" fill="none" /> : null}
+          {ovs.map((x, i) => (
+            <Path key={x.o.id} d={path(x.pts)} stroke={t.chart[(i + 3) % t.chart.length]} strokeWidth={1.8} strokeDasharray="7,4" fill="none" />
+          ))}
           {isBar ? (
             pts.map((p) => (p.v ? <Rect key={p.d} x={x(p.d) - bw / 2} y={y(p.v)} width={bw} height={Math.max(0, y(y0) - y(p.v))} fill={color} rx={1} /> : null))
           ) : (
@@ -119,9 +139,12 @@ export function SeriesChart({ s, system, height = 170, testID }: { s: Series; sy
       ) : (
         <Txt muted>{tr("common.noData")}</Txt>
       )}
-      <View style={{ flexDirection: "row", gap: 16, marginTop: 4 }}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: 16, rowGap: 4, marginTop: 4 }}>
         <Legend color={color} label={s.kind === "forecast" ? tr("why.forecast") : s.kind === "modelled" ? tr("why.model") : tr("why.observed")} />
         {nrm.length > 0 ? <Legend color={t.textMuted} label={tr("why.normal")} dashed /> : null}
+        {ovs.map((x, i) => (
+          <Legend key={x.o.id} color={t.chart[(i + 3) % t.chart.length]} label={x.o.label} dashed />
+        ))}
       </View>
     </View>
   );

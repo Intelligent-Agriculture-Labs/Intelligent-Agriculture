@@ -25,8 +25,7 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "org.fieldshift.app",
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
-      "usesCleartextTraffic": true
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -45,15 +44,32 @@
         {
           "locationWhenInUsePermission": "FieldShift uses your location to find NASA data for your field."
         }
+      ],
+      "expo-asset",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#f6f8f3",
+          "dark": {
+            "backgroundColor": "#0f1611"
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
     "scheme": "fieldshift",
     "description": "NASA Earth observations turned into weekly farm decisions and crop-rotation strategies.",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#f6f8f3"
-    },
     "experiments": {
       "typedRoutes": false
     }

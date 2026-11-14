@@ -39,7 +39,7 @@ function defaultBase(): string {
 }
 
 export const API_BASE = defaultBase();
-const TIMEOUT_MS = 45000;
+const TIMEOUT_MS = 120000; // first uncached call can take ~1 min (NASA APIs)
 const CACHE_PREFIX = "fieldshift:cache:v1:";
 
 async function http<T>(path: string, body?: unknown): Promise<T> {

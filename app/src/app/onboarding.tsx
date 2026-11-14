@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -7,7 +8,7 @@ import { api, type Origin } from "@/api/client";
 import type { IrrigationMethod, PresetLocation } from "@/api/types";
 import MapPicker from "@/components/map/MapPicker";
 import type { MapLayer } from "@/components/map/leafletHtml";
-import { Button, Card, Chip, ChipRow, DateField, OriginBanner, Screen, Section, Txt, styles as ui } from "@/components/ui";
+import { Button, Chip, ChipRow, DateField, OriginBanner, Screen, Section, Txt, styles as ui } from "@/components/ui";
 import { useCrops } from "@/components/domain";
 import { space, useTheme } from "@/lib/theme";
 import { useStore } from "@/state/store";
@@ -143,20 +144,41 @@ export default function Onboarding() {
 
       {presets.length ? (
         <Section title={tr("onboarding.presets")}>
-          {presets.map((p) => (
-            <Card key={p.id} style={{ padding: space.md, borderColor: presetId === p.id ? t.primary : t.border, borderWidth: presetId === p.id ? 2 : 1 }}>
-              <Button
-                kind={presetId === p.id ? "primary" : "secondary"}
-                label={p.name}
-                icon="location"
+          {presets.map((p) => {
+            const sel = presetId === p.id;
+            return (
+              <Pressable
+                key={p.id}
+                accessibilityRole="button"
+                accessibilityState={{ selected: sel }}
+                accessibilityLabel={`${p.name}. ${p.story}`}
                 onPress={() => choosePreset(p)}
                 testID={`preset-${p.id}`}
-              />
-              <Txt v="small" muted style={{ marginTop: space.sm }}>
-                {p.story}
-              </Txt>
-            </Card>
-          ))}
+                style={({ pressed }) => ({
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: space.md,
+                  minHeight: 56,
+                  paddingVertical: space.sm,
+                  paddingHorizontal: space.md,
+                  marginTop: space.sm,
+                  borderRadius: 14,
+                  borderWidth: sel ? 2 : 1,
+                  borderColor: sel ? t.primary : t.border,
+                  backgroundColor: sel ? t.cardAlt : t.card,
+                  opacity: pressed ? 0.85 : 1,
+                })}
+              >
+                <Ionicons name={sel ? "checkmark-circle" : "location-outline"} size={24} color={t.primary} />
+                <View style={{ flex: 1 }}>
+                  <Txt v="label">{p.name}</Txt>
+                  <Txt v="small" muted numberOfLines={2}>
+                    {p.story}
+                  </Txt>
+                </View>
+              </Pressable>
+            );
+          })}
         </Section>
       ) : null}
 

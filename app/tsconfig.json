@@ -3,7 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "resolveJsonModule": true,
-    "paths": { "@/*": ["./src/*"] }
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["jest", "node"]
   },
   "include": ["**/*.ts", "**/*.tsx", "expo-env.d.ts"],
   "exclude": ["node_modules", "dist", "e2e", "playwright.config.ts"]

@@ -2,7 +2,7 @@ import React from "react";
 import { Linking, Pressable, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { ConfidenceMeter, SeriesChart } from "@/components/charts";
+import { ConfidenceMeter, OVERLAY_SERIES, SeriesChart } from "@/components/charts";
 import { Card, Section, Txt } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/units";
@@ -15,7 +15,11 @@ export function WhyView({ why, series, sources, expert }: { why: WhyBlock; serie
   const t = useTheme();
   const { t: tr, i18n } = useTranslation();
   const { settings } = useStore();
-  const used = why.series.map((id) => series.find((s) => s.id === id)).filter((s): s is Series => !!s);
+  const all = why.series.map((id) => series.find((s) => s.id === id)).filter((s): s is Series => !!s);
+  // threshold-like series are drawn on top of the first chart with the same unit instead of on their own
+  const used = all.filter((s) => !OVERLAY_SERIES.has(s.id) || !all.some((p) => !OVERLAY_SERIES.has(p.id) && p.unit === s.unit));
+  const overlaysFor = (p: Series) =>
+    used.find((u) => u.unit === p.unit && !OVERLAY_SERIES.has(u.id)) === p ? all.filter((s) => OVERLAY_SERIES.has(s.id) && s.unit === p.unit) : [];
   const srcs = why.sources.map((id) => sources.find((s) => s.id === id)).filter((s): s is SourceRef => !!s);
   return (
     <>
@@ -42,7 +46,7 @@ export function WhyView({ why, series, sources, expert }: { why: WhyBlock; serie
         <Section title={tr("why.data")}>
           {used.map((s) => (
             <Card key={s.id}>
-              <SeriesChart s={s} system={settings.units} testID={`chart-${s.id}`} />
+              <SeriesChart s={s} system={settings.units} testID={`chart-${s.id}`} overlays={overlaysFor(s)} />
               {expert ? (
                 <View style={{ marginTop: space.sm }}>
                   <Txt v="small" muted>

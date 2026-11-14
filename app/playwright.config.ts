@@ -14,7 +14,5 @@ export default defineConfig({
     { name: "chromium-desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
-  webServer: process.env.E2E_BASE_URL
-    ? undefined
-    : { command: "npx serve -s dist -l 4173", port: 4173, reuseExistingServer: true, timeout: 60_000 },
+  webServer: process.env.E2E_BASE_URL ? undefined : { command: "npx serve -s dist -l 4173", port: 4173, reuseExistingServer: true, timeout: 60_000 },
 });

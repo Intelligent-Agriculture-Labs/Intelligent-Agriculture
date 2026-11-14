@@ -11,7 +11,11 @@ test("core flow: pick demo farm → 3 action cards → Why? with chart", async (
   await page.getByTestId("start").click();
 
   await expect(page.getByTestId("home")).toBeVisible();
-  for (const i of [0, 1, 2]) await expect(page.getByTestId(`action-card-${i}`)).toBeVisible();
+  // home shows the top (max 3) prioritized action cards
+  await expect(page.getByTestId("action-card-0")).toBeVisible();
+  const cards = await page.locator('[data-testid^="action-card-"]').count();
+  expect(cards).toBeGreaterThanOrEqual(1);
+  expect(cards).toBeLessThanOrEqual(3);
   await expect(page.getByTestId("attribution")).toContainText(/NASA/i);
 
   await page.getByTestId("action-card-0").click();

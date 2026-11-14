@@ -113,7 +113,12 @@ def level_from_pct(p: float | None) -> int:
 
 
 def combined_level(
-    spi30: float | None, spi90: float | None, spei90: float | None, sm_pct: float | None, vhi: float | None
+    spi30: float | None,
+    spi90: float | None,
+    spei90: float | None,
+    sm_pct: float | None,
+    vhi: float | None,
+    spei365: float | None = None,
 ) -> tuple[int, list[str]]:
     """Convergence-of-evidence blend (like the USDM): weighted mean of indicator levels, rounded.
     Long-term water balance (SPI/SPEI-90) weighs most; short-term SPI-30 and satellite indicators refine it."""
