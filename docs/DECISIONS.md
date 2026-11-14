@@ -58,3 +58,17 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 
 ## ADR-011 "SI" terminology
 - The 2026 Space Apps rules use "Super Intelligence (SI)" in place of "AI". Submission texts use "SI", with "AI" in parentheses on first use for clarity.
+
+## ADR-012 Earthdata Login for SMAP via AppEEARS (17:25)
+- ORNL's no-auth SMAP subsets return "no data" for every demo site, so the user provided an Earthdata Login. It is stored only on the VPS (`~/.config/fieldshift/earthdata`, mode 600) and never committed.
+- `scripts/appeears_smap.py` extracts SMAP L3E surface and L4 surface/root-zone/percentile series for the demo sites. They are committed as small gz files and used for the drought status (L4 root-zone percentile) and for validation (V3).
+- Arbitrary new locations get no SMAP. AppEEARS is asynchronous, so live per-request extraction is on the roadmap.
+
+## ADR-013 Single container (17:20)
+- Podman's DNS (aardvark) on the Linux test host refused queries, so the nginx → api proxy failed. FastAPI now serves the exported web app itself.
+- One image, one port, the same behaviour on Docker and podman.
+
+## ADR-014 No public hosting (18:15, user decision)
+- The user chose to keep the demo private: no tunnel or public URL.
+- Judges get the 30 s video, the screenshots, and `docker compose up --build` (or the offline mode).
+- SUBMISSION.md lists hosting as an optional human step.
