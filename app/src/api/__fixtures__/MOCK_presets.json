@@ -1,0 +1,36 @@
+[
+ {
+  "id": "fallon_nv",
+  "name": "Fallon, Nevada (USA) — alfalfa",
+  "lat": 39.4735,
+  "lon": -118.7774,
+  "crop": "alfalfa",
+  "planting_date": "2026-03-20",
+  "irrigation": "flood",
+  "current_rotation": [
+   "alfalfa",
+   "alfalfa",
+   "alfalfa",
+   "alfalfa",
+   "alfalfa"
+  ],
+  "story": "MOCK: Lahontan Valley alfalfa grower facing reduced irrigation allocations.",
+  "cached": false
+ },
+ {
+  "id": "machakos_ke",
+  "name": "Machakos (Kenya) — maize smallholder",
+  "lat": -1.5177,
+  "lon": 37.2634,
+  "crop": "maize",
+  "planting_date": "2026-10-20",
+  "irrigation": "none",
+  "current_rotation": [
+   "maize",
+   "maize",
+   "maize"
+  ],
+  "story": "MOCK: rain-fed smallholder in a semi-arid bimodal-rainfall region.",
+  "cached": false
+ }
+]

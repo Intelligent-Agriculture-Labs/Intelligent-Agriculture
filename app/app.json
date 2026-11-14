@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "FieldShift",
+    "slug": "fieldshift",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.fieldshift.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "FieldShift uses your location to find NASA data for your field.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#2f6b3a",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "org.fieldshift.app",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "usesCleartextTraffic": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "name": "FieldShift",
+      "themeColor": "#2f6b3a"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-localization",
+      "expo-sharing",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "FieldShift uses your location to find NASA data for your field."
+        }
+      ]
+    ],
+    "scheme": "fieldshift",
+    "description": "NASA Earth observations turned into weekly farm decisions and crop-rotation strategies.",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f6f8f3"
+    },
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

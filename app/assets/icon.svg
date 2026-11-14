@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f4d2a"/>
+      <stop offset="1" stop-color="#2f6b3a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#sky)"/>
+  <!-- orbit arc -->
+  <path d="M170 430 A380 230 0 0 1 860 330" fill="none" stroke="#e9f5d0" stroke-width="22" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="830" cy="318" r="46" fill="#f2c94c"/>
+  <!-- fields -->
+  <path d="M120 900 L420 560 L640 560 L904 900 Z" fill="#7fb24a"/>
+  <path d="M420 560 L640 560 L700 640 L370 640 Z" fill="#a7cf63"/>
+  <g stroke="#2f6b3a" stroke-width="18" stroke-linecap="round" opacity="0.55">
+    <line x1="530" y1="575" x2="512" y2="890"/>
+    <line x1="470" y1="575" x2="330" y2="890"/>
+    <line x1="590" y1="575" x2="700" y2="890"/>
+  </g>
+  <!-- leaf -->
+  <path d="M512 520 C430 470 420 370 512 300 C604 370 594 470 512 520 Z" fill="#e9f5d0"/>
+  <line x1="512" y1="330" x2="512" y2="515" stroke="#2f6b3a" stroke-width="14" stroke-linecap="round"/>
+</svg>

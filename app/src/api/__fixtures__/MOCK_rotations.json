@@ -1,0 +1,1174 @@
+{
+ "strategies": [
+  {
+   "id": "current",
+   "name": "MOCK: Continuous alfalfa",
+   "is_current": true,
+   "total_score": 52,
+   "slots": [
+    {
+     "year": 1,
+     "crop": "alfalfa",
+     "season": "perennial",
+     "start_month": 3,
+     "end_month": 10
+    }
+   ],
+   "calendar": [
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 1
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 1
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 1
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 1
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 1
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 1
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 1
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 1
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 2
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 2
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 2
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 2
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 2
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 2
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 2
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 2
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 3
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 3
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 3
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 3
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 3
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 3
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 3
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 3
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 4
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 4
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 4
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 4
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 4
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 4
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 4
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 4
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    }
+   ],
+   "metrics": [
+    {
+     "id": "water",
+     "label": "Water use",
+     "value": 980,
+     "unit": "mm/yr",
+     "score": 55,
+     "vs_current": 0
+    },
+    {
+     "id": "soil",
+     "label": "Soil health",
+     "value": 60,
+     "unit": "index",
+     "score": 55,
+     "vs_current": 0
+    },
+    {
+     "id": "income",
+     "label": "Income",
+     "value": 100,
+     "unit": "index",
+     "score": 55,
+     "vs_current": 0
+    },
+    {
+     "id": "pests",
+     "label": "Pest-cycle break",
+     "value": 30,
+     "unit": "index",
+     "score": 55,
+     "vs_current": 0
+    },
+    {
+     "id": "risk",
+     "label": "Climate risk",
+     "value": 50,
+     "unit": "index",
+     "score": 55,
+     "vs_current": 0
+    },
+    {
+     "id": "bare_days",
+     "label": "Bare-soil days",
+     "value": 120,
+     "unit": "days/yr",
+     "score": 55,
+     "vs_current": 0
+    }
+   ],
+   "why_suggested": "MOCK: placeholder explanation of why this rotation was suggested.",
+   "evidence": [
+    "MOCK: July ET₀ averaged 7.9 mm/day (placeholder)"
+   ],
+   "benefits": [
+    "MOCK benefit"
+   ],
+   "info_gaps": [
+    "MOCK gap"
+   ],
+   "risks_local_review": [
+    "MOCK risk for local review"
+   ],
+   "sources": [
+    "nasa_power"
+   ]
+  },
+  {
+   "id": "alt1",
+   "name": "MOCK: Alfalfa → teff → wheat + cover",
+   "is_current": false,
+   "total_score": 68,
+   "slots": [
+    {
+     "year": 1,
+     "crop": "alfalfa",
+     "season": "perennial",
+     "start_month": 3,
+     "end_month": 10
+    }
+   ],
+   "calendar": [
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.2,
+     "year": 1
+    },
+    {
+     "month": 4,
+     "crop": null,
+     "cover": 0,
+     "year": 1
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 1
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 1
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 1
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.7,
+     "year": 1
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 1
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 1
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 1
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 1,
+     "crop": "teff",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 2,
+     "crop": "teff",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 3,
+     "crop": "teff",
+     "cover": 0.2,
+     "year": 2
+    },
+    {
+     "month": 4,
+     "crop": null,
+     "cover": 0,
+     "year": 2
+    },
+    {
+     "month": 5,
+     "crop": "teff",
+     "cover": 0.6,
+     "year": 2
+    },
+    {
+     "month": 6,
+     "crop": "teff",
+     "cover": 0.9,
+     "year": 2
+    },
+    {
+     "month": 7,
+     "crop": "teff",
+     "cover": 0.9,
+     "year": 2
+    },
+    {
+     "month": 8,
+     "crop": "teff",
+     "cover": 0.7,
+     "year": 2
+    },
+    {
+     "month": 9,
+     "crop": "teff",
+     "cover": 0.4,
+     "year": 2
+    },
+    {
+     "month": 10,
+     "crop": "teff",
+     "cover": 0.5,
+     "year": 2
+    },
+    {
+     "month": 11,
+     "crop": "teff",
+     "cover": 0.4,
+     "year": 2
+    },
+    {
+     "month": 12,
+     "crop": "teff",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.2,
+     "year": 3
+    },
+    {
+     "month": 4,
+     "crop": null,
+     "cover": 0,
+     "year": 3
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 3
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 3
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 3
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.7,
+     "year": 3
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 3
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 3
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 3
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.2,
+     "year": 4
+    },
+    {
+     "month": 4,
+     "crop": null,
+     "cover": 0,
+     "year": 4
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.6,
+     "year": 4
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 4
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.9,
+     "year": 4
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.7,
+     "year": 4
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 4
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 4
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 4
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    }
+   ],
+   "metrics": [
+    {
+     "id": "water",
+     "label": "Water use",
+     "value": 890,
+     "unit": "mm/yr",
+     "score": 73,
+     "vs_current": 18
+    },
+    {
+     "id": "soil",
+     "label": "Soil health",
+     "value": 72,
+     "unit": "index",
+     "score": 67,
+     "vs_current": 12
+    },
+    {
+     "id": "income",
+     "label": "Income",
+     "value": 95,
+     "unit": "index",
+     "score": 50,
+     "vs_current": -5
+    },
+    {
+     "id": "pests",
+     "label": "Pest-cycle break",
+     "value": 55,
+     "unit": "index",
+     "score": 80,
+     "vs_current": 25
+    },
+    {
+     "id": "risk",
+     "label": "Climate risk",
+     "value": 56,
+     "unit": "index",
+     "score": 61,
+     "vs_current": 6
+    },
+    {
+     "id": "bare_days",
+     "label": "Bare-soil days",
+     "value": 108,
+     "unit": "days/yr",
+     "score": 73,
+     "vs_current": 18
+    }
+   ],
+   "why_suggested": "MOCK: placeholder explanation of why this rotation was suggested.",
+   "evidence": [
+    "MOCK: July ET₀ averaged 7.9 mm/day (placeholder)"
+   ],
+   "benefits": [
+    "MOCK benefit"
+   ],
+   "info_gaps": [
+    "MOCK gap"
+   ],
+   "risks_local_review": [
+    "MOCK risk for local review"
+   ],
+   "sources": [
+    "nasa_power"
+   ]
+  },
+  {
+   "id": "alt2",
+   "name": "MOCK: Alfalfa → silage maize → triticale",
+   "is_current": false,
+   "total_score": 61,
+   "slots": [
+    {
+     "year": 1,
+     "crop": "alfalfa",
+     "season": "perennial",
+     "start_month": 3,
+     "end_month": 10
+    }
+   ],
+   "calendar": [
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 1
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 1
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 1
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.2,
+     "year": 1
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 1
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 1
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.95,
+     "year": 1
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.95,
+     "year": 1
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 1
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 1
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 1
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 1
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 2
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 2
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 2
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.2,
+     "year": 2
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 2
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 2
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.95,
+     "year": 2
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.95,
+     "year": 2
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 2
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 2
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 2
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 2
+    },
+    {
+     "month": 1,
+     "crop": "maize_silage",
+     "cover": 0.4,
+     "year": 3
+    },
+    {
+     "month": 2,
+     "crop": "maize_silage",
+     "cover": 0.4,
+     "year": 3
+    },
+    {
+     "month": 3,
+     "crop": "maize_silage",
+     "cover": 0.5,
+     "year": 3
+    },
+    {
+     "month": 4,
+     "crop": "maize_silage",
+     "cover": 0.2,
+     "year": 3
+    },
+    {
+     "month": 5,
+     "crop": "maize_silage",
+     "cover": 0.3,
+     "year": 3
+    },
+    {
+     "month": 6,
+     "crop": "maize_silage",
+     "cover": 0.8,
+     "year": 3
+    },
+    {
+     "month": 7,
+     "crop": "maize_silage",
+     "cover": 0.95,
+     "year": 3
+    },
+    {
+     "month": 8,
+     "crop": "maize_silage",
+     "cover": 0.95,
+     "year": 3
+    },
+    {
+     "month": 9,
+     "crop": "maize_silage",
+     "cover": 0.4,
+     "year": 3
+    },
+    {
+     "month": 10,
+     "crop": "maize_silage",
+     "cover": 0.5,
+     "year": 3
+    },
+    {
+     "month": 11,
+     "crop": "maize_silage",
+     "cover": 0.5,
+     "year": 3
+    },
+    {
+     "month": 12,
+     "crop": "maize_silage",
+     "cover": 0.4,
+     "year": 3
+    },
+    {
+     "month": 1,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 4
+    },
+    {
+     "month": 2,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 4
+    },
+    {
+     "month": 3,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 4
+    },
+    {
+     "month": 4,
+     "crop": "alfalfa",
+     "cover": 0.2,
+     "year": 4
+    },
+    {
+     "month": 5,
+     "crop": "alfalfa",
+     "cover": 0.3,
+     "year": 4
+    },
+    {
+     "month": 6,
+     "crop": "alfalfa",
+     "cover": 0.8,
+     "year": 4
+    },
+    {
+     "month": 7,
+     "crop": "alfalfa",
+     "cover": 0.95,
+     "year": 4
+    },
+    {
+     "month": 8,
+     "crop": "alfalfa",
+     "cover": 0.95,
+     "year": 4
+    },
+    {
+     "month": 9,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 4
+    },
+    {
+     "month": 10,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 4
+    },
+    {
+     "month": 11,
+     "crop": "alfalfa",
+     "cover": 0.5,
+     "year": 4
+    },
+    {
+     "month": 12,
+     "crop": "alfalfa",
+     "cover": 0.4,
+     "year": 4
+    }
+   ],
+   "metrics": [
+    {
+     "id": "water",
+     "label": "Water use",
+     "value": 955,
+     "unit": "mm/yr",
+     "score": 60,
+     "vs_current": 5
+    },
+    {
+     "id": "soil",
+     "label": "Soil health",
+     "value": 66,
+     "unit": "index",
+     "score": 61,
+     "vs_current": 6
+    },
+    {
+     "id": "income",
+     "label": "Income",
+     "value": 110,
+     "unit": "index",
+     "score": 65,
+     "vs_current": 10
+    },
+    {
+     "id": "pests",
+     "label": "Pest-cycle break",
+     "value": 48,
+     "unit": "index",
+     "score": 73,
+     "vs_current": 18
+    },
+    {
+     "id": "risk",
+     "label": "Climate risk",
+     "value": 46,
+     "unit": "index",
+     "score": 51,
+     "vs_current": -4
+    },
+    {
+     "id": "bare_days",
+     "label": "Bare-soil days",
+     "value": 114,
+     "unit": "days/yr",
+     "score": 60,
+     "vs_current": 5
+    }
+   ],
+   "why_suggested": "MOCK: placeholder explanation of why this rotation was suggested.",
+   "evidence": [
+    "MOCK: July ET₀ averaged 7.9 mm/day (placeholder)"
+   ],
+   "benefits": [
+    "MOCK benefit"
+   ],
+   "info_gaps": [
+    "MOCK gap"
+   ],
+   "risks_local_review": [
+    "MOCK risk for local review"
+   ],
+   "sources": [
+    "nasa_power"
+   ]
+  }
+ ],
+ "climate_context": [
+  "MOCK: frost-free season lengthened (placeholder)"
+ ],
+ "vulnerable_periods": [
+  {
+   "month": 7,
+   "issue": "MOCK: peak heat and water demand",
+   "risk": "high"
+  }
+ ],
+ "sources": [
+  {
+   "id": "nasa_power",
+   "name": "NASA POWER daily agroclimatology",
+   "provider": "NASA LaRC",
+   "url": "https://example.invalid/mock",
+   "resolution": "0.5° × 0.625°",
+   "latency": "~2 days",
+   "last_date": "2026-11-12",
+   "is_nasa": true,
+   "status": "demo"
+  },
+  {
+   "id": "smap_l3e",
+   "name": "SMAP L3 enhanced soil moisture",
+   "provider": "NASA/ORNL DAAC",
+   "url": "https://example.invalid/mock",
+   "resolution": "9 km",
+   "latency": "~2 days",
+   "last_date": "2026-11-12",
+   "is_nasa": true,
+   "status": "demo"
+  },
+  {
+   "id": "modis_ndvi",
+   "name": "MODIS MOD13Q1 NDVI",
+   "provider": "NASA/ORNL DAAC",
+   "url": "https://example.invalid/mock",
+   "resolution": "250 m",
+   "latency": "~16 days",
+   "last_date": "2026-11-12",
+   "is_nasa": true,
+   "status": "demo"
+  },
+  {
+   "id": "openmeteo_forecast",
+   "name": "16-day forecast",
+   "provider": "Open-Meteo",
+   "url": "https://example.invalid/mock",
+   "resolution": "~11 km",
+   "latency": "hourly",
+   "last_date": "2026-11-12",
+   "is_nasa": false,
+   "status": "demo"
+  }
+ ],
+ "disclaimer": "MOCK disclaimer: decision support only."
+}

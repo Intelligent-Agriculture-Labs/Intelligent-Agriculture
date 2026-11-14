@@ -1,0 +1,11 @@
+node_modules/
+.expo/
+dist/
+web-build/
+ios/
+android/
+playwright-report/
+test-results/
+*.log
+.env*.local
+expo-env.d.ts

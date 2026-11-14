@@ -1,0 +1,123 @@
+[
+ {
+  "id": "alfalfa",
+  "name": "Alfalfa",
+  "family": "Fabaceae",
+  "type": "perennial",
+  "n_fixing": true,
+  "root_depth_m": 1.5,
+  "season_days": 365,
+  "typical_yield_t_ha": 16,
+  "icon": "leaf"
+ },
+ {
+  "id": "maize",
+  "name": "Maize (grain)",
+  "family": "Poaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 1.2,
+  "season_days": 140,
+  "typical_yield_t_ha": 11,
+  "icon": "nutrition"
+ },
+ {
+  "id": "maize_silage",
+  "name": "Maize (silage)",
+  "family": "Poaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 1.2,
+  "season_days": 120,
+  "typical_yield_t_ha": 50,
+  "icon": "nutrition"
+ },
+ {
+  "id": "winter_wheat",
+  "name": "Winter wheat",
+  "family": "Poaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 1.2,
+  "season_days": 270,
+  "typical_yield_t_ha": 6,
+  "icon": "nutrition-outline"
+ },
+ {
+  "id": "barley",
+  "name": "Barley",
+  "family": "Poaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 1,
+  "season_days": 120,
+  "typical_yield_t_ha": 5,
+  "icon": "nutrition-outline"
+ },
+ {
+  "id": "sorghum",
+  "name": "Sorghum",
+  "family": "Poaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 1.4,
+  "season_days": 120,
+  "typical_yield_t_ha": 6,
+  "icon": "nutrition"
+ },
+ {
+  "id": "teff",
+  "name": "Teff (forage)",
+  "family": "Poaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 0.6,
+  "season_days": 90,
+  "typical_yield_t_ha": 9,
+  "icon": "flower-outline"
+ },
+ {
+  "id": "safflower",
+  "name": "Safflower",
+  "family": "Asteraceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 1.8,
+  "season_days": 140,
+  "typical_yield_t_ha": 2.5,
+  "icon": "flower"
+ },
+ {
+  "id": "dry_bean",
+  "name": "Dry bean",
+  "family": "Fabaceae",
+  "type": "annual",
+  "n_fixing": true,
+  "root_depth_m": 0.8,
+  "season_days": 100,
+  "typical_yield_t_ha": 2.5,
+  "icon": "ellipse"
+ },
+ {
+  "id": "potato",
+  "name": "Potato",
+  "family": "Solanaceae",
+  "type": "annual",
+  "n_fixing": false,
+  "root_depth_m": 0.5,
+  "season_days": 130,
+  "typical_yield_t_ha": 45,
+  "icon": "egg"
+ },
+ {
+  "id": "cover_rye_vetch",
+  "name": "Cover: rye + vetch",
+  "family": "Mixed",
+  "type": "cover",
+  "n_fixing": true,
+  "root_depth_m": 1,
+  "season_days": 180,
+  "typical_yield_t_ha": 0,
+  "icon": "leaf-outline"
+ }
+]
