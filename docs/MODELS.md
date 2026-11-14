@@ -113,7 +113,37 @@ Candidates are the farmer's current rotation plus ten templates (`config/rotatio
 - *Benefits* lists metrics ≥ 8 points better than the current rotation.
 - *Information gaps* and *risks for local review* are rule-based: market, soil test, low-confidence crop parameters, alfalfa autotoxicity, water-right rules, herbicide carry-over.
 
-## 9. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
+## <a id="terrain"></a>9. Terrain maps (`terrain.py`, `engine/maps.py`)
+**DEM.** A 3 × 3 block of zoom-14 web-mercator terrain tiles (AWS Terrain Tiles, terrarium encoding: NASA SRTM 30 m outside the U.S., USGS 3DEP in the U.S.) is fetched around the field. That gives ~768 × 768 px of ≈ 9.5 m·cos(lat). The DEM is smoothed to the true source scale (~30 m) before derivatives, to avoid "orange-peel" artefacts from oversampling.
+
+| Layer | Method |
+|---|---|
+| Slope, aspect | Horn (1981) 3 × 3 finite differences; aspect = compass bearing of the downslope direction |
+| Hillshade | Burrough & McDonnell (1998); sun from 315° at 45° |
+| Flow accumulation | D8 steepest descent (O'Callaghan & Mark 1984), cells processed from highest to lowest; no pit filling |
+| Wetness | Topographic wetness index TWI = ln(a / tan β) (Beven & Kirkby 1979), with a = specific catchment area |
+| Frost-prone hollows | Topographic position index TPI = z − mean(z within ~300 m) (Weiss 2001). Cold-air-pooling index = clip(−TPI / 8 m) × clip(1 − slope / 8°) |
+| **Erosion (RUSLE)** | A = R · K · LS · C · P (Renard et al. 1997) |
+| Management zones | Erosion hotspot (A ≥ 5 t/ha/yr) > wet (top-10 % TWI on < 3 % slope) > frost hollow (index ≥ 0.5) > productive core, classified on ~90 m-smoothed indices |
+
+RUSLE inputs:
+- **R** from NASA POWER mean annual precipitation (Renard & Freimund 1994): R = 0.0483 P¹·⁶¹ for P ≤ 850 mm, else 587.8 − 1.219 P + 0.004105 P².
+- **K** by soil texture: OMAFRA mid-values (Stone & Hilborn 2012).
+- **LS** after Moore & Burch (1986): (A_s/22.13)^0.4 · (sin β / 0.0896)^1.3, with flow length capped at 120 m.
+- **C** by crop type: perennial 0.02, cover 0.05, small grain 0.20, row crop 0.38.
+- **P** = 1 (no support practices).
+
+Field statistics use the drawn polygon, or a 150 m radius around the pin.
+
+## <a id="planner"></a>10. Season planner (`engine/planner.py`)
+For the next occurrence of the planting date, the season model runs for each of the last 15 seasons:
+- **Sowing-date scan:** ±6 weeks in weekly steps, giving median and p10 yield, irrigation, frost risk and heat days. Recommended window as in §6.
+- **Stage dates:** median days to the FAO-56 stage boundaries in thermal time, with the 10–90 % spread between years. Perennials get the median cutting dates instead.
+- **Pest scouting:** median calendar dates of the first two degree-day events of every pest present in the region.
+- **Monthly water budget:** median ET₀, ETc, ETa, rain and gross irrigation per month. With an allocation, the full-irrigation need is simulated too, and coverage = allocation / full need.
+- **Risk calendar:** share of years with a damaging frost (crop kill threshold) or ≥ 3 heat days (≥ T_heat) in each month.
+
+## 11. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
 Each module emits zero or more cards, each with risk, due date and a Why block (summary, steps with numbers, series, model, confidence, caveats, sources). Cards are ranked by risk, then due date. Thresholds are versioned in `rules.yaml`, and texts in six languages are in `messages.yaml`.
 
 **Confidence** is a documented heuristic, not a calibrated probability:

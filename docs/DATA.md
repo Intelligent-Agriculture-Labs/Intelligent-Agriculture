@@ -22,6 +22,13 @@ All sources were verified reachable on 2026-11-14 from both the Mac and the VPS.
 | Crop coefficients, stage lengths, root depth, p, Ky | **FAO-56 / FAO-33** | FAO | — | — | literature | Season model | — |
 | Prices / costs | USDA NASS prices received, extension budgets (2023–24, indicative) | USDA (public domain) | national | — | literature, in `config/crops.yaml` | Indicative gross margin | User-editable config |
 
+## Additional sources (maps, planner, SMAP)
+| Variable | Source | Provider / licence | Resolution | Access | Used for |
+|---|---|---|---|---|---|
+| Elevation grid (terrain maps) | **AWS Terrain Tiles** (terrarium PNG, zoom 14) | Mapzen / AWS Open Data. Sources: **NASA SRTM**, USGS 3DEP/NED, others (public) | ~30 m source (10 m U.S.), ~9.5 m·cos(lat) pixels | `s3.amazonaws.com/elevation-tiles-prod`, no auth | Slope, wetness, frost hollows, RUSLE LS, zones |
+| Mean annual precipitation | **NASA POWER climatology** API | NASA LaRC | 0.5° | no auth | RUSLE R factor |
+| Surface & root-zone soil moisture, root-zone percentile | **SMAP L3E (SPL3SMP_E.006) and L4 (SPL4SMGP.008) via NASA AppEEARS** | NASA NSIDC / GMAO | 9 km, daily / 3-hourly | Earthdata Login (batch job, ADR-012) | Drought status (L4 root-zone percentile), validation V3 |
+
 ## Imagery on the map
 NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`, no auth. Used only as visual context.
 

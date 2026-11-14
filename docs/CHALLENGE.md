@@ -55,7 +55,8 @@ Global awards include Best Use of Science, Best Use of Data, Best Use of Technol
 | Temperature, heat stress, frost, extreme rain, long-term water trends | Climate view (1984→now, Theil–Sen + Mann–Kendall); heat/frost cards | Relevance |
 | Explain terms and uncertainty | "Why?" view: plain summary, reasoning steps with numbers, confidence + note, caveats (e.g. 9 km vs. field), sources with resolution and latency | Validity, Presentation |
 | Scenario sliders | **What if?**: planting date, irrigation strategy, crop, +°C, rain % | Creativity |
-| Interactive map / field-level | Map pin/GPS onboarding, NASA GIBS imagery layer | Presentation |
+| Interactive maps; field-level vulnerabilities (erosion zones, water-stress/wet spots, frost-prone areas) | **Map** tab: computed terrain layers (elevation, slope, RUSLE erosion, wetness, frost hollows), management zones with planning advice, NASA GIBS true-colour/NDVI | Relevance, Creativity, Presentation |
+| Timelines, planning | **Plan** tab: sowing-window scan, stage dates, pest-scouting timeline, monthly water budget vs. allocation, frost/heat risk calendar | Impact, Validity |
 | Support, not replace, local expertise | Disclaimers, "needs local review" lists, confidence on every card | Validity |
 | Weekly decisions (build-prompt scope) | **This week**: ≤ 3 ranked action cards for water, drought, disease, pests, frost/heat | Impact |
 | Low-connectivity smallholders | Kenya preset, small gzip payloads, offline last-advice cache, six languages incl. Swahili and Hindi | Impact, Global Connection |

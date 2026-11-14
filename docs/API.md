@@ -11,6 +11,9 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | POST | `/api/simulate` | What-if: N past seasons for a scenario vs. baseline |
 | POST | `/api/rotations` | Current rotation + ≥ 3 alternatives with metrics, calendar, texts |
 | GET | `/api/climate?lat=&lon=` | 1984→ yearly indicators, trends, normals, insights |
+| POST | `/api/terrain` | Computed terrain maps around the field (PNG overlays + legends + field stats + management zones) |
+| GET | `/api/terrain/png/{key}/{layer}.png` | Map overlay image (web-mercator aligned with `bounds`) |
+| POST | `/api/planner` | Season planner: sowing scan, stage dates, operations timeline, water budget, risk calendar |
 | GET | `/api/export/advice.csv` | Tidy CSV of every series behind the advice |
 | GET | `/api/export/field.geojson` | Point feature with the advice summary |
 

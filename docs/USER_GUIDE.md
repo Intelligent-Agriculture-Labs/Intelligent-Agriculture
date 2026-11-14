@@ -35,6 +35,24 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 - **Data sources:** which NASA or partner dataset was used, its resolution, latency and last date.
 <br clear="right">
 
+## 3b. Map
+The **Map** tab shows your field on a satellite or NDVI background (NASA GIBS), with maps computed from elevation data:
+- **Elevation & relief**
+- **Slope**
+- **Erosion risk:** estimated soil loss in t/ha/yr, using NASA rain records and your crop.
+- **Wetness:** where water collects.
+- **Frost-prone hollows**
+- **Management zones:** all of the above combined.
+
+Below the map, **Planning advice for your field** lists each zone, how much of your field it covers, and what to do about it. Example: "Erosion hotspot, 32 %: keep soil covered, farm along the contour". Draw your field outline during setup for exact numbers.
+
+## 3c. Plan
+The **Plan** tab is your season planner:
+- the best **sowing window**, from a chart of yield against sowing date (a typical year and a bad year);
+- a **timeline** of the season: sowing, crop stages (with how much they vary between years), when to scout for pests, the peak irrigation month and harvest (for alfalfa, the cutting dates);
+- a **monthly water budget**: crop water use against rain and irrigation. If you enter your seasonal water allocation, it shows how much of the need it covers;
+- a **risk calendar**: the chance of damaging frost or heat in each month.
+
 ## 4. Rotations (Field Shift)
 <img src="../media/web-rotations-mobile.png" width="260" align="right" alt="Rotations screen">
 
