@@ -320,6 +320,33 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             f"Estimated water used from the root zone today: {dr_t:.0f} mm ({pct_left}% of available water left).",
         ]
         caveats = [caveat_grid]
+        etp = sources.et_points(lat, lon)
+        if etp:
+            eco = [
+                (dt.date.fromisoformat(d_), v)
+                for d_, v in zip(etp["dates"], etp["eco_et_daily"], strict=True)
+                if v is not None
+            ]
+            eco = [(d_, v) for d_, v in eco if planting <= d_ <= today]
+            if eco:
+                series.append(
+                    _series(
+                        "ecostress_et",
+                        "Measured field ET (NASA ECOSTRESS, 70 m)",
+                        "mm/day",
+                        [d_ for d_, _ in eco],
+                        [v for _, v in eco],
+                        "ecostress",
+                        "observed",
+                    )
+                )
+                ld, lv = eco[-1]
+                if ld in ddates:
+                    steps.append(
+                        f"NASA ECOSTRESS measured {lv:.1f} mm/day of evapotranspiration on this field on {ld.isoformat()} (70 m); "
+                        f"the model had {daily['eta'][ddates.index(ld)]:.1f} mm/day."
+                    )
+                ctx.statuses["ecostress"] = "cache"
         if fusion and "scale" in fusion:
             steps.append(
                 f"Sentinel-2 ({fusion['date'].isoformat()}, 10 m) shows field NDVI {fusion['ndvi']:.2f} → satellite crop coefficient {fusion['kcb_sat']:.2f} "
@@ -360,7 +387,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                         "why": _why(
                             f"Your crop will run short of easily available soil water around {stress_day.isoformat()}. Irrigating ~{gross} mm before then avoids yield loss.",
                             steps,
-                            ["soil_depletion", "raw_threshold", "et0", "precip"],
+                            ["soil_depletion", "raw_threshold", "et0", "precip", "ecostress_et"],
                             "FAO-56 single-Kc root-zone water balance",
                             "water-balance",
                             conf,
@@ -387,7 +414,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                         "why": _why(
                             f"Soil water stays above the stress point for the next {ndays} days.",
                             steps,
-                            ["soil_depletion", "raw_threshold", "et0", "precip"],
+                            ["soil_depletion", "raw_threshold", "et0", "precip", "ecostress_et"],
                             "FAO-56 single-Kc root-zone water balance",
                             "water-balance",
                             conf,
@@ -699,7 +726,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "smap_l3e",
             "smap_l4",
             "mod16",
+            "ecostress",
         )
+        if sid != "ecostress" or ctx.statuses.get("ecostress")
     ]
     offline = any(s["status"] == "demo" for s in srcs)
     area = _polygon_area_ha(inp.get("polygon"))

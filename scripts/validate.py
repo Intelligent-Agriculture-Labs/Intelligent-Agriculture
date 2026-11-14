@@ -25,7 +25,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 os.environ.setdefault("FIELDSHIFT_ORNL_RETRIES", "5")
 
 from fieldshift.data import sources  # noqa: E402
-from fieldshift.data.http import DataUnavailable, get_json  # noqa: E402
+from fieldshift.data.http import get_json  # noqa: E402
 from fieldshift.engine.context import build  # noqa: E402
 from fieldshift.science import disease, drought  # noqa: E402
 from fieldshift.science.cropmodel import gdd_requirement, simulate  # noqa: E402
@@ -364,22 +364,20 @@ def exp_yield_signal() -> dict[str, Any]:
 
 # --------------------------------------------------------------------------- 5. ET vs MODIS MOD16
 def exp_mod16() -> dict[str, Any]:
-    """Fully-irrigated alfalfa ET (season model) vs. MODIS MOD16A2GF annual ET at the Fallon pixel (500 m)."""
-    lat, lon = SITES["fallon_nv"]
+    """Irrigated alfalfa at the Fallon demo FIELD: model ETa vs NASA ECOSTRESS daily ET (70 m, overpass days) and vs MODIS
+    MOD16A2GF annual ET (500 m). ECOSTRESS resolves the field itself; MOD16 mixes it with surroundings."""
+    from fieldshift.engine import service
+
+    p = next(x for x in service.presets() if x["id"] == "fallon_nv")
+    lat, lon = p["lat"], p["lon"]
+    etp = sources.et_points(lat, lon)
+    if not etp:
+        return {"status": "no ET points file (run scripts/appeears_smap.py --set et)"}
     ctx = build(lat, lon, AS_OF)
-    try:
-        series = sources.ornl_series(
-            "mod16", lat, lon, dt.date(2015, 1, 1), dt.date(2023, 12, 31), max_requests=60
-        )
-    except DataUnavailable as e:
-        return {"status": f"unavailable: {e}"}
-    if not series:
-        return {"status": "no MOD16 data returned (ORNL DAAC unavailable)"}
-    annual: dict[int, float] = {}
-    for d, v in series:
-        annual[d.year] = annual.get(d.year, 0.0) + v
-    model = {}
-    for y in sorted(annual):
+    out: dict[str, Any] = {}
+    # ECOSTRESS daily vs model ETa (full irrigation, flood) on overpass days in the growing season
+    model_d: dict[dt.date, float] = {}
+    for y in range(2018, 2025):
         r = simulate(
             "alfalfa",
             ctx.weather,
@@ -387,21 +385,68 @@ def exp_mod16() -> dict[str, Any]:
             taw_per_m=ctx.taw_per_m,
             strategy="full",
             method="flood",
+            record_daily=True,
         )
-        # add non-growing-season soil evaporation, approximated as Kc 0.3 × ET0 outside the season
-        i0, i1 = ctx.idx(dt.date(y, 1, 1)), ctx.idx(dt.date(y, 12, 31)) + 1
-        js, je = ctx.idx(r.start), ctx.idx(r.end)
-        off = 0.3 * (np.nansum(ctx.weather.et0[i0:js]) + np.nansum(ctx.weather.et0[je + 1 : i1]))
-        model[y] = r.et_mm + off
-    a = np.array([model[y] for y in sorted(annual)])
-    b = np.array([annual[y] for y in sorted(annual)])
-    return {
-        "years": sorted(annual),
-        "model_mm": [round(x) for x in a],
-        "mod16_mm": [round(x) for x in b],
-        **metrics(a, b),
-        "note": "MOD16 is known to underestimate ET of irrigated crops in arid regions (no irrigation input); see docs/VALIDATION.md.",
-    }
+        for d_, v in zip(r.daily["date"], r.daily["eta"], strict=True):
+            model_d[dt.date.fromisoformat(d_)] = v
+    pairs = [
+        (model_d[dt.date.fromisoformat(d_)], v)
+        for d_, v in zip(etp["dates"], etp["eco_et_daily"], strict=True)
+        if v is not None
+        and dt.date.fromisoformat(d_) in model_d
+        and 5 <= dt.date.fromisoformat(d_).month <= 9
+    ]
+    if len(pairs) >= 10:
+        a = np.array([x for x, _ in pairs])
+        b = np.array([y for _, y in pairs])
+        out["ecostress_daily"] = metrics(a, b)
+        if plt is not None:
+            fig, ax = plt.subplots(figsize=(4, 4))
+            ax.scatter(b, a, s=8, alpha=0.6)
+            lim = max(a.max(), b.max()) * 1.05
+            ax.plot([0, lim], [0, lim], "k--", lw=0.8)
+            ax.set_xlabel("NASA ECOSTRESS daily ET, 70 m (mm/day)")
+            ax.set_ylabel("FieldShift model ETa (mm/day)")
+            ax.set_title(
+                f"Fallon alfalfa field, May–Sep 2018–2024\nr={out['ecostress_daily']['r']}, bias={out['ecostress_daily']['bias']} mm/d"
+            )
+            fig.tight_layout()
+            fig.savefig(OUT / "ecostress_fallon.png", dpi=110)
+            plt.close(fig)
+    # MOD16 annual sums vs model annual ET (season + off-season evaporation)
+    annual: dict[int, float] = {}
+    for d_, v in zip(etp["dates"], etp["mod16_et_8day"], strict=True):
+        if v is not None:
+            annual[int(d_[:4])] = annual.get(int(d_[:4]), 0.0) + v
+    yrs = [y for y in sorted(annual) if 2015 <= y <= 2024]
+    if yrs:
+        model = []
+        for y in yrs:
+            r = simulate(
+                "alfalfa",
+                ctx.weather,
+                dt.date(y, 3, 15),
+                taw_per_m=ctx.taw_per_m,
+                strategy="full",
+                method="flood",
+            )
+            i0, i1 = ctx.idx(dt.date(y, 1, 1)), ctx.idx(dt.date(y, 12, 31)) + 1
+            js, je = ctx.idx(r.start), ctx.idx(r.end)
+            off = 0.3 * (np.nansum(ctx.weather.et0[i0:js]) + np.nansum(ctx.weather.et0[je + 1 : i1]))
+            model.append(r.et_mm + off)
+        a = np.array(model)
+        b = np.array([annual[y] for y in yrs])
+        out["mod16_annual"] = {
+            "years": yrs,
+            "model_mm": [round(x) for x in a],
+            "mod16_mm": [round(x) for x in b],
+            **metrics(a, b),
+        }
+    out["note"] = (
+        "ECOSTRESS (70 m) observes the field itself on clear ISS overpasses; MOD16 (500 m) mixes irrigated fields with desert and "
+        "has no irrigation input, so it is expected to be far below an irrigated field's ET."
+    )
+    return out
 
 
 # --------------------------------------------------------------------------- 6. late blight 2009

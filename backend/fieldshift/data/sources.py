@@ -103,6 +103,14 @@ SOURCES: dict[str, dict[str, Any]] = {
         latency="~3 days",
         is_nasa=True,
     ),
+    "ecostress": dict(
+        name="ECOSTRESS L3T JET daily evapotranspiration (via AppEEARS)",
+        provider="NASA JPL / LP DAAC",
+        url="https://ecostress.jpl.nasa.gov/data",
+        resolution="70 m, irregular overpasses (ISS)",
+        latency="~days",
+        is_nasa=True,
+    ),
     "era5_land": dict(
         name="ERA5 / ERA5-Land reanalysis soil moisture (via Open-Meteo archive)",
         provider="Copernicus C3S / ECMWF",
@@ -398,6 +406,24 @@ def smap_points(lat: float, lon: float, max_km: float = 10.0) -> dict[str, Any] 
     Live SMAP extraction for arbitrary points needs Earthdata Login + an async AppEEARS task (ROADMAP)."""
     best = None
     for f in sorted(SMAP_DIR.glob("*.json.gz")):
+        try:
+            with gzip.open(f, "rt") as fh:
+                d = json.load(fh)
+        except (OSError, json.JSONDecodeError):
+            continue
+        km = math.hypot((d["lat"] - lat) * 111.3, (d["lon"] - lon) * 111.3 * math.cos(math.radians(lat)))
+        if km <= max_km and (best is None or km < best[0]):
+            best = (km, d)
+    return best[1] if best else None
+
+
+ET_DIR = Path(__file__).resolve().parent / "et_points"
+
+
+def et_points(lat: float, lon: float, max_km: float = 1.0) -> dict[str, Any] | None:
+    """Pre-extracted ECOSTRESS (70 m daily ET) + MOD16 (500 m 8-day ET) series for a demo field (AppEEARS batch job)."""
+    best = None
+    for f in sorted(ET_DIR.glob("*.json.gz")):
         try:
             with gzip.open(f, "rt") as fh:
                 d = json.load(fh)

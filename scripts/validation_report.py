@@ -111,19 +111,25 @@ def render(r: dict[str, Any]) -> str:
     out.append("")
     m = r.get("mod16", {})
     out.append(
-        "### V6 · Irrigated alfalfa ET (season model + off-season evaporation) vs. MODIS MOD16A2GF, Fallon"
+        "### V6 · Irrigated alfalfa ET at the Fallon field: model vs NASA ECOSTRESS (70 m) and MODIS MOD16 (500 m)"
     )
     out.append(f"_run: {r.get('mod16_run_at', '–')}_\n")
-    if "years" in m:
-        out.append("| Year | " + " | ".join(str(x) for x in m["years"]) + " |")
-        out.append("|---|" + "---|" * len(m["years"]))
-        out.append("| FieldShift (mm) | " + " | ".join(str(x) for x in m["model_mm"]) + " |")
-        out.append("| MOD16 (mm) | " + " | ".join(str(x) for x in m["mod16_mm"]) + " |")
+    if "ecostress_daily" in m:
+        e = m["ecostress_daily"]
         out.append(
-            f"\nr = {fmt(m.get('r'))}, mean bias = {fmt(m.get('bias'), 0)} mm/yr ({fmt(m.get('mean_model'), 0)} vs {fmt(m.get('mean_ref'), 0)})."
+            f"ECOSTRESS daily ET on {e['n']} clear overpass days (May–Sep 2018–2024): r = {fmt(e['r'])}, bias = {fmt(e['bias'])} mm/day "
+            f"(model mean {fmt(e['mean_model'])} vs ECOSTRESS {fmt(e['mean_ref'])} mm/day), RMSE {fmt(e['rmse'])} mm/day.\n"
         )
-    else:
-        out.append(f"*{m.get('status', 'not run')}*")
+    if "mod16_annual" in m:
+        a = m["mod16_annual"]
+        out.append("| Year | " + " | ".join(str(x) for x in a["years"]) + " |")
+        out.append("|---|" + "---|" * len(a["years"]))
+        out.append("| FieldShift (mm/yr) | " + " | ".join(str(x) for x in a["model_mm"]) + " |")
+        out.append("| MOD16 (mm/yr) | " + " | ".join(str(x) for x in a["mod16_mm"]) + " |")
+    if "status" in m:
+        out.append(f"*{m['status']}*")
+    if "note" in m:
+        out.append(f"\n{m['note']}")
     out.append("")
     b = r.get("blight", {})
     out.append("### V7 · Late-blight weather risk (Hutton criteria, NASA POWER hourly), Ithaca NY, Jun–Aug")
