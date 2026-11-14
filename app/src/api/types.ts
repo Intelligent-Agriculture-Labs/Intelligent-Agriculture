@@ -6,8 +6,7 @@
 
 export type Risk = "low" | "moderate" | "high" | "severe";
 export type Lang = "en" | "es" | "fr" | "sw" | "hi" | "de";
-export type IrrigationMethod =
-  "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
+export type IrrigationMethod = "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
 
 export interface FieldInput {
   lat: number;
@@ -136,8 +135,7 @@ export interface SimulateRequest {
   lon: number;
   crop: string;
   planting_date: string; // month-day used across years, ISO date with any year
-  irrigation_strategy:
-    "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
+  irrigation_strategy: "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
   water_allocation_mm?: number | null;
   delta_t_c?: number; // climate scenario: + °C
   rain_factor?: number; // e.g. 0.8 = 20% less rain
@@ -198,15 +196,7 @@ export interface RotationSlot {
   end_month: number;
 }
 export interface RotationMetric {
-  id:
-    | "water"
-    | "soil"
-    | "income"
-    | "pests"
-    | "risk"
-    | "erosion"
-    | "nitrogen"
-    | "bare_days";
+  id: "water" | "soil" | "income" | "pests" | "risk" | "erosion" | "nitrogen" | "bare_days";
   label: string;
   value: number; // in unit
   unit: string;

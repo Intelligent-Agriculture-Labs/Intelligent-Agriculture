@@ -57,9 +57,13 @@ export function Txt({
   );
 }
 
-export function Card({ children, style, alt }: { children: React.ReactNode; style?: StyleProp<ViewStyle>; alt?: boolean }) {
+export function Card({ children, style, alt, testID }: { children: React.ReactNode; style?: StyleProp<ViewStyle>; alt?: boolean; testID?: string }) {
   const t = useTheme();
-  return <View style={[styles.card, { backgroundColor: alt ? t.cardAlt : t.card, borderColor: t.border }, style]}>{children}</View>;
+  return (
+    <View testID={testID} style={[styles.card, { backgroundColor: alt ? t.cardAlt : t.card, borderColor: t.border }, style]}>
+      {children}
+    </View>
+  );
 }
 
 export function Button({

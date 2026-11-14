@@ -5,11 +5,15 @@ import type {
   ClimateResponse,
   CropInfo,
   FieldInput,
+  PlannerRequest,
+  PlannerResponse,
   PresetLocation,
   RotationRequest,
   RotationResponse,
   SimulateRequest,
   SimulateResponse,
+  TerrainRequest,
+  TerrainResponse,
 } from "./types";
 
 /**
@@ -106,6 +110,20 @@ async function withFallback<T>(key: string, live: () => Promise<T>, mock: () => 
   }
 }
 
+/** live → device cache; no mock fallback (used for terrain maps and the planner, where placeholders would mislead). */
+async function withCache<T>(key: string, live: () => Promise<T>): Promise<Result<T>> {
+  try {
+    const data = await live();
+    await writeCache(key, data);
+    return { data, origin: "live", savedAt: new Date().toISOString() };
+  } catch (err) {
+    if (err instanceof ApiError && err.status >= 400 && err.status < 500) throw err;
+    const cached = await readCache<T>(key);
+    if (cached) return { data: cached.data, origin: "cache", savedAt: cached.savedAt };
+    throw err;
+  }
+}
+
 const k = (...parts: (string | number | undefined | null)[]) => parts.map((p) => (typeof p === "number" ? p.toFixed(3) : (p ?? ""))).join("|");
 
 export const api = {
@@ -147,6 +165,14 @@ export const api = {
       () => http(`/api/climate?lat=${lat}&lon=${lon}`),
       async () => (await import("./__fixtures__/MOCK_climate.json")).default as unknown as ClimateResponse,
     ),
+  terrain: (r: TerrainRequest) =>
+    withCache<TerrainResponse>(k("terrain", r.lat, r.lon, r.crop, JSON.stringify(r.polygon ?? null)), () => http("/api/terrain", r)),
+  planner: (r: PlannerRequest) =>
+    withCache<PlannerResponse>(k("plan", r.lat, r.lon, r.crop, r.planting_date, r.irrigation, r.water_allocation_mm ?? "", r.as_of ?? ""), () =>
+      http("/api/planner", r),
+    ),
+  /** absolute URL for server-relative paths such as terrain PNG overlays */
+  abs: (path: string) => (path.startsWith("http") ? path : `${API_BASE}${path}`),
   exportUrl: (kind: "advice.csv" | "field.geojson", f: FieldInput) =>
     `${API_BASE}/api/export/${kind}?lat=${f.lat}&lon=${f.lon}&crop=${encodeURIComponent(f.crop)}&planting_date=${f.planting_date}&irrigation=${f.irrigation}`,
 };
