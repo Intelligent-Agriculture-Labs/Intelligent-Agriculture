@@ -290,8 +290,6 @@ export interface PresetLocation {
   cached: boolean;
   /** a past date with an active season, to replay real advice for demos (sent as FieldInput.as_of) */
   replay_date?: string | null;
-  /** field outline [lon, lat] ring (real farm boundary for the demo farm), when the server provides one */
-  polygon?: [number, number][] | null;
 }
 
 /* ---------- Terrain maps (POST /api/terrain) ---------- */
@@ -395,6 +393,8 @@ export interface FieldRecord {
   notes?: string | null;
   preset_id?: string | null;
   replay_date?: string | null;
+  history?: RotationYear[]; // what was grown on this field (past years)
+  plan?: RotationYear[]; // the farmer's multi-year rotation plan
   updated_at: string; // ISO datetime, set by the device on every change
   deleted?: boolean;
 }
@@ -468,4 +468,102 @@ export interface SatelliteResponse {
   kcb_now?: number | null; // satellite-derived basal crop coefficient (NDVI -> Kcb)
   sources?: SourceRef[];
   caveats?: string[];
+}
+
+/* ---------- Accounts (email + password) ----------
+ * Accounts own one farm (fields, plans, settings) so a farmer logs in on phone and PC.
+ * The sync-code flow still works for sharing a farm with a family member without an account.
+ * Auth: `Authorization: Bearer <token>`; tokens are opaque, valid 90 days. */
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  created_at: string;
+}
+export interface AuthResponse {
+  token: string;
+  user: User;
+  farm: Farm; // the account's farm (created on register; local fields can be uploaded with register)
+}
+// POST /api/auth/register {email, password (>= 8 chars), name?, fields?: FieldRecord[], settings?: FarmSettings} -> AuthResponse
+// POST /api/auth/login {email, password} -> AuthResponse
+// POST /api/auth/logout (Bearer) -> {ok: true}
+// GET  /api/auth/me (Bearer) -> {user: User, farm: Farm}
+// GET  /api/me/farm (Bearer) -> Farm ;  PUT /api/me/farm (Bearer) {name?, fields, settings?} -> Farm (per-field merge)
+// POST /api/auth/password (Bearer) {old_password, new_password} -> {ok: true}
+// DELETE /api/auth/me (Bearer) {password} -> {ok: true}   (deletes account + farm)
+
+/* ---------- Per-field multi-year rotation plan ----------
+ * FieldRecord gets `history` (what was grown) and `plan` (what the farmer intends). The checker evaluates
+ * each planned year biologically (disease/pest host breaks, return intervals, nitrogen, allelopathy, soil cover)
+ * and agronomically (simulated yield & water at this field from NASA weather) and proposes improvements. */
+export interface RotationYear {
+  year: number; // calendar year of the main crop's harvest
+  crop: string; // main crop id
+  cover_crop?: string | null; // optional cover / catch crop after the main crop
+}
+export interface RotationIssue {
+  id: string; // e.g. "return_interval", "shared_pathogen:sclerotinia", "n_deficit", "bare_soil", "allelopathy", "water_shortfall"
+  severity: "info" | "caution" | "problem";
+  title: string; // plain language: "Potato again too soon"
+  explanation: string; // plain language, 1–3 sentences, with numbers
+  suggestion: string | null; // what to do instead
+  sources: string[]; // citations from the knowledge base
+}
+export interface RotationYearCheck {
+  year: number;
+  crop: string;
+  cover_crop: string | null;
+  verdict: "good" | "caution" | "problem";
+  score: number; // 0..100
+  issues: RotationIssue[];
+  benefits: string[]; // plain language: "Peas left ~40 kg N/ha for this wheat"
+  sim: {
+    yield_t_ha: number; // expected (median) with rotation effects applied
+    yield_p10: number; // bad year
+    irrigation_mm: number;
+    water_use_mm: number;
+    n_balance_kg_ha: number; // + surplus / − deficit to supply with fertiliser
+    margin_usd_ha: number; // indicative
+    bare_days: number;
+    erosion_t_ha: number | null; // RUSLE for this field (needs polygon/terrain)
+    rotation_effect_pct: number; // yield effect of predecessors (+/−)
+  };
+}
+export interface RotationPlanRequest {
+  lat: number;
+  lon: number;
+  polygon?: [number, number][] | null;
+  irrigation: IrrigationMethod;
+  water_allocation_mm?: number | null;
+  history: RotationYear[]; // past years (most recent last), may be empty
+  plan: RotationYear[]; // planned years (consecutive), 1..8
+  priorities?: Priorities;
+  lang?: Lang;
+  optimize?: boolean; // also search for a better plan
+}
+export interface RotationPlanResponse {
+  years: RotationYearCheck[];
+  summary: {
+    score: number;
+    verdict: "good" | "caution" | "problem";
+    headline: string; // plain language: "Good plan — one change would cut disease risk"
+    total_margin_usd_ha: number;
+    avg_irrigation_mm: number;
+    n_balance_kg_ha: number; // over the plan
+    disease_pressure: { pathogen: string; name: string; level: "low" | "medium" | "high"; years: number[] }[];
+  };
+  suggestions: { title: string; explanation: string; plan: RotationYear[]; score: number; score_gain: number }[];
+  optimized: { plan: RotationYear[]; score: number; explanation: string } | null;
+  crops_available: string[]; // crops that fit this field's climate
+  sources: SourceRef[];
+  disclaimer: string;
+}
+// POST /api/rotations/plan -> RotationPlanResponse
+
+/* ---------- Plain-language glossary (GET /api/glossary?lang=en) ---------- */
+export interface GlossaryEntry {
+  term: string; // "ET₀"
+  plain: string; // "How much water a well-watered lawn would lose to the air today — the weather's thirst."
+  why_it_matters: string;
 }
