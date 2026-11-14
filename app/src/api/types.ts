@@ -85,6 +85,16 @@ export interface DroughtStatus {
   spei90?: number | null;
   sm_percentile: number | null; // 0..100
   vhi: number | null; // 0..100
+  /** AI drought classifier (contiguous U.S. only, where it was validated); level replaces the rule-based level */
+  ml?: {
+    level: number;
+    probabilities: number[]; // None, D0..D4
+    rules_level: number;
+    model: string;
+    heldout_within1_acc: number;
+    heldout_spearman: number;
+    n_counties: number;
+  } | null;
   why: WhyBlock;
 }
 

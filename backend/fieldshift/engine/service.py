@@ -19,6 +19,7 @@ from ..data.sources import source_ref
 from ..science import climate as climmod
 from ..science import disease as dis
 from ..science import drought as drt
+from ..science import drought_ml
 from ..science import pests as pst
 from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
@@ -551,7 +552,37 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         *[f"Indicator: {p}" for p in parts],
         "Levels follow the U.S. Drought Monitor scale (D0–D4); indicators are blended by a weighted 'convergence of evidence'.",
     ]
+    # ---- AI drought classifier (gradient boosting on USDM labels) where it was validated
+    ml_info = None
+    model_name = "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + satellite indicators"
+    if drought_ml.in_validated_domain(lat, lon) and drought_ml.load() is not None:
+        try:
+            Xf = drought_ml.feature_matrix(pd_, w.rain[:obs_end], w.et0[:obs_end], w.tmax[:obs_end])
+            pr = drought_ml.predict(Xf[-1])
+        except (ValueError, IndexError):
+            pr = None
+        if pr is not None:
+            ml_level, proba = pr
+            meta = drought_ml.load()[1]  # type: ignore[index]
+            hv = meta["ml_heldout"]
+            ml_info = {
+                "level": ml_level,
+                "probabilities": [round(p_, 3) for p_ in proba],
+                "rules_level": level,
+                "model": "Gradient-boosted trees trained on U.S. Drought Monitor maps",
+                "heldout_within1_acc": hv["within1_acc"],
+                "heldout_spearman": hv["spearman_vs_dsci"],
+                "n_counties": meta["n_counties"],
+            }
+            dsteps.append(
+                f"AI classifier (gradient boosting on {meta['n_samples']:,} weekly U.S. Drought Monitor maps from {meta['n_counties']} counties): "
+                f"{drt.LABELS[ml_level]} with {100 * max(proba):.0f} % probability. On counties it never saw it is within one category "
+                f"{100 * hv['within1_acc']:.0f} % of the time (rule-based blend: {drt.LABELS[level]})."
+            )
+            level = ml_level
+            model_name = "AI drought classifier (gradient boosting on USDM labels, NASA POWER features) + rule-based SPI/SPEI blend"
     drought = {
+        "ml": ml_info,
         "level": level,
         "label": drt.LABELS[level],
         "spi30": spi30,
@@ -564,7 +595,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             f"{drt.LABELS[level]} based on {len(parts)} indicators.",
             dsteps,
             ["spi90", "precip", "et0", "ndvi", "smap_sm"],
-            "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + satellite indicators",
+            model_name,
             "drought",
             0.6 if len(parts) >= 3 else 0.45,
             "Agreement between independent indicators raises confidence.",
