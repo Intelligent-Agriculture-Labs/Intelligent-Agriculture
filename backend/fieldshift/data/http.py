@@ -16,6 +16,8 @@ import logging
 import os
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutTimeout
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -45,6 +47,19 @@ class Fetched:
 
 
 _host_locks: dict[str, threading.Lock] = {}
+_host_down: dict[str, float] = {}
+_deadline_pool = ThreadPoolExecutor(max_workers=16, thread_name_prefix="http")
+
+
+def _get_with_deadline(url: str, *, timeout: float, **kw: Any) -> httpx.Response:
+    """httpx timeouts are per phase (a trickling server can exceed them); enforce a hard total deadline."""
+    fut = _deadline_pool.submit(httpx.get, url, timeout=httpx.Timeout(timeout, connect=10.0), **kw)
+    try:
+        return fut.result(timeout=timeout * 1.5 + 5)
+    except FutTimeout as e:
+        raise TimeoutError(f"hard deadline exceeded for {url}") from e
+
+
 _host_last: dict[str, float] = {}
 _MIN_INTERVAL = {"modis.ornl.gov": 0.5, "power.larc.nasa.gov": 0.2, "rest.isric.org": 1.0}
 
@@ -97,13 +112,14 @@ def get_json(
     if cached is not None and (time.time() - cached["t"] < ttl_s or offline_mode()):
         return Fetched(cached["d"], "cache", cached["t"])
 
-    if not offline_mode():
+    down_until = _host_down.get(httpx.URL(url).host, 0.0)
+    if not offline_mode() and time.time() >= down_until:
         host = httpx.URL(url).host
         last_err: Exception | None = None
         for attempt in range(retries):
             try:
                 _rate_limit(host)
-                r = httpx.get(
+                r = _get_with_deadline(
                     url,
                     params=params,
                     timeout=timeout_s,
@@ -124,10 +140,15 @@ def get_json(
                 last_err = RuntimeError(f"HTTP {r.status_code}")
             except DataUnavailable:
                 raise
-            except (httpx.HTTPError, ValueError, RuntimeError) as e:  # network / JSON errors
+            except (httpx.HTTPError, ValueError, RuntimeError, TimeoutError) as e:  # network / JSON errors
                 last_err = e
             time.sleep(min(8.0, 1.5 * 2**attempt))
         log.warning("live fetch failed for %s: %s", url, last_err)
+        if (
+            isinstance(last_err, (TimeoutError, httpx.TimeoutException))
+            and os.environ.get("FIELDSHIFT_CIRCUIT_BREAKER", "1") == "1"
+        ):
+            _host_down[host] = time.time() + 300  # circuit breaker: skip a hanging host for 5 min
 
     if cached is not None:
         return Fetched(cached["d"], "cache", cached["t"])

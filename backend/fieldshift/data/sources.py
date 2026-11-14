@@ -265,7 +265,7 @@ def soil(lat: float, lon: float) -> dict[str, Any] | None:
 
     url = "https://rest.isric.org/soilgrids/v2.0/properties/query?" + urlencode(params)
     try:
-        f = get_json(url, None, ttl_s=365 * 86400, timeout_s=60, retries=2)
+        f = get_json(url, None, ttl_s=365 * 86400, timeout_s=25, retries=1)
     except DataUnavailable:
         return None
     vals: dict[str, float] = {}
