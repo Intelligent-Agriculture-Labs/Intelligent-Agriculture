@@ -35,21 +35,14 @@ BG = "0x1d3b24"  # brand dark green
 
 # (images shown side by side, caption, seconds)
 SHOTS: list[tuple[list[str], str, float]] = [
-    ([], "FieldShift — NASA data for farm decisions|Nevada alfalfa farm. Hotter summers. Less water.", 3.0),
-    (["web-climate-desktop.png"], "NASA POWER: days above 35 °C doubled since 1984 (26 to 50 a year)", 4.0),
-    (
-        ["ios-home-replay.png", "android-home-replay.png"],
-        "This week: exactly when and how much to irrigate",
-        5.0,
-    ),
-    (["ios-why.png", "android-why.png"], "Every number is one tap away from its NASA evidence", 4.0),
-    (
-        ["web-rotations-desktop.png"],
-        "Field Shift: compare rotations on 15 seasons of NASA data at your field",
-        6.0,
-    ),
-    (["web-whatif-desktop.png"], "What if? Test +2 °C and less rain before you plant", 4.0),
-    ([], "FieldShift|Web · iOS · Android · 6 languages · works offline", 4.0),
+    ([], "FieldShift — NASA data for farm decisions|A Nevada alfalfa farm. Hotter summers. Less water.", 3.0),
+    (["ios-climate.png", "web-climate-desktop.png"], "NASA POWER: days above 35 °C doubled since 1984 (26 → 50 a year)", 3.5),
+    (["web-detect-mobile.png", "ios-field-editor.png"], "Tap your field — AI finds its boundary on satellite imagery", 4.0),
+    (["ios-home-replay.png", "android-home-replay.png"], "This week: when and how much to irrigate, drought status", 4.0),
+    (["ios-why.png", "android-why.png"], "Every number is one tap from its NASA evidence", 3.0),
+    (["ios-satellite.png", "web-satellite-desktop.png"], "Sentinel-2 + AI: management zones and cuttings seen from space", 4.0),
+    (["ios-plan.png", "ios-rotations.png", "android-map.png"], "Plan the season, compare rotations, map erosion & frost", 4.5),
+    ([], "FieldShift|Web · iOS · Android · syncs phone ↔ PC · 6 languages · offline", 4.0),
 ]
 
 

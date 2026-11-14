@@ -62,6 +62,23 @@ def _mosaic(
     return img, cx - half, cy - half, seed
 
 
+def _merge_close(ring: list[list[float]], lat: float, min_m: float) -> list[list[float]]:
+    """Drop vertices closer than min_m to the previously kept vertex (cleaner outlines to edit by hand)."""
+    if ring and ring[0] == ring[-1]:
+        ring = ring[:-1]
+    kx = 111320.0 * math.cos(math.radians(lat))
+    out: list[list[float]] = []
+    for p in ring:
+        if not out or math.hypot((p[0] - out[-1][0]) * kx, (p[1] - out[-1][1]) * 110540.0) >= min_m:
+            out.append(p)
+    if (
+        len(out) > 3
+        and math.hypot((out[0][0] - out[-1][0]) * kx, (out[0][1] - out[-1][1]) * 110540.0) < min_m
+    ):
+        out.pop()
+    return out if len(out) >= 3 else ring
+
+
 def detect_field(lat: float, lon: float, source: str | None = None) -> dict[str, Any]:
     src = source or "esri"
     attempts = [(src, 17), (src, 16)] if src == "esri" else [(src, 16), (src, 15)]
@@ -82,6 +99,7 @@ def detect_field(lat: float, lon: float, source: str | None = None) -> dict[str,
     for r, c in last["polygon_rc"]:
         lo, la = tile_to_lonlat(x0 + c / 256.0, y0 + r / 256.0, z)
         ring.append([round(lo, 6), round(la, 6)])
+    ring = _merge_close(ring, lat, min_m=8.0)
     if ring[0] != ring[-1]:
         ring.append(ring[0])
     m_per_px = 40075016.686 * math.cos(math.radians(lat)) / (2**z) / 256
