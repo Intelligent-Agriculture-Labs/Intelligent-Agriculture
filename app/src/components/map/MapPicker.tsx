@@ -21,9 +21,13 @@ export default function MapPicker({
   lon,
   polygon,
   editable,
+  selectedVertex,
   layer,
   onPick,
   onVertexMove,
+  onVertexSelect,
+  onVertexDelete,
+  onInsertVertex,
   fitNonce,
   zoom = 11,
   height = 300,
@@ -39,8 +43,8 @@ export default function MapPicker({
     if (ready && lat !== null && lon !== null) post({ type: "marker", lat, lon, zoom: Math.max(12, zoom) });
   }, [ready, lat, lon, zoom]);
   useEffect(() => {
-    if (ready) post({ type: "polygon", points: polygon ?? [], editable: !!editable });
-  }, [ready, polygon, editable]);
+    if (ready) post({ type: "polygon", points: polygon ?? [], editable: !!editable, selected: selectedVertex ?? null });
+  }, [ready, polygon, editable, selectedVertex]);
   useEffect(() => {
     if (ready && fitNonce) post({ type: "fit" });
   }, [ready, fitNonce]);
@@ -50,10 +54,13 @@ export default function MapPicker({
 
   const onMessage = (e: WebViewMessageEvent) => {
     try {
-      const m = JSON.parse(e.nativeEvent.data) as { type: string; lat?: number; lon?: number; index?: number };
+      const m = JSON.parse(e.nativeEvent.data) as { type: string; lat?: number; lon?: number; index?: number; after?: number };
       if (m.type === "ready") setReady(true);
       if (m.type === "click" && m.lat !== undefined && m.lon !== undefined) onPick(m.lat, m.lon);
       if (m.type === "vertexMove" && m.index !== undefined && m.lat !== undefined && m.lon !== undefined) onVertexMove?.(m.index, m.lat, m.lon);
+      if (m.type === "vertexSelect" && m.index !== undefined) onVertexSelect?.(m.index);
+      if (m.type === "vertexDelete" && m.index !== undefined) onVertexDelete?.(m.index);
+      if (m.type === "insertVertex" && m.after !== undefined && m.lat !== undefined && m.lon !== undefined) onInsertVertex?.(m.after, m.lat, m.lon);
     } catch {
       // ignore malformed messages
     }

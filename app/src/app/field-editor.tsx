@@ -1,16 +1,17 @@
 import React, { useMemo, useState } from "react";
-import { TextInput, View } from "react-native";
+import { ActivityIndicator, TextInput, View } from "react-native";
 import * as Location from "expo-location";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
 import type { IrrigationMethod } from "@/api/types";
+import { api, ApiError, type FieldDetectResponse } from "@/api/client";
 import MapPicker from "@/components/map/MapPicker";
 import { isUS, type MapLayer } from "@/components/map/leafletHtml";
 import { useCrops } from "@/components/domain";
 import { Button, Chip, ChipRow, DateField, Screen, Section, Txt, styles as ui } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { fmt, inToMm, mmToIn } from "@/lib/units";
-import { polygonAreaHa, polygonCentroid } from "@/state/farm";
+import { deleteVertex, insertVertex, openRing, polygonAreaHa, polygonCentroid } from "@/state/farm";
 import { useStore } from "@/state/store";
 
 const IRRIGATION: IrrigationMethod[] = ["none", "drip", "sprinkler", "pivot", "furrow", "flood"];
@@ -23,7 +24,10 @@ const LAYERS: { id: MapLayer; icon: "planet" | "map" | "earth" | "leaf" | "image
   { id: "ndvi", icon: "leaf" },
 ];
 
-/** Add or edit a field: draw its outline on 10 m Sentinel-2 imagery, then set crop, sowing date and irrigation. */
+/**
+ * Add or edit a field. Default for a field without an outline: tap the field on high-res imagery and FieldShift detects
+ * its boundary (POST /api/fields/detect); the farmer then fixes it by hand (drag / insert / delete corners) or draws it.
+ */
 export default function FieldEditor() {
   const t = useTheme();
   const { t: tr } = useTranslation();
@@ -35,7 +39,7 @@ export default function FieldEditor() {
   const sys = settings.units;
 
   const [name, setName] = useState(editing?.name ?? tr("fields.defaultName", { n: fields.length + 1 }));
-  const [polygon, setPolygon] = useState<[number, number][]>(editing?.polygon ?? []);
+  const [polygon, setPolygon] = useState<[number, number][]>(openRing(editing?.polygon));
   const [pin, setPin] = useState<{ lat: number; lon: number } | null>(editing ? { lat: editing.lat, lon: editing.lon } : null);
   const [crop, setCrop] = useState(editing?.crop ?? seed?.crop ?? "maize");
   const [date, setDate] = useState(editing?.planting_date ?? seed?.planting_date ?? new Date().toISOString().slice(0, 10));
@@ -46,7 +50,10 @@ export default function FieldEditor() {
       : "",
   );
   const [layer, setLayer] = useState<MapLayer>("esri");
-  const [mode, setMode] = useState<"draw" | "pin">("draw");
+  const [mode, setMode] = useState<"detect" | "draw" | "edit" | "pin">(editing?.polygon && editing.polygon.length >= 3 ? "edit" : "detect");
+  const [selected, setSelected] = useState<number | null>(null);
+  const [detecting, setDetecting] = useState(false);
+  const [detected, setDetected] = useState<FieldDetectResponse | null>(null);
   const [fitNonce, setFitNonce] = useState(0);
   const [coordText, setCoordText] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
@@ -58,11 +65,44 @@ export default function FieldEditor() {
   const [initialCenter] = useState(() => (editing ? { lat: editing.lat, lon: editing.lon } : seed ? { lat: seed.lat, lon: seed.lon } : null));
   const mapCenter = pin && (!editing || pin.lat !== editing.lat || pin.lon !== editing.lon) ? pin : initialCenter;
 
+  const runDetect = async (lat: number, lon: number) => {
+    if (detecting) return;
+    setMsg(null);
+    setDetecting(true);
+    setSelected(null);
+    try {
+      const res = await api.detectField({ lat, lon, source: layer === "naip" ? "naip" : "esri" });
+      const ring = openRing(res.polygon);
+      if (ring.length < 3) throw new Error("empty");
+      setPolygon(ring);
+      setDetected(res);
+      setMode("edit");
+      setFitNonce((n) => n + 1);
+    } catch (e) {
+      setDetected(null);
+      setMsg(e instanceof ApiError && (e.status === 422 || e.status === 503) ? tr("detect.notFound") : tr("detect.failed"));
+      setMode("draw");
+    } finally {
+      setDetecting(false);
+    }
+  };
   const onPick = (lat: number, lon: number) => {
-    if (mode === "draw") setPolygon((p) => [...p, [lon, lat]]);
-    else setPin({ lat, lon });
+    if (mode === "detect") runDetect(lat, lon);
+    else if (mode === "draw") setPolygon((p) => [...p, [lon, lat]]);
+    else if (mode === "pin") setPin({ lat, lon });
+    else setSelected(null); // edit mode: a tap on the map just deselects
   };
   const onVertexMove = (i: number, lat: number, lon: number) => setPolygon((p) => p.map((q, k) => (k === i ? [lon, lat] : q)));
+  const onInsert = (after: number, lat: number, lon: number) => {
+    setPolygon((p) => insertVertex(p, after, [lon, lat]));
+    setSelected(after + 1);
+  };
+  const onDelete = (i: number) => {
+    setPolygon((p) => deleteVertex(p, i));
+    setSelected(null);
+  };
+  const conf = detected?.confidence ?? null;
+  const confRisk = conf === null ? null : conf >= 0.7 ? "low" : conf >= 0.4 ? "moderate" : "severe";
 
   const useGps = async () => {
     setMsg(null);
@@ -163,36 +203,103 @@ export default function FieldEditor() {
             />
           ))}
         </ChipRow>
-        <View style={{ marginTop: space.md }}>
+        <View style={{ marginTop: space.md }} testID="editor-map">
           <MapPicker
             lat={mapCenter?.lat ?? null}
             lon={mapCenter?.lon ?? null}
             zoom={17}
             polygon={polygon}
-            editable={mode === "draw"}
+            editable={mode === "draw" || mode === "edit"}
+            selectedVertex={selected}
             layer={layer}
             onPick={onPick}
             onVertexMove={onVertexMove}
+            onVertexSelect={setSelected}
+            onVertexDelete={onDelete}
+            onInsertVertex={onInsert}
             fitNonce={fitNonce}
             height={420}
             accessibilityLabel={tr("fields.mapA11y")}
           />
+          {detecting ? (
+            <View
+              accessibilityLiveRegion="polite"
+              accessibilityLabel={tr("detect.finding")}
+              testID="detect-spinner"
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                borderRadius: 16,
+                backgroundColor: "rgba(0,0,0,0.35)",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: space.sm,
+              }}
+            >
+              <ActivityIndicator size="large" color="#ffffff" />
+              <Txt v="label" color="#ffffff">
+                {tr("detect.finding")}
+              </Txt>
+            </View>
+          ) : null}
         </View>
         <ChipRow>
+          <Chip icon="sparkles" label={tr("detect.mode")} selected={mode === "detect"} onPress={() => setMode("detect")} testID="mode-detect" />
           <Chip icon="shapes" label={tr("fields.modeDraw")} selected={mode === "draw"} onPress={() => setMode("draw")} testID="mode-draw" />
+          {polygon.length >= 3 ? (
+            <Chip icon="create" label={tr("detect.modeEdit")} selected={mode === "edit"} onPress={() => setMode("edit")} testID="mode-edit" />
+          ) : null}
           <Chip icon="pin" label={tr("fields.modePin")} selected={mode === "pin"} onPress={() => setMode("pin")} testID="mode-pin" />
-          <Chip icon="arrow-undo" label={tr("fields.undo")} onPress={() => setPolygon((p) => p.slice(0, -1))} testID="undo-point" />
+          {mode === "draw" ? <Chip icon="arrow-undo" label={tr("fields.undo")} onPress={() => setPolygon((p) => p.slice(0, -1))} testID="undo-point" /> : null}
+          {selected !== null && polygon.length > 3 ? (
+            <Chip icon="close-circle" label={tr("detect.deleteCorner", { n: selected + 1 })} onPress={() => onDelete(selected)} testID="delete-corner" />
+          ) : null}
           {polygon.length ? <Chip icon="trash" label={tr("onboarding.clearField")} onPress={() => setPolygon([])} /> : null}
           {polygon.length >= 3 ? <Chip icon="scan" label={tr("fields.zoomToField")} onPress={() => setFitNonce((n) => n + 1)} /> : null}
           <Chip icon="locate" label={tr("onboarding.gps")} onPress={useGps} />
         </ChipRow>
         <Txt v="small" muted style={{ marginTop: space.sm }} testID="field-area">
-          {mode === "draw"
-            ? polygon.length >= 3
+          {mode === "pin"
+            ? tr("fields.pinHint")
+            : polygon.length >= 3
               ? tr("fields.areaLive", { area: fmt(area, "ha", sys, 2), count: polygon.length })
-              : tr("fields.drawHint", { count: polygon.length })
-            : tr("fields.pinHint")}
+              : mode === "detect"
+                ? tr("detect.hint")
+                : tr("fields.drawHint", { count: polygon.length })}
         </Txt>
+        {mode === "edit" ? (
+          <Txt v="small" muted style={{ marginTop: 2 }}>
+            {tr("detect.editHint")}
+          </Txt>
+        ) : null}
+        {detected && confRisk && polygon.length >= 3 ? (
+          <View style={{ marginTop: space.sm, gap: space.xs }} testID="detect-result">
+            <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm, flexWrap: "wrap" }}>
+              <View
+                style={{ backgroundColor: t.risk[confRisk].bg, borderRadius: 12, paddingHorizontal: space.sm, paddingVertical: 4 }}
+                accessibilityLabel={tr("detect.confidenceA11y", { pct: Math.round((conf ?? 0) * 100) })}
+              >
+                <Txt v="small" color={t.risk[confRisk].fg} style={{ fontWeight: "700" }} testID="detect-confidence">
+                  {tr(confRisk === "low" ? "detect.confGood" : confRisk === "moderate" ? "detect.confCheck" : "detect.confLow", {
+                    pct: Math.round((conf ?? 0) * 100),
+                  })}
+                </Txt>
+              </View>
+              <Button kind="ghost" icon="refresh" label={tr("detect.again")} onPress={() => setMode("detect")} testID="detect-again" />
+            </View>
+            {detected.touches_border ? (
+              <Txt v="small" color={t.risk.moderate.fg}>
+                {tr("detect.border")}
+              </Txt>
+            ) : null}
+            <Txt v="small" muted>
+              {detected.note}
+            </Txt>
+          </View>
+        ) : null}
         <View style={{ flexDirection: "row", gap: space.sm, marginTop: space.md }}>
           <TextInput
             accessibilityLabel={tr("onboarding.searchPlaceholder")}

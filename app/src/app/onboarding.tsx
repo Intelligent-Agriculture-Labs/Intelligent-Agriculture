@@ -4,7 +4,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { api, type Origin } from "@/api/client";
+import { api, ApiError, type Origin } from "@/api/client";
+import { openRing, polygonCentroid } from "@/state/farm";
 import type { IrrigationMethod, PresetLocation } from "@/api/types";
 import MapPicker from "@/components/map/MapPicker";
 import type { MapLayer } from "@/components/map/leafletHtml";
@@ -52,6 +53,9 @@ export default function Onboarding() {
   const [name, setName] = useState(field?.name ?? "");
   const [layer, setLayer] = useState<MapLayer>("street");
   const [drawing, setDrawing] = useState(false);
+  const [detectOn, setDetectOn] = useState(false);
+  const [detectBusy, setDetectBusy] = useState(false);
+  const [detectMsg, setDetectMsg] = useState<string | null>(null);
   const [polygon, setPolygon] = useState<[number, number][]>(field?.polygon ?? []);
   const [gpsMsg, setGpsMsg] = useState<string | null>(null);
 
@@ -84,7 +88,38 @@ export default function Onboarding() {
     router.replace("/home");
   }, [params.preset, params.replay, presets, setField]);
 
+  const detect = async (la: number, lo: number) => {
+    if (detectBusy) return;
+    setDetectBusy(true);
+    setDetectMsg(null);
+    try {
+      const res = await api.detectField({ lat: la, lon: lo, source: "esri" });
+      const ring = openRing(res.polygon);
+      if (ring.length < 3) throw new Error("empty");
+      const c = polygonCentroid(ring);
+      setPolygon(ring);
+      setLat(+c.lat.toFixed(6));
+      setLon(+c.lon.toFixed(6));
+      setCoordText(`${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}`);
+      setPresetId(null);
+      setReplayDate(null);
+      setName(tr("fields.defaultName", { n: 1 }));
+      setDetectOn(false);
+      setDetectMsg(tr("detect.onboardingDone", { area: res.area_ha.toFixed(1), pct: Math.round(res.confidence * 100) }));
+    } catch (e) {
+      setDetectMsg(e instanceof ApiError && (e.status === 422 || e.status === 503) ? tr("detect.notFound") : tr("detect.failed"));
+      setDetectOn(false);
+      setDrawing(true);
+    } finally {
+      setDetectBusy(false);
+    }
+  };
+
   const pick = (la: number, lo: number) => {
+    if (detectOn) {
+      detect(la, lo);
+      return;
+    }
     if (drawing) {
       setPolygon((p) => [...p, [lo, la]]);
       return;
@@ -211,7 +246,7 @@ export default function Onboarding() {
       <Section title={tr("onboarding.layer")}>
         <ChipRow>
           <Chip label={tr("onboarding.layerStreet")} selected={layer === "street"} onPress={() => setLayer("street")} icon="map" />
-          <Chip label={tr("onboarding.layerSatellite")} selected={layer === "truecolor"} onPress={() => setLayer("truecolor")} icon="planet" />
+          <Chip label={tr("onboarding.layerSatellite")} selected={layer === "esri"} onPress={() => setLayer("esri")} icon="planet" />
           <Chip label={tr("onboarding.layerNdvi")} selected={layer === "ndvi"} onPress={() => setLayer("ndvi")} icon="leaf" />
         </ChipRow>
         <View style={{ marginTop: space.md }}>
@@ -220,13 +255,33 @@ export default function Onboarding() {
         <ChipRow>
           <Chip label={tr("onboarding.gps")} icon="locate" onPress={useGps} testID="gps" />
           <Chip
+            label={tr("detect.mode")}
+            icon="sparkles"
+            selected={detectOn}
+            onPress={() => {
+              setDetectOn((d) => !d);
+              setDrawing(false);
+              setLayer("esri");
+              setDetectMsg(null);
+            }}
+            testID="onboarding-detect"
+          />
+          <Chip
             label={drawing ? `${tr("onboarding.drawField")} · ${tr("onboarding.fieldPoints", { count: polygon.length })}` : tr("onboarding.drawField")}
             icon="shapes"
             selected={drawing}
-            onPress={() => setDrawing((d) => !d)}
+            onPress={() => {
+              setDrawing((d) => !d);
+              setDetectOn(false);
+            }}
           />
           {polygon.length ? <Chip label={tr("onboarding.clearField")} icon="trash" onPress={() => setPolygon([])} /> : null}
         </ChipRow>
+        {detectOn || detectBusy || detectMsg ? (
+          <Txt v="small" muted style={{ marginTop: space.sm }} testID="onboarding-detect-status">
+            {detectBusy ? tr("detect.finding") : detectOn ? tr("detect.hint") : detectMsg}
+          </Txt>
+        ) : null}
         {drawing ? (
           <Txt v="small" muted style={{ marginTop: space.sm }}>
             {tr("onboarding.drawHint")}

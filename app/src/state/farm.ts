@@ -197,3 +197,40 @@ export function formatSyncCode(input: string): string {
 export function isValidSyncCode(input: string): boolean {
   return /^[A-Z0-9]{8}$/.test(normalizeSyncCode(input));
 }
+
+/* ---------- polygon ring editing (field editor) ---------- */
+type LonLat = [number, number];
+
+/** Drop the duplicated closing vertex of a closed GeoJSON-style ring (editors work on open rings). */
+export function openRing(pts: LonLat[] | null | undefined): LonLat[] {
+  if (!pts || !pts.length) return [];
+  const out = pts.map((p) => [p[0], p[1]] as LonLat);
+  while (out.length > 1) {
+    const a = out[0];
+    const b = out[out.length - 1];
+    if (Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9) out.pop();
+    else break;
+  }
+  return out;
+}
+
+/** Insert a vertex after index `after` (use the edge midpoint handle of edge after→after+1). */
+export function insertVertex(pts: LonLat[], after: number, p: LonLat): LonLat[] {
+  const i = Math.max(-1, Math.min(after, pts.length - 1));
+  return [...pts.slice(0, i + 1), p, ...pts.slice(i + 1)];
+}
+
+/** Remove vertex `index`; a field outline keeps at least 3 corners. */
+export function deleteVertex(pts: LonLat[], index: number): LonLat[] {
+  if (pts.length <= 3 || index < 0 || index >= pts.length) return pts;
+  return pts.filter((_, k) => k !== index);
+}
+
+/** Midpoints of every edge of the (open) ring, including the closing edge; index i = edge i → i+1. */
+export function edgeMidpoints(pts: LonLat[]): LonLat[] {
+  if (pts.length < 3) return [];
+  return pts.map((p, i) => {
+    const q = pts[(i + 1) % pts.length];
+    return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2] as LonLat;
+  });
+}

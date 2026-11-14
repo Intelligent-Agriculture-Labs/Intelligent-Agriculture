@@ -1,4 +1,8 @@
 import {
+  deleteVertex,
+  edgeMidpoints,
+  insertVertex,
+  openRing,
   type Field,
   formatSyncCode,
   fromRecord,
@@ -117,5 +121,46 @@ describe("sync codes", () => {
     const { size, d } = qrPath("fieldshift://join?code=K7QF-2M9X");
     expect(size).toBeGreaterThanOrEqual(29); // version >= 2 + quiet zone
     expect(d.length).toBeGreaterThan(100);
+  });
+});
+
+describe("polygon ring editing", () => {
+  const closed: [number, number][] = [
+    [0, 0],
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [0, 0],
+  ];
+  it("drops the duplicated closing vertex (and only that)", () => {
+    expect(openRing(closed)).toHaveLength(4);
+    expect(openRing(closed.slice(0, 4))).toHaveLength(4);
+    expect(openRing(null)).toEqual([]);
+    expect(openRing([...closed, [0, 0]])).toHaveLength(4);
+  });
+  it("inserts a vertex after an index (edge midpoint handle)", () => {
+    const ring = openRing(closed);
+    const mids = edgeMidpoints(ring);
+    expect(mids).toHaveLength(4);
+    expect(mids[3]).toEqual([0, 0.5]); // closing edge 3 -> 0
+    const r2 = insertVertex(ring, 0, mids[0]);
+    expect(r2).toEqual([
+      [0, 0],
+      [0.5, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ]);
+    expect(insertVertex(ring, 3, mids[3])[4]).toEqual([0, 0.5]);
+  });
+  it("deletes a vertex but keeps at least three corners", () => {
+    const ring = openRing(closed);
+    expect(deleteVertex(ring, 1)).toEqual([
+      [0, 0],
+      [1, 1],
+      [0, 1],
+    ]);
+    expect(deleteVertex(deleteVertex(ring, 1), 0)).toHaveLength(3);
+    expect(deleteVertex(ring, 9)).toBe(ring);
   });
 });

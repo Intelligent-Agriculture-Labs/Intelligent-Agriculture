@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, type LayoutChangeEvent } from "react-native";
+import { Text, View, type LayoutChangeEvent } from "react-native";
 import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from "react-native-svg";
 import { useTranslation } from "react-i18next";
 import type { SatelliteResponse, SeriesPoint } from "@/api/types";
@@ -50,6 +50,7 @@ export function NdviChart({ data, height = 220 }: { data: SatelliteResponse; hei
   if (ph?.greenup) markers.push({ date: ph.greenup, label: tr("sat.greenup"), color: t.chart[0] });
   if (ph?.peak) markers.push({ date: ph.peak, label: tr("sat.peak"), color: t.chart[2] });
   if (ph?.senescence) markers.push({ date: ph.senescence, label: tr("sat.senescence"), color: t.chart[3] });
+  const harvests = (ph?.harvest_events ?? []).filter((h) => toT(h) >= t0 && toT(h) <= t1);
 
   return (
     <View onLayout={onLayout} accessible accessibilityRole="image" accessibilityLabel={summary} testID="ndvi-chart">
@@ -87,6 +88,12 @@ export function NdviChart({ data, height = 220 }: { data: SatelliteResponse; hei
               </SvgText>
             </G>
           ))}
+          {harvests.map((h) => (
+            <G key={`h${h}`}>
+              <Line x1={x(h)} x2={x(h)} y1={PAD.t + 14} y2={PAD.t + ih} stroke={t.accent} strokeWidth={1} opacity={0.6} />
+              <Path d={`M${x(h) - 6},${PAD.t + ih - 14} L${x(h) + 6},${PAD.t + ih - 14} L${x(h)},${PAD.t + ih - 4} Z`} fill={t.accent} />
+            </G>
+          ))}
           {path ? <Path d={path} stroke={t.chart[0]} strokeWidth={2.5} fill="none" /> : null}
           {pts.map((p) => (
             <Circle key={p.date} cx={x(p.date)} cy={y(p.value as number)} r={3.5} fill={t.card} stroke={t.chart[1]} strokeWidth={2} />
@@ -95,6 +102,14 @@ export function NdviChart({ data, height = 220 }: { data: SatelliteResponse; hei
       ) : (
         <View style={{ height }} />
       )}
+      {harvests.length ? (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginTop: 4 }} testID="harvest-legend">
+          <Svg width={12} height={10}>
+            <Path d="M0,0 L12,0 L6,10 Z" fill={t.accent} />
+          </Svg>
+          <Text style={{ color: t.textMuted, fontSize: 12 }}>{tr("sat.harvestLegend")}</Text>
+        </View>
+      ) : null}
     </View>
   );
 }

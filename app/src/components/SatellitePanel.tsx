@@ -239,6 +239,16 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
                     v={`${fmtDate(d.phenology.peak)}${d.phenology.peak_ndvi !== null ? ` · NDVI ${d.phenology.peak_ndvi.toFixed(2)}` : ""}`}
                   />
                   <KV k={tr("sat.senescence")} v={fmtDate(d.phenology.senescence)} />
+                  {d.phenology.harvest_events?.length ? (
+                    <Txt v="small" style={{ marginTop: 4 }} testID="sat-harvests">
+                      {tr("sat.harvests", {
+                        count: d.phenology.harvest_events.length,
+                        dates: d.phenology.harvest_events
+                          .map((h) => new Date(`${h}T00:00:00Z`).toLocaleDateString(i18n.language, { day: "numeric", month: "short", timeZone: "UTC" }))
+                          .join(", "),
+                      })}
+                    </Txt>
+                  ) : null}
                   {d.phenology.bare_periods.length ? (
                     <Txt v="small" muted style={{ marginTop: 4 }}>
                       {tr("sat.bare", {

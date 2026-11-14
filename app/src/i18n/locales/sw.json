@@ -323,7 +323,7 @@
     "defaultName": "Shamba {{n}}",
     "editTitle": "Hariri shamba",
     "newTitle": "Shamba jipya",
-    "editorHint": "Kuza picha ya setilaiti na uguse pembe za shamba lako. Buruta pembe ili kuirekebisha.",
+    "editorHint": "Gusa ndani ya shamba lako kwenye picha ya setilaiti na FieldShift itapata mpaka wake kiotomatiki. Kisha buruta, ongeza au futa pembe kuurekebisha, au chora mpaka mwenyewe.",
     "name": "Jina la shamba",
     "outline": "Mpaka wa shamba",
     "layer": {
@@ -402,6 +402,25 @@
     "sceneRow": "mawingu {{cloud}} % · shamba safi {{valid}} %",
     "refresh": "Onyesha upya uchambuzi wa setilaiti",
     "chartA11y": "Chati ya ukijani kutoka picha {{n}} za setilaiti. NDVI ya juu {{peak}}. Msimu: {{type}}.",
-    "chartA11yShort": "Chati ya ukijani kutoka picha {{n}} za setilaiti."
+    "chartA11yShort": "Chati ya ukijani kutoka picha {{n}} za setilaiti.",
+    "harvestLegend": "Ukataji / mavuno yanayoonekana kutoka angani",
+    "harvests": "Ukataji / mavuno {{count}} yamegunduliwa: {{dates}}"
+  },
+  "detect": {
+    "mode": "Tambua shamba kiotomatiki",
+    "modeEdit": "Hariri mpaka",
+    "finding": "Inatafuta mpaka wa shamba lako…",
+    "hint": "Gusa ndani ya shamba lako — FieldShift inapata mpaka wake kwenye picha ya setilaiti.",
+    "editHint": "Buruta pembe kuisogeza, gusa \"+\" kwenye ukingo kuongeza pembe, chagua pembe (au bofya kulia / bonyeza kwa muda) kuifuta.",
+    "notFound": "Hakuna mpaka wazi uliopatikana hapa. Chora mpaka kwa kugusa pembe badala yake.",
+    "failed": "Utambuzi wa kiotomatiki haupatikani sasa. Chora mpaka kwa kugusa pembe.",
+    "deleteCorner": "Futa pembe {{n}}",
+    "confidenceA11y": "Uhakika wa utambuzi asilimia {{pct}}",
+    "confGood": "Imelingana vizuri · {{pct}} %",
+    "confCheck": "Tafadhali kagua · {{pct}} %",
+    "confLow": "Uhakika mdogo · {{pct}} % — tafadhali kagua mpaka",
+    "again": "Jaribu tena (gusa shamba lako)",
+    "border": "Mpaka unafika ukingoni mwa eneo lililochambuliwa — huenda shamba lako ni kubwa zaidi. Punguza kuza na ukague.",
+    "onboardingDone": "Shamba limepatikana: ha {{area}} (uhakika {{pct}} %). Unaweza kurekebisha mpaka baadaye katika Hariri shamba."
   }
 }

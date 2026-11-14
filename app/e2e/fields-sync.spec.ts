@@ -22,6 +22,7 @@ test("add a second field by drawing it on satellite imagery, then switch between
 
   await expect(page.getByTestId("field-editor")).toBeVisible();
   await page.getByTestId("field-name").fill("East pivot");
+  await page.getByTestId("mode-draw").click(); // manual drawing (detection is the default for new fields)
   const frame = page.frameLocator('[data-testid="map-iframe"]');
   const map = frame.locator("#m.leaflet-container");
   await expect(map).toBeVisible({ timeout: 60_000 });
@@ -70,4 +71,31 @@ test("satellite view of a field (Sentinel-2)", async ({ page, request }) => {
   await expect(page.getByTestId("satellite-panel")).toBeVisible();
   await expect(page.getByTestId("ndvi-chart")).toBeVisible({ timeout: 540_000 });
   await expect(page.getByTestId("sat-phenology")).toBeVisible();
+});
+
+test("tap a field: automatic boundary detection fills the outline, then it can be edited", async ({ page, request }) => {
+  const probe = await request.post(`${API}/api/fields/detect`, { data: { lat: 39.44087, lon: -118.83012 }, timeout: 60_000 }).catch(() => null);
+  test.skip(!probe || !probe.ok(), "field detection endpoint not available");
+  await startWithFallon(page);
+  await page.getByTestId("field-switcher").first().click();
+  await page.getByTestId("field-add").click();
+  await expect(page.getByTestId("field-editor")).toBeVisible();
+  // new field without outline: detection is the default mode
+  await expect(page.getByTestId("field-area")).toContainText(/Tap inside your field/);
+  const frame = page.frameLocator('[data-testid="map-iframe"]');
+  const map = frame.locator("#m.leaflet-container");
+  await expect(map).toBeVisible({ timeout: 60_000 });
+  await expect(frame.locator(".leaflet-tile-loaded").first()).toBeVisible({ timeout: 60_000 });
+  const box = await page.getByTestId("map-iframe").boundingBox();
+  if (!box) throw new Error("map not laid out");
+  await map.click({ position: { x: box.width / 2 + 25, y: box.height / 2 + 15 } }); // inside the Fallon field, off the pin
+  await expect(page.getByTestId("detect-result")).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByTestId("field-area")).toContainText(/\b[4-6][.,]\d+ ha\b/);
+  await expect(page.getByTestId("mode-edit")).toBeVisible();
+  // edit: insert a corner via an edge "+" handle, then delete it again
+  const before = await frame.locator(".fs-vertex").count();
+  await frame.locator(".fs-mid").first().click();
+  await expect(frame.locator(".fs-vertex")).toHaveCount(before + 1);
+  await page.getByTestId("delete-corner").click();
+  await expect(frame.locator(".fs-vertex")).toHaveCount(before);
 });

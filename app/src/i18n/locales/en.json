@@ -323,7 +323,7 @@
     "defaultName": "Field {{n}}",
     "editTitle": "Edit field",
     "newTitle": "New field",
-    "editorHint": "Zoom in on the satellite image and tap the corners of your field. Drag a corner to adjust it.",
+    "editorHint": "Tap inside your field on the satellite image and FieldShift finds its boundary automatically. Then drag, add or delete corners to fix it, or draw the outline yourself.",
     "name": "Field name",
     "outline": "Field outline",
     "layer": {
@@ -402,6 +402,25 @@
     "sceneRow": "clouds {{cloud}} % · field clear {{valid}} %",
     "refresh": "Refresh satellite analysis",
     "chartA11y": "Greenness chart from {{n}} satellite images. Peak NDVI {{peak}}. Season: {{type}}.",
-    "chartA11yShort": "Greenness chart from {{n}} satellite images."
+    "chartA11yShort": "Greenness chart from {{n}} satellite images.",
+    "harvestLegend": "Cutting / harvest seen from space",
+    "harvests": "{{count}} cuttings / harvests detected: {{dates}}"
+  },
+  "detect": {
+    "mode": "Detect field automatically",
+    "modeEdit": "Edit outline",
+    "finding": "Finding your field boundary…",
+    "hint": "Tap inside your field — FieldShift finds its boundary on the satellite image.",
+    "editHint": "Drag a corner to move it, tap a “+” on an edge to add a corner, select a corner (or right-click / long-press it) to delete it.",
+    "notFound": "No clear field boundary found here. Draw the outline by tapping the corners instead.",
+    "failed": "Automatic detection is not available right now. Draw the outline by tapping the corners.",
+    "deleteCorner": "Delete corner {{n}}",
+    "confidenceA11y": "Detection confidence {{pct}} percent",
+    "confGood": "Good match · {{pct}} %",
+    "confCheck": "Please check · {{pct}} %",
+    "confLow": "Low confidence · {{pct}} % — please check the outline",
+    "again": "Try again (tap your field)",
+    "border": "The outline reaches the edge of the analysed area — your field may be larger. Zoom out and check it.",
+    "onboardingDone": "Field found: {{area}} ha ({{pct}} % confidence). You can fine-tune the outline later in Edit field."
   }
 }

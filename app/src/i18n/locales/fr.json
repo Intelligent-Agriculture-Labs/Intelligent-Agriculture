@@ -323,7 +323,7 @@
     "defaultName": "Parcelle {{n}}",
     "editTitle": "Modifier la parcelle",
     "newTitle": "Nouvelle parcelle",
-    "editorHint": "Zoomez sur l'image satellite et touchez les coins de votre parcelle. Faites glisser un coin pour l'ajuster.",
+    "editorHint": "Touchez l'intérieur de votre parcelle sur l'image satellite et FieldShift trouve sa limite automatiquement. Puis déplacez, ajoutez ou supprimez des coins pour la corriger, ou dessinez le contour vous-même.",
     "name": "Nom de la parcelle",
     "outline": "Contour de la parcelle",
     "layer": {
@@ -402,6 +402,25 @@
     "sceneRow": "nuages {{cloud}} % · parcelle claire {{valid}} %",
     "refresh": "Actualiser l'analyse satellite",
     "chartA11y": "Graphique de verdure à partir de {{n}} images satellite. NDVI maximal {{peak}}. Saison : {{type}}.",
-    "chartA11yShort": "Graphique de verdure à partir de {{n}} images satellite."
+    "chartA11yShort": "Graphique de verdure à partir de {{n}} images satellite.",
+    "harvestLegend": "Coupe / récolte vue de l'espace",
+    "harvests": "{{count}} coupes / récoltes détectées : {{dates}}"
+  },
+  "detect": {
+    "mode": "Détecter la parcelle automatiquement",
+    "modeEdit": "Modifier le contour",
+    "finding": "Recherche de la limite de votre parcelle…",
+    "hint": "Touchez l'intérieur de votre parcelle : FieldShift trouve sa limite sur l'image satellite.",
+    "editHint": "Faites glisser un coin pour le déplacer, touchez un « + » sur un bord pour ajouter un coin, sélectionnez un coin (ou clic droit / appui long) pour le supprimer.",
+    "notFound": "Aucune limite nette trouvée ici. Dessinez le contour en touchant les coins.",
+    "failed": "La détection automatique n'est pas disponible pour l'instant. Dessinez le contour en touchant les coins.",
+    "deleteCorner": "Supprimer le coin {{n}}",
+    "confidenceA11y": "Confiance de la détection {{pct}} pour cent",
+    "confGood": "Bonne correspondance · {{pct}} %",
+    "confCheck": "À vérifier · {{pct}} %",
+    "confLow": "Confiance faible · {{pct}} % — vérifiez le contour",
+    "again": "Réessayer (touchez votre parcelle)",
+    "border": "Le contour touche le bord de la zone analysée : votre parcelle est peut-être plus grande. Dézoomez et vérifiez.",
+    "onboardingDone": "Parcelle trouvée : {{area}} ha ({{pct}} % de confiance). Vous pourrez ajuster le contour dans Modifier la parcelle."
   }
 }

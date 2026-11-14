@@ -323,7 +323,7 @@
     "defaultName": "Parcela {{n}}",
     "editTitle": "Editar parcela",
     "newTitle": "Nueva parcela",
-    "editorHint": "Acerque la imagen de satélite y toque las esquinas de su parcela. Arrastre una esquina para ajustarla.",
+    "editorHint": "Toque dentro de su parcela en la imagen de satélite y FieldShift encuentra su límite automáticamente. Después arrastre, añada o borre esquinas para corregirlo, o dibuje el contorno usted mismo.",
     "name": "Nombre de la parcela",
     "outline": "Contorno de la parcela",
     "layer": {
@@ -402,6 +402,25 @@
     "sceneRow": "nubes {{cloud}} % · parcela despejada {{valid}} %",
     "refresh": "Actualizar análisis de satélite",
     "chartA11y": "Gráfico de verdor con {{n}} imágenes de satélite. NDVI máximo {{peak}}. Campaña: {{type}}.",
-    "chartA11yShort": "Gráfico de verdor con {{n}} imágenes de satélite."
+    "chartA11yShort": "Gráfico de verdor con {{n}} imágenes de satélite.",
+    "harvestLegend": "Corte / cosecha visto desde el espacio",
+    "harvests": "{{count}} cortes / cosechas detectados: {{dates}}"
+  },
+  "detect": {
+    "mode": "Detectar parcela automáticamente",
+    "modeEdit": "Editar contorno",
+    "finding": "Buscando el límite de su parcela…",
+    "hint": "Toque dentro de su parcela: FieldShift encuentra su límite en la imagen de satélite.",
+    "editHint": "Arrastre una esquina para moverla, toque un «+» en un borde para añadir una esquina, seleccione una esquina (o clic derecho / pulsación larga) para borrarla.",
+    "notFound": "No se encontró un límite claro aquí. Dibuje el contorno tocando las esquinas.",
+    "failed": "La detección automática no está disponible ahora. Dibuje el contorno tocando las esquinas.",
+    "deleteCorner": "Borrar esquina {{n}}",
+    "confidenceA11y": "Confianza de la detección {{pct}} por ciento",
+    "confGood": "Buen ajuste · {{pct}} %",
+    "confCheck": "Revíselo · {{pct}} %",
+    "confLow": "Confianza baja · {{pct}} %: revise el contorno",
+    "again": "Reintentar (toque su parcela)",
+    "border": "El contorno llega al borde de la zona analizada: su parcela puede ser mayor. Aleje el mapa y revíselo.",
+    "onboardingDone": "Parcela encontrada: {{area}} ha ({{pct}} % de confianza). Puede ajustar el contorno después en Editar parcela."
   }
 }

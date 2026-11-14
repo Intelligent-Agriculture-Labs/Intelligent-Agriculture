@@ -71,6 +71,17 @@ async function http<T>(path: string, body?: unknown, method?: "GET" | "POST" | "
   }
 }
 
+export interface FieldDetectResponse {
+  polygon: [number, number][]; // closed ring [lon, lat]
+  area_ha: number;
+  confidence: number; // 0..1
+  touches_border: boolean;
+  method: string;
+  imagery: string;
+  pixel_m: number;
+  note: string;
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -184,6 +195,8 @@ export const api = {
       http<Farm>(`/api/farms/${encodeURIComponent(farmId)}`, b, "PUT", 20000),
     join: (syncCode: string) => http<Farm>("/api/farms/join", { sync_code: syncCode }, "POST", 20000),
   },
+  /** tap-to-delineate: field boundary from high-res imagery around a point (sub-metre Esri or US NAIP) */
+  detectField: (b: { lat: number; lon: number; source?: "esri" | "naip" }) => http<FieldDetectResponse>("/api/fields/detect", b, "POST", 45000),
   /** one call of the async satellite job (start or poll); the caller polls until status === "done" */
   satelliteOnce: (r: SatelliteRequest) => http<SatelliteResponse>("/api/satellite", r, "POST", 60000),
   satelliteKey: (r: SatelliteRequest) => k("sat", r.lat, r.lon, JSON.stringify(r.polygon ?? null), r.start ?? "", r.end ?? ""),

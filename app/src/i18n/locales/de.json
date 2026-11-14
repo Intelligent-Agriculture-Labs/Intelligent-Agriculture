@@ -323,7 +323,7 @@
     "defaultName": "Feld {{n}}",
     "editTitle": "Feld bearbeiten",
     "newTitle": "Neues Feld",
-    "editorHint": "Zoomen Sie ins Satellitenbild und tippen Sie die Ecken Ihres Feldes an. Ziehen Sie eine Ecke, um sie anzupassen.",
+    "editorHint": "Tippen Sie im Satellitenbild in Ihr Feld und FieldShift findet seine Grenze automatisch. Dann Ecken ziehen, hinzufügen oder löschen – oder den Umriss selbst zeichnen.",
     "name": "Feldname",
     "outline": "Feldumriss",
     "layer": {
@@ -402,6 +402,25 @@
     "sceneRow": "Wolken {{cloud}} % · Feld frei {{valid}} %",
     "refresh": "Satellitenauswertung aktualisieren",
     "chartA11y": "Grünheits-Diagramm aus {{n}} Satellitenbildern. Höchster NDVI {{peak}}. Saison: {{type}}.",
-    "chartA11yShort": "Grünheits-Diagramm aus {{n}} Satellitenbildern."
+    "chartA11yShort": "Grünheits-Diagramm aus {{n}} Satellitenbildern.",
+    "harvestLegend": "Schnitt / Ernte aus dem All erkannt",
+    "harvests": "{{count}} Schnitte / Ernten erkannt: {{dates}}"
+  },
+  "detect": {
+    "mode": "Feld automatisch erkennen",
+    "modeEdit": "Umriss bearbeiten",
+    "finding": "Feldgrenze wird gesucht…",
+    "hint": "Tippen Sie in Ihr Feld – FieldShift findet seine Grenze im Satellitenbild.",
+    "editHint": "Ecke ziehen zum Verschieben, „+“ auf einer Kante tippen zum Einfügen, Ecke auswählen (oder Rechtsklick / lange drücken) zum Löschen.",
+    "notFound": "Hier wurde keine klare Feldgrenze gefunden. Zeichnen Sie den Umriss, indem Sie die Ecken antippen.",
+    "failed": "Die automatische Erkennung ist gerade nicht verfügbar. Zeichnen Sie den Umriss, indem Sie die Ecken antippen.",
+    "deleteCorner": "Ecke {{n}} löschen",
+    "confidenceA11y": "Erkennungssicherheit {{pct}} Prozent",
+    "confGood": "Gute Übereinstimmung · {{pct}} %",
+    "confCheck": "Bitte prüfen · {{pct}} %",
+    "confLow": "Geringe Sicherheit · {{pct}} % – bitte Umriss prüfen",
+    "again": "Erneut versuchen (Feld antippen)",
+    "border": "Der Umriss reicht bis an den Rand des ausgewerteten Bereichs – Ihr Feld ist evtl. größer. Herauszoomen und prüfen.",
+    "onboardingDone": "Feld gefunden: {{area}} ha ({{pct}} % Sicherheit). Den Umriss können Sie später unter „Feld bearbeiten“ anpassen."
   }
 }
