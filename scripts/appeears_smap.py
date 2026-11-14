@@ -76,21 +76,21 @@ def main() -> None:
             ],
         },
     }
-    tid = c.post(f"{API}/task", json=task, headers=h).json()["task_id"]
+    tid = os.environ.get("APPEEARS_TASK_ID") or c.post(f"{API}/task", json=task, headers=h).json()["task_id"]
     print("task", tid, flush=True)
     while True:
-        st = c.get(f"{API}/status/{tid}", headers=h).json()
-        status = st.get("status") if isinstance(st, dict) else None
-        print(
-            dt.datetime.now().strftime("%H:%M"),
-            status,
-            st.get("progress") if isinstance(st, dict) else "",
-            flush=True,
-        )
-        if status == "done" or (isinstance(st, list) and st and st[0].get("status") == "done"):
+        # /task/{id} returns the task document including its status (pending/queued/processing/done/error)
+        try:
+            st = c.get(f"{API}/task/{tid}", headers=h).json()
+            status = st.get("status")
+        except (httpx.HTTPError, ValueError) as e:
+            print("poll error", e, flush=True)
+            status = None
+        print(dt.datetime.now().strftime("%H:%M"), status, flush=True)
+        if status == "done":
             break
         if status in ("error", "expired"):
-            sys.exit(f"AppEEARS task failed: {st}")
+            sys.exit(f"AppEEARS task failed: {status}")
         time.sleep(60)
     files = c.get(f"{API}/bundle/{tid}", headers=h).json()["files"]
     rows: dict[str, dict[str, dict[str, list[float]]]] = defaultdict(
