@@ -226,6 +226,51 @@ def export_geojson(
     }
 
 
+class PlannerRequest(BaseModel):
+    lat: float = Field(ge=-60, le=75)
+    lon: float = Field(ge=-180, le=180)
+    crop: str
+    planting_date: str
+    irrigation: Irr = "sprinkler"
+    water_allocation_mm: float | None = None
+    as_of: str | None = None
+
+
+@app.post("/api/planner")
+def planner_ep(req: PlannerRequest) -> dict[str, Any]:
+    """Season planner: sowing-date scan, stage dates, operations timeline, monthly water budget, risk calendar."""
+    from .engine import planner
+
+    _check_crop(req.crop)
+    return planner.planner_api(req.model_dump())
+
+
+class TerrainRequest(BaseModel):
+    lat: float = Field(ge=-60, le=60)
+    lon: float = Field(ge=-180, le=180)
+    crop: str = "maize"
+    polygon: list[list[float]] | None = None
+
+
+@app.post("/api/terrain")
+def terrain_ep(req: TerrainRequest) -> dict[str, Any]:
+    """Computed terrain maps around the field: elevation, slope, RUSLE erosion, wetness, frost hollows, zones."""
+    from .engine import maps
+
+    _check_crop(req.crop)
+    return maps.terrain_api(req.model_dump())
+
+
+@app.get("/api/terrain/png/{key}/{layer}.png", include_in_schema=False)
+def terrain_png(key: str, layer: str) -> Response:
+    from .engine import maps
+
+    data = maps.get_png(key, layer)
+    if data is None:
+        raise HTTPException(404, "map expired; request /api/terrain again")
+    return Response(data, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
+
+
 # --------------------------------------------------------------------------- static web app (single-container deploy)
 _WEB_DIR = os.environ.get("FIELDSHIFT_WEB_DIR")
 if _WEB_DIR and os.path.isdir(_WEB_DIR):

@@ -33,7 +33,7 @@ IRRIGATION_EFFICIENCY = {
     "sprinkler": 0.75,
     "pivot": 0.85,
     "furrow": 0.60,
-    "flood": 0.55,
+    "flood": 0.65,
 }
 
 
