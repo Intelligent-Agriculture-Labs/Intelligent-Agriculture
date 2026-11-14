@@ -55,15 +55,17 @@ export default function Home() {
 
           {field.replay_date ? (
             <View style={{ marginTop: space.md }}>
-              <View
-                accessibilityRole="radiogroup"
-                style={{ flexDirection: "row", backgroundColor: t.cardAlt, borderRadius: 12, padding: 4, gap: 4 }}
-              >
+              <View accessibilityRole="radiogroup" style={{ flexDirection: "row", backgroundColor: t.cardAlt, borderRadius: 12, padding: 4, gap: 4 }}>
                 {[null, field.replay_date].map((d) => {
                   const active = (field.as_of ?? null) === d;
                   const label = d
                     ? tr("home.modeReplay", {
-                        date: new Date(d + "T00:00:00Z").toLocaleDateString(i18n.language, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
+                        date: new Date(d + "T00:00:00Z").toLocaleDateString(i18n.language, {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                          timeZone: "UTC",
+                        }),
                       })
                     : tr("home.modeToday");
                   return (
@@ -93,7 +95,12 @@ export default function Home() {
               {field.as_of ? (
                 <Txt v="small" muted style={{ marginTop: 4 }}>
                   {tr("home.replayNote", {
-                    date: new Date(field.as_of + "T00:00:00Z").toLocaleDateString(i18n.language, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }),
+                    date: new Date(field.as_of + "T00:00:00Z").toLocaleDateString(i18n.language, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      timeZone: "UTC",
+                    }),
                   })}
                 </Txt>
               ) : null}
