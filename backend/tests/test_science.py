@@ -132,3 +132,24 @@ def test_climate_trend_detects_warming():
     vals = [20 + 0.05 * (y - 1985) for y in years]
     slope, p = climate.trend(years, vals)
     assert slope == pytest.approx(0.5, abs=1e-6) and p < 0.01
+
+
+def test_mediterranean_detection_requires_mild_winter():
+    from fieldshift.science.rotation import is_mediterranean
+
+    med = [
+        {"month": m, "precip": 70 if m in (1, 2, 3, 10, 11, 12) else 10, "tmin": 5 if m in (1, 2, 12) else 12}
+        for m in range(1, 13)
+    ]
+    basin = [{**n, "tmin": -8 if n["month"] in (1, 2, 12) else 5} for n in med]
+    assert is_mediterranean(med, 37.9)
+    assert not is_mediterranean(basin, 39.5)
+
+
+def test_winter_hardy_wheat_survives_cold_winter():
+    w = make_weather(days=800, tmax=-5, tmin=-25, start=dt.date(2020, 1, 1))
+    # warm spring/summer from day 150 onwards
+    w.tmax[150:] = 25
+    w.tmin[150:] = 10
+    r = simulate("winter_wheat", w, dt.date(2020, 1, 2), strategy="full", gdd_req=2000)
+    assert r.frost_events == 0

@@ -120,3 +120,12 @@ def test_climate_and_exports():
         params={"lat": 39.47, "lon": -118.78, "crop": "alfalfa", "planting_date": "2024-03-15"},
     ).json()
     assert gj["type"] == "FeatureCollection"
+
+
+def test_rotations_respect_climate_zone():
+    r = client.post(
+        "/api/rotations",
+        json={"lat": -1.5, "lon": 37.3, "current_rotation": ["maize"] * 3, "irrigation": "none"},
+    ).json()
+    ids = {s["id"] for s in r["strategies"]}
+    assert "alfalfa_teff_wheat" not in ids and "split_season_alfalfa" not in ids

@@ -33,7 +33,8 @@ from .cropmodel import Weather, crop, gdd_requirement, simulate
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 N_PRICE_USD_KG = 1.3  # indicative fertilizer-N price for valuing legume N credits
 SAME_FAMILY_PENALTY = 0.08  # monoculture yield penalty (literature range ~5–15 %)
-AFTER_LEGUME_BONUS = 0.05  # "rotation effect" after a legume (literature range ~5–15 %)
+AFTER_LEGUME_BONUS = 0.05
+SMALLHOLDER_INPUT_SHARE = 0.3  # share of gross revenue spent on inputs in low-input tropical systems (indicative)  # "rotation effect" after a legume (literature range ~5–15 %)
 
 
 @lru_cache
@@ -46,10 +47,40 @@ def climate_zone(lat: float) -> str:
     return "tropical" if abs(lat) < 20 else ("south" if lat < 0 else "north")
 
 
+# Mediterranean (winter-rain) calendar: spring crops sown in late winter, small grains in autumn
+MEDITERRANEAN_PLANTING = {
+    "barley": "11-15",
+    "safflower": "02-15",
+    "sunflower": "03-01",
+    "dry_bean": "03-15",
+    "potato": "02-15",
+    "teff": "04-01",
+}
+
+
+def is_mediterranean(normals: list[dict[str, float]], lat: float) -> bool:
+    cool = [1, 2, 3, 10, 11, 12] if lat >= 0 else [4, 5, 6, 7, 8, 9]
+    p_cool = sum(n["precip"] for n in normals if n["month"] in cool)
+    p_warm = sum(n["precip"] for n in normals if n["month"] not in cool)
+    mild_winter = (
+        min(n["tmin"] for n in normals) > 0.0
+    )  # Köppen Cs: winter-wet *and* mild (excludes Great Basin)
+    return abs(lat) >= 20 and p_cool > 2 * p_warm and p_cool + p_warm < 1000 and mild_winter
+
+
 def planting_date_for(
-    crop_id: str, year: int, lat: float, rainy_onset_month: int | None, override: str | None = None
+    crop_id: str,
+    year: int,
+    lat: float,
+    rainy_onset_month: int | None,
+    override: str | None = None,
+    mediterranean: bool = False,
 ) -> dt.date:
-    md = override or rotation_config()["default_planting"].get(crop_id, "05-01")
+    md = (
+        override
+        or (MEDITERRANEAN_PLANTING.get(crop_id) if mediterranean else None)
+        or rotation_config()["default_planting"].get(crop_id, "05-01")
+    )
     m, d = (int(x) for x in md.split("-"))
     zone = climate_zone(lat)
     if zone == "south":
@@ -106,9 +137,10 @@ def evaluate_slot(
     allocation_mm: float | None,
     plant_override: str | None,
     irrigate_until: str | None,
+    mediterranean: bool = False,
 ) -> SlotStats:
     c = crop(crop_id)
-    first = planting_date_for(crop_id, years[0], lat, onset, plant_override)
+    first = planting_date_for(crop_id, years[0], lat, onset, plant_override, mediterranean)
     req = gdd_requirement(c, w, first, years)
     iu: tuple[int, int] | None = None
     if irrigate_until:
@@ -116,7 +148,7 @@ def evaluate_slot(
         iu = (mm, dd)
     res: list[Any] = []
     for y in years:
-        p = planting_date_for(crop_id, y, lat, onset, plant_override)
+        p = planting_date_for(crop_id, y, lat, onset, plant_override, mediterranean)
         if w.index(p) < 0 or w.index(p) + 30 >= len(w.dates):
             res.append(None)
             continue
@@ -178,6 +210,7 @@ def score_strategy(
     erosive_share: list[float],
     slope_pct: float | None,
     irrigated: bool,
+    smallholder: bool = False,
 ) -> dict[str, Any]:
     slots = tpl["slots"]
     n_years = max(s["year"] for s in slots)
@@ -217,7 +250,12 @@ def score_strategy(
         price = c["price_usd_t"]
         # fertilizer saved on a non-legume following a legume (≈ 40 kg N/ha credit, valued at N price)
         n_saving = N_PRICE_USD_KG * 40 if (prev_legume and c["family"] != "Fabaceae") else 0.0
-        margin = yld * price - c["cost_usd_ha"] + n_saving
+        if smallholder:
+            # config costs are U.S. high-input budgets; for tropical smallholder systems use a uniform
+            # input-cost share instead so crops are compared on one basis (documented in MODELS.md §Rotations)
+            margin = yld * price * (1 - SMALLHOLDER_INPUT_SHARE) + n_saving
+        else:
+            margin = yld * price - c["cost_usd_ha"] + n_saving
         margins_by_year.append(float(np.mean(margin)))
         water_total += float(np.mean(st.irr)) if irrigated else 0.0
         deficit_total += float(np.mean(st.deficit))

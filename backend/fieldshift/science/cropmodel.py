@@ -257,9 +257,17 @@ def simulate(
             g_sum += g
             frac = min(1.0, g_sum / gdd_req)
             kc, stage, root_frac = kc_at(c, frac)
-            if np.isfinite(tmin) and tmin <= c["t_kill"] and frac > 0.02:
-                frost += 1
+            hardy = c.get("winter_hardy", False) and stage in (
+                "initial",
+                "development",
+            )  # hardened winter cereals
+            t_kill = (
+                c.get("t_kill_spring", c["t_kill"]) if c.get("winter_hardy") and not hardy else c["t_kill"]
+            )
+            if np.isfinite(tmin) and tmin <= t_kill and frac > 0.02 and not hardy:
                 events.append({"date": d.isoformat(), "type": "frost", "tmin": round(float(tmin), 1)})
+                if frac < 0.8:
+                    frost += 1  # damaging frost (late killing frosts end the season instead)
                 if frac >= 0.8:
                     # killing frost late in the season ends it: the crop is harvested at its current completion
                     end_idx = i

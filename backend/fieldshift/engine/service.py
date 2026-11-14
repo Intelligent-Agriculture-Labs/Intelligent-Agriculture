@@ -1224,6 +1224,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
     pd_ = w.dates[: ctx.idx(today) + 1]
     normals = climmod.monthly_normals(pd_, w.tmax, w.tmin, w.rain, w.et0, 1991, 2020)
     onset = rot.rainy_onset(normals) if abs(lat) < 20 else None
+    med = rot.is_mediterranean(normals, lat)
 
     # erosive rain share per month (heavy-rain days ≥ 95th pct of wet days, NASA POWER)
     rain = w.rain[: len(pd_)]
@@ -1259,6 +1260,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                 alloc,
                 s.get("plant"),
                 s.get("irrigate_until"),
+                med,
             )
         return slot_cache[key]
 
@@ -1272,7 +1274,10 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             if ss.n < 0.6 * len(years):
                 feasible = False
                 notes.append(f"{crop(s['crop'])['name']}: not enough simulated seasons")
-            elif np.mean([f > 0 for f in ss.frost]) > 0.3 and crop(s["crop"])["type"] != "perennial":
+            elif np.mean([f > 0 for f in ss.frost]) > 0.3 and crop(s["crop"])["type"] not in (
+                "perennial",
+                "cover",
+            ):
                 feasible = False
                 notes.append(f"{crop(s['crop'])['name']}: frost during the season in >30 % of years")
             elif (
@@ -1286,7 +1291,10 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             continue
         if not irrigated and tpl["id"] != "current" and "irrigated" in tpl.get("tags", []):
             continue
-        sc = rot.score_strategy(tpl, st, erosive_share, ctx.slope_pct, irrigated)
+        zone = "tropical" if abs(lat) < 20 else "temperate"
+        if tpl["id"] != "current" and zone not in tpl.get("zones", ["temperate", "tropical"]):
+            continue
+        sc = rot.score_strategy(tpl, st, erosive_share, ctx.slope_pct, irrigated, smallholder=abs(lat) < 20)
         evaluated.append((tpl, st, sc, notes))
 
     raws = [e[2]["raw"] for e in evaluated]
@@ -1303,7 +1311,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             "risk": fx["risk"],
         }
         total = sum(pr[m] * scores[m] for m in scores) / max(1e-9, sum(pr.values()))
-        out.append((tpl, st, sc, notes, scores, round(total, 1)))
+        out.append((tpl, st, sc, notes, scores, round(float(total), 1)))
     cur = next(o for o in out if o[0]["id"] == "current")
     alts = sorted(
         [o for o in out if o[0]["id"] != "current" and not _same_rotation(o[0], cur[0])], key=lambda o: -o[5]
@@ -1327,7 +1335,9 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "income",
-                "label": "Gross margin (indicative)",
+                "label": "Gross margin (indicative)"
+                if abs(lat) >= 20
+                else "Net revenue after ~30 % input costs (indicative)",
                 "value": round(raw["income"]),
                 "unit": "USD/ha/yr",
                 "score": scores["income"],
