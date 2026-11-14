@@ -143,7 +143,71 @@ For the next occurrence of the planting date, the season model runs for each of 
 - **Monthly water budget:** median ET₀, ETc, ETa, rain and gross irrigation per month. With an allocation, the full-irrigation need is simulated too, and coverage = allocation / full need.
 - **Risk calendar:** share of years with a damaging frost (crop kill threshold) or ≥ 3 heat days (≥ T_heat) in each month.
 
-## 11. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
+## <a id="field-detect"></a>11. Tap-to-detect field boundaries (`science/fielddetect.py`)
+The farmer taps inside a field, and an editable polygon comes back in ~0.5–3 s.
+
+**Imagery.** Sub-metre RGB (Esri World Imagery; USDA NAIP option in the U.S.), a 3 × 3 tile window at zoom 17, retrying at zoom 16 if the field touches the window edge.
+
+**Pipeline:**
+1. Downsample to ~2.7 m and apply a 5 × 5 median filter, which removes crop rows and wheel tracks.
+2. Convert to CIE-Lab.
+3. Felzenszwalb–Huttenlocher graph segmentation (scale 300).
+4. Snap the tap to the lowest-gradient pixel nearby.
+5. Edge-aware region growing over adjacent segments. A segment joins when ΔE(segment, region mean) < 9 **and** the median gradient along the shared border is below max(90th-percentile gradient, 5). Roads and ditches stop the growth; internal irrigation borders do not.
+6. Fill holes, morphological opening, keep the component containing the tap.
+7. Trace the contour and simplify it (Douglas–Peucker, 2 px).
+
+**Confidence** = f(boundary contrast, compactness, border contact).
+
+**Visual check on real farms:**
+- Fallon border-irrigated field and Córdoba wheat field: outlined correctly.
+- Iowa: correct, with one leak through a farmstead gap.
+- Terraced smallholder plots (Machakos): only one strip is found.
+
+That is why the polygon always stays editable.
+
+## <a id="satellite"></a>12. Field satellite analytics (`science/satellite.py`, `engine/satellite_service.py`)
+**Data.** Sentinel-2 L2A COGs (Earth Search STAC) from the last 12 months, cloud cover < 60 %, up to 24 scenes spread over time. Bands red, NIR and SCL are read through a GDAL WarpedVRT onto a ~10 m web-mercator grid around the field, so scenes from different UTM tiles stack pixel-for-pixel and align with the map. Clear pixels are SCL classes 4/5/6; a scene counts only if ≥ 60 % of the field is clear.
+
+**NDVI series.** Daily linear gap-filling, then a Savitzky–Golay filter (window 31 d, order 2; Chen et al. 2004).
+
+**Phenology.**
+- Green-up and senescence at 50 % of the seasonal amplitude (TIMESAT; Jönsson & Eklundh 2004).
+- Bare periods: NDVI < 0.20 for ≥ 20 days.
+- Season type from prominent peaks (prominence ≥ 0.15): single season, double crop, or repeated cuttings such as alfalfa.
+
+**AI management zones (unsupervised ML).**
+- Standardized per-pixel features: mean NDVI, peak NDVI (p90), temporal NDVI variability, slope and wetness (TWI, from the DEM resampled onto the same grid).
+- k-means with k ∈ {2, 3, 4} chosen by silhouette score (Rousseeuw 1987); the smallest k wins unless a larger k separates clearly better.
+- Zones are ranked by vigour.
+- Advice rules use zone wetness and slope relative to the field (waterlogging vs. thin soil on slopes vs. sampling).
+
+**Satellite crop coefficient.**
+- fc = (NDVI − 0.15)/(0.85 − 0.15).
+- Kcb = 0.15 + (Kcb_full − 0.15) · min(1, 1.5 fc, fc^(1/(1+h))), the FAO-56 density coefficient (Allen & Pereira 2009).
+
+**Data fusion into the water balance.** If a clear scene ≤ 15 days old exists for the field, crop water use from that date is scaled by (Kcb_sat + 0.05)/Kc_model, clipped to 0.4–1.4. The irrigation card's Why shows the numbers, and its confidence rises by 0.1.
+
+## <a id="drought-ml"></a>13. AI drought classifier (`science/drought_ml.py`, `scripts/train_drought_ml.py`)
+**Features** (the same code for training and serving), daily from NASA POWER:
+- SPI-30/90/180/365 (gamma fit per week-of-year);
+- SPEI-like indices on P − ET₀ for the same windows (Gringorten empirical probabilities);
+- 30/90-day Tmax anomalies;
+- seasonality (sin/cos day of year);
+- aridity (ΣP/ΣET₀).
+
+**Labels.** The dominant weekly U.S. Drought Monitor category per county (highest Dk covering ≥ 50 % of the area): 80 counties stratified across the contiguous U.S., 2005–2024, 83,600 samples.
+
+**Model.** scikit-learn HistGradientBoostingClassifier: class-balanced, 300 iterations, learning rate 0.06, 31 leaves, L2 1.0.
+
+**Evaluation.** 5-fold GroupKFold by county, i.e. on counties the model never saw, against the rule-based status on the same samples (EXP-09).
+
+**Use.** The model is used only inside its validated domain (contiguous U.S.), where it replaces the rule level; class probabilities are shown in the Why. Everywhere else the transparent rule-based status is used.
+
+## <a id="sync"></a>14. Farm sync
+An account-free farm document (SQLite) is addressed by a random 128-bit id, which stays secret on each device, plus an 8-character pairing code (alphabet without 0/O/1/I). Fields merge per id by `updated_at` (last writer wins); deletions are tombstones. The client pushes 2 s after a change and pulls on start, on focus and every 60 s.
+
+## 15. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
 Each module emits zero or more cards, each with risk, due date and a Why block (summary, steps with numbers, series, model, confidence, caveats, sources). Cards are ranked by risk, then due date. Thresholds are versioned in `rules.yaml`, and texts in six languages are in `messages.yaml`.
 
 **Confidence** is a documented heuristic, not a calibrated probability:

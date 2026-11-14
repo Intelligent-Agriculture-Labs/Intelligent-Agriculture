@@ -68,6 +68,18 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - Podman's DNS (aardvark) on the Linux test host refused queries, so the nginx → api proxy failed. FastAPI now serves the exported web app itself.
 - One image, one port, the same behaviour on Docker and podman.
 
+## ADR-015 Sub-metre imagery for drawing and detection (19:00, user feedback "not high-res enough")
+- Field drawing and tap-to-detect use Esri World Imagery (global, sub-metre) by default, with USDA NAIP (public domain) as the U.S. option. 10 m Sentinel-2 is too coarse to see field edges.
+- **Licence note:** Esri's basemap is used with attribution for this non-commercial hackathon demo. A production deployment needs an Esri/ArcGIS key or a licensed imagery source. Detection works on any RGB tile source (NAIP in the U.S.).
+
+## ADR-016 AI components chosen (19:10)
+- **Supervised:** a drought classifier trained on USDM labels. It is adopted only where it beat the rules on held-out counties (EXP-09).
+- **Unsupervised:** k-means management zones on Sentinel-2 + terrain.
+- **Computer vision:** field-boundary detection.
+- **Data fusion:** satellite Kcb into the water balance.
+- An LLM is deliberately **not** used to generate advice. Every number stays traceable to data and published methods.
+- A foundation-model segmenter (SAM) for field boundaries is on the roadmap as an optional GPU service.
+
 ## ADR-014 No public hosting (18:15, user decision)
 - The user chose to keep the demo private: no tunnel or public URL.
 - Judges get the 30 s video, the screenshots, and `docker compose up --build` (or the offline mode).

@@ -69,5 +69,33 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
 - **Result:** Ithaca NY, Jun–Aug: 2009 had 57 Hutton days, ranking **3rd of 11 seasons (2005–2015)**. 2008 (62) and 2006 (60) were wetter on POWER's grid. 2009's epidemic was amplified by infected transplants sold region-wide, which no weather model can see.
 - **Decision:** keep the Hutton model (the operational UK standard), but present it as "weather favourable for infection", never as "disease present". The Hutton thresholds are calibrated for station RH; the 50 km grid RH is smoother, which inflates near-saturation hours. Card confidence is therefore 0.5.
 
+## EXP-09 Does a learned drought classifier beat the rule-based blend?
+- **Hypothesis:** gradient-boosted trees on multi-scale SPI/SPEI and temperature features from NASA POWER reproduce the U.S. Drought Monitor better than the hand-weighted blend, including at locations they never saw.
+- **Method:** 80 counties, 2005–2024 weekly, 83,600 samples. 5-fold GroupKFold by county. Same samples for both methods.
+- **Result (held-out counties):**
+
+  | Metric | ML | Rules |
+  |---|---|---|
+  | Exact category | **0.61** | 0.59 |
+  | Within ±1 category | **0.889** | 0.862 |
+  | MAE (levels) | **0.54** | 0.60 |
+  | Spearman vs DSCI | **0.68** | 0.55 |
+  | D1+ hit rate | **0.70** | 0.45 |
+  | D1+ false-alarm ratio | **0.39** | 0.42 |
+
+- **Decision:** adopted for the contiguous U.S. (the validated domain), with probabilities shown. Outside the U.S. the rules stay, because transferring the model there is unvalidated.
+
+## EXP-10 Field boundary detection: superpixel growing vs. field-scale graph segmentation
+- **v1:** SLIC superpixels (~1,600) + colour/edge region growing at native resolution. It under-segmented badly: Fallon 1.6 of ~5.5 ha, Machakos one stripe, Córdoba 0.03 ha (the tap was on a hedge).
+- **v2 (adopted):**
+  - Downsample to ~2.7 m and median-filter, which removes in-field texture.
+  - Felzenszwalb segmentation.
+  - Snap the seed to the calmest pixel nearby.
+  - Edge-aware growth (median border gradient below max(p90, 5)), re-evaluating neighbours as the region grows.
+  - Visual check on 4 farms: Fallon and Córdoba correct; Iowa correct except one leak through a farmstead gap; Machakos terraces not merged.
+  - Synthetic test with an internal irrigation border: passes.
+- **Not adopted:** a stricter border statistic (65th percentile). It still leaked in Iowa and broke the synthetic test.
+- **Roadmap:** a promptable segmentation foundation model (e.g. SAM) on the GPU box, as an optional service.
+
 ## EXP-08 AquaCrop-style biomass vs. FAO-33 yield response (diagnostic)
 - The season model reports both: the FAO-33 Ky yield (used in the product) and an AquaCrop-style WP*·Σ(Tr/ET₀) biomass. They are kept side by side for transparency. The FAO-33 approach is used because its parameters exist for every crop in the table, including forage and cover crops, and because it responds directly to the water-stress question farmers ask.

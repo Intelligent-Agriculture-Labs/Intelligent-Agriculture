@@ -14,6 +14,10 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | POST | `/api/terrain` | Computed terrain maps around the field (PNG overlays + legends + field stats + management zones) |
 | GET | `/api/terrain/png/{key}/{layer}.png` | Map overlay image (web-mercator aligned with `bounds`) |
 | POST | `/api/planner` | Season planner: sowing scan, stage dates, operations timeline, water budget, risk calendar |
+| POST | `/api/fields/detect` | Tap-to-detect: editable field polygon around a point (sub-metre imagery) |
+| POST | `/api/satellite` | Sentinel-2 field analysis (async; poll until `status: done`): NDVI series, phenology, AI zones, Kcb, latest images |
+| GET | `/api/satellite/png/{key}/{zones,ndvi,truecolor}.png` | Satellite overlays aligned with `bounds` |
+| POST | `/api/farms` · POST `/api/farms/join` · GET/PUT `/api/farms/{farm_id}` | Account-free farm sync between devices |
 | GET | `/api/export/advice.csv` | Tidy CSV of every series behind the advice |
 | GET | `/api/export/field.geojson` | Point feature with the advice summary |
 

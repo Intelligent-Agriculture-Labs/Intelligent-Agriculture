@@ -56,6 +56,8 @@ Global awards include Best Use of Science, Best Use of Data, Best Use of Technol
 | Explain terms and uncertainty | "Why?" view: plain summary, reasoning steps with numbers, confidence + note, caveats (e.g. 9 km vs. field), sources with resolution and latency | Validity, Presentation |
 | Scenario sliders | **What if?**: planting date, irrigation strategy, crop, +°C, rain % | Creativity |
 | Interactive maps; field-level vulnerabilities (erosion zones, water-stress/wet spots, frost-prone areas) | **Map** tab: computed terrain layers (elevation, slope, RUSLE erosion, wetness, frost hollows), management zones with planning advice, NASA GIBS true-colour/NDVI | Relevance, Creativity, Presentation |
+| SI/AI, data fusion, harmonising resolutions | AI drought classifier (gradient boosting on USDM, county-held-out validated); k-means management zones on 10 m Sentinel-2 + 30 m terrain on one grid; satellite Kcb fused into the water balance; tap-to-detect field boundaries | Creativity, Validity |
+| Field-level, any field the farmer has; works across devices | Multiple fields per farm, drawn or auto-detected on sub-metre imagery, synced phone ↔ PC by code/QR without accounts | Impact, Presentation |
 | Timelines, planning | **Plan** tab: sowing-window scan, stage dates, pest-scouting timeline, monthly water budget vs. allocation, frost/heat risk calendar | Impact, Validity |
 | Support, not replace, local expertise | Disclaimers, "needs local review" lists, confidence on every card | Validity |
 | Weekly decisions (build-prompt scope) | **This week**: ≤ 3 ranked action cards for water, drought, disease, pests, frost/heat | Impact |

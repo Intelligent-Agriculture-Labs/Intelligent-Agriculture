@@ -29,6 +29,15 @@ All sources were verified reachable on 2026-11-14 from both the Mac and the VPS.
 | Mean annual precipitation | **NASA POWER climatology** API | NASA LaRC | 0.5° | no auth | RUSLE R factor |
 | Surface & root-zone soil moisture, root-zone percentile | **SMAP L3E (SPL3SMP_E.006) and L4 (SPL4SMGP.008) via NASA AppEEARS** | NASA NSIDC / GMAO | 9 km, daily / 3-hourly | Earthdata Login (batch job, ADR-012) | Drought status (L4 root-zone percentile), validation V3 |
 
+## Field-scale imagery and analysis
+| Data | Source | Licence / provider | Resolution | Access | Used for |
+|---|---|---|---|---|---|
+| Sentinel-2 L2A surface reflectance + scene classification | Earth Search STAC (Element 84), AWS Open Data COGs | ESA Copernicus (free and open) | 10 m, 5-day | no auth, HTTP range reads | Field NDVI series, phenology, AI zones, satellite Kcb, latest true-colour/NDVI images |
+| High-resolution basemap (drawing, detection) | Esri World Imagery | Esri, Maxar, Earthstar Geographics (attribution; terms of use apply) | ~0.3–1 m | tile service | Field drawing; tap-to-detect boundaries |
+| U.S. aerial imagery | USDA NAIP via USGS The National Map | public domain | ~0.6–1 m source (tiles to zoom 16) | tile service | Field drawing (U.S.), alternative detection source |
+| Sentinel-2 cloudless 2023 mosaic | EOX s2maps.eu | CC BY-NC-SA 4.0 (contains Copernicus data) | 10 m | tile service | Basemap |
+| County centroids | U.S. Census Gazetteer 2023 | public domain | — | download | ML training locations |
+
 ## Imagery on the map
 NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`, no auth. Used only as visual context.
 
