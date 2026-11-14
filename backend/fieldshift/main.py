@@ -469,6 +469,22 @@ def rotation_plan_ep(req: RotationPlanRequest) -> dict[str, Any]:
         raise HTTPException(422, str(e)) from e
 
 
+@app.get("/api/glossary")
+def glossary_ep(lang: Lang = "en") -> list[dict[str, Any]]:
+    """Plain-language explanations of the terms used in the app."""
+    import yaml as _yaml
+
+    from .science.cropmodel import CONFIG
+
+    with open(CONFIG / "glossary.yaml", encoding="utf-8") as f:
+        terms = _yaml.safe_load(f)["terms"]
+    out = []
+    for tid, tr in terms.items():
+        e = tr.get(lang) or tr["en"]
+        out.append({"id": tid, "term": e["term"], "plain": e["plain"], "why_it_matters": e["why"]})
+    return out
+
+
 class PlannerRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)

@@ -209,9 +209,17 @@ def test_planner_allocation_note_present_when_short():
 
 
 def test_rotation_plan_flags_short_return_and_optimizes():
-    body = {"lat": 39.47, "lon": -118.78, "irrigation": "drip",
-            "history": [{"year": 2024, "crop": "maize"}, {"year": 2025, "crop": "maize"}],
-            "plan": [{"year": 2026, "crop": "maize"}, {"year": 2027, "crop": "soybean"}, {"year": 2028, "crop": "maize"}]}
+    body = {
+        "lat": 39.47,
+        "lon": -118.78,
+        "irrigation": "drip",
+        "history": [{"year": 2024, "crop": "maize"}, {"year": 2025, "crop": "maize"}],
+        "plan": [
+            {"year": 2026, "crop": "maize"},
+            {"year": 2027, "crop": "soybean"},
+            {"year": 2028, "crop": "maize"},
+        ],
+    }
     r = client.post("/api/rotations/plan", json=body)
     assert r.status_code == 200
     j = r.json()

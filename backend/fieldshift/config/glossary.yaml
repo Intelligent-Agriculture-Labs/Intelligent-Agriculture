@@ -1,0 +1,121 @@
+# Plain-language glossary (GET /api/glossary?lang=xx). Keys: term, plain, why. Languages: en es fr sw hi de.
+terms:
+  et0:
+    en: {term: "Crop water demand (ET₀)", plain: "How much water the weather pulls out of a well-watered field each day — sun, heat, wind and dry air make it higher.", why: "Your crop uses roughly this much water (more at full leaf). It sets how much you need to irrigate."}
+    es: {term: "Demanda de agua (ET₀)", plain: "El agua que el tiempo saca cada día de un campo bien regado; sol, calor, viento y aire seco la aumentan.", why: "Su cultivo usa más o menos esta cantidad; define cuánto regar."}
+    fr: {term: "Besoin en eau (ET₀)", plain: "L'eau que la météo retire chaque jour d'un champ bien arrosé ; soleil, chaleur, vent et air sec l'augmentent.", why: "Votre culture consomme à peu près cela ; c'est la base de l'irrigation."}
+    sw: {term: "Mahitaji ya maji (ET₀)", plain: "Kiasi cha maji ambacho hali ya hewa huvuta kutoka shambani kila siku — jua, joto, upepo na hewa kavu huongeza.", why: "Zao lako hutumia takriban kiasi hiki; huamua kiasi cha kumwagilia."}
+    hi: {term: "फसल जल माँग (ET₀)", plain: "मौसम हर दिन अच्छी तरह सिंचित खेत से कितना पानी खींचता है — धूप, गर्मी, हवा और सूखी हवा इसे बढ़ाते हैं।", why: "आपकी फसल लगभग इतना पानी उपयोग करती है; इससे सिंचाई तय होती है।"}
+    de: {term: "Wasserbedarf (ET₀)", plain: "Wie viel Wasser das Wetter einem gut bewässerten Feld pro Tag entzieht – Sonne, Hitze, Wind und trockene Luft erhöhen ihn.", why: "So viel Wasser braucht Ihre Kultur etwa; daraus folgt die Bewässerung."}
+  soil_water:
+    en: {term: "Soil water (easily available / total)", plain: "Total = all the water the root zone can hold for the crop. Easily available = the part the crop can take without stress.", why: "When the easily available water is used up, the crop starts to suffer — that is when to irrigate."}
+    es: {term: "Agua del suelo", plain: "Total = toda el agua que la zona de raíces puede guardar. Fácilmente disponible = la parte que la planta toma sin estrés.", why: "Cuando se agota la fácilmente disponible, el cultivo sufre: es el momento de regar."}
+    fr: {term: "Eau du sol", plain: "Totale = toute l'eau que la zone racinaire peut retenir. Facilement disponible = ce que la plante prend sans stress.", why: "Quand l'eau facilement disponible est épuisée, la culture souffre : c'est le moment d'irriguer."}
+    sw: {term: "Maji ya udongo", plain: "Jumla = maji yote eneo la mizizi linaweza kushika. Yanayopatikana kwa urahisi = sehemu ambayo mmea huchukua bila msongo.", why: "Yanapoisha, mmea huanza kuteseka — wakati wa kumwagilia."}
+    hi: {term: "मिट्टी का पानी", plain: "कुल = जड़ क्षेत्र जितना पानी रख सकता है। आसानी से उपलब्ध = वह हिस्सा जिसे फसल बिना तनाव ले सकती है।", why: "जब यह खत्म होता है, फसल को तनाव होता है — सिंचाई का समय।"}
+    de: {term: "Bodenwasser", plain: "Gesamt = alles Wasser, das der Wurzelraum halten kann. Leicht verfügbar = der Teil, den die Pflanze ohne Stress nutzt.", why: "Ist das leicht verfügbare Wasser verbraucht, leidet die Kultur – dann bewässern."}
+  ndvi:
+    en: {term: "Greenness (NDVI)", plain: "A satellite measure of how green and dense the plants are, from 0 (bare soil) to about 0.9 (lush crop).", why: "It shows growth, harvests and problem spots from space, even before you see them."}
+    es: {term: "Verdor (NDVI)", plain: "Medida satelital de cuán verdes y densas están las plantas, de 0 (suelo) a ~0,9 (cultivo frondoso).", why: "Muestra crecimiento, cosechas y zonas con problemas desde el espacio."}
+    fr: {term: "Verdure (NDVI)", plain: "Mesure satellite de la verdure et densité des plantes, de 0 (sol nu) à ~0,9 (culture dense).", why: "Elle montre la croissance, les récoltes et les zones à problème depuis l'espace."}
+    sw: {term: "Ukijani (NDVI)", plain: "Kipimo cha setilaiti cha jinsi mimea ilivyo kijani na mingi, kutoka 0 (udongo mtupu) hadi ~0.9.", why: "Huonyesha ukuaji, mavuno na maeneo yenye matatizo kutoka angani."}
+    hi: {term: "हरियाली (NDVI)", plain: "उपग्रह माप कि पौधे कितने हरे और घने हैं, 0 (खाली मिट्टी) से लगभग 0.9 तक।", why: "यह अंतरिक्ष से वृद्धि, कटाई और समस्या वाले हिस्से दिखाता है।"}
+    de: {term: "Grünheit (NDVI)", plain: "Satellitenmaß dafür, wie grün und dicht die Pflanzen sind – von 0 (kahler Boden) bis etwa 0,9.", why: "Zeigt Wachstum, Ernten und Problemstellen aus dem All."}
+  spi:
+    en: {term: "Rain vs normal (SPI / SPEI)", plain: "Compares recent rain (SPEI: rain minus crop demand) with the same weeks in 40 years. 0 = normal, −1 = dry, −2 = very dry.", why: "It tells you if a dry spell is unusual for your place."}
+    es: {term: "Lluvia vs normal (SPI/SPEI)", plain: "Compara la lluvia reciente con las mismas semanas en 40 años. 0 = normal, −1 = seco, −2 = muy seco.", why: "Indica si la sequía es inusual para su zona."}
+    fr: {term: "Pluie vs normale (SPI/SPEI)", plain: "Compare la pluie récente aux mêmes semaines sur 40 ans. 0 = normal, −1 = sec, −2 = très sec.", why: "Indique si la sécheresse est inhabituelle chez vous."}
+    sw: {term: "Mvua dhidi ya kawaida (SPI/SPEI)", plain: "Hulinganisha mvua ya karibuni na wiki zilezile kwa miaka 40. 0 = kawaida, −1 = kavu, −2 = kavu sana.", why: "Hukuambia kama ukame si wa kawaida mahali pako."}
+    hi: {term: "सामान्य की तुलना में वर्षा (SPI/SPEI)", plain: "हाल की वर्षा की 40 वर्षों के उन्हीं हफ़्तों से तुलना। 0 = सामान्य, −1 = सूखा, −2 = बहुत सूखा।", why: "बताता है कि सूखा आपकी जगह के लिए असामान्य है या नहीं।"}
+    de: {term: "Regen vs. normal (SPI/SPEI)", plain: "Vergleicht den jüngsten Regen mit denselben Wochen in 40 Jahren. 0 = normal, −1 = trocken, −2 = sehr trocken.", why: "Zeigt, ob eine Trockenphase für Ihren Ort ungewöhnlich ist."}
+  drought_levels:
+    en: {term: "Drought levels D0–D4", plain: "The U.S. Drought Monitor scale: D0 abnormally dry, D1 moderate, D2 severe, D3 extreme, D4 exceptional drought.", why: "Higher levels mean water supplies and yields are increasingly at risk."}
+    es: {term: "Niveles de sequía D0–D4", plain: "D0 anormalmente seco, D1 moderada, D2 severa, D3 extrema, D4 excepcional.", why: "Más nivel = más riesgo para agua y rendimientos."}
+    fr: {term: "Niveaux de sécheresse D0–D4", plain: "D0 anormalement sec, D1 modérée, D2 sévère, D3 extrême, D4 exceptionnelle.", why: "Plus le niveau est haut, plus l'eau et les rendements sont menacés."}
+    sw: {term: "Viwango vya ukame D0–D4", plain: "D0 ukavu usio wa kawaida, D1 wastani, D2 mkali, D3 mkali sana, D4 wa kipekee.", why: "Kiwango kikubwa = hatari kubwa kwa maji na mavuno."}
+    hi: {term: "सूखा स्तर D0–D4", plain: "D0 असामान्य रूप से सूखा, D1 मध्यम, D2 गंभीर, D3 अत्यधिक, D4 असाधारण सूखा।", why: "ऊँचा स्तर = पानी और उपज को अधिक खतरा।"}
+    de: {term: "Dürrestufen D0–D4", plain: "D0 ungewöhnlich trocken, D1 mäßig, D2 schwer, D3 extrem, D4 außergewöhnlich.", why: "Höhere Stufen bedeuten mehr Risiko für Wasser und Ertrag."}
+  kc:
+    en: {term: "Crop water factor (Kc)", plain: "How thirsty your crop is compared with the reference grass: small seedlings ~0.3, full canopy ~1.0–1.2.", why: "Crop water use = crop water factor × crop water demand."}
+    es: {term: "Factor de cultivo (Kc)", plain: "Cuánta agua usa su cultivo frente al pasto de referencia: plántulas ~0,3, cultivo pleno ~1,0–1,2.", why: "Uso de agua = factor × demanda."}
+    fr: {term: "Coefficient cultural (Kc)", plain: "Soif de la culture par rapport à l'herbe de référence : jeunes plants ~0,3, plein couvert ~1,0–1,2.", why: "Consommation = coefficient × besoin en eau."}
+    sw: {term: "Kigezo cha maji ya zao (Kc)", plain: "Jinsi zao lako lina kiu ikilinganishwa na nyasi ya marejeo: miche ~0.3, zao kamili ~1.0–1.2.", why: "Matumizi ya maji = kigezo × mahitaji ya maji."}
+    hi: {term: "फसल जल गुणांक (Kc)", plain: "संदर्भ घास की तुलना में आपकी फसल कितनी प्यासी है: पौध ~0.3, पूरी फसल ~1.0–1.2।", why: "जल उपयोग = गुणांक × जल माँग।"}
+    de: {term: "Kulturkoeffizient (Kc)", plain: "Wie durstig Ihre Kultur im Vergleich zu Referenzgras ist: Keimlinge ~0,3, volle Bestände ~1,0–1,2.", why: "Wasserverbrauch = Koeffizient × Wasserbedarf."}
+  gdd:
+    en: {term: "Degree-days", plain: "Daily warmth above a growth threshold, added up. Crops and insects develop when enough warmth has built up.", why: "Predicts flowering, harvest and when pests hatch — better than counting calendar days."}
+    es: {term: "Grados-día", plain: "Calor diario por encima de un umbral, sumado. Cultivos e insectos se desarrollan al acumular suficiente calor.", why: "Predice floración, cosecha y eclosión de plagas."}
+    fr: {term: "Degrés-jours", plain: "Chaleur quotidienne au-dessus d'un seuil, cumulée. Plantes et insectes se développent avec la chaleur accumulée.", why: "Prédit floraison, récolte et éclosion des ravageurs."}
+    sw: {term: "Siku-nyuzi", plain: "Joto la kila siku juu ya kiwango cha ukuaji, likijumlishwa. Mazao na wadudu hukua joto likitosha.", why: "Hutabiri kuchanua, mavuno na kuanguliwa kwa wadudu."}
+    hi: {term: "डिग्री-दिवस", plain: "वृद्धि सीमा से ऊपर दैनिक गर्मी का जोड़। पर्याप्त गर्मी होने पर फसलें और कीट विकसित होते हैं।", why: "फूल, कटाई और कीटों के निकलने का अनुमान।"}
+    de: {term: "Gradtage", plain: "Tägliche Wärme über einer Wachstumsschwelle, aufsummiert. Pflanzen und Insekten entwickeln sich mit genug Wärme.", why: "Sagt Blüte, Ernte und Schädlingsschlupf voraus."}
+  rotation:
+    en: {term: "Crop rotation", plain: "Growing different crops one after another on the same field instead of the same crop every year.", why: "Starves soil-borne pests and diseases, feeds the soil (legumes add nitrogen) and spreads risk."}
+    es: {term: "Rotación de cultivos", plain: "Sembrar cultivos distintos uno tras otro en el mismo campo en vez de repetir.", why: "Corta plagas y enfermedades del suelo, alimenta el suelo y reparte el riesgo."}
+    fr: {term: "Rotation des cultures", plain: "Faire se succéder des cultures différentes sur la même parcelle.", why: "Affame les ravageurs et maladies du sol, nourrit le sol et répartit le risque."}
+    sw: {term: "Mzunguko wa mazao", plain: "Kupanda mazao tofauti mfululizo kwenye shamba moja badala ya zao lilelile kila mwaka.", why: "Huua njaa wadudu na magonjwa ya udongo, hulisha udongo na hupunguza hatari."}
+    hi: {term: "फसल चक्र", plain: "एक ही खेत पर हर साल एक ही फसल के बजाय अलग-अलग फसलें एक के बाद एक उगाना।", why: "मिट्टी के कीट-रोग घटाता है, मिट्टी को पोषण देता है और जोखिम बाँटता है।"}
+    de: {term: "Fruchtfolge", plain: "Verschiedene Kulturen nacheinander auf demselben Feld statt jedes Jahr dieselbe.", why: "Hungert bodenbürtige Schädlinge und Krankheiten aus, ernährt den Boden und streut das Risiko."}
+  return_interval:
+    en: {term: "Return interval", plain: "The number of years before the same crop (or a close relative) should come back to a field.", why: "Many soil pests and diseases survive several years; waiting long enough lets them die out."}
+    es: {term: "Intervalo de retorno", plain: "Años antes de que el mismo cultivo vuelva al campo.", why: "Muchas plagas del suelo sobreviven años; esperar las elimina."}
+    fr: {term: "Délai de retour", plain: "Années avant que la même culture revienne sur la parcelle.", why: "Beaucoup de ravageurs du sol survivent des années ; attendre les élimine."}
+    sw: {term: "Muda wa kurudia", plain: "Miaka kabla zao lilelile halijarudi shambani.", why: "Wadudu wengi wa udongo huishi miaka; kusubiri huwaua."}
+    hi: {term: "वापसी अंतराल", plain: "एक ही फसल को उसी खेत में दोबारा लाने से पहले के वर्ष।", why: "कई मिट्टी के कीट वर्षों तक जीवित रहते हैं; इंतज़ार उन्हें खत्म करता है।"}
+    de: {term: "Anbaupause", plain: "Jahre, bis dieselbe Kultur wieder auf das Feld darf.", why: "Viele Bodenschädlinge überleben Jahre; die Pause lässt sie absterben."}
+  n_credit:
+    en: {term: "Nitrogen credit", plain: "Nitrogen that a previous crop (especially beans, peas, alfalfa, clover) leaves in the soil for the next crop.", why: "You can apply less fertiliser and save money."}
+    es: {term: "Crédito de nitrógeno", plain: "Nitrógeno que deja un cultivo previo (sobre todo leguminosas) para el siguiente.", why: "Menos fertilizante y menos costo."}
+    fr: {term: "Crédit d'azote", plain: "Azote laissé par la culture précédente (surtout légumineuses) pour la suivante.", why: "Moins d'engrais, moins de coûts."}
+    sw: {term: "Mchango wa naitrojeni", plain: "Naitrojeni inayoachwa na zao lililotangulia (hasa maharagwe, kunde) kwa zao linalofuata.", why: "Unatumia mbolea kidogo na kuokoa pesa."}
+    hi: {term: "नाइट्रोजन लाभ", plain: "पिछली फसल (खासकर दलहन) द्वारा अगली फसल के लिए छोड़ा गया नाइट्रोजन।", why: "कम खाद, कम खर्च।"}
+    de: {term: "Stickstoff-Nachlieferung", plain: "Stickstoff, den die Vorfrucht (v. a. Leguminosen) für die Folgefrucht hinterlässt.", why: "Weniger Dünger, weniger Kosten."}
+  cover_crop:
+    en: {term: "Cover crop", plain: "A crop sown between main crops to cover the soil, not mainly for harvest (e.g. rye, vetch, clover, mustard).", why: "Protects soil from erosion, adds organic matter and (legumes) nitrogen, smothers weeds."}
+    es: {term: "Cultivo de cobertura", plain: "Cultivo sembrado entre cultivos principales para cubrir el suelo.", why: "Protege de la erosión, aporta materia orgánica y nitrógeno, frena malezas."}
+    fr: {term: "Couvert végétal", plain: "Culture semée entre deux cultures principales pour couvrir le sol.", why: "Protège de l'érosion, apporte matière organique et azote, étouffe les adventices."}
+    sw: {term: "Zao la kufunika", plain: "Zao linalopandwa kati ya mazao makuu kufunika udongo.", why: "Hulinda udongo dhidi ya mmomonyoko, huongeza mbolea asilia na naitrojeni."}
+    hi: {term: "आवरण फसल", plain: "मुख्य फसलों के बीच मिट्टी ढकने के लिए बोई गई फसल।", why: "कटाव से बचाती है, जैविक पदार्थ और नाइट्रोजन जोड़ती है।"}
+    de: {term: "Zwischenfrucht", plain: "Zwischen Hauptkulturen gesät, um den Boden zu bedecken.", why: "Schützt vor Erosion, bringt Humus und (Leguminosen) Stickstoff, unterdrückt Unkraut."}
+  erosion:
+    en: {term: "Erosion (RUSLE)", plain: "Estimated topsoil washed away per year, from rain power, soil type, slope and how well the soil is covered.", why: "Topsoil forms very slowly; above ~3–5 t/ha per year you are losing your field's productivity."}
+    es: {term: "Erosión (RUSLE)", plain: "Suelo arrastrado por año según lluvia, suelo, pendiente y cobertura.", why: "Por encima de ~3–5 t/ha al año se pierde productividad."}
+    fr: {term: "Érosion (RUSLE)", plain: "Terre emportée par an selon la pluie, le sol, la pente et la couverture.", why: "Au-delà de ~3–5 t/ha par an, la parcelle perd sa fertilité."}
+    sw: {term: "Mmomonyoko (RUSLE)", plain: "Udongo wa juu unaosombwa kwa mwaka kutokana na mvua, aina ya udongo, mteremko na ufunikaji.", why: "Zaidi ya ~3–5 t/ha kwa mwaka, shamba hupoteza rutuba."}
+    hi: {term: "मिट्टी कटाव (RUSLE)", plain: "वर्षा, मिट्टी, ढलान और आवरण से हर साल बहने वाली ऊपरी मिट्टी का अनुमान।", why: "~3–5 t/ha प्रति वर्ष से अधिक पर उत्पादकता घटती है।"}
+    de: {term: "Erosion (RUSLE)", plain: "Geschätzter jährlicher Bodenabtrag aus Regen, Boden, Hangneigung und Bedeckung.", why: "Über ~3–5 t/ha im Jahr verliert das Feld Fruchtbarkeit."}
+  wetness:
+    en: {term: "Wetness index", plain: "Shows where water from higher ground collects in flat, low spots of your field.", why: "Wet spots dry late, can waterlog roots and may need drainage or different crops."}
+    es: {term: "Índice de humedad", plain: "Muestra dónde se acumula el agua en partes bajas y planas.", why: "Las zonas húmedas se secan tarde y pueden encharcarse."}
+    fr: {term: "Indice d'humidité", plain: "Montre où l'eau s'accumule dans les creux plats de la parcelle.", why: "Les zones humides ressuient tard et peuvent asphyxier les racines."}
+    sw: {term: "Kiashiria cha unyevu", plain: "Huonyesha mahali maji hukusanyika kwenye maeneo ya chini.", why: "Maeneo haya hukauka polepole na yanaweza kujaa maji."}
+    hi: {term: "नमी सूचकांक", plain: "दिखाता है कि खेत के निचले समतल हिस्सों में पानी कहाँ जमा होता है।", why: "गीले हिस्से देर से सूखते हैं और जड़ों को नुकसान पहुँचा सकते हैं।"}
+    de: {term: "Feuchteindex", plain: "Zeigt, wo sich Wasser in flachen Senken des Feldes sammelt.", why: "Nasse Stellen trocknen spät ab und können Staunässe bekommen."}
+  frost_hollow:
+    en: {term: "Frost hollow", plain: "A low spot where cold, heavy air collects on clear, calm nights.", why: "Late spring and early autumn frosts hit here first — avoid frost-sensitive crops there."}
+    es: {term: "Hondonada de helada", plain: "Lugar bajo donde se acumula aire frío en noches despejadas.", why: "Las heladas tardías golpean primero ahí."}
+    fr: {term: "Cuvette à gel", plain: "Creux où l'air froid s'accumule les nuits claires.", why: "Les gelées tardives y frappent d'abord."}
+    sw: {term: "Bonde la baridi", plain: "Eneo la chini ambapo hewa baridi hukusanyika usiku usio na mawingu.", why: "Baridi kali huanza hapa kwanza."}
+    hi: {term: "पाला गड्ढा", plain: "निचला स्थान जहाँ साफ़ रातों में ठंडी हवा जमा होती है।", why: "देर से पड़ने वाला पाला पहले यहीं लगता है।"}
+    de: {term: "Frostsenke", plain: "Tiefe Stelle, an der sich in klaren Nächten kalte Luft sammelt.", why: "Spätfröste treffen hier zuerst."}
+  management_zones:
+    en: {term: "Management zones (AI)", plain: "Parts of your field that grow consistently better or worse, found by an AI that compares years of satellite images and the terrain.", why: "Treat zones differently — seed, fertiliser, drainage or scouting — instead of the whole field the same."}
+    es: {term: "Zonas de manejo (IA)", plain: "Partes del campo que crecen mejor o peor de forma constante, halladas por IA con años de imágenes.", why: "Maneje cada zona distinto."}
+    fr: {term: "Zones de gestion (IA)", plain: "Parties de la parcelle qui poussent toujours mieux ou moins bien, trouvées par IA.", why: "Traitez chaque zone différemment."}
+    sw: {term: "Kanda za usimamizi (AI)", plain: "Sehemu za shamba zinazostawi vizuri au vibaya kila mara, zinazopatikana na AI.", why: "Shughulikia kila kanda tofauti."}
+    hi: {term: "प्रबंधन क्षेत्र (AI)", plain: "खेत के वे हिस्से जो लगातार बेहतर या कमज़ोर उगते हैं, AI द्वारा पहचाने गए।", why: "हर क्षेत्र को अलग तरीके से संभालें।"}
+    de: {term: "Bewirtschaftungszonen (KI)", plain: "Teile Ihres Feldes, die dauerhaft besser oder schlechter wachsen – per KI aus Satellitenbildern ermittelt.", why: "Zonen unterschiedlich bewirtschaften."}
+  confidence:
+    en: {term: "Confidence", plain: "How sure FieldShift is about a piece of advice, based on data quality and how well the method has been tested.", why: "Low confidence means: check in the field before acting."}
+    es: {term: "Confianza", plain: "Qué tan seguro está FieldShift según la calidad de datos y el método.", why: "Confianza baja: compruebe en el campo antes de actuar."}
+    fr: {term: "Confiance", plain: "Degré de certitude selon la qualité des données et la méthode.", why: "Confiance faible : vérifiez sur le terrain."}
+    sw: {term: "Uhakika", plain: "Jinsi FieldShift ilivyo na uhakika kulingana na ubora wa data na mbinu.", why: "Uhakika mdogo: kagua shambani kwanza."}
+    hi: {term: "विश्वास", plain: "डेटा गुणवत्ता और विधि के आधार पर FieldShift कितना निश्चित है।", why: "कम विश्वास: पहले खेत में जाँच करें।"}
+    de: {term: "Sicherheit", plain: "Wie sicher FieldShift ist – je nach Datenqualität und Methode.", why: "Geringe Sicherheit: vor dem Handeln im Feld prüfen."}
+  replay:
+    en: {term: "Replay", plain: "Shows the advice FieldShift would have given on a real past date, using the real data of that time.", why: "Lets you see how the app works in the middle of a season, and check it against what happened."}
+    es: {term: "Repetición", plain: "Muestra el consejo que habría dado FieldShift en una fecha pasada real.", why: "Permite ver la app a mitad de temporada."}
+    fr: {term: "Relecture", plain: "Montre le conseil qu'aurait donné FieldShift à une date passée réelle.", why: "Voir l'appli en pleine saison."}
+    sw: {term: "Rudia", plain: "Huonyesha ushauri ambao FieldShift ingetoa tarehe halisi iliyopita.", why: "Huonyesha programu katikati ya msimu."}
+    hi: {term: "रीप्ले", plain: "बीती वास्तविक तारीख पर FieldShift जो सलाह देता, वह दिखाता है।", why: "मौसम के बीच ऐप कैसे काम करता है, यह देखें।"}
+    de: {term: "Wiedergabe", plain: "Zeigt den Rat, den FieldShift an einem echten vergangenen Datum gegeben hätte.", why: "Zeigt die App mitten in der Saison."}
