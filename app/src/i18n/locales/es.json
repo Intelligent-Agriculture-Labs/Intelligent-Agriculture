@@ -278,7 +278,8 @@
     "view": {
       "terrain": "Relieve",
       "satellite": "Satélite"
-    }
+    },
+    "subtitleSatellite": "Imágenes Sentinel-2 de 10 m de su parcela de los últimos 12 meses: verdor, cortes y cosechas, y zonas de manejo con IA."
   },
   "plan": {
     "title": "Planificador de temporada",

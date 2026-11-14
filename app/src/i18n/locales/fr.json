@@ -278,7 +278,8 @@
     "view": {
       "terrain": "Relief",
       "satellite": "Satellite"
-    }
+    },
+    "subtitleSatellite": "Images Sentinel-2 à 10 m de votre parcelle sur 12 mois : verdure, coupes et récoltes, et zones de gestion par IA."
   },
   "plan": {
     "title": "Planificateur de saison",

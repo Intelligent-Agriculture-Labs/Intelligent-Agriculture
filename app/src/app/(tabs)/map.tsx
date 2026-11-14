@@ -77,7 +77,7 @@ export default function MapScreen() {
     <Screen testID="map-screen">
       <Txt v="h1">{tr("map.title")}</Txt>
       <Txt muted style={{ marginTop: 4 }}>
-        {tr("map.subtitle")}
+        {tr(view === "satellite" ? "map.subtitleSatellite" : "map.subtitle")}
       </Txt>
       <View accessibilityRole="tablist" style={{ flexDirection: "row", backgroundColor: t.cardAlt, borderRadius: 12, padding: 4, gap: 4, marginTop: space.md }}>
         {(["terrain", "satellite"] as const).map((v) => {

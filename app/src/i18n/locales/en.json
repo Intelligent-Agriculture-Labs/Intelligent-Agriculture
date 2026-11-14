@@ -278,7 +278,8 @@
     "view": {
       "terrain": "Terrain",
       "satellite": "Satellite"
-    }
+    },
+    "subtitleSatellite": "10 m Sentinel-2 images of your field over the last 12 months: greenness, cuttings and harvests, and AI management zones."
   },
   "plan": {
     "title": "Season planner",

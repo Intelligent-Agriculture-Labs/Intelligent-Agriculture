@@ -278,7 +278,8 @@
     "view": {
       "terrain": "Gelände",
       "satellite": "Satellit"
-    }
+    },
+    "subtitleSatellite": "10-m-Sentinel-2-Bilder Ihres Feldes der letzten 12 Monate: Grünheit, Schnitte und Ernten sowie KI-Bewirtschaftungszonen."
   },
   "plan": {
     "title": "Saisonplaner",

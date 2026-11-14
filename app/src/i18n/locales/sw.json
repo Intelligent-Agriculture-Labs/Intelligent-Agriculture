@@ -278,7 +278,8 @@
     "view": {
       "terrain": "Mwinuko",
       "satellite": "Setilaiti"
-    }
+    },
+    "subtitleSatellite": "Picha za Sentinel-2 za mita 10 za shamba lako kwa miezi 12 iliyopita: ukijani, ukataji na mavuno, na kanda za usimamizi kwa AI."
   },
   "plan": {
     "title": "Mpangaji wa msimu",
