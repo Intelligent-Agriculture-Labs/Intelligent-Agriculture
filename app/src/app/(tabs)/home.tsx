@@ -16,7 +16,7 @@ const droughtRisk = (level: number): Risk => (level <= 0 ? "low" : level <= 2 ? 
 export default function Home() {
   const t = useTheme();
   const { t: tr, i18n } = useTranslation();
-  const { ready, field, advice, refreshAdvice, settings } = useStore();
+  const { ready, field, setField, advice, refreshAdvice, settings } = useStore();
   const crops = useCrops();
   if (!ready) return <Loading />;
   if (!field) return <Redirect href="/onboarding" />;
@@ -52,6 +52,53 @@ export default function Home() {
               </Txt>
             </Pressable>
           </View>
+
+          {field.replay_date ? (
+            <View style={{ marginTop: space.md }}>
+              <View
+                accessibilityRole="radiogroup"
+                style={{ flexDirection: "row", backgroundColor: t.cardAlt, borderRadius: 12, padding: 4, gap: 4 }}
+              >
+                {[null, field.replay_date].map((d) => {
+                  const active = (field.as_of ?? null) === d;
+                  const label = d
+                    ? tr("home.modeReplay", {
+                        date: new Date(d + "T00:00:00Z").toLocaleDateString(i18n.language, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
+                      })
+                    : tr("home.modeToday");
+                  return (
+                    <Pressable
+                      key={d ?? "today"}
+                      accessibilityRole="radio"
+                      accessibilityState={{ checked: active }}
+                      accessibilityLabel={label}
+                      onPress={() => setField({ ...field, as_of: d })}
+                      testID={d ? "mode-replay" : "mode-today"}
+                      style={{
+                        flex: 1,
+                        minHeight: 44,
+                        borderRadius: 9,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: active ? t.card : "transparent",
+                      }}
+                    >
+                      <Txt v="small" style={{ fontWeight: active ? "700" : "500" }} color={active ? t.primary : t.textMuted}>
+                        {label}
+                      </Txt>
+                    </Pressable>
+                  );
+                })}
+              </View>
+              {field.as_of ? (
+                <Txt v="small" muted style={{ marginTop: 4 }}>
+                  {tr("home.replayNote", {
+                    date: new Date(field.as_of + "T00:00:00Z").toLocaleDateString(i18n.language, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }),
+                  })}
+                </Txt>
+              ) : null}
+            </View>
+          ) : null}
 
           <OriginBanner origin={advice.origin} savedAt={advice.savedAt} demo={a?.offline && advice.origin === "live"} />
           {a?.mock && advice.origin !== "mock" ? <OriginBanner origin="mock" /> : null}

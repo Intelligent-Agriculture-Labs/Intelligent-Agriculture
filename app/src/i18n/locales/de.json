@@ -1,6 +1,15 @@
 {
-  "app": { "name": "FieldShift", "tagline": "NASA-Erdbeobachtung → Entscheidungen für diese Woche" },
-  "tabs": { "home": "Diese Woche", "rotations": "Fruchtfolgen", "whatif": "Was wäre, wenn?", "climate": "Klima", "settings": "Einstellungen" },
+  "app": {
+    "name": "FieldShift",
+    "tagline": "NASA-Erdbeobachtung → Entscheidungen für diese Woche"
+  },
+  "tabs": {
+    "home": "Diese Woche",
+    "rotations": "Fruchtfolgen",
+    "whatif": "Was wäre, wenn?",
+    "climate": "Klima",
+    "settings": "Einstellungen"
+  },
   "common": {
     "loading": "NASA-Daten werden geladen…",
     "retry": "Erneut versuchen",
@@ -79,7 +88,10 @@
     "seasonSoFar": "Bisherige Saison",
     "seasonEt": "Wasserverbrauch der Kultur",
     "seasonRain": "Regen",
-    "seasonIrr": "Bewässerung"
+    "seasonIrr": "Bewässerung",
+    "modeToday": "Heute",
+    "modeReplay": "{{date}} abspielen",
+    "replayNote": "Echte NASA-Daten vom {{date}} – eine Woche mitten in der Saison."
   },
   "why": {
     "title": "Warum diese Empfehlung?",
@@ -198,7 +210,12 @@
     "rawSeries": "Rohdaten",
     "field": "Ihr Feld"
   },
-  "risk": { "low": "Gering", "moderate": "Mittel", "high": "Hoch", "severe": "Sehr hoch" },
+  "risk": {
+    "low": "Gering",
+    "moderate": "Mittel",
+    "high": "Hoch",
+    "severe": "Sehr hoch"
+  },
   "a11y": {
     "riskLevel": "Risikostufe {{level}}",
     "openWhy": "Erklärung öffnen für {{title}}",

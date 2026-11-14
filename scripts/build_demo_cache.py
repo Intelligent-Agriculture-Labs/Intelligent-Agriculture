@@ -22,12 +22,21 @@ os.environ.setdefault("FIELDSHIFT_ORNL_RETRIES", "6")
 from fieldshift.data import http, sources  # noqa: E402
 from fieldshift.engine import context, service  # noqa: E402
 
+if "--enrich-only" in sys.argv:  # satellite layers only, one site per process (run in parallel)
+    for p in service.presets():
+        if p["id"] in sys.argv:
+            for d in (None, {"fallon_nv": "2025-07-15", "machakos_ke": "2025-11-20", "cordoba_es": "2025-04-10", "ames_ia": "2025-07-20"}[p["id"]]):
+                t = dt.date.fromisoformat(d) if d else dt.date.today()
+                e = context.enrichment(p["lat"], p["lon"], t)
+                print(p["id"], d, {k: len(v) for k, v in e.items()}, flush=True)
+    sys.exit(0)
+
 # summer replay dates used by the demo (irrigation season; documented in docs/USER_GUIDE.md)
 REPLAY = {"fallon_nv": "2025-07-15", "machakos_ke": "2025-11-20", "cordoba_es": "2025-04-10", "ames_ia": "2025-07-20"}
 
 
 def main() -> None:
-    only = set(sys.argv[1:])
+    only = {a for a in sys.argv[1:] if not a.startswith("--")}
     for p in service.presets():
         if only and p["id"] not in only:
             continue
@@ -35,10 +44,11 @@ def main() -> None:
         print(f"== {p['id']}", flush=True)
         for as_of in (None, REPLAY.get(p["id"])):
             today = dt.date.fromisoformat(as_of) if as_of else dt.date.today()
-            enr = context.enrichment(p["lat"], p["lon"], today)
-            print("   enrichment", as_of, {k: len(v) for k, v in enr.items()}, flush=True)
+            if "--no-enrich" not in sys.argv:
+                enr = context.enrichment(p["lat"], p["lon"], today)
+                print("   enrichment", as_of, {k: len(v) for k, v in enr.items()}, flush=True)
             inp = {"lat": p["lat"], "lon": p["lon"], "crop": p["crop"], "planting_date": p["planting_date"], "irrigation": p["irrigation"],
-                   "as_of": as_of, "enrich_timeout_s": 600}
+                   "as_of": as_of, "enrich_timeout_s": 5 if "--no-enrich" in sys.argv else 900}
             a = service.advice(inp)
             print("   advice", as_of, [c["title"] for c in a["cards"]], flush=True)
             for lang in ("es", "fr", "sw", "hi", "de"):

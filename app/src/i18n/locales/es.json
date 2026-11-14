@@ -1,6 +1,15 @@
 {
-  "app": { "name": "FieldShift", "tagline": "Datos de la NASA → decisiones para tu finca esta semana" },
-  "tabs": { "home": "Esta semana", "rotations": "Rotaciones", "whatif": "¿Y si…?", "climate": "Clima", "settings": "Ajustes" },
+  "app": {
+    "name": "FieldShift",
+    "tagline": "Datos de la NASA → decisiones para tu finca esta semana"
+  },
+  "tabs": {
+    "home": "Esta semana",
+    "rotations": "Rotaciones",
+    "whatif": "¿Y si…?",
+    "climate": "Clima",
+    "settings": "Ajustes"
+  },
   "common": {
     "loading": "Cargando datos de la NASA…",
     "retry": "Reintentar",
@@ -79,7 +88,10 @@
     "seasonSoFar": "Temporada hasta ahora",
     "seasonEt": "Consumo de agua del cultivo",
     "seasonRain": "Lluvia",
-    "seasonIrr": "Riego"
+    "seasonIrr": "Riego",
+    "modeToday": "Hoy",
+    "modeReplay": "Repetir {{date}}",
+    "replayNote": "Reproduciendo datos reales de la NASA del {{date}}, una semana de la temporada de cultivo."
   },
   "why": {
     "title": "¿Por qué este consejo?",
@@ -198,7 +210,12 @@
     "rawSeries": "Series de datos",
     "field": "Tu parcela"
   },
-  "risk": { "low": "Bajo", "moderate": "Moderado", "high": "Alto", "severe": "Grave" },
+  "risk": {
+    "low": "Bajo",
+    "moderate": "Moderado",
+    "high": "Alto",
+    "severe": "Grave"
+  },
   "a11y": {
     "riskLevel": "Nivel de riesgo {{level}}",
     "openWhy": "Abrir explicación de {{title}}",

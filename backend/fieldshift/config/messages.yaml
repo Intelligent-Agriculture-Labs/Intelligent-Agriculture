@@ -145,3 +145,26 @@ risk_words:
   moderate: {en: Moderate, es: moderado, fr: modéré, sw: wastani, hi: मध्यम, de: Mittler}
   high: {en: High, es: alto, fr: élevé, sw: kubwa, hi: उच्च, de: Hoh}
   severe: {en: Severe, es: severo, fr: sévère, sw: kubwa sana, hi: गंभीर, de: Sehr hoh}
+plan_title:
+  en: "Off-season: plan next year's rotation"
+  es: "Fuera de temporada: planifique la rotación del próximo año"
+  fr: "Hors saison : planifiez la rotation de l'an prochain"
+  sw: "Nje ya msimu: panga mzunguko wa mazao wa mwaka ujao"
+  hi: "ऑफ-सीज़न: अगले साल का फसल चक्र तय करें"
+  de: "Nebensaison: Fruchtfolge fürs nächste Jahr planen"
+plan_detail:
+  en: "Your {crop} is {state}. Compare your rotation with alternatives simulated on 15 seasons of NASA data at your field."
+  es: "Su {crop} está {state}. Compare su rotación con alternativas simuladas con 15 temporadas de datos NASA."
+  fr: "Votre {crop} est {state}. Comparez votre rotation à des alternatives simulées sur 15 saisons de données NASA."
+  sw: "{crop} yako iko {state}. Linganisha mzunguko wako na mbadala zilizoigwa kwa misimu 15 ya data ya NASA."
+  hi: "आपकी {crop} {state} है। NASA डेटा के 15 मौसमों पर सिम्युलेट विकल्पों से अपने फसल चक्र की तुलना करें।"
+  de: "Ihr {crop} ist {state}. Vergleichen Sie Ihre Fruchtfolge mit Alternativen, simuliert mit 15 Saisons NASA-Daten."
+state_dormant: {en: dormant for winter, es: en reposo invernal, fr: en dormance hivernale, sw: imelala wakati wa baridi, hi: सर्दी में सुप्त, de: in Winterruhe}
+state_harvested: {en: harvested, es: cosechado, fr: récolté, sw: imevunwa, hi: कटाई हो चुकी, de: geerntet}
+rainfed_ok_title:
+  en: "No water stress expected for {days} days"
+  es: "Sin estrés hídrico previsto en {days} días"
+  fr: "Pas de stress hydrique prévu pendant {days} jours"
+  sw: "Hakuna msongo wa maji unaotarajiwa kwa siku {days}"
+  hi: "{days} दिनों तक जल तनाव की आशंका नहीं"
+  de: "{days} Tage kein Wasserstress erwartet"

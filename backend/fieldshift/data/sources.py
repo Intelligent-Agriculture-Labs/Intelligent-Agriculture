@@ -353,3 +353,27 @@ def ornl_series(
         for part in ex.map(fetch, chunks):
             res.extend(part)
     return sorted(res)
+
+
+def power_hourly(lat: float, lon: float, start: dt.date, end: dt.date) -> dict[str, list[Any]]:
+    """NASA POWER hourly T2M/RH2M in Open-Meteo-like hourly dict form (used for replay/back-tests)."""
+    params = {
+        "parameters": "T2M,RH2M",
+        "community": "AG",
+        "latitude": _r(lat, 3),
+        "longitude": _r(lon, 3),
+        "start": start.strftime("%Y%m%d"),
+        "end": end.strftime("%Y%m%d"),
+        "format": "JSON",
+        "time-standard": "LST",
+    }
+    f = get_json(
+        "https://power.larc.nasa.gov/api/temporal/hourly/point", params, ttl_s=365 * 86400, timeout_s=120
+    )
+    p = f.data["properties"]["parameter"]
+    keys = sorted(p.get("T2M", {}))
+    return {
+        "time": [f"{k[:4]}-{k[4:6]}-{k[6:8]}T{k[8:10]}:00" for k in keys],
+        "temperature_2m": [p["T2M"][k] if p["T2M"][k] > -998 else None for k in keys],
+        "relative_humidity_2m": [p["RH2M"][k] if p["RH2M"].get(k, -999) > -998 else None for k in keys],
+    }

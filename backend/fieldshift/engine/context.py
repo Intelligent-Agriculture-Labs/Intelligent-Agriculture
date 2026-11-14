@@ -147,6 +147,13 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
         for i, d in enumerate(dates):
             if d > today:
                 prov[i] = 2
+        try:
+            hourly = sources.power_hourly(
+                lat, lon, today - dt.timedelta(days=14), today + dt.timedelta(days=16)
+            )
+            statuses["nasa_power_hourly"] = "live"
+        except (DataUnavailable, KeyError) as e:
+            log.warning("POWER hourly unavailable: %s", e)
 
     # extend with climatology for long simulations beyond the forecast horizon (marked provenance 3)
     w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0)

@@ -15,6 +15,7 @@ import numpy as np
 
 PESTS: dict[str, dict[str, Any]] = {
     "alfalfa_weevil": {
+        "range": ["north_america", "europe", "asia"],
         "name": "Alfalfa weevil",
         "crops": ["alfalfa"],
         "t_low": 9.0,  # 48 °F
@@ -31,6 +32,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "ref": "UC IPM Alfalfa Pest Management Guidelines; Purdue E-series (48 °F base)",
     },
     "western_corn_rootworm": {
+        "range": ["north_america", "europe"],
         "name": "Western corn rootworm",
         "crops": ["maize", "maize_silage"],
         "t_low": 11.1,  # 52 °F (soil-based in literature; air proxy here)
@@ -43,6 +45,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "ref": "Iowa State University Extension (52 °F base, soil DD approximated with air temperature)",
     },
     "european_corn_borer": {
+        "range": ["north_america", "europe", "asia"],
         "name": "European corn borer",
         "crops": ["maize", "maize_silage", "dry_bean"],
         "t_low": 10.0,
@@ -54,6 +57,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "ref": "Mason et al. (1996) NCR-327",
     },
     "corn_earworm": {
+        "range": ["north_america", "south_america"],
         "name": "Corn earworm",
         "crops": ["maize", "tomato", "sorghum"],
         "t_low": 12.6,
@@ -62,6 +66,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "ref": "UC IPM degree-day models (Heliothis zea)",
     },
     "colorado_potato_beetle": {
+        "range": ["north_america", "europe", "asia"],
         "name": "Colorado potato beetle",
         "crops": ["potato", "tomato"],
         "t_low": 10.0,
@@ -73,6 +78,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "ref": "Ferro et al. (1985); University of Maine IPM",
     },
     "cereal_aphids": {
+        "range": ["north_america", "south_america", "europe", "asia", "africa", "oceania"],
         "name": "Russian wheat aphid / cereal aphids",
         "crops": ["winter_wheat", "barley", "triticale_forage"],
         "t_low": 5.0,
@@ -81,11 +87,13 @@ PESTS: dict[str, dict[str, Any]] = {
         "ref": "Colorado State University Extension (indicative)",
     },
     "fall_armyworm": {
+        "range": ["north_america", "south_america", "africa", "asia", "oceania"],
         "name": "Fall armyworm",
         "crops": ["maize", "sorghum", "pearl_millet", "teff"],
         "t_low": 10.9,
         "t_high": 35.0,
         "events": [(350, "One generation completed (egg→adult)", "Scout whorls for windowpane damage")],
+        "recurring": True,  # continuous generations where it does not overwinter (tropics)
         "ref": "Hogg et al. 1982; FAO FAW guidance",
     },
 }
@@ -111,10 +119,15 @@ def status(
     today: dt.date,
     lat: float,
     forecast_days: int = 7,
+    planting: dt.date | None = None,
 ) -> dict[str, Any]:
-    """Accumulated DD to today, projected DD in `forecast_days`, next event and days until it."""
+    """Accumulated DD to today, projected DD in `forecast_days`, next event and days until it.
+    For annual crops the biofix is the later of the calendar biofix and the planting date (pest pressure
+    tied to the crop); recurring pests (e.g. fall armyworm in the tropics) cycle through generations."""
     p = PESTS[pest_id]
     bf = biofix(today, lat)
+    if planting is not None and planting <= today and (planting > bf or abs(lat) < 23.5):
+        bf = planting
     i0 = max(0, (bf - dates[0]).days)
     it = min(len(dates) - 1, (today - dates[0]).days)
     dd = degree_days(tmax, tmin, p["t_low"], p["t_high"])
@@ -124,6 +137,12 @@ def status(
     nxt = None
     days_until = None
     passed = None
+    generation = 0
+    acc_total = acc_today
+    if p.get("recurring"):
+        gen_dd = p["events"][-1][0]
+        generation = int(acc_today // gen_dd)
+        acc_today -= generation * gen_dd  # position within the current generation
     for ev in p["events"]:
         if acc_today < ev[0]:
             nxt = ev
@@ -139,7 +158,8 @@ def status(
         "id": pest_id,
         "name": p["name"],
         "biofix": bf.isoformat(),
-        "dd_today": round(acc_today),
+        "dd_today": round(acc_total),
+        "generation": generation + 1 if p.get("recurring") else None,
         "dd_in_week": round(acc_week),
         "next_event": {"dd": nxt[0], "label": nxt[1], "action": nxt[2]} if nxt else None,
         "days_until_next": days_until,
@@ -147,3 +167,20 @@ def status(
         "t_low": p["t_low"],
         "ref": p["ref"],
     }
+
+
+def region_of(lat: float, lon: float) -> str:
+    """Very coarse continent lookup for pest geographic ranges (sufficient for range filtering)."""
+    if lon < -30:
+        return "north_america" if lat > 13 else "south_america"
+    if lat < -10 and lon > 110:
+        return "oceania"
+    if -35 <= lat <= 37 and -20 <= lon <= 52 and not (lat > 30 and lon < 36 and lon > -10 and lat > 35):
+        return "africa"
+    if lon <= 40 and lat > 35:
+        return "europe"
+    return "asia"
+
+
+def present(pest_id: str, lat: float, lon: float) -> bool:
+    return region_of(lat, lon) in PESTS[pest_id].get("range", [])

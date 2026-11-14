@@ -1,6 +1,15 @@
 {
-  "app": { "name": "FieldShift", "tagline": "नासा के पृथ्वी आँकड़े → इस सप्ताह के खेती के फ़ैसले" },
-  "tabs": { "home": "इस सप्ताह", "rotations": "फसल चक्र", "whatif": "अगर ऐसा हो?", "climate": "जलवायु", "settings": "सेटिंग्स" },
+  "app": {
+    "name": "FieldShift",
+    "tagline": "नासा के पृथ्वी आँकड़े → इस सप्ताह के खेती के फ़ैसले"
+  },
+  "tabs": {
+    "home": "इस सप्ताह",
+    "rotations": "फसल चक्र",
+    "whatif": "अगर ऐसा हो?",
+    "climate": "जलवायु",
+    "settings": "सेटिंग्स"
+  },
   "common": {
     "loading": "नासा डेटा लोड हो रहा है…",
     "retry": "फिर से कोशिश करें",
@@ -79,7 +88,10 @@
     "seasonSoFar": "अब तक का मौसम",
     "seasonEt": "फसल द्वारा पानी का उपयोग",
     "seasonRain": "बारिश",
-    "seasonIrr": "सिंचाई"
+    "seasonIrr": "सिंचाई",
+    "modeToday": "आज",
+    "modeReplay": "{{date}} दोहराएँ",
+    "replayNote": "{{date}} के वास्तविक NASA डेटा का पुनःप्रदर्शन — फसल मौसम का एक सप्ताह।"
   },
   "why": {
     "title": "यह सलाह क्यों?",
@@ -198,7 +210,12 @@
     "rawSeries": "कच्ची डेटा शृंखला",
     "field": "आपका खेत"
   },
-  "risk": { "low": "कम", "moderate": "मध्यम", "high": "अधिक", "severe": "गंभीर" },
+  "risk": {
+    "low": "कम",
+    "moderate": "मध्यम",
+    "high": "अधिक",
+    "severe": "गंभीर"
+  },
   "a11y": {
     "riskLevel": "जोखिम स्तर {{level}}",
     "openWhy": "{{title}} का स्पष्टीकरण खोलें",

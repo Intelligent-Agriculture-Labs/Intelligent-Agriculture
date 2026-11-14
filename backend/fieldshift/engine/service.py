@@ -320,7 +320,32 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                         ),
                     }
                 )
-        elif stress_day and stress_day <= horizon:
+        elif not (stress_day and stress_day <= horizon):
+            steps.append(f"With the forecast, the crop stays above the stress point for at least {ndays} days.")
+            cards.append(
+                {
+                    "id": "rainfed_ok",
+                    "category": "water",
+                    "risk": "low",
+                    "icon": "rainy-outline",
+                    "title": t("rainfed_ok_title", lang, days=ndays),
+                    "detail": t("no_irrigation_detail", lang, pct=pct_left),
+                    "due": None,
+                    "amount": None,
+                    "why": _why(
+                        f"Rain and stored soil water cover crop demand for the next {ndays} days.",
+                        steps,
+                        ["soil_depletion", "raw_threshold", "precip"],
+                        "FAO-56 single-Kc root-zone water balance",
+                        "water-balance",
+                        0.5,
+                        "Rain-fed estimate from NASA POWER + forecast.",
+                        caveats,
+                        ["nasa_power", "openmeteo_forecast", "soilgrids"],
+                    ),
+                }
+            )
+        else:
             days_left = (stress_day - today).days
             cards.append(
                 {
@@ -360,6 +385,44 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "forecast_et0_7d_mm": round(float(np.nansum(w.et0[ctx.forecast_window(7)])), 1),
         }
         cards.extend(_planting_cards(ctx, cid, planting, method, lang))
+
+    # ---------- off-season: dormant perennial or harvested annual -> rotation planning card (the Field Shift question)
+    if planting <= today:
+        killed = any(e["type"] == "killing_frost" and e["date"] <= today.isoformat() for e in res.events)
+        harvested = c["type"] != "perennial" and res.end < today
+        recent = w.tmax[max(0, i_today - 6) : i_today + 1], w.tmin[max(0, i_today - 6) : i_today + 1]
+        cold = bool(
+            np.nanmean((recent[0] + recent[1]) / 2) < c["t_base"] + 6
+        )  # growth negligible (alfalfa < ~11 °C)
+        if killed or harvested or (c["type"] == "perennial" and cold):
+            state = t("state_harvested" if harvested else "state_dormant", lang)
+            cards.append(
+                {
+                    "id": "plan_rotation",
+                    "category": "planning",
+                    "risk": "low",
+                    "icon": "swap-horizontal",
+                    "title": t("plan_title", lang),
+                    "detail": t("plan_detail", lang, crop=c["name"].lower(), state=state),
+                    "due": None,
+                    "amount": None,
+                    "why": _why(
+                        "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives "
+                        "over the last 15 seasons of NASA POWER weather at this location.",
+                        [
+                            f"7-day mean temperature {np.nanmean((recent[0] + recent[1]) / 2):.1f} °C; {c['name']} grows very little below ~{c['t_base'] + 6} °C.",
+                            "Rotations are compared on water, income, soil health, erosion, pest cycles and climate risk.",
+                        ],
+                        ["tmax", "tmin"],
+                        "Season-state rule",
+                        "rotations",
+                        0.8,
+                        "Season state follows directly from temperature and the season model.",
+                        [],
+                        ["nasa_power"],
+                    ),
+                }
+            )
 
     # ---------- weather series for Why views (last 120 days + forecast)
     i0 = max(0, i_today - 120)
@@ -416,9 +479,12 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     spi30 = drt.spi_at(w.rain[:obs_end], pd_, today, 30)
     spi90 = drt.spi_at(w.rain[:obs_end], pd_, today, 90)
     spei90 = drt.standardized_at((w.rain - w.et0)[:obs_end], pd_, today, 90)
+    spei365 = drt.standardized_at(
+        (w.rain - w.et0)[:obs_end], pd_, today, 365
+    )  # EXP-03: improves USDM agreement
     vhi, ndvi_card = _ndvi_block(ctx, series, lang, today, planting, c)
     sm_pct = _smap_block(ctx, series)
-    level, parts = drt.combined_level(spi30, spi90, spei90, sm_pct, vhi)
+    level, parts = drt.combined_level(spi30, spi90, spei90, sm_pct, vhi, spei365=spei365)
     acc90 = drt.rolling_sum(w.rain[:obs_end], 90)
     spi_series_d = w.dates[max(0, obs_end - 365) : obs_end]
     spi_vals = [
@@ -455,6 +521,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         "spi30": spi30,
         "spi90": spi90,
         "spei90": spei90,
+        "spei365": spei365,
         "sm_percentile": sm_pct,
         "vhi": vhi,
         "why": _why(
@@ -493,7 +560,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     # ---------- disease (hourly forecast)
     cards.extend(_disease_cards(ctx, cid, today, lang, series))
     # ---------- pests
-    cards.extend(_pest_cards(ctx, cid, today, lang, lat))
+    cards.extend(_pest_cards(ctx, cid, today, lang, lat, planting))
     # ---------- frost / heat
     cards.extend(_temp_cards(ctx, cid, today, lang, planting))
 
@@ -736,20 +803,25 @@ def _disease_cards(
     return out
 
 
-def _pest_cards(ctx: FieldContext, cid: str, today: dt.date, lang: str, lat: float) -> list[dict[str, Any]]:
+def _pest_cards(
+    ctx: FieldContext, cid: str, today: dt.date, lang: str, lat: float, planting: dt.date
+) -> list[dict[str, Any]]:
     out = []
+    c_type = crop(cid)["type"]
     w = ctx.weather
     for pid, p in pst.PESTS.items():
-        if cid not in p["crops"]:
+        if cid not in p["crops"] or not pst.present(pid, lat, ctx.lon):
             continue
-        st = pst.status(pid, w.dates, w.tmax, w.tmin, today, lat)
+        st = pst.status(
+            pid, w.dates, w.tmax, w.tmin, today, lat, planting=planting if c_type != "perennial" else None
+        )
         ev = st["next_event"]
         days_until = st["days_until_next"]
         lastev = st["last_event"]
         recent = False
         if lastev:
             # was the last event passed within the last N days?
-            bf = dt.date.fromisoformat(st["biofix"])
+            bf = dt.date.fromisoformat(st["biofix"])  # noqa: F841
             dd = pst.degree_days(w.tmax, w.tmin, p["t_low"], p["t_high"])
             i0 = ctx.idx(bf)
             cum = np.cumsum(dd[i0 : ctx.idx(today) + 1])
@@ -760,6 +832,12 @@ def _pest_cards(ctx: FieldContext, cid: str, today: dt.date, lang: str, lat: flo
             due = (today + dt.timedelta(days=days_until)).isoformat()
             action = ev["action"]
             risk = "moderate" if days_until > 3 else "high"
+        elif p.get("recurring") and c_type != "perennial" and 0 <= (today - planting).days <= 60:
+            title = f"{p['name']}: {lastev['action'] if lastev else ev['action'] if ev else ''}".strip()
+            title = f"{p['name']}: scout weekly (generation {st['generation']})" if lang == "en" else title
+            due = today.isoformat()
+            action = "Young plants are most vulnerable in the whorl stage; scout 20 plants in 5 spots weekly (FAO FAW guidance)."
+            risk = "moderate"
         elif recent and lastev:
             title = t("pest_now_title", lang, pest=p["name"], event=lastev["label"].lower())
             due = today.isoformat()

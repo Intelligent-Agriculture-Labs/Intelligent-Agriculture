@@ -40,7 +40,9 @@ export function ActionCard({ card, system, compact, testID }: { card: ActionCard
       accessibilityRole="button"
       accessibilityLabel={tr("a11y.openWhy", { title: card.title })}
       accessibilityHint={card.detail}
-      onPress={() => router.push({ pathname: "/why/[cardId]", params: { cardId: card.id } })}
+      onPress={() =>
+        card.id === "plan_rotation" ? router.push("/rotations") : router.push({ pathname: "/why/[cardId]", params: { cardId: card.id } })
+      }
       testID={testID}
       style={({ pressed }) => [
         {

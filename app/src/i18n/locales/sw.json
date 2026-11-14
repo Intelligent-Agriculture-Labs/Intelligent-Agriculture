@@ -1,6 +1,15 @@
 {
-  "app": { "name": "FieldShift", "tagline": "Data za NASA → maamuzi ya shamba wiki hii" },
-  "tabs": { "home": "Wiki hii", "rotations": "Mzunguko wa mazao", "whatif": "Je, kama?", "climate": "Hali ya hewa", "settings": "Mipangilio" },
+  "app": {
+    "name": "FieldShift",
+    "tagline": "Data za NASA → maamuzi ya shamba wiki hii"
+  },
+  "tabs": {
+    "home": "Wiki hii",
+    "rotations": "Mzunguko wa mazao",
+    "whatif": "Je, kama?",
+    "climate": "Hali ya hewa",
+    "settings": "Mipangilio"
+  },
   "common": {
     "loading": "Inapakia data za NASA…",
     "retry": "Jaribu tena",
@@ -79,7 +88,10 @@
     "seasonSoFar": "Msimu hadi sasa",
     "seasonEt": "Maji yaliyotumiwa na zao",
     "seasonRain": "Mvua",
-    "seasonIrr": "Umwagiliaji"
+    "seasonIrr": "Umwagiliaji",
+    "modeToday": "Leo",
+    "modeReplay": "Rudia {{date}}",
+    "replayNote": "Inaonyesha data halisi ya NASA ya {{date}} — wiki ndani ya msimu wa kilimo."
   },
   "why": {
     "title": "Kwa nini ushauri huu?",
@@ -198,7 +210,12 @@
     "rawSeries": "Data ghafi",
     "field": "Shamba lako"
   },
-  "risk": { "low": "Chini", "moderate": "Wastani", "high": "Juu", "severe": "Hatari kubwa" },
+  "risk": {
+    "low": "Chini",
+    "moderate": "Wastani",
+    "high": "Juu",
+    "severe": "Hatari kubwa"
+  },
   "a11y": {
     "riskLevel": "Kiwango cha hatari {{level}}",
     "openWhy": "Fungua maelezo ya {{title}}",

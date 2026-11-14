@@ -259,4 +259,6 @@ export interface PresetLocation {
   current_rotation: string[];
   story: string;
   cached: boolean;
+  /** a past date with an active season, to replay real advice for demos (sent as FieldInput.as_of) */
+  replay_date?: string | null;
 }

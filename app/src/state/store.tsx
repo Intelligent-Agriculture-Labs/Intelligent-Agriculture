@@ -21,6 +21,9 @@ export interface Field {
   name: string;
   presetId?: string | null;
   current_rotation: string[];
+  /** replay date for demo farms (null = today) */
+  as_of?: string | null;
+  replay_date?: string | null;
 }
 
 interface AdviceState {
@@ -54,6 +57,7 @@ export function toFieldInput(f: Field, lang: Lang): FieldInput {
     irrigation: f.irrigation,
     polygon: f.polygon && f.polygon.length >= 3 ? f.polygon : undefined,
     lang,
+    as_of: f.as_of ?? null,
   };
 }
 

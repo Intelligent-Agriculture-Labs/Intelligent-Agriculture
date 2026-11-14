@@ -1,6 +1,15 @@
 {
-  "app": { "name": "FieldShift", "tagline": "NASA Earth data → this week's farm decisions" },
-  "tabs": { "home": "This week", "rotations": "Rotations", "whatif": "What if?", "climate": "Climate", "settings": "Settings" },
+  "app": {
+    "name": "FieldShift",
+    "tagline": "NASA Earth data → this week's farm decisions"
+  },
+  "tabs": {
+    "home": "This week",
+    "rotations": "Rotations",
+    "whatif": "What if?",
+    "climate": "Climate",
+    "settings": "Settings"
+  },
   "common": {
     "loading": "Loading NASA data…",
     "retry": "Try again",
@@ -79,7 +88,10 @@
     "seasonSoFar": "Season so far",
     "seasonEt": "Crop water use",
     "seasonRain": "Rain",
-    "seasonIrr": "Irrigation"
+    "seasonIrr": "Irrigation",
+    "modeToday": "Today",
+    "modeReplay": "Replay {{date}}",
+    "replayNote": "Replaying real NASA data for {{date}} — a week inside the growing season."
   },
   "why": {
     "title": "Why this advice?",
@@ -198,7 +210,12 @@
     "rawSeries": "Raw series",
     "field": "Your field"
   },
-  "risk": { "low": "Low", "moderate": "Moderate", "high": "High", "severe": "Severe" },
+  "risk": {
+    "low": "Low",
+    "moderate": "Moderate",
+    "high": "High",
+    "severe": "Severe"
+  },
   "a11y": {
     "riskLevel": "Risk level {{level}}",
     "openWhy": "Open explanation for {{title}}",

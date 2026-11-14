@@ -36,6 +36,7 @@ export default function Onboarding() {
   const { field, setField } = useStore();
   const crops = useCrops();
   const [presets, setPresets] = useState<PresetLocation[]>([]);
+  const [replayDate, setReplayDate] = useState<string | null>(null);
   const [presetOrigin, setPresetOrigin] = useState<Origin | null>(null);
   const [lat, setLat] = useState<number | null>(field?.lat ?? null);
   const [lon, setLon] = useState<number | null>(field?.lon ?? null);
@@ -71,6 +72,7 @@ export default function Onboarding() {
     setLon(lo);
     setCoordText(`${la.toFixed(4)}, ${lo.toFixed(4)}`);
     setPresetId(null);
+    setReplayDate(null);
     setName(`${la.toFixed(3)}, ${lo.toFixed(3)}`);
   };
 
@@ -85,6 +87,7 @@ export default function Onboarding() {
     setRotation(p.current_rotation);
     setName(p.name);
     setPolygon([]);
+    setReplayDate(p.replay_date ?? null);
   };
 
   const useGps = async () => {
@@ -125,6 +128,8 @@ export default function Onboarding() {
       name: name || `${lat.toFixed(3)}, ${lon.toFixed(3)}`,
       presetId,
       current_rotation: rotation.length ? rotation : [crop, crop, crop, crop],
+      replay_date: presetId ? replayDate : null,
+      as_of: null,
     });
     router.replace("/home");
   };
