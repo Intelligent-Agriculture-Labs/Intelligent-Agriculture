@@ -4,28 +4,24 @@
 
 **NASA Space Apps Challenge 2026 · "Field Shift: Adapting Farms with NASA Data"** · Web · iOS · Android · syncs phone ↔ PC · 6 languages · works offline
 
-FieldShift lets a farmer **outline every field on sub-metre satellite imagery** (or tap once and let FieldShift find the boundary), then answers, for each field:
+FieldShift is a free app for farmers that turns NASA Earth observations into plain-language decisions. Open it, tap inside your field on sub-metre satellite imagery (FieldShift finds the boundary; you can drag the corners), and it answers four questions for every field:
 
-1. **"What should I do this week, and why?"** At most three ranked action cards: *Irrigate 38 mm by Thursday*, *High stripe-rust risk from Friday: inspect leaves*, *Fall armyworm: scout weekly*.
-2. **"What is happening inside my field?"**
-   - 10 m **Sentinel-2** NDVI history with detected green-up, peak and bare periods;
-   - **AI management zones**;
-   - computed **terrain maps**: erosion (RUSLE), wetness, frost hollows, slope.
-3. **"How should I plan this season?"** Sowing window, crop-stage and pest-scouting timeline, a monthly water budget against the farmer's allocation, and a frost/heat risk calendar.
-4. **"Is my rotation ready for the climate I actually farm in?"** The current rotation vs. ≥ 3 alternatives, simulated on 15 seasons of NASA weather at that field and scored on water, income, soil health, erosion, pest cycles and climate risk. Each comes with why it was suggested, the evidence, the benefits, the information gaps, and what needs local review.
+1. **"What should I do this week, and why?"** At most three action cards, such as *Irrigate 38 mm by Thursday*, *High stripe-rust risk from Friday: inspect leaves* or *Fall armyworm: new generation in ~4 days*. Each has a **Why?** view with the NASA data against normal, the model, its confidence, caveats and sources.
+2. **"What is happening inside my field?"** 10 m Sentinel-2 greenness history with green-up, cuttings and harvests seen from space; **AI management zones**; computed terrain maps of erosion (RUSLE), wetness, frost hollows and slope.
+3. **"What should I grow in the next years?"** A **multi-year rotation plan per field**. Each year is checked against cited agronomy: 30 soil-borne diseases and pests, nitrogen from legumes, bare soil and erosion, water and climate fit, across **52 crops**. FieldShift says what to change, proposes an AI-optimised plan and shows its **impact**: water, fertiliser, CO₂e, topsoil and income, with trade-offs stated.
+4. **"Is my farm ready for the climate I actually farm in?"** 40-year climate trends at the field, What-if scenarios (+°C, −rain, sowing date, irrigation) and a season planner.
 
-Every number is one tap from its evidence. The **Why?** view shows:
-- the data against the normal;
-- the model and its equations;
-- confidence and its reason;
-- honest caveats;
-- each source with its resolution, latency and date.
+It is built for real farms. **Accounts** sync phone and PC, and it works **offline**. Each week's advice fits in **two SMS** in six languages: English, Spanish, French, Swahili, Hindi and German. A **glossary** explains every term in plain words.
 
-| This week | Field from space | Plan | Field Shift (rotations) |
+| Welcome | This week | Field from space | Plan the next years |
 |---|---|---|---|
-| ![home](media/web-home.png) | ![satellite](media/web-satellite-mobile.png) | ![plan](media/web-plan-mobile.png) | ![rotations](media/web-rotations-mobile.png) |
+| ![welcome](media/web-welcome-mobile.png) | ![home](media/web-home.png) | ![satellite](media/web-satellite-mobile.png) | ![plan years](media/web-plan-years-mobile.png) |
 
-More: [iOS](media/) and [Android](media/) captures, web screenshots of the [map](media/web-map-desktop.png), [field editor](media/web-fields-desktop.png) and [sync](media/web-sync-mobile.png), and [`media/BUILDS.md`](media/BUILDS.md).
+More:
+- web: [terrain zones](media/web-map-mobile.png), [layers](media/web-layers-mobile.png), [field editor](media/web-fields-desktop.png), [insights](media/web-insights-mobile.png), [account](media/web-account-mobile.png), [share as text](media/web-share-text-mobile.png);
+- [iOS](media/) and [Android](media/) captures and [`media/BUILDS.md`](media/BUILDS.md);
+- the **30 s video** [`media/fieldshift-demo-30s.mp4`](media/fieldshift-demo-30s.mp4) and **7-slide deck** [`media/fieldshift-deck.pdf`](media/fieldshift-deck.pdf);
+- a static showcase site with no login: `python3 scripts/build_site.py` → `site/dist/` (GitHub Pages-ready).
 
 ## The story: Lahontan Valley, Nevada
 The challenge photo shows a Nevada alfalfa farmer, so FieldShift's hero demo is a real ~5.5 ha border-irrigated alfalfa field near Fallon. The NASA POWER record there shows:

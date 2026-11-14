@@ -4,6 +4,7 @@ Everything below is ready to paste into the project submission page. **Human ste
 
 ## ☐ Before you submit (checklist for the team owner)
 - ☐ Make the repository publicly reachable. The current source of truth is the private Gitea (`http://vps-home-node-1:3001/lino/fieldshift`). Push a mirror to GitHub: `git remote add github git@github.com:<you>/fieldshift.git && git push github main --tags`.
+- ☐ Build and publish the showcase page: `python3 scripts/build_site.py --repo https://github.com/<you>/fieldshift`, then publish `site/dist` with GitHub Pages. This also bakes the repository URL into the deck: `media/fieldshift-deck.pdf`.
 - ☐ Upload the 30-second video [`media/fieldshift-demo-30s.mp4`](media/fieldshift-demo-30s.mp4) to YouTube (unlisted is fine) or Google Drive (anyone with the link), and paste the link below. It has burned-in English captions and no voice, so it meets the subtitle rule.
 - ☐ (Optional) Host the app publicly; see `docs/DEPLOYMENT.md#public-hosting-human-step`. Without hosting, judges can run `docker compose up --build` or watch the video.
 - ☐ All team members are registered for the same Local Event, and appear on the team page.
@@ -17,35 +18,52 @@ Everything below is ready to paste into the project submission page. **Human ste
 Field Shift: Adapting Farms with NASA Data (https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/)
 
 ## High-level summary (short, ~100 words)
-FieldShift is a free web, iOS and Android app that turns NASA Earth observations into simple farm decisions. A farmer drops a pin, picks a crop and gets at most three action cards for this week, such as "Irrigate 38 mm by Thursday" or "High stripe-rust risk from Friday", each with a one-tap "Why?" showing the NASA data, model, confidence and caveats. Its Field Shift explorer compares the farmer's current crop rotation with three or more alternatives, simulated on 15 seasons of NASA weather at that exact field. They are scored on water, income, soil health, erosion, pest cycles and climate risk.
+FieldShift is a free web, iOS and Android app that turns 40 years of NASA Earth observations into simple farm decisions. A farmer taps their field on satellite imagery, and AI finds the boundary. FieldShift then gives at most three actions for this week, each with a one-tap "Why?" showing the NASA evidence. It also gives a multi-year, science-based rotation plan for every field. The plan is checked against 30 soil-borne diseases and pests, nitrogen, erosion, water and climate, and comes with an optimised alternative and its impact on water, fertiliser, CO₂e, soil and income. It works offline, syncs phone and PC, and fits each week into two SMS in six languages.
 
 ## Feature highlights (for judges)
-- **Map any field:** tap inside your field on sub-metre imagery and FieldShift detects the boundary (editable by hand). Many fields per farm, synced phone ↔ PC with a code/QR and no account.
-- **Field from space:** 10 m Sentinel-2 greenness history, detected cuttings/harvests, **AI management zones** (k-means on NDVI + terrain), and a satellite crop coefficient fused into the irrigation model.
-- **Computed terrain maps:** RUSLE erosion, wetness, frost hollows and slope from NASA SRTM.
-- **Season planner:** sowing window, stage and pest-scouting timeline, water budget vs. allocation, frost/heat calendar.
-- **AI drought classifier:** trained on 83,600 U.S. Drought Monitor maps; beats the rule baseline on counties it never saw.
-- **NASA data everywhere:** POWER (1984→), SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, SRTM, GIBS.
+- **Map any field:** tap inside your field on sub-metre imagery; FieldShift detects the boundary (editable by hand). Many fields per farm. Accounts sync phone ↔ PC; sharing by code works without an account.
+- **This week:** at most 3 cards: irrigation (FAO-56 water balance on NASA POWER + satellite crop coefficient), drought (SPI/SPEI + SMAP + an **AI classifier** trained on U.S. Drought Monitor maps), disease, pests, frost and heat. Each has a plain-language "Why?".
+- **Field from space:** 10 m Sentinel-2 greenness history, detected cuttings and harvests, **AI management zones**, and terrain maps (RUSLE erosion risk and hotspots, wetness, frost hollows, slope) from NASA SRTM.
+- **Plan the next years:** a per-field rotation plan over 52 crops, checked year by year against a cited knowledge base (30 pathogens, 22 rules). It says what to change, offers a beam-search optimised plan, and states the **impact** (water, N fertiliser, CO₂e, topsoil, income) with trade-offs.
+- **Insights:** 40-year climate trends at the field, What-if scenarios, rotation comparison on 15 simulated seasons.
+- **For every farmer:** offline mode, six languages incl. Swahili and Hindi, a plain-language glossary, a first-run guide, and **weekly advice as text that fits two SMS**.
+- **NASA data everywhere:** POWER (1984→), SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, SRTM, GIBS. Partner data: Sentinel-2 and ERA5.
 
 ## High-level summary (long)
-Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. FieldShift closes that gap with one engine and four simple views:
+**What it does.** Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. FieldShift turns that data into decisions for each field, in five simple tabs:
+1. **Today.** At most three actions for this week, ranked by urgency.
+2. **Field.** Satellite and terrain maps of the field.
+3. **Plan.** This season, plus the rotation for the next years.
+4. **Insights.** Climate trends, What-if scenarios and rotation comparison.
+5. **More.** Account, languages, glossary and sharing.
 
-1. **This week.** A daily FAO-56 root-zone water balance runs on NASA POWER weather (1984 → today), bridged with a 16-day forecast. It tells irrigated farmers *when* and *how many millimetres* to irrigate for their irrigation method, and warns rain-fed farmers before water stress. Disease models (Hutton late-blight criteria, stripe rust, white mould…) use hourly humidity. Degree-day models time pest scouting. Drought status combines SPI/SPEI with SMAP soil moisture and MODIS vegetation health. An NDVI anomaly triggers "scout this field".
-2. **Field Shift (rotations).** The current rotation and its alternatives are simulated over the last 15 seasons at the field. Each is scored on irrigation water, indicative income, a soil-health index (living roots, residue, biological nitrogen), erosion (SRTM slope × erosive rain × bare months), pest-cycle disruption and climate risk. The farmer sets the weights with priority sliders. Every strategy lists why it was suggested, the NASA evidence, its benefits, the information gaps, and the risks that need local review. A month-by-month calendar shows the bare-soil windows.
-3. **What if?** The farmer can change the sowing date, irrigation strategy (full, deficit, seasonal allocation), crop, temperature (+°C) or rainfall (%). The app shows the effect on yield in typical and bad years, water use and stress days.
-4. **Climate.** Shows how the local season has already changed since 1984: heat days, frost-free season, rain, water deficit, with trend significance.
+**How it works.**
+- **This week.** A daily FAO-56 root-zone water balance runs on NASA POWER weather (1984 → today), bridged with a 16-day forecast and fused with a Sentinel-2 crop coefficient. It tells irrigated farmers *when* and *how many millimetres* to irrigate, and warns rain-fed farmers before water stress.
+- **Disease and pests.** Disease models (Hutton late-blight criteria, stripe rust, white mould…) use hourly humidity. Degree-day models time pest scouting.
+- **Drought status** combines SPI/SPEI with SMAP soil moisture and MODIS vegetation health, refined by a gradient-boosting classifier trained on 80 U.S. counties.
+- **Rotation plan.** The planner models disease carry-over from each pathogen's survival in soil, legume nitrogen credits, bare-soil erosion (RUSLE with NASA rain erosivity and SRTM slopes), and water need and yield. Water and yield are simulated with NASA weather at that field. An optimiser searches the region's cropping system for a better plan, and FieldShift reports its impact on the field: water, fertiliser N, CO₂e (IPCC EF1), topsoil and indicative margin.
 
-It runs anywhere on Earth because its backbone data is global. It speaks English, Spanish, French, Swahili, Hindi and German. It works offline from cached advice and needs no account.
+**Benefits.** On the demo fields, the suggested plans would:
+- cut irrigation by about 19,600 m³ a year on a 5.5 ha Nevada alfalfa field (at a lower margin, which the app states);
+- keep about 650 t of topsoil over four years on a 48 ha Iowa field;
+- save about 105 kg N/ha (≈ 450 kg CO₂e/ha) over four years on a Kenyan smallholder field.
 
-FieldShift is validated against independent data:
+These are model estimates, not yet measured on farms. FieldShift runs anywhere on Earth because its backbone data is global. It works on cheap phones, offline and by SMS.
+
+**Validation.** FieldShift is validated against independent data:
 - ET₀ vs. ERA5: monthly r up to 0.997;
 - soil-water dynamics vs. ERA5-Land;
-- drought status vs. the U.S. Drought Monitor: ρ = 0.74 in Iowa;
+- drought status vs. the U.S. Drought Monitor: ρ = 0.74 in Iowa; the AI classifier is within ±1 category in 89 % of weeks on held-out counties;
 - the 2012 and 1988 droughts come out as the two worst of 40 simulated Iowa seasons.
 
 Its weak spots are reported openly. It is designed to support, never replace, farmer judgement.
 
-**Story used in the demo.** Irrigated alfalfa in Nevada's Lahontan Valley (Fallon), the setting of the challenge's own photo. NASA POWER shows days ≥ 35 °C there doubling since 1984 (26 → 50 a year) while warm-season rain fell (95 → 55 mm). FieldShift shows the trade-offs: split-season alfalfa uses ~45 % less irrigation water, and a teff → winter-wheat break disrupts pest cycles. The same app serves a rain-fed maize smallholder in Machakos, Kenya, in Swahili.
+**Aims.** Next steps:
+- co-design with extension services and farmer groups;
+- add GPM IMERG rainfall and GRACE-FO groundwater;
+- run on-farm trials to measure the real impact.
+
+**Story used in the demo.** Irrigated alfalfa in Nevada's Lahontan Valley (Fallon), the setting of the challenge's own photo. NASA POWER shows days ≥ 35 °C there doubling since 1984 (26 → 50 a year) while warm-season rain fell (95 → 55 mm). The same app serves a rain-fed maize smallholder in Machakos, Kenya, in Swahili.
 
 ## How it addresses the challenge
 | Challenge ask | FieldShift |
@@ -82,13 +100,14 @@ We used an SI coding assistant (Anthropic Claude, via Claude Code / T3 Code) ext
 - to write most of the code, tests and documentation;
 - to run and analyse the validation experiments.
 
-The team set the goals, chose the direction and reviewed the outputs. The app itself uses no SI at runtime. All advice is computed deterministically from data with published, cited methods (FAO-56, FAO-33, SPI/SPEI, Hutton criteria). No SI-generated images, video or voice are used in the demo. All visuals are real screen captures of the app.
+The team set the goals, chose the direction and reviewed the outputs. The app itself uses no generative AI at runtime. Its ML models are classical and trained by us (gradient boosting for drought, k-means zones, image segmentation for field boundaries). All advice is computed deterministically from data with published, cited methods (FAO-56, FAO-33, SPI/SPEI, Hutton criteria). No SI-generated images, video or voice are used in the demo. All visuals are real screen captures of the app.
 
 ## Links
 - Repository: ☐ `<public GitHub URL>` (source of truth: private Gitea, see above)
 - Demo video (30 s): ☐ `<YouTube/Drive URL>`, from file `media/fieldshift-demo-30s.mp4`
 - Slides (alternative demo format, 7 slides): `media/fieldshift-deck.pdf` (built by `scripts/build_site.py` from `site/deck.html`)
 - Live app: ☐ `<URL if hosted>`; otherwise `docker compose up --build`
+- Showcase page (no login): ☐ publish `site/dist` (built by `python3 scripts/build_site.py --repo <public URL>`) with GitHub Pages
 
 ---
 
