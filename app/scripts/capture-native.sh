@@ -55,10 +55,11 @@ android)
   export ANDROID_HOME=${ANDROID_HOME:-$HOME/Library/Android/sdk}; ADB=$ANDROID_HOME/platform-tools/adb
   APK=${APK:-$APP/build-artifacts/fieldshift-v1.0.0-capture.apk}
   $ADB wait-for-device; $ADB uninstall org.fieldshift.app >/dev/null 2>&1 || true; $ADB install -r "$APK" >/dev/null
+  $ADB shell settings put global hide_error_dialogs 1 || true   # no ANR popups over captures (slow cold start on emulator)
   $ADB shell settings put global sysui_demo_allowed 1 || true
   $ADB shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0941 >/dev/null || true
   $ADB shell screenrecord --time-limit 180 --bit-rate 6000000 /sdcard/fs-flow.mp4 & REC=$!
-  sleep 2; $ADB shell monkey -p org.fieldshift.app -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; t0=$(date +%s)
+  sleep 2; $ADB shell am start -W -n org.fieldshift.app/.MainActivity >/dev/null; t0=$(date +%s)
   for s in "${SHOTS[@]}"; do off=${s%%:*}; name=${s#*:}
     while [ $(( $(date +%s) - t0 )) -lt "$off" ]; do sleep 0.5; done
     $ADB exec-out screencap -p > "$MEDIA/android-$name.png"; echo "android-$name.png"; done

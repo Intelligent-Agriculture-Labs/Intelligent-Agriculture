@@ -8,7 +8,7 @@ set -euo pipefail
 HOST=${HOST:-fsvps}
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 OUT=${OUT:-$APP_DIR/build-artifacts}
-NAME=${NAME:-fieldshift-v1.0.0$([ "${CAPTURE:-0}" = 1 ] && echo -capture).apk}
+NAME=${NAME:-fieldshift-v1.0.0$([ "${CAPTURE:-0}" = 1 ] && echo -capture || true).apk}
 mkdir -p "$OUT"
 ssh "$HOST" mkdir -p android-build
 rsync -az --delete --exclude node_modules --exclude ios --exclude android --exclude dist --exclude build-artifacts \
