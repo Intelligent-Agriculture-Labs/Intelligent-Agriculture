@@ -1,4 +1,5 @@
 import React from "react";
+import { useWindowDimensions } from "react-native";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
@@ -10,9 +11,21 @@ const icon = (name: IonName) =>
     return <Ionicons name={name} color={String(color)} size={size} />;
   };
 
+const TABS: { name: string; icon: IonName }[] = [
+  { name: "home", icon: "today" },
+  { name: "map", icon: "map" },
+  { name: "plan", icon: "calendar" },
+  { name: "rotations", icon: "repeat" },
+  { name: "whatif", icon: "flask" },
+  { name: "climate", icon: "trending-up" },
+  { name: "settings", icon: "settings" },
+];
+
 export default function TabLayout() {
   const t = useTheme();
   const { t: tr } = useTranslation();
+  const { width } = useWindowDimensions();
+  const narrow = width < 700; // 7 tabs: use short labels on phones (full label stays the accessibility label)
   return (
     <Tabs
       screenOptions={{
@@ -20,14 +33,22 @@ export default function TabLayout() {
         tabBarActiveTintColor: t.primary,
         tabBarInactiveTintColor: t.textMuted,
         tabBarStyle: { backgroundColor: t.card, borderTopColor: t.border, minHeight: 56 },
-        tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
+        tabBarLabelStyle: { fontSize: narrow ? 10 : 12, fontWeight: "600" },
+        tabBarItemStyle: narrow ? { paddingHorizontal: 0 } : undefined,
       }}
     >
-      <Tabs.Screen name="home" options={{ title: tr("tabs.home"), tabBarIcon: icon("today"), tabBarButtonTestID: "tab-home" }} />
-      <Tabs.Screen name="rotations" options={{ title: tr("tabs.rotations"), tabBarIcon: icon("repeat"), tabBarButtonTestID: "tab-rotations" }} />
-      <Tabs.Screen name="whatif" options={{ title: tr("tabs.whatif"), tabBarIcon: icon("flask"), tabBarButtonTestID: "tab-whatif" }} />
-      <Tabs.Screen name="climate" options={{ title: tr("tabs.climate"), tabBarIcon: icon("trending-up"), tabBarButtonTestID: "tab-climate" }} />
-      <Tabs.Screen name="settings" options={{ title: tr("tabs.settings"), tabBarIcon: icon("settings"), tabBarButtonTestID: "tab-settings" }} />
+      {TABS.map((tab) => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            title: narrow ? tr(`tabsShort.${tab.name}`) : tr(`tabs.${tab.name}`),
+            tabBarAccessibilityLabel: tr(`tabs.${tab.name}`),
+            tabBarIcon: icon(tab.icon),
+            tabBarButtonTestID: `tab-${tab.name}`,
+          }}
+        />
+      ))}
     </Tabs>
   );
 }

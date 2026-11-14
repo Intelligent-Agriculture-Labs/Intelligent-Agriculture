@@ -8,7 +8,9 @@
     "rotations": "Fruchtfolgen",
     "whatif": "Was wäre, wenn?",
     "climate": "Klima",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "map": "Karte",
+    "plan": "Plan"
   },
   "common": {
     "loading": "NASA-Daten werden geladen…",
@@ -230,5 +232,75 @@
     "date": "Bewässerungsdatum",
     "amount": "Ausgebrachte Menge ({{unit}})",
     "logged": "Letzte Bewässerung: {{amount}} am {{date}}"
+  },
+  "tabsShort": {
+    "home": "Woche",
+    "map": "Karte",
+    "plan": "Plan",
+    "rotations": "Folge",
+    "whatif": "Was wenn",
+    "climate": "Klima",
+    "settings": "Optionen"
+  },
+  "map": {
+    "title": "Ihr Feld aus dem All",
+    "subtitle": "Geländekarten aus NASA-SRTM-Höhendaten: wo Boden abgetragen wird, Wasser sich sammelt und Kaltluft stehen bleibt.",
+    "layers": "Kartenebene",
+    "loading": "Geländekarten werden aus NASA-SRTM-Höhendaten berechnet…",
+    "offlineNote": "Offline: Kartenbilder brauchen eine Verbindung; Legende, Statistik und Hinweise unten stammen vom letzten Download.",
+    "layer": {
+      "zones": "Bewirtschaftungszonen",
+      "erosion": "Erosionsrisiko",
+      "slope": "Hangneigung",
+      "wetness": "Nässe",
+      "frost": "Frostsenken",
+      "elevation": "Höhe",
+      "hillshade": "Relief"
+    },
+    "base": {
+      "street": "Straßenkarte",
+      "truecolor": "Satellit (NASA)",
+      "ndvi": "Grünheit (NDVI)"
+    },
+    "opacity": "Deckkraft der Ebene",
+    "a11y": "Karte Ihres Feldes: {{layer}}",
+    "ofField": "{{pct}} % des Feldes",
+    "fieldMean": "Feldmittel",
+    "fieldP90": "Schlechteste 10 %",
+    "adviceTitle": "Planungshinweise für Ihr Feld",
+    "fieldInfo": "{{area}} ausgewertet ({{how}}) · Boden: {{texture}} · Regen: {{rain}}/Jahr",
+    "byOutline": "Ihre Feldgrenze",
+    "byRadius": "150 m um Ihren Punkt",
+    "sources": "Datenquellen und Grenzen"
+  },
+  "plan": {
+    "title": "Saisonplaner",
+    "subtitle": "{{crop}} · {{place}}: wann säen, was wann passiert und wie viel Wasser Sie brauchen.",
+    "allocation": "Verfügbares Wasser in dieser Saison ({{unit}})",
+    "allocationHint": "Optional: Ihr Wasserrecht bzw. Ihre Zuteilung eingeben, um zu sehen, ob sie für die Kultur reicht.",
+    "update": "Aktualisieren",
+    "loading": "15 vergangene Saisons mit NASA-Wetter werden simuliert…",
+    "sowing": "Wann säen",
+    "window": "Bestes Saatfenster: {{start}} – {{end}}",
+    "windowWhy": "Simuliert für {{n}} Saisons ({{y0}}–{{y1}}) mit NASA-POWER-Wetter an Ihrem Feld.",
+    "median": "Typischer Ertrag",
+    "badYear": "Schlechtes Jahr (1 von 10)",
+    "frostRisk": "Frostrisiko",
+    "scanA11y": "Ertrag nach Saattermin; am besten um den {{best}}, bis zu {{y}}",
+    "timeline": "Ihre Saison Schritt für Schritt",
+    "cuttings": "Schnittplan und Saisonschritte",
+    "days": "Tage",
+    "water": "Wasserbilanz nach Monat",
+    "cropUse": "Wasserbedarf der Kultur",
+    "rain": "Regen",
+    "irrigation": "Bewässerung",
+    "waterA11y": "Wasserverbrauch der Kultur {{etc}}, Regen {{rain}}",
+    "fullNeed": "Voller Bewässerungsbedarf (typische Saison): {{mm}}",
+    "coverage": "Ihre Zuteilung von {{alloc}} deckt etwa {{pct}} % davon.",
+    "coverageAdvice": "Planen Sie Defizitbewässerung, eine geteilte Saison oder eine kürzere Kultur.",
+    "risks": "Wetterrisiko nach Monat",
+    "riskA11y": "Frost- und Hitzerisiko pro Monat",
+    "riskLegend": "❄ Anteil der Jahre mit schädlichem Frost in diesem Monat · ☀ Anteil mit 3 oder mehr Hitzestresstagen.",
+    "sources": "Daten: NASA POWER (Wetter 1984→heute), SoilGrids (Boden), FieldShift-Saisonmodell."
   }
 }

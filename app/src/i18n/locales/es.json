@@ -8,7 +8,9 @@
     "rotations": "Rotaciones",
     "whatif": "¿Y si…?",
     "climate": "Clima",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "map": "Mapa",
+    "plan": "Plan"
   },
   "common": {
     "loading": "Cargando datos de la NASA…",
@@ -230,5 +232,75 @@
     "date": "Fecha de riego",
     "amount": "Cantidad aplicada ({{unit}})",
     "logged": "Último riego: {{amount}} el {{date}}"
+  },
+  "tabsShort": {
+    "home": "Semana",
+    "map": "Mapa",
+    "plan": "Plan",
+    "rotations": "Rotar",
+    "whatif": "¿Y si?",
+    "climate": "Clima",
+    "settings": "Ajustes"
+  },
+  "map": {
+    "title": "Su campo desde el espacio",
+    "subtitle": "Mapas del terreno calculados con la elevación NASA SRTM: dónde se erosiona el suelo, se acumula el agua y se estanca el aire frío.",
+    "layers": "Capa del mapa",
+    "loading": "Calculando mapas del terreno con la elevación NASA SRTM…",
+    "offlineNote": "Sin conexión: las imágenes del mapa necesitan internet; la leyenda, estadísticas y consejos son de su última descarga.",
+    "layer": {
+      "zones": "Zonas de manejo",
+      "erosion": "Riesgo de erosión",
+      "slope": "Pendiente",
+      "wetness": "Humedad",
+      "frost": "Hondonadas de helada",
+      "elevation": "Elevación",
+      "hillshade": "Relieve"
+    },
+    "base": {
+      "street": "Mapa de calles",
+      "truecolor": "Satélite (NASA)",
+      "ndvi": "Verdor (NDVI)"
+    },
+    "opacity": "Opacidad de la capa",
+    "a11y": "Mapa de su campo mostrando {{layer}}",
+    "ofField": "{{pct}} % del campo",
+    "fieldMean": "Promedio del campo",
+    "fieldP90": "Peor 10 %",
+    "adviceTitle": "Consejos de planificación para su campo",
+    "fieldInfo": "{{area}} analizadas ({{how}}) · suelo: {{texture}} · lluvia: {{rain}}/año",
+    "byOutline": "contorno de su campo",
+    "byRadius": "150 m alrededor del punto",
+    "sources": "Fuentes de datos y límites"
+  },
+  "plan": {
+    "title": "Planificador de temporada",
+    "subtitle": "{{crop}} · {{place}}: cuándo sembrar, qué ocurre y cuándo, y cuánta agua necesitará.",
+    "allocation": "Agua disponible esta temporada ({{unit}})",
+    "allocationHint": "Opcional: indique su derecho o dotación de agua para ver si cubre el cultivo.",
+    "update": "Actualizar",
+    "loading": "Simulando 15 temporadas pasadas con clima de la NASA…",
+    "sowing": "Cuándo sembrar",
+    "window": "Mejor ventana de siembra: {{start}} – {{end}}",
+    "windowWhy": "Simulado para {{n}} temporadas ({{y0}}–{{y1}}) de clima NASA POWER en su campo.",
+    "median": "Rendimiento típico",
+    "badYear": "Año malo (1 de 10)",
+    "frostRisk": "Riesgo de helada",
+    "scanA11y": "Rendimiento según fecha de siembra; mejor hacia {{best}}, hasta {{y}}",
+    "timeline": "Su temporada, paso a paso",
+    "cuttings": "Calendario de cortes y etapas",
+    "days": "días",
+    "water": "Balance de agua por mes",
+    "cropUse": "Consumo del cultivo",
+    "rain": "Lluvia",
+    "irrigation": "Riego",
+    "waterA11y": "Consumo de agua del cultivo {{etc}}, lluvia {{rain}}",
+    "fullNeed": "Necesidad de riego completo (temporada típica): {{mm}}",
+    "coverage": "Su dotación de {{alloc}} cubre aproximadamente el {{pct}} %.",
+    "coverageAdvice": "Planifique riego deficitario, temporada dividida o un cultivo de ciclo más corto.",
+    "risks": "Riesgo climático por mes",
+    "riskA11y": "Riesgo de helada y calor por mes",
+    "riskLegend": "❄ años pasados con helada dañina en ese mes · ☀ años con 3 o más días de estrés por calor.",
+    "sources": "Datos: NASA POWER (clima 1984→hoy), SoilGrids (suelo), modelo de temporada FieldShift."
   }
 }

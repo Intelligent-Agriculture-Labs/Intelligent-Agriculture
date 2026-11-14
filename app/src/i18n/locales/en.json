@@ -8,7 +8,9 @@
     "rotations": "Rotations",
     "whatif": "What if?",
     "climate": "Climate",
-    "settings": "Settings"
+    "settings": "Settings",
+    "map": "Map",
+    "plan": "Plan"
   },
   "common": {
     "loading": "Loading NASA data…",
@@ -230,5 +232,75 @@
     "date": "Irrigation date",
     "amount": "Amount applied ({{unit}})",
     "logged": "Last irrigation: {{amount}} on {{date}}"
+  },
+  "tabsShort": {
+    "home": "Week",
+    "map": "Map",
+    "plan": "Plan",
+    "rotations": "Rotate",
+    "whatif": "What if",
+    "climate": "Climate",
+    "settings": "Settings"
+  },
+  "map": {
+    "title": "Your field from space",
+    "subtitle": "Terrain maps computed from NASA SRTM elevation: where soil erodes, water collects and cold air pools.",
+    "layers": "Map layer",
+    "loading": "Computing terrain maps from NASA SRTM elevation…",
+    "offlineNote": "Offline: map images need a connection; the legend, statistics and advice below are from your last download.",
+    "layer": {
+      "zones": "Management zones",
+      "erosion": "Erosion risk",
+      "slope": "Slope",
+      "wetness": "Wetness",
+      "frost": "Frost hollows",
+      "elevation": "Elevation",
+      "hillshade": "Relief"
+    },
+    "base": {
+      "street": "Street map",
+      "truecolor": "Satellite (NASA)",
+      "ndvi": "Greenness (NDVI)"
+    },
+    "opacity": "Layer opacity",
+    "a11y": "Map of your field showing {{layer}}",
+    "ofField": "{{pct}} % of field",
+    "fieldMean": "Field average",
+    "fieldP90": "Worst 10 %",
+    "adviceTitle": "Planning advice for your field",
+    "fieldInfo": "{{area}} analysed ({{how}}) · soil: {{texture}} · rain: {{rain}}/year",
+    "byOutline": "your field outline",
+    "byRadius": "150 m around your pin",
+    "sources": "Data sources and limits"
+  },
+  "plan": {
+    "title": "Season planner",
+    "subtitle": "{{crop}} · {{place}}: when to sow, what happens when, and how much water you will need.",
+    "allocation": "Water available this season ({{unit}})",
+    "allocationHint": "Optional: enter your water right or allocation to see if it covers the crop.",
+    "update": "Update",
+    "loading": "Simulating 15 past seasons with NASA weather…",
+    "sowing": "When to sow",
+    "window": "Best sowing window: {{start}} – {{end}}",
+    "windowWhy": "Simulated for {{n}} seasons ({{y0}}–{{y1}}) of NASA POWER weather at your field.",
+    "median": "Typical yield",
+    "badYear": "Bad year (1 in 10)",
+    "frostRisk": "Frost risk",
+    "scanA11y": "Yield by sowing date; best around {{best}}, up to {{y}}",
+    "timeline": "Your season, step by step",
+    "cuttings": "Cutting schedule and season steps",
+    "days": "days",
+    "water": "Water budget by month",
+    "cropUse": "Crop water use",
+    "rain": "Rain",
+    "irrigation": "Irrigation",
+    "waterA11y": "Season crop water use {{etc}}, rain {{rain}}",
+    "fullNeed": "Full irrigation need (typical season): {{mm}}",
+    "coverage": "Your allocation of {{alloc}} covers about {{pct}} % of it.",
+    "coverageAdvice": "Plan deficit irrigation, a split season or a shorter-season crop.",
+    "risks": "Weather risk by month",
+    "riskA11y": "Frost and heat risk per month",
+    "riskLegend": "❄ share of past years with a damaging frost in that month · ☀ share with 3 or more heat-stress days.",
+    "sources": "Data: NASA POWER (weather 1984→today), SoilGrids (soil), FieldShift season model."
   }
 }

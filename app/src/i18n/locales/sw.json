@@ -8,7 +8,9 @@
     "rotations": "Mzunguko wa mazao",
     "whatif": "Je, kama?",
     "climate": "Hali ya hewa",
-    "settings": "Mipangilio"
+    "settings": "Mipangilio",
+    "map": "Ramani",
+    "plan": "Mpango"
   },
   "common": {
     "loading": "Inapakia data za NASA…",
@@ -230,5 +232,75 @@
     "date": "Tarehe ya kumwagilia",
     "amount": "Kiasi kilichotumika ({{unit}})",
     "logged": "Umwagiliaji wa mwisho: {{amount}} tarehe {{date}}"
+  },
+  "tabsShort": {
+    "home": "Wiki",
+    "map": "Ramani",
+    "plan": "Mpango",
+    "rotations": "Mzunguko",
+    "whatif": "Je kama?",
+    "climate": "Tabianchi",
+    "settings": "Mipangilio"
+  },
+  "map": {
+    "title": "Shamba lako kutoka angani",
+    "subtitle": "Ramani za ardhi zilizokokotolewa kwa mwinuko wa NASA SRTM: wapi udongo unamomonyoka, maji yanakusanyika na hewa baridi inatuama.",
+    "layers": "Tabaka la ramani",
+    "loading": "Inakokotoa ramani za ardhi kutoka mwinuko wa NASA SRTM…",
+    "offlineNote": "Nje ya mtandao: picha za ramani zinahitaji mtandao; ufunguo, takwimu na ushauri hapa chini ni wa upakuaji wako wa mwisho.",
+    "layer": {
+      "zones": "Kanda za usimamizi",
+      "erosion": "Hatari ya mmomonyoko",
+      "slope": "Mteremko",
+      "wetness": "Unyevu",
+      "frost": "Mabonde ya baridi kali",
+      "elevation": "Mwinuko",
+      "hillshade": "Umbo la ardhi"
+    },
+    "base": {
+      "street": "Ramani ya barabara",
+      "truecolor": "Setilaiti (NASA)",
+      "ndvi": "Ukijani (NDVI)"
+    },
+    "opacity": "Uwazi wa tabaka",
+    "a11y": "Ramani ya shamba lako ikionyesha {{layer}}",
+    "ofField": "{{pct}} % ya shamba",
+    "fieldMean": "Wastani wa shamba",
+    "fieldP90": "10 % mbaya zaidi",
+    "adviceTitle": "Ushauri wa mipango kwa shamba lako",
+    "fieldInfo": "{{area}} zimechambuliwa ({{how}}) · udongo: {{texture}} · mvua: {{rain}}/mwaka",
+    "byOutline": "mpaka wa shamba lako",
+    "byRadius": "mita 150 kuzunguka alama",
+    "sources": "Vyanzo vya data na mipaka"
+  },
+  "plan": {
+    "title": "Mpangaji wa msimu",
+    "subtitle": "{{crop}} · {{place}}: wakati wa kupanda, kinachotokea lini, na maji kiasi gani utahitaji.",
+    "allocation": "Maji yanayopatikana msimu huu ({{unit}})",
+    "allocationHint": "Si lazima: weka haki yako ya maji ili kuona kama yanatosha zao.",
+    "update": "Sasisha",
+    "loading": "Inaiga misimu 15 iliyopita kwa hali ya hewa ya NASA…",
+    "sowing": "Wakati wa kupanda",
+    "window": "Kipindi bora cha kupanda: {{start}} – {{end}}",
+    "windowWhy": "Imeigwa kwa misimu {{n}} ({{y0}}–{{y1}}) ya hali ya hewa ya NASA POWER shambani kwako.",
+    "median": "Mavuno ya kawaida",
+    "badYear": "Mwaka mbaya (1 kati ya 10)",
+    "frostRisk": "Hatari ya baridi kali",
+    "scanA11y": "Mavuno kulingana na tarehe ya kupanda; bora karibu {{best}}, hadi {{y}}",
+    "timeline": "Msimu wako, hatua kwa hatua",
+    "cuttings": "Ratiba ya kukata na hatua za msimu",
+    "days": "siku",
+    "water": "Bajeti ya maji kwa mwezi",
+    "cropUse": "Matumizi ya maji ya zao",
+    "rain": "Mvua",
+    "irrigation": "Umwagiliaji",
+    "waterA11y": "Matumizi ya maji ya zao {{etc}}, mvua {{rain}}",
+    "fullNeed": "Mahitaji kamili ya umwagiliaji (msimu wa kawaida): {{mm}}",
+    "coverage": "Mgao wako wa {{alloc}} unatosha karibu {{pct}} %.",
+    "coverageAdvice": "Panga umwagiliaji pungufu, msimu uliogawanywa au zao la muda mfupi.",
+    "risks": "Hatari za hali ya hewa kwa mwezi",
+    "riskA11y": "Hatari ya baridi kali na joto kwa mwezi",
+    "riskLegend": "❄ sehemu ya miaka yenye baridi kali yenye madhara mwezi huo · ☀ yenye siku 3 au zaidi za msongo wa joto.",
+    "sources": "Data: NASA POWER (hali ya hewa 1984→leo), SoilGrids (udongo), modeli ya msimu ya FieldShift."
   }
 }

@@ -8,7 +8,9 @@
     "rotations": "Rotations",
     "whatif": "Et si… ?",
     "climate": "Climat",
-    "settings": "Réglages"
+    "settings": "Réglages",
+    "map": "Carte",
+    "plan": "Plan"
   },
   "common": {
     "loading": "Chargement des données NASA…",
@@ -230,5 +232,75 @@
     "date": "Date d'irrigation",
     "amount": "Quantité apportée ({{unit}})",
     "logged": "Dernière irrigation : {{amount}} le {{date}}"
+  },
+  "tabsShort": {
+    "home": "Semaine",
+    "map": "Carte",
+    "plan": "Plan",
+    "rotations": "Rotation",
+    "whatif": "Et si ?",
+    "climate": "Climat",
+    "settings": "Réglages"
+  },
+  "map": {
+    "title": "Votre parcelle vue de l'espace",
+    "subtitle": "Cartes du relief calculées avec l'altitude NASA SRTM : où le sol s'érode, où l'eau s'accumule et où l'air froid stagne.",
+    "layers": "Couche",
+    "loading": "Calcul des cartes du relief à partir de l'altitude NASA SRTM…",
+    "offlineNote": "Hors ligne : les images de carte nécessitent une connexion ; la légende, les statistiques et les conseils proviennent du dernier téléchargement.",
+    "layer": {
+      "zones": "Zones de gestion",
+      "erosion": "Risque d'érosion",
+      "slope": "Pente",
+      "wetness": "Humidité",
+      "frost": "Cuvettes à gel",
+      "elevation": "Altitude",
+      "hillshade": "Relief"
+    },
+    "base": {
+      "street": "Plan",
+      "truecolor": "Satellite (NASA)",
+      "ndvi": "Verdure (NDVI)"
+    },
+    "opacity": "Opacité de la couche",
+    "a11y": "Carte de votre parcelle : {{layer}}",
+    "ofField": "{{pct}} % de la parcelle",
+    "fieldMean": "Moyenne de la parcelle",
+    "fieldP90": "Pires 10 %",
+    "adviceTitle": "Conseils de planification pour votre parcelle",
+    "fieldInfo": "{{area}} analysés ({{how}}) · sol : {{texture}} · pluie : {{rain}}/an",
+    "byOutline": "contour de votre parcelle",
+    "byRadius": "150 m autour du repère",
+    "sources": "Sources de données et limites"
+  },
+  "plan": {
+    "title": "Planificateur de saison",
+    "subtitle": "{{crop}} · {{place}} : quand semer, ce qui se passe et quand, et combien d'eau il faudra.",
+    "allocation": "Eau disponible cette saison ({{unit}})",
+    "allocationHint": "Facultatif : saisissez votre droit ou quota d'eau pour voir s'il couvre la culture.",
+    "update": "Mettre à jour",
+    "loading": "Simulation de 15 saisons passées avec la météo NASA…",
+    "sowing": "Quand semer",
+    "window": "Meilleure fenêtre de semis : {{start}} – {{end}}",
+    "windowWhy": "Simulé sur {{n}} saisons ({{y0}}–{{y1}}) de météo NASA POWER sur votre parcelle.",
+    "median": "Rendement typique",
+    "badYear": "Mauvaise année (1 sur 10)",
+    "frostRisk": "Risque de gel",
+    "scanA11y": "Rendement selon la date de semis ; meilleur vers le {{best}}, jusqu'à {{y}}",
+    "timeline": "Votre saison, étape par étape",
+    "cuttings": "Calendrier des coupes et étapes",
+    "days": "jours",
+    "water": "Bilan hydrique mensuel",
+    "cropUse": "Besoin de la culture",
+    "rain": "Pluie",
+    "irrigation": "Irrigation",
+    "waterA11y": "Besoin en eau de la culture {{etc}}, pluie {{rain}}",
+    "fullNeed": "Besoin d'irrigation complète (saison typique) : {{mm}}",
+    "coverage": "Votre quota de {{alloc}} en couvre environ {{pct}} %.",
+    "coverageAdvice": "Prévoyez une irrigation déficitaire, une saison fractionnée ou une culture plus courte.",
+    "risks": "Risque météo par mois",
+    "riskA11y": "Risque de gel et de chaleur par mois",
+    "riskLegend": "❄ part des années avec un gel dommageable ce mois-là · ☀ part avec 3 jours ou plus de stress thermique.",
+    "sources": "Données : NASA POWER (météo 1984→aujourd'hui), SoilGrids (sol), modèle de saison FieldShift."
   }
 }
