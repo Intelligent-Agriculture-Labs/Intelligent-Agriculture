@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>FieldShift film</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
 <style>
-:root{--bg:#050807;--ink:#eef4ef;--muted:#a9b9ad;--accent:#86dc98;--heat:#ffb35c}
+:root{--bg:#050807;--ink:#eef4ef;--muted:#b3c3b7;--accent:#86dc98;--heat:#ffb35c}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
 body{font-family:Inter,system-ui,sans-serif;color:var(--ink)}
@@ -17,42 +17,51 @@ canvas{position:absolute;left:0;top:0}
 #map{position:absolute;inset:0;overflow:hidden}
 #map img,#map .lvl{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity}
 #map img{-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 72%,transparent 100%)}
-#polywrap svg{position:absolute;left:0;top:0;overflow:visible}
+#polywrap svg,.aerial svg{position:absolute;left:0;top:0;overflow:visible}
 .glow{filter:drop-shadow(0 0 10px rgba(134,220,152,.95)) drop-shadow(0 0 28px rgba(134,220,152,.6))}
 #shade{background:#000}
 #scrimL{background:linear-gradient(90deg,rgba(3,6,5,.92) 0%,rgba(3,6,5,.72) 34%,rgba(3,6,5,0) 62%)}
 #flash{background:radial-gradient(circle at 50% 50%,#fff 0%,#e9ffe9 30%,rgba(255,255,255,0) 75%);mix-blend-mode:screen}
-#studio{background:
-  radial-gradient(900px 700px at 78% 40%,rgba(64,140,86,.30),transparent 70%),
-  radial-gradient(800px 600px at 10% 90%,rgba(40,90,120,.22),transparent 70%),
-  linear-gradient(180deg,#07100b,#040705)}
+#studio{background:#040705}
 #vignette{background:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
-#grain{mix-blend-mode:overlay;opacity:.10}
+#grain{mix-blend-mode:overlay;opacity:.09}
 #black{background:#000}
-.eyebrow{font:600 19px/1 Inter;letter-spacing:.32em;text-transform:uppercase;color:var(--accent)}
+.eyebrow{font:700 19px/1 Inter;letter-spacing:.32em;text-transform:uppercase;color:var(--accent)}
 .h1{font:800 96px/1.02 Manrope;letter-spacing:-.025em}
-.h2{font:800 76px/1.04 Manrope;letter-spacing:-.022em}
-.body{font:500 30px/1.4 Inter;color:var(--muted)}
-.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.h2{font:800 74px/1.04 Manrope;letter-spacing:-.022em}
+.sub{font:500 31px/1.38 Inter;color:var(--muted)}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
 .w>span{display:inline-block;will-change:transform}
 .title{font:800 190px/1 Manrope;letter-spacing:-.045em}
 .title .ch{display:inline-block;will-change:transform,filter,opacity}
-.chip{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font:600 22px/1 Inter;color:#dfeae2;backdrop-filter:blur(8px)}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);font:600 22px/1 Inter;color:#e3ede5;backdrop-filter:blur(8px);white-space:nowrap}
 .chip i{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
-.phone{position:absolute;width:372px;height:781px;border-radius:62px;padding:12px;
-  background:linear-gradient(145deg,#3a423d 0%,#141917 40%,#0b0e0c 100%);
-  box-shadow:0 70px 140px rgba(0,0,0,.6),0 20px 40px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,255,255,.10);
+/* iPhone 17-style device: screen 1206 x 2622 (2.174) */
+.phone{position:absolute;width:404px;height:845px;border-radius:70px;padding:14px;
+  background:linear-gradient(150deg,#59625c 0%,#2a302c 18%,#121614 52%,#2b322e 100%);
+  box-shadow:0 80px 160px rgba(0,0,0,.6),0 24px 50px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.12),inset 0 0 0 5px #0a0d0b;
   transform-origin:50% 50%;will-change:transform,opacity}
-.phone .scr{width:100%;height:100%;border-radius:50px;overflow:hidden;background:#f4f5f0 center/cover no-repeat}
-.phone .island{position:absolute;left:50%;top:24px;width:104px;height:31px;margin-left:-52px;border-radius:20px;background:#000}
-.phone::after{content:"";position:absolute;inset:12px;border-radius:50px;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05) 100%);pointer-events:none}
-.card{position:absolute;border-radius:28px;overflow:hidden;box-shadow:0 60px 120px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.1)}
-.stat{position:absolute;padding:26px 30px;border-radius:24px;background:rgba(10,20,14,.72);border:1px solid rgba(134,220,152,.25);backdrop-filter:blur(10px);min-width:430px}
-.stat b{display:block;font:800 72px/1 Manrope;letter-spacing:-.02em;color:#fff}
-.stat span{display:block;margin-top:10px;font:500 22px/1.35 Inter;color:var(--muted)}
+.phone .bt{position:absolute;width:5px;border-radius:3px;background:linear-gradient(90deg,#3a423d,#1a1f1c)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:56px;overflow:hidden;background:#f4f5f0}
+.phone .scr .ly{position:absolute;inset:0;background:#f4f5f0 center/100% 100% no-repeat;will-change:transform,opacity}
+.phone .scr .dim{position:absolute;inset:0;background:#000;opacity:0}
+.phone .island{position:absolute;left:50%;top:26px;width:112px;height:33px;margin-left:-56px;border-radius:20px;background:#000;z-index:5}
+.phone::after{content:"";position:absolute;inset:14px;border-radius:56px;background:linear-gradient(115deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,0) 72%,rgba(255,255,255,.05) 100%);pointer-events:none;z-index:6}
+.aerial{position:absolute;inset:0;overflow:hidden;background:#1b2018}
+.aerial .in{position:absolute;left:0;top:0;transform-origin:0 0}
+.tap{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:radial-gradient(circle,rgba(134,220,152,.55),rgba(134,220,152,.15) 60%,transparent 70%);border:3px solid rgba(255,255,255,.85);opacity:0;z-index:4}
+.call{position:absolute;display:flex;align-items:center;gap:16px;padding:18px 24px;border-radius:22px;background:rgba(14,24,18,.78);border:1px solid rgba(134,220,152,.28);backdrop-filter:blur(14px);box-shadow:0 30px 60px rgba(0,0,0,.45);white-space:nowrap;will-change:transform,opacity}
+.call .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(134,220,152,.16);font-size:24px}
+.call b{display:block;font:800 30px/1.1 Manrope;color:#fff}
+.call span{display:block;font:500 19px/1.3 Inter;color:var(--muted);margin-top:4px}
+.call.big b{font-size:60px;letter-spacing:-.02em}
 .lang{position:absolute;left:0;right:0;text-align:center;font:800 64px/1 Manrope;letter-spacing:-.02em}
 .small{font:500 20px/1.4 Inter;color:#8fa596}
 .bar{position:absolute;bottom:0;width:10px;border-radius:3px 3px 0 0}
+.sect{position:absolute;left:120px;top:300px;width:760px}
+.sect .eyebrow{margin-bottom:26px}
+.sect .sub{margin-top:26px;width:700px}
+.sect .chips{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -62,90 +71,90 @@ canvas{position:absolute;left:0;top:0}
   <canvas id="globe" width="1920" height="1080"></canvas>
   <div id="shade" class="full" style="opacity:0"></div>
   <div id="scrimL" class="full" style="opacity:0"></div>
-  <div id="flash" class="full" style="opacity:0"></div>
 
   <!-- S1 team -->
   <div id="s1" class="full" style="opacity:0">
     <div style="position:absolute;left:0;right:0;bottom:150px;text-align:center">
       <div class="eyebrow" id="s1a" style="color:#cfe9d5;letter-spacing:.5em">Team FieldShift</div>
-      <div class="small" id="s1b" style="margin-top:18px;letter-spacing:.3em;text-transform:uppercase;color:#7f9a87">NASA Space Apps Challenge 2026</div>
+      <div class="small" style="margin-top:18px;letter-spacing:.3em;text-transform:uppercase;color:#7f9a87">NASA Space Apps Challenge 2026</div>
     </div>
   </div>
 
   <!-- S2 challenge -->
   <div id="s2" class="full" style="opacity:0">
-    <div style="position:absolute;left:120px;top:210px;width:900px">
+    <div style="position:absolute;left:120px;top:200px;width:900px">
       <div class="eyebrow" id="s2e">The challenge</div>
       <div class="h1" id="s2h" style="margin-top:28px">Hotter summers.<br>Less water.</div>
-      <div class="body" id="s2b" style="margin-top:26px;width:760px">Fallon, Nevada</div>
+      <div class="sub" id="s2b" style="margin-top:26px;width:720px">Farms must adapt, field by field. Fallon, Nevada:</div>
     </div>
-    <div id="chart" style="position:absolute;left:120px;top:690px;width:760px;height:240px">
-      <div class="small" style="color:#cbd8ce;font-weight:600">Days above 35 °C · NASA POWER</div>
+    <div id="chart" style="position:absolute;left:120px;top:680px;width:760px;height:240px">
+      <div class="small" style="color:#cbd8ce;font-weight:600">Days above 35 °C per year · NASA POWER</div>
       <div id="bars" style="position:absolute;left:0;top:44px;width:620px;height:170px"></div>
       <svg id="trend" width="620" height="170" style="position:absolute;left:0;top:44px;overflow:visible"><path id="trendp" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 9"/></svg>
       <div id="heatnum" style="position:absolute;left:650px;top:70px;font:800 64px/1 Manrope;color:var(--heat);white-space:nowrap"></div>
-      <div class="small" style="position:absolute;left:652px;top:150px;white-space:nowrap">days a year</div>
+      <div class="small" style="position:absolute;left:652px;top:150px;white-space:nowrap">1984 → today</div>
       <div class="small" style="position:absolute;left:0;top:222px">1984</div>
       <div class="small" style="position:absolute;left:578px;top:222px">2025</div>
     </div>
   </div>
 
+  <!-- studio world (how it works + every farm) -->
+  <div id="studio" class="full" style="opacity:0"></div>
+  <canvas id="dust" width="1920" height="1080" style="opacity:0"></canvas>
+  <div id="flash" class="full" style="opacity:0"></div>
+
   <!-- S3 title -->
   <div id="s3" class="full" style="opacity:0">
-    <div id="titlewrap" style="position:absolute;left:0;right:0;top:340px;text-align:center">
+    <div id="titlewrap" style="position:absolute;left:0;right:0;top:330px;text-align:center">
       <div class="title" id="title">FieldShift</div>
-      <div class="body" id="tag" style="margin-top:28px;font-size:36px;color:#dbe7de">NASA data. Better farm decisions.</div>
+      <div class="sub" id="tag" style="margin:28px auto 0;font-size:38px;color:#e2ece4;width:1200px">40 years of NASA Earth data, turned into this week's farm decisions.</div>
     </div>
-    <div id="fieldlabel" class="chip" style="position:absolute;left:0;top:0;opacity:0"><i></i>Found by AI</div>
+    <div id="fieldlabel" class="chip" style="position:absolute;left:0;top:0;opacity:0"><i></i>Your field · found by AI in one tap</div>
   </div>
 
-  <!-- S4/S5 studio -->
-  <div id="studio" class="full" style="opacity:0"></div>
-
-  <div id="s4" class="full" style="opacity:0">
-    <div id="b1" class="abs" style="left:120px;top:250px;width:760px">
-      <div class="eyebrow">01 · Your field</div>
-      <div class="h2" style="margin-top:26px">Tap your field.<br>AI maps it.</div>
-      <div class="chips" style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap"><span class="chip"><i></i>Sentinel-2</span><span class="chip"><i></i>AI zones</span></div>
+  <div id="sects">
+    <div class="sect" id="x1">
+      <div class="eyebrow">01 · Your field from space</div>
+      <div class="h2">Tap your field.<br>AI draws it.</div>
+      <div class="sub">Sentinel-2 history, AI management zones and NASA terrain maps for every field.</div>
     </div>
-    <div id="b2" class="abs" style="left:120px;top:250px;width:760px">
+    <div class="sect" id="x2">
       <div class="eyebrow">02 · This week</div>
-      <div class="h2" style="margin-top:26px">3 actions<br>this week.</div>
-      <div class="chips" style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap"><span class="chip"><i></i>NASA POWER</span><span class="chip"><i></i>SMAP</span><span class="chip"><i></i>ECOSTRESS</span></div>
+      <div class="h2">Three clear actions,<br>every week.</div>
+      <div class="sub" id="x2a">Irrigation, drought, pests and frost from NASA POWER, SMAP and ECOSTRESS.</div>
+      <div class="sub" id="x2b" style="position:absolute;left:0;opacity:0">Tap any card to see the NASA evidence behind it.</div>
     </div>
-    <div id="b3" class="abs" style="left:120px;top:230px;width:760px">
-      <div class="eyebrow">03 · Rotations</div>
-      <div class="h2" style="margin-top:26px">Plan the<br>next years.</div>
+    <div class="sect" id="x3">
+      <div class="eyebrow">03 · Crop rotations</div>
+      <div class="h2">Plan the next years<br>with soil biology.</div>
+      <div class="sub">52 crops and 30 soil diseases checked. The AI suggests a better rotation and shows its impact.</div>
     </div>
-    <div id="satcard" class="card" style="left:930px;top:180px;width:660px;height:720px;opacity:0">
-      <div id="satimg" class="full" style="background-repeat:no-repeat"></div>
-      <svg id="satsvg" class="full" width="660" height="720" style="overflow:visible"><path id="satpoly" fill="rgba(134,220,152,.16)" stroke="#86dc98" stroke-width="5" stroke-linejoin="round" class="glow"/><g id="satdots"></g></svg>
-      <div class="chip" style="position:absolute;left:26px;bottom:26px;background:rgba(0,0,0,.55)"><i></i>Fallon, Nevada · 5.5 ha</div>
-    </div>
-    <div id="stats"></div>
   </div>
 
   <div id="s5" class="full" style="opacity:0">
-    <div style="position:absolute;left:0;right:0;top:92px;text-align:center">
-      <div class="eyebrow" style="font-size:24px">Every farm on Earth</div>
+    <div style="position:absolute;left:0;right:0;top:64px;text-align:center">
+      <div class="h2" id="s5h" style="font-size:58px">Built for every farm on Earth.</div>
     </div>
     <div id="langs"></div>
-    <div style="position:absolute;left:0;right:0;bottom:84px;text-align:center" class="body" id="s5b">iPhone · Android · Web · Offline · SMS</div>
+    <div style="position:absolute;left:0;right:0;bottom:56px;text-align:center" class="sub" id="s5b">iPhone · Android · Web · works offline · weekly advice by SMS</div>
   </div>
 
+  <div id="phones" class="full" style="perspective:2400px;perspective-origin:60% 45%"></div>
+  <div id="calls" class="full"></div>
+
   <div id="s6" class="full" style="opacity:0">
-    <div class="abs" style="left:130px;top:300px;width:820px">
+    <div class="abs" style="left:130px;top:270px;width:860px">
       <div style="display:flex;align-items:center;gap:26px" id="s6logo">
         <img src="../app/assets/icon.svg" width="104" height="104" style="border-radius:24px;box-shadow:0 10px 40px rgba(134,220,152,.25)">
         <div style="font:800 110px/1 Manrope;letter-spacing:-.04em">FieldShift</div>
       </div>
-      <div class="body" id="s6t" style="margin-top:30px;font-size:40px;color:#e6efe8;font-weight:600">Adapting every field with NASA data.</div>
-      <div class="body" id="s6n" style="margin-top:22px;font-size:28px">Next: field trials with farmers</div>
+      <div class="sub" id="s6t" style="margin-top:32px;font-size:42px;color:#eef4ef;font-weight:700">Adapting every field with NASA data.</div>
+      <div class="sub" id="s6a" style="margin-top:22px;font-size:28px">Free and open source. NASA POWER, SMAP, MODIS, ECOSTRESS and SRTM.</div>
+      <div class="sub" id="s6n" style="margin-top:12px;font-size:28px">Next: field trials with farmers and extension services.</div>
     </div>
-    <div class="abs small" id="s6f" style="left:130px;top:960px;width:1660px;font-size:17px;color:#6f8676">NASA Space Apps Challenge 2026 · Team FieldShift · Real app screens · Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, Blue Marble (GIBS); Copernicus Sentinel-2 · Imagery: Esri, Maxar, Earthstar Geographics · Animation and score programmed with an SI coding assistant (no generative image, video, voice or music models)</div>
+    <div class="abs small" id="s6f" style="left:130px;top:970px;width:1660px;font-size:16px;color:#6f8676">NASA Space Apps Challenge 2026 · Team FieldShift · Real app screens (iPhone 17 simulator) · Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, Blue Marble (GIBS); Copernicus Sentinel-2 · Imagery: Esri, Maxar, Earthstar Geographics · Animation and score programmed with an SI coding assistant (no generative image, video, voice or music models)</div>
   </div>
 
-  <div id="phones" class="full" style="perspective:2200px;perspective-origin:60% 45%"></div>
   <canvas id="grain" width="960" height="540" style="width:1920px;height:1080px"></canvas>
   <div id="vignette" class="full"></div>
   <div id="black" class="full" style="opacity:1"></div>
@@ -157,11 +166,11 @@ const W = 1920, H = 1080;
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const seg = (t, a, b) => clamp((t - a) / (b - a));
 const lerp = (a, b, p) => a + (b - a) * p;
-const eIO = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;   // cubic in-out
+const eIO = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 const eOut = p => 1 - Math.pow(1 - p, 3);
 const eOut5 = p => 1 - Math.pow(1 - p, 5);
-const eIn = p => p * p * p;
 const eSine = p => -(Math.cos(Math.PI * p) - 1) / 2;
+const eBack = p => { const c = 1.7; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
 const $ = id => document.getElementById(id);
 const op = (el, v) => { el.style.opacity = v; };
 const D2R = Math.PI / 180;
@@ -171,7 +180,7 @@ function wordsify(el) {
   el.innerHTML = html.map(line => line.trim().split(/\s+/).map(w => `<span class="w"><span>${w}</span></span>`).join(" ")).join("<br>");
   return [...el.querySelectorAll(".w>span")];
 }
-function revealWords(spans, t, t0, step = .055, dur = .7) {
+function revealWords(spans, t, t0, step = .05, dur = .7) {
   spans.forEach((s, i) => {
     const p = eOut5(seg(t, t0 + i * step, t0 + i * step + dur));
     s.style.transform = `translateY(${(1 - p) * 105}%)`;
@@ -179,32 +188,29 @@ function revealWords(spans, t, t0, step = .055, dur = .7) {
   });
 }
 function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-
-// ------------------------------------------------------------------ data + assets
-let LV, HEAT, TEX, texW, texH;
-const levelEls = [];
 const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
 
+// ------------------------------------------------------------------ init
+let LV, HEAT, TEX, texW, texH, Z18;
+const levelEls = [];
+const PH = {}; // phones
+const SECT = {};
 async function init() {
   LV = await (await fetch("assets/levels.json")).json();
   HEAT = await (await fetch("fallon_heat.json")).json();
   const map = $("map");
   for (const L of LV.levels) {
     const img = await loadImg(`assets/z${String(L.z).padStart(2, "0")}.jpg`);
-    img.width = L.w; img.height = L.h;
-    map.appendChild(img);
+    img.width = L.w; img.height = L.h; map.appendChild(img);
     levelEls.push({ ...L, el: img });
   }
-  // field polygon (z18 mosaic px) as svg that follows the z18 layer
-  const z18 = levelEls[levelEls.length - 1];
+  Z18 = levelEls[levelEls.length - 1];
+  const polyD = "M" + LV.poly_z18.map(p => p.join(",")).join("L") + "Z";
   const wrap = document.createElement("div"); wrap.id = "polywrap"; wrap.className = "lvl";
-  wrap.style.width = z18.w + "px"; wrap.style.height = z18.h + "px";
-  const d = "M" + LV.poly_z18.map(p => p.join(",")).join("L") + "Z";
-  wrap.innerHTML = `<svg width="${z18.w}" height="${z18.h}"><path id="fpoly" d="${d}" fill="rgba(134,220,152,0)" stroke="#9cf0ad" stroke-width="7" stroke-linejoin="round" class="glow"/></svg>`;
-  map.appendChild(wrap);
-  z18.poly = wrap;
-  const fp = $("fpoly"); fp.dataset.len = fp.getTotalLength();
-  fp.style.strokeDasharray = fp.dataset.len;
+  wrap.style.width = Z18.w + "px"; wrap.style.height = Z18.h + "px";
+  wrap.innerHTML = `<svg width="${Z18.w}" height="${Z18.h}"><path id="fpoly" d="${polyD}" fill="rgba(134,220,152,0)" stroke="#9cf0ad" stroke-width="7" stroke-linejoin="round" class="glow"/></svg>`;
+  map.appendChild(wrap); Z18.poly = wrap;
+  const fp = $("fpoly"); fp.dataset.len = fp.getTotalLength(); fp.style.strokeDasharray = fp.dataset.len;
 
   // globe texture
   const bm = await loadImg("assets/bluemarble.jpg");
@@ -221,6 +227,9 @@ async function init() {
     const s = r() < .03 ? 2.2 : r() < .2 ? 1.4 : .9;
     sc.beginPath(); sc.arc(r() * W, r() * H, s, 0, 7); sc.fill();
   }
+  // dust particles
+  const dr = mulberry(21);
+  window.DUST = Array.from({ length: 160 }, () => ({ x: dr() * W, y: dr() * H, z: .3 + dr() * 1.4, s: .6 + dr() * 2.4, a: .15 + dr() * .5, ph: dr() * 6.28 }));
 
   // heat chart
   const ys = HEAT.heat_days, n = ys.length, mx = Math.max(...ys);
@@ -232,77 +241,72 @@ async function init() {
     b.style.background = `linear-gradient(180deg, hsl(${lerp(120, 28, f)} 70% 62%), hsl(${lerp(130, 20, f)} 55% 38%))`;
     bars.appendChild(b);
   });
-  // least-squares trend
   const xm = (n - 1) / 2, ym = ys.reduce((a, b) => a + b) / n;
   let sxy = 0, sxx = 0; ys.forEach((y, i) => { sxy += (i - xm) * (y - ym); sxx += (i - xm) ** 2; });
   const k = sxy / sxx, y0 = ym - k * xm, y1 = ym + k * (n - 1 - xm);
-  HEAT.fit = [y0, y1];
   const tp = $("trendp");
   tp.setAttribute("d", `M${bw / 2},${170 - 170 * y0 / mx} L${620 - bw / 2},${170 - 170 * y1 / mx}`);
   tp.dataset.len = tp.getTotalLength();
 
-  // words
+  // text
   window.W_s2h = wordsify($("s2h")); window.W_s2b = wordsify($("s2b")); window.W_s2e = wordsify($("s2e"));
   window.W_tag = wordsify($("tag"));
   $("title").innerHTML = [..."FieldShift"].map(c => `<span class="ch">${c}</span>`).join("");
-  window.W_b = ["b1", "b2", "b3"].map(id => ({
-    eb: wordsify($(id).querySelector(".eyebrow")), h: wordsify($(id).querySelector(".h2")), b: $(id).querySelector(".body") ? wordsify($(id).querySelector(".body")) : [],
-    chips: [...$(id).querySelectorAll(".chip")]
-  }));
-  window.W_s6 = { t: wordsify($("s6t")), n: wordsify($("s6n")) };
-
-  // sat card image (z18 crop centred on the field)
-  const scale = .78;
-  const si = $("satimg");
-  si.style.backgroundImage = `url(assets/z18.jpg)`;
-  si.style.backgroundSize = `${z18.w * scale}px ${z18.h * scale}px`;
-  const offx = 330 - z18.px * scale, offy = 340 - z18.py * scale;
-  si.style.backgroundPosition = `${offx}px ${offy}px`;
-  const pts = LV.poly_z18.map(([x, y]) => [x * scale + offx, y * scale + offy]);
-  const sp = $("satpoly"); sp.setAttribute("d", "M" + pts.map(p => p.join(",")).join("L") + "Z");
-  sp.dataset.len = sp.getTotalLength(); sp.style.strokeDasharray = sp.dataset.len;
-  const dots = $("satdots");
-  pts.slice(0, -1).forEach(([x, y]) => { dots.insertAdjacentHTML("beforeend", `<circle cx="${x}" cy="${y}" r="9" fill="#fff" stroke="#2f7a45" stroke-width="4"/>`); });
+  for (const id of ["x1", "x2", "x3"]) {
+    const el = $(id);
+    SECT[id] = { el, eb: wordsify(el.querySelector(".eyebrow")), h: wordsify(el.querySelector(".h2")), subs: [...el.querySelectorAll(".sub")].map(s => ({ el: s, w: wordsify(s) })) };
+  }
+  $("x2b").style.top = $("x2a").offsetTop + "px"; $("x2b").style.marginTop = "0";
+  window.W_s5h = wordsify($("s5h")); window.W_s5b = wordsify($("s5b"));
+  window.W_s6 = { t: wordsify($("s6t")), a: wordsify($("s6a")), n: wordsify($("s6n")) };
 
   // phones
-  const ph = $("phones");
-  const mk = (id, src) => { const d = document.createElement("div"); d.className = "phone"; d.id = id; d.style.opacity = 0; d.innerHTML = `<div class="scr" style="background-image:url(../media/${src})"></div><div class="island"></div>`; ph.appendChild(d); return d; };
-  window.P = {
-    welcome: mk("p_welcome", "iphone-welcome.png"),
-    sat: mk("p_sat", "iphone-satellite.png"),
-    home: mk("p_home", "iphone-home.png"),
-    why: mk("p_why", "iphone-why.png"),
-    plan: mk("p_plan", "iphone-impact.png"),
+  const mkPhone = (id, layers) => {
+    const d = document.createElement("div"); d.className = "phone"; d.id = id; d.style.opacity = 0;
+    d.innerHTML = `<div class="bt" style="left:-4px;top:150px;height:36px"></div><div class="bt" style="left:-4px;top:215px;height:66px"></div><div class="bt" style="left:-4px;top:295px;height:66px"></div><div class="bt" style="right:-4px;top:250px;height:104px"></div>
+      <div class="scr">${layers.map(([k, src]) => `<div class="ly" data-k="${k}" style="background-image:url(../media/${src})"></div>`).join("")}<div class="tap"></div></div><div class="island"></div>`;
+    $("phones").appendChild(d);
+    const o = { el: d, ly: {} }; d.querySelectorAll(".ly").forEach(l => { o.ly[l.dataset.k] = l; l.style.opacity = 0; });
+    o.tap = d.querySelector(".tap");
+    return o;
   };
-  const car = ["iphone-climate.png", "iphone-home-sw.png", "iphone-satellite.png", "iphone-home-hi.png", "iphone-home.png", "iphone-home-es.png", "iphone-terrain-ke.png", "iphone-plan-years.png", "iphone-field-editor.png"];
-  window.CAR = car.map((s, i) => mk("car" + i, s));
-  await Promise.all([...document.querySelectorAll(".scr")].map(e => loadImg(e.style.backgroundImage.slice(5, -2))));
+  PH.hero = mkPhone("hero", [["sat", "iphone-satellite.png"], ["home", "iphone-home.png"], ["why", "iphone-why.png"], ["plan", "iphone-plan-years.png"], ["impact", "iphone-impact.png"],
+    ["en", "iphone-home.png"], ["sw", "iphone-home-sw.png"], ["hi", "iphone-home-hi.png"], ["es", "iphone-home-es.png"]]);
+  // aerial layer inside the hero screen: the same z18 imagery + outline as the full-screen dive
+  const aer = document.createElement("div"); aer.className = "aerial"; aer.innerHTML = `${[15, 16, 17].map(z => { const L = levelEls.find(l => l.z === z); return `<img class="alv" data-z="${z}" src="assets/z${z}.jpg" width="${L.w}" height="${L.h}" style="position:absolute;left:0;top:0;transform-origin:0 0">`; }).join("")}<div class="in"><img src="assets/z18.jpg" width="${Z18.w}" height="${Z18.h}"><svg width="${Z18.w}" height="${Z18.h}"><path d="${polyD}" fill="rgba(134,220,152,.18)" stroke="#9cf0ad" stroke-width="7" stroke-linejoin="round" class="glow" id="apoly"/></svg></div><div class="dim" style="background:#000"></div>`;
+  PH.hero.el.querySelector(".scr").prepend(aer); PH.hero.aerial = aer;
+  const side = ["iphone-climate.png", "iphone-terrain-ke.png", "iphone-welcome.png", "iphone-home-ke.png", "iphone-insights.png", "iphone-why.png", "iphone-field-editor.png", "iphone-account.png"];
+  PH.side = side.map((s, i) => { const p = mkPhone("side" + i, [["a", s]]); p.ly.a.style.opacity = 1; return p; });
 
-  // stats
-  const st = $("stats");
-  window.STATS = [
-    { v: 29075, fmt: v => Math.round(v).toLocaleString("en-US") + " m³", l: "water saved a year · this field" },
-  ].map((s, i) => { const d = document.createElement("div"); d.className = "stat"; d.innerHTML = `<b></b><span>${s.l}</span>`; st.appendChild(d); return { ...s, el: d }; });
+  // callouts
+  const mkCall = (id, icon, b, s, big = false) => { const d = document.createElement("div"); d.className = "call" + (big ? " big" : ""); d.id = id; d.style.opacity = 0; d.innerHTML = `<div class="ic">${icon}</div><div><b>${b}</b><span>${s}</span></div>`; $("calls").appendChild(d); return d; };
+  window.CALL = {
+    c1: mkCall("c1", "✦", "Boundary in one tap", "AI segmentation on sub-metre imagery"),
+    c2: mkCall("c2", "🛰", "AI management zones", "k-means on Sentinel-2 greenness"),
+    c3: mkCall("c3", "💧", "Irrigate 151 mm by Mon 21", "before the crop runs short of water"),
+    c4: mkCall("c4", "∑", "FAO-56 water balance", "NASA POWER weather · confidence · sources"),
+    c5: mkCall("c5", "◎", "Plan score 78 / 100", "disease, nitrogen, erosion and water"),
+    c6: mkCall("c6", "↓", "29,075 m³", "less irrigation water a year · this field", true),
+  };
 
-  // languages
-  const L = ["This week", "Wiki hii", "इस सप्ताह", "Esta semana", "Cette semaine", "Diese Woche"];
-  window.LANGS = L.map(w => { const d = document.createElement("div"); d.className = "lang"; d.textContent = w; d.style.top = "820px"; $("langs").appendChild(d); return d; });
+  const L = [["This week", 20.35], ["Wiki hii", 21.05], ["इस सप्ताह", 21.75], ["Esta semana", 22.45]];
+  window.LANGS = L.map(([w, at]) => { const d = document.createElement("div"); d.className = "lang"; d.textContent = w; d.style.top = "872px"; d.dataset.at = at; $("langs").appendChild(d); return d; });
 
   await document.fonts.ready;
   await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
+  await Promise.all([...document.querySelectorAll(".ly")].map(e => loadImg(e.style.backgroundImage.slice(5, -2))));
 }
 
 // ------------------------------------------------------------------ globe
-const gctx = () => $("globe").getContext("2d");
 let gbuf = null;
 const FIELD = { lat: 39.44087, lon: -118.83012 };
 function drawGlobe(cx, cy, R, lat0, lon0, pins = null, t = 0) {
-  const ctx = gctx();
+  const ctx = $("globe").getContext("2d");
   ctx.clearRect(0, 0, W, H);
   if (!gbuf) gbuf = ctx.createImageData(W, H);
   const d = gbuf.data; d.fill(0);
   const sp = Math.sin(lat0 * D2R), cp = Math.cos(lat0 * D2R), l0 = lon0 * D2R;
-  const sx = -.55, sy = .42, sz = .72; // sun (view space)
+  const sx = -.55, sy = .42, sz = .72;
   const y0 = Math.max(0, Math.floor(cy - R)), y1 = Math.min(H - 1, Math.ceil(cy + R));
   for (let py = y0; py <= y1; py++) {
     const y = -(py + .5 - cy) / R; const yy = y * y; if (yy >= 1) continue;
@@ -327,7 +331,6 @@ function drawGlobe(cx, cy, R, lat0, lon0, pins = null, t = 0) {
     }
   }
   ctx.putImageData(gbuf, 0, 0);
-  // atmosphere halo
   if (R < 2600) {
     const g = ctx.createRadialGradient(cx, cy, R * .985, cx, cy, R * 1.12);
     g.addColorStop(0, "rgba(120,180,255,.55)"); g.addColorStop(.25, "rgba(90,150,255,.22)"); g.addColorStop(1, "rgba(60,120,255,0)");
@@ -344,11 +347,10 @@ function drawGlobe(cx, cy, R, lat0, lon0, pins = null, t = 0) {
     ctx.beginPath(); ctx.arc(X, Y, 8 + ph * 46, 0, 7); ctx.stroke();
     ctx.fillStyle = `rgba(190,255,200,${a})`; ctx.shadowColor = "#86dc98"; ctx.shadowBlur = 24;
     ctx.beginPath(); ctx.arc(X, Y, 8, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
-    if (p.label) { ctx.font = "600 22px Inter"; ctx.fillStyle = `rgba(230,240,232,${a})`; ctx.fillText(p.label, X + 20, Y + 8); }
+    ctx.font = "600 22px Inter"; ctx.fillStyle = `rgba(230,240,232,${a})`; ctx.fillText(p.label, X + 20, Y + 8);
   }
 }
 
-// map zoom: camera zoom Z (web-mercator zoom), centred on the field
 function drawMap(Z, alpha) {
   $("map").style.opacity = alpha;
   if (alpha <= 0) return;
@@ -357,10 +359,7 @@ function drawMap(Z, alpha) {
     const vis = clamp((Z - (L.z - .7)) / .6);
     const hidden = vis <= 0 || s > 9;
     L.el.style.display = hidden ? "none" : "block";
-    if (!hidden) {
-      L.el.style.transform = `translate(${960 - L.px * s}px,${540 - L.py * s}px) scale(${s})`;
-      L.el.style.opacity = vis;
-    }
+    if (!hidden) { L.el.style.transform = `translate(${960 - L.px * s}px,${540 - L.py * s}px) scale(${s})`; L.el.style.opacity = vis; }
     if (L.poly) {
       L.poly.style.transform = `translate(${960 - L.px * s}px,${540 - L.py * s}px) scale(${s})`;
       L.poly.style.display = Z > 15.5 ? "block" : "none";
@@ -368,8 +367,13 @@ function drawMap(Z, alpha) {
     }
   }
 }
+// camera zoom of the dive (web-mercator zoom level)
+function camZ(t) {
+  if (t < 1.6) return lerp(2.5, 3.05, eSine(seg(t, 0, 1.6)));
+  if (t < 4.85) return lerp(3.05, 17.35, eIO(seg(t, 1.6, 4.85)));
+  return lerp(17.35, 18.0, eOut(seg(t, 4.85, 10)));
+}
 
-// ------------------------------------------------------------------ phones
 function placeEl(el, { x = 960, y = 540, s = 1, ry = 0, rx = 0, rz = 0, o = 1, z = 0, blur = 0 }) {
   const w = el.offsetWidth, h = el.offsetHeight;
   el.style.transform = `translate3d(${x - w / 2}px,${y - h / 2}px,${z}px) rotateY(${ry}deg) rotateX(${rx}deg) rotateZ(${rz}deg) scale(${s})`;
@@ -377,175 +381,215 @@ function placeEl(el, { x = 960, y = 540, s = 1, ry = 0, rx = 0, rz = 0, o = 1, z
   el.style.filter = blur > .05 ? `blur(${blur}px)` : "none";
   el.style.zIndex = Math.round(1000 + z);
 }
+function layer(ly, { x = 0, y = 0, o = 1, dim = 0 }) {
+  ly.style.transform = `translate(${x}%,${y}%)`;
+  ly.style.opacity = o;
+  ly.style.filter = dim > .01 ? `brightness(${1 - dim})` : "none";
+}
+// callout: pop in with overshoot, float, fade out
+function callout(el, t, a, b, x, y, side = 1) {
+  const pin = seg(t, a, a + .55), pout = seg(t, b - .35, b);
+  const s = .82 + .18 * eBack(pin);
+  const fy = Math.sin((t - a) * 1.6) * 7;
+  el.style.left = "0px"; el.style.top = "0px";
+  el.style.transform = `translate(${x + side * (1 - eOut(pin)) * -60}px,${y + fy - 20 * pout}px) scale(${s * (1 - .06 * pout)})`;
+  el.style.opacity = clamp(pin * 1.6) * (1 - pout);
+}
+// section text: words in, then out upwards with blur
+function section(S, t, a, b, subSwap = null) {
+  const out = seg(t, b - .4, b);
+  S.el.style.opacity = (t > a - .1 && t < b + .05) ? 1 - out : 0;
+  S.el.style.transform = `translateY(${-40 * eOut(out)}px)`;
+  S.el.style.filter = out > .01 ? `blur(${out * 8}px)` : "none";
+  revealWords(S.eb, t, a, .02, .5);
+  revealWords(S.h, t, a + .1, .06, .7);
+  S.subs.forEach((sb, i) => {
+    if (!subSwap || i === 0) {
+      revealWords(sb.w, t, a + .45, .025, .6);
+      if (subSwap) { const p = seg(t, subSwap, subSwap + .3); sb.el.style.opacity = 1 - p; sb.el.style.transform = `translateY(${-20 * p}px)`; }
+    } else {
+      const p = seg(t, subSwap + .1, subSwap + .2); sb.el.style.opacity = p;
+      revealWords(sb.w, t, subSwap + .1, .025, .6);
+    }
+  });
+}
 
 // ------------------------------------------------------------------ main render
-let seed = 1;
+const HERO = { S0: 5.3, t0: 8.0, t1: 9.6 };
 window.render = function (t) {
-  // global fades
   op($("black"), Math.max(1 - seg(t, 0, .5), seg(t, 29.1, 30)));
+  const Z = camZ(t);
 
-  // ---------- camera dive (0 - 10 s)
-  // Z: 2.5 -> 3.05 (0-1.6 s), then dive to 17.35 at 4.85 s, then slow push to 18.0 by 10 s
-  let Z;
-  if (t < 1.6) Z = lerp(2.5, 3.05, eSine(seg(t, 0, 1.6)));
-  else if (t < 4.85) Z = lerp(3.05, 17.35, eIO(seg(t, 1.6, 4.85)));
-  else Z = lerp(17.35, 18.0, eOut(seg(t, 4.85, 10)));
+  // ---------- globe + dive (0 - 8 s)
   const latc = lerp(18, FIELD.lat, eIO(seg(t, 0, 3.0)));
   const lonc = lerp(-62, FIELD.lon, eIO(seg(t, 0, 3.0)));
   const R = 256 * Math.pow(2, Z) / (2 * Math.PI * Math.cos(latc * D2R));
-  const globeA = (t < 10) ? 1 - seg(Z, 4.1, 4.7) : 0;
-  const s6 = seg(t, 24.85, 25.25);
-  if (t < 10 && globeA > 0) {
+  const globeA = t < 8 ? 1 - seg(Z, 4.1, 4.7) : 0;
+  if (t < 8 && globeA > 0) {
     $("globe").style.opacity = globeA;
     drawGlobe(960, 540 + (1 - seg(t, 0, 3)) * 40, R, latc, lonc);
   } else if (t >= 24.6) {
-    $("globe").style.opacity = eOut(s6);
+    $("globe").style.opacity = seg(t, 24.6, 25.0);
+    const rise = eOut5(seg(t, 24.6, 25.8));
     const rot = lerp(-108, -2, eSine(seg(t, 24.6, 30)));
-    const Rg = lerp(330, 390, eOut(seg(t, 24.6, 30)));
-    drawGlobe(1400, 500, Rg, 18, rot, [
-      { lat: 39.44, lon: -118.83, label: "Nevada", a: seg(t, 25.2, 25.7), ph: 0 },
-      { lat: 42.03, lon: -93.62, label: "Iowa", a: seg(t, 25.5, 26.0), ph: .3 },
-      { lat: 37.88, lon: -4.78, label: "Andalusia", a: seg(t, 25.8, 26.3), ph: .55 },
+    const Rg = lerp(330, 395, eOut(seg(t, 24.6, 30)));
+    drawGlobe(1400, lerp(1500, 500, rise), Rg, 18, rot, [
+      { lat: 39.44, lon: -118.83, label: "Nevada", a: seg(t, 25.4, 25.9), ph: 0 },
+      { lat: 42.03, lon: -93.62, label: "Iowa", a: seg(t, 25.6, 26.1), ph: .3 },
+      { lat: 37.88, lon: -4.78, label: "Andalusia", a: seg(t, 25.9, 26.4), ph: .55 },
       { lat: -1.52, lon: 37.26, label: "Kenya", a: seg(t, 26.6, 27.1), ph: .8 },
     ], t);
-  } else { $("globe").style.opacity = 0; }
-  op($("stars"), t < 10 ? 1 - seg(Z, 3.6, 4.4) : (t >= 24.6 ? eOut(s6) : 0));
-  $("stars").style.transform = `scale(${1 + .04 * t / 5})`;
-  drawMap(Z, t < 10.6 ? seg(Z, 3.9, 4.5) * (1 - seg(t, 10.0, 10.6)) : 0);
-
-  // shading for legibility
+  } else $("globe").style.opacity = 0;
+  op($("stars"), t < 8 ? 1 - seg(Z, 3.6, 4.4) : (t >= 24.4 ? seg(t, 24.4, 25.0) : 0));
+  $("stars").style.transform = `scale(${1 + .04 * (t % 25) / 5}) translateY(${t >= 24 ? (1 - eOut(seg(t, 24.4, 26))) * 120 : 0}px)`;
+  drawMap(Z, t < HERO.t0 ? seg(Z, 3.9, 4.5) : 0);
   op($("scrimL"), seg(t, 2.2, 2.8) * (1 - seg(t, 4.7, 5.1)));
-  op($("shade"), t < 10.6 ? .52 * eOut(seg(t, 5.6, 6.6)) : 0);
-  // flash at 5.0
-  op($("flash"), t >= 24.95 ? .55 * Math.exp(-(t - 24.95) * 6) * seg(t, 24.95, 25.0) : t >= 4.92 ? .9 * Math.exp(-(t - 4.92) * 5.5) * seg(t, 4.92, 5.0) : 0);
-
-  // field outline draws itself 5.0 - 6.4
+  const shadeA = .52 * eOut(seg(t, 5.6, 6.6));
+  op($("shade"), t < HERO.t0 ? shadeA : 0);
+  op($("flash"), t >= 24.95 ? .5 * Math.exp(-(t - 24.95) * 6) * seg(t, 24.95, 25.0) : t >= 4.92 ? .9 * Math.exp(-(t - 4.92) * 5.5) * seg(t, 4.92, 5.0) : 0);
   const fp = $("fpoly");
-  if (fp) {
-    const p = eIO(seg(t, 5.0, 6.4));
-    fp.style.strokeDashoffset = fp.dataset.len * (1 - p);
-    fp.setAttribute("fill", `rgba(134,220,152,${.18 * seg(t, 6.0, 6.8)})`);
-  }
+  { const p = eIO(seg(t, 5.0, 6.4)); fp.style.strokeDashoffset = fp.dataset.len * (1 - p); fp.setAttribute("fill", `rgba(134,220,152,${.18 * seg(t, 6.0, 6.8)})`); }
 
-  // ---------- S1: team (0.4 - 2.4)
+  // ---------- S1 / S2
   op($("s1"), seg(t, .4, 1.0) * (1 - seg(t, 2.0, 2.5)));
   $("s1a").style.letterSpacing = lerp(.62, .5, eOut(seg(t, .4, 2.4))) + "em";
-
-  // ---------- S2: challenge (2.3 - 5.0)
   op($("s2"), (t < 5.2 ? 1 : 0) * (1 - seg(t, 4.75, 5.0)));
   revealWords(W_s2e, t, 2.3, .03, .5);
   revealWords(W_s2h, t, 2.45, .08, .7);
-  revealWords(W_s2b, t, 2.9, .03, .6);
+  revealWords(W_s2b, t, 2.85, .03, .6);
   const bars = $("bars").children;
-  for (let i = 0; i < bars.length; i++) {
-    const p = eOut(seg(t, 2.8 + i * .028, 3.3 + i * .028));
-    bars[i].style.height = (bars[i].dataset.h * p) + "px";
-  }
+  for (let i = 0; i < bars.length; i++) bars[i].style.height = (bars[i].dataset.h * eOut(seg(t, 2.8 + i * .028, 3.3 + i * .028))) + "px";
   op($("chart"), seg(t, 2.6, 3.0));
-  const tp = $("trendp"); const tpp = eIO(seg(t, 3.7, 4.4));
-  tp.style.strokeDasharray = `${tp.dataset.len * tpp} 9999`;
+  const tp = $("trendp"); tp.style.strokeDasharray = `${tp.dataset.len * eIO(seg(t, 3.7, 4.4))} 9999`;
   op($("heatnum"), seg(t, 3.9, 4.3));
-  $("heatnum").textContent = `${Math.round(HEAT.baseline_mean)} → ${Math.round(lerp(HEAT.baseline_mean, HEAT.recent_mean, eOut(seg(t, 3.9, 4.6))))}`;
+  $("heatnum").textContent = `${Math.round(HEAT.baseline_mean)} → ${Math.round(lerp(HEAT.baseline_mean, HEAT.recent_mean, eOut(seg(t, 3.9, 4.6))))} days`;
 
-  // ---------- S3: title (5.0 - 10.0)
-  const s3a = seg(t, 5.0, 5.2) * (1 - seg(t, 9.55, 10.0));
-  op($("s3"), s3a);
+  // ---------- S3 title (5 - 8.3)
+  op($("s3"), seg(t, 5.0, 5.2) * (1 - seg(t, 7.9, 8.3)));
+  $("s3").style.filter = t > 7.9 ? `blur(${seg(t, 7.9, 8.3) * 10}px)` : "none";
+  $("titlewrap").style.transform = `translateY(${-50 * eIO(seg(t, 7.8, 8.3))}px) scale(${1 + .03 * seg(t, 5, 8)})`;
   const chs = $("title").children;
   for (let i = 0; i < chs.length; i++) {
     const p = eOut5(seg(t, 5.25 + i * .045, 6.15 + i * .045));
     chs[i].style.transform = `translateY(${(1 - p) * 60}px) scale(${1 + (1 - p) * .25})`;
-    chs[i].style.filter = `blur(${(1 - p) * 18}px)`;
-    chs[i].style.opacity = p;
+    chs[i].style.filter = `blur(${(1 - p) * 18}px)`; chs[i].style.opacity = p;
   }
-  revealWords(W_tag, t, 6.3, .05, .7);
-  // title glides up-left as the phone arrives (7.7 - 8.6)
-  const gl = eIO(seg(t, 7.6, 8.5));
-  $("titlewrap").style.transform = `translate(${-410 * gl}px,${-40 * gl}px) scale(${1 - .3 * gl})`;
-  $("titlewrap").style.transformOrigin = "50% 50%";
-  // phone welcome (7.7 - 10)
-  placeEl(P.welcome, { x: lerp(1500, 1440, eOut(seg(t, 7.7, 9.8))), y: lerp(1500, 560, eOut5(seg(t, 7.7, 8.9))), ry: lerp(-28, -14, seg(t, 7.7, 10)), rx: 4, s: .92, o: seg(t, 7.7, 8.0) * (1 - seg(t, 9.6, 10.0)), z: 0 });
-  // field label chip near the polygon (6.4 - 7.6)
-  const fl = $("fieldlabel");
-  fl.style.left = "1080px"; fl.style.top = lerp(250, 236, eOut(seg(t, 6.3, 7))) + "px";
-  op(fl, seg(t, 6.3, 6.7) * (1 - seg(t, 7.4, 7.8)));
+  revealWords(W_tag, t, 6.3, .045, .7);
+  const fl = $("fieldlabel"); fl.style.left = "1050px"; fl.style.top = lerp(250, 236, eOut(seg(t, 6.3, 7))) + "px";
+  op(fl, seg(t, 6.4, 6.8) * (1 - seg(t, 7.6, 7.9)));
 
-  // ---------- S4: how it works (10 - 20)
-  const st = seg(t, 9.8, 10.4) * (1 - seg(t, 24.7, 25.6));
-  op($("studio"), st);
-  op($("s4"), (t >= 9.9 && t < 20.3) ? 1 : 0);
-  const beats = [[10.0, 13.4], [13.4, 16.8], [16.8, 20.2]];
-  beats.forEach(([a, b], i) => {
-    const el = $("b" + (i + 1)), w = W_b[i];
-    const inA = i === 0 ? a + .15 : a - .12, out = b - .3;  // overlapping hand-offs: no empty frames
-    op(el, (t >= inA - .05 && t < b + .02) ? 1 - seg(t, out, b) : 0);
-    el.style.transform = `translateY(${-30 * seg(t, out, b)}px)`;
-    revealWords(w.eb, t, inA, .02, .5);
-    revealWords(w.h, t, inA + .1, .07, .7);
-    revealWords(w.b, t, inA + .45, .012, .6);
-    w.chips.forEach((c, j) => { const p = eOut(seg(t, inA + .8 + j * .09, inA + 1.3 + j * .09)); c.style.opacity = p; c.style.transform = `translateY(${(1 - p) * 24}px) scale(${.92 + .08 * p})`; });
-  });
-  // beat 1 visuals: satellite card + satellite phone
-  const b1o = seg(t, 10.1, 10.6) * (1 - seg(t, 13.1, 13.45));
-  const sc = $("satcard");
-  sc.style.opacity = b1o;
-  sc.style.transform = `perspective(2200px) translate(${lerp(80, 0, eOut5(seg(t, 10.1, 11.0)))}px,0) rotateY(${lerp(-16, -8, seg(t, 10.1, 13.4))}deg) scale(${lerp(1.04, 1.0, seg(t, 10.1, 13.4))})`;
-  $("satimg").style.transform = `scale(${lerp(1.0, 1.06, seg(t, 10.1, 13.4))})`;
-  const spol = $("satpoly"), spp = eIO(seg(t, 10.6, 11.9));
-  spol.style.strokeDashoffset = spol.dataset.len * (1 - spp);
-  spol.setAttribute("fill", `rgba(134,220,152,${.22 * seg(t, 11.6, 12.2)})`);
-  [...$("satdots").children].forEach((c, i, arr) => { const p = eOut5(seg(t, 10.6 + i / arr.length * 1.3, 10.8 + i / arr.length * 1.3)); c.setAttribute("r", 9 * p); });
-  placeEl(P.sat, { x: lerp(1720, 1640, eOut(seg(t, 11.0, 13.4))), y: lerp(1300, 600, eOut5(seg(t, 11.0, 12.0))), ry: -18, rx: 3, s: .86, z: 120, o: seg(t, 11.0, 11.3) * (1 - seg(t, 13.0, 13.4)) });
-  // beat 2: home + why
-  const b2 = seg(t, 13.3, 14.1), b2o = 1 - seg(t, 16.55, 16.95);
-  placeEl(P.why, { x: lerp(1700, 1580, eOut5(b2)), y: lerp(620, 560, eOut5(b2)), ry: -24, rx: 3, s: .84, z: -160, o: seg(t, 13.6, 14.0) * b2o * .95, blur: 1.2 });
-  placeEl(P.home, { x: lerp(1300, 1210, eOut5(b2)), y: lerp(1300, 560, eOut5(seg(t, 13.2, 14.2))), ry: lerp(-20, -10, seg(t, 13.2, 16.8)), rx: 3, s: .95, z: 60, o: seg(t, 13.2, 13.45) * b2o });
-  // beat 3: plan phone + counting stats
-  const b3 = seg(t, 16.6, 17.5), b3o = 1 - seg(t, 19.85, 20.15);
-  placeEl(P.plan, { x: lerp(1660, 1590, eOut(seg(t, 16.9, 20))), y: lerp(1300, 540, eOut5(b3)), ry: lerp(-24, -16, seg(t, 16.9, 20)), rx: 3, s: .95, z: 40, o: seg(t, 16.6, 16.85) * b3o });
-  STATS.forEach((s, i) => {
-    const a = 17.3 + i * .32;
-    const p = eOut5(seg(t, a, a + .7));
-    s.el.style.left = "120px";
-    s.el.style.top = (560 + i * 150) + "px";
-    s.el.style.transform = `translateX(${(1 - p) * -60}px)`;
-    s.el.style.opacity = p * b3o;
-    s.el.querySelector("b").textContent = s.fmt(s.v * eOut(seg(t, a, a + 1.3)));
-    s.el.style.padding = "18px 26px";
+  // ---------- studio world (8 - 25): moving light, dust, camera drift
+  const st = seg(t, 8.3, 9.4) * (1 - seg(t, 24.5, 25.2));
+  const studio = $("studio");
+  studio.style.opacity = st;
+  if (st > 0) {
+    const ax = 72 + 8 * Math.sin(t * .35), ay = 40 + 10 * Math.cos(t * .28), bx = 14 + 10 * Math.cos(t * .22), by = 82 + 8 * Math.sin(t * .31);
+    studio.style.background = `radial-gradient(1000px 760px at ${ax}% ${ay}%,rgba(64,150,92,.34),transparent 70%),radial-gradient(900px 700px at ${bx}% ${by}%,rgba(40,100,140,.26),transparent 70%),radial-gradient(600px 500px at ${50 + 20 * Math.sin(t * .17)}% ${20 + 10 * Math.sin(t * .4)}%,rgba(134,220,152,.10),transparent 70%),linear-gradient(180deg,#07110b,#030604)`;
+  }
+  const dust = $("dust"); dust.style.opacity = st * .9;
+  if (st > 0) {
+    const g = dust.getContext("2d"); g.clearRect(0, 0, W, H);
+    for (const p of DUST) {
+      const x = ((p.x - t * 14 * p.z) % W + W) % W, y = ((p.y - t * 6 * p.z + Math.sin(t * .7 + p.ph) * 10) % H + H) % H;
+      g.fillStyle = `rgba(190,240,200,${p.a * (.6 + .4 * Math.sin(t * 1.3 + p.ph))})`;
+      g.beginPath(); g.arc(x, y, p.s * p.z, 0, 7); g.fill();
+    }
+  }
+
+  // ---------- hero phone: born from the aerial view, then the app runs inside it
+  const hero = PH.hero;
+  if (t >= HERO.t0 && t < 25.4) {
+    const m = eIO(seg(t, HERO.t0, HERO.t1));
+    const sc = Math.exp(lerp(Math.log(HERO.S0), 0, m));
+    const bob = Math.sin(t * 1.1) * 9, sway = Math.sin(t * .6) * 3;
+    // base pose for "how it works", then centre for "every farm", then fly away
+    const toC = eIO(seg(t, 19.9, 20.8)), away = eIO(seg(t, 24.4, 25.3));
+    let x = lerp(lerp(960, 1340, m), 960, toC), y = lerp(540 + bob * m, 470, toC) - away * 1100;
+    let s = sc * lerp(1, .74, toC) * (1 - .25 * away);
+    let ry = lerp(lerp(0, -15 + sway, m), sway * .5, toC), rx = lerp(lerp(0, 3, m), 0, toC) + away * 25;
+    // a little swing on every screen change
+    for (const k of [12.6, 14.9, 16.4, 17.7]) ry += -6 * Math.sin(Math.PI * seg(t, k, k + .6));
+    placeEl(hero.el, { x, y, s, ry, rx, o: 1, z: 200, blur: away * 6 });
+    hero.el.style.borderRadius = "70px";
+    // aerial layer: same view as the full-screen dive at the hand-off, frozen inside the screen
+    const Zh = camZ(HERO.t0), s8 = Math.pow(2, Zh - 18), k = s8 / HERO.S0;
+    const scrW = 376, scrH = 817;
+    hero.aerial.querySelector(".in").style.transform = `translate(${scrW / 2 - Z18.px * k}px,${scrH / 2 - Z18.py * k}px) scale(${k})`;
+    hero.aerial.querySelectorAll(".alv").forEach(im => {   // coarser levels underneath so the screen is always covered
+      const L = levelEls.find(l => l.z === +im.dataset.z), kl = k * Math.pow(2, 18 - L.z);
+      im.style.transform = `translate(${scrW / 2 - L.px * kl}px,${scrH / 2 - L.py * kl}px) scale(${kl})`;
+    });
+    hero.aerial.querySelector("#apoly").setAttribute("stroke-width", 7 / (k * HERO.S0));
+    hero.aerial.querySelector(".dim").style.opacity = shadeA * (1 - seg(t, 8.2, 9.2));
+    hero.aerial.style.opacity = 1 - seg(t, 9.1, 9.7);
+    hero.aerial.style.borderRadius = "56px";
+    // screens
+    const p1 = eIO(seg(t, 12.6, 13.15)), p2 = eIO(seg(t, 14.9, 15.45)), tab = eIO(seg(t, 16.4, 16.75)), scr = eIO(seg(t, 17.7, 18.1));
+    const L = hero.ly;
+    layer(L.sat, { o: seg(t, 9.1, 9.7) * (t < 13.3 ? 1 : 0), x: -30 * p1, dim: .35 * p1 });
+    layer(L.home, { o: t >= 12.55 && t < 15.6 ? 1 : 0, x: 100 * (1 - p1) - 30 * p2, dim: .35 * p2 });
+    layer(L.why, { o: t >= 14.85 && t < 16.8 ? 1 - tab : 0, x: 100 * (1 - p2) });
+    layer(L.plan, { o: t >= 16.4 && t < 18.5 ? tab * (1 - scr) : 0, y: -14 * scr });
+    const lang = (a) => eIO(seg(t, a, a + .3));
+    layer(L.impact, { o: t >= 17.65 ? scr * (1 - lang(20.2)) : 0, y: 14 * (1 - scr) });
+    layer(L.en, { o: lang(20.2) * (1 - lang(20.95)) });
+    layer(L.sw, { o: lang(20.95) * (1 - lang(21.65)) });
+    layer(L.hi, { o: lang(21.65) * (1 - lang(22.35)) });
+    layer(L.es, { o: lang(22.35) });
+    // tap ripple on the irrigation card
+    const tp2 = seg(t, 14.45, 15.0);
+    hero.tap.style.left = (scrW * .46) + "px"; hero.tap.style.top = (scrH * .76) + "px";
+    hero.tap.style.opacity = tp2 > 0 && tp2 < 1 ? Math.sin(Math.PI * tp2) : 0;
+    hero.tap.style.transform = `scale(${.4 + 1.1 * eOut(tp2)})`;
+  } else hero.el.style.opacity = 0;
+
+  // side phones fan out from behind the hero (20.3 - 25)
+  PH.side.forEach((p, i) => {
+    const k = (i < 4 ? -(4 - i) : i - 3);           // -4..-1, 1..4
+    const fan = eOut5(seg(t, 20.3 + Math.abs(k) * .07, 21.3 + Math.abs(k) * .07));
+    const drift = -18 * (t - 21);
+    const away = eIO(seg(t, 24.3 + Math.abs(k) * .03, 25.2 + Math.abs(k) * .03));
+    const x = 960 + fan * (k * 290 + drift * (1 - away)), z = -Math.abs(k) * 170 * fan;
+    const on = t > 20.2 && t < 25.5;
+    placeEl(p.el, { x, y: 470 + Math.sin(t * 1.2 + k) * 8 - away * 1100, s: .62, ry: -k * 12 * fan + away * 10, rx: away * 25, z, o: on ? fan * clamp(1.5 - Math.abs(k) * .22) : 0, blur: away * 5 });
   });
 
-  // ---------- S5: every farm (20 - 25)
-  const s5 = seg(t, 19.95, 20.25) * (1 - seg(t, 24.55, 24.95));
+  // ---------- sections (left text) and callouts
+  section(SECT.x1, t, 9.2, 12.75);
+  section(SECT.x2, t, 12.6, 16.5, 14.95);
+  section(SECT.x3, t, 16.35, 20.1);
+  callout(CALL.c1, t, 9.9, 12.6, 930, 690, 1);
+  callout(CALL.c2, t, 10.6, 12.6, 1000, 800, 1);
+  callout(CALL.c3, t, 13.4, 14.9, 960, 700, 1);
+  callout(CALL.c4, t, 15.5, 16.5, 960, 700, 1);
+  callout(CALL.c5, t, 16.9, 18.2, 960, 700, 1);
+  callout(CALL.c6, t, 18.3, 20.0, 930, 680, 1);
+
+  // ---------- S5: every farm
+  const s5 = seg(t, 20.1, 20.5) * (1 - seg(t, 24.4, 24.9));
   op($("s5"), s5);
-  const off = lerp(-1.2, 2.3, seg(t, 20.0, 25.0));
-  CAR.forEach((el, i) => {
-    const dx = i - 4 + 2.2 - off; // slots from the centre
-    const x = 960 + dx * 330;
-    const ry = clamp(-dx * 14, -50, 50);
-    const zz = -Math.abs(dx) * 170;
-    const enter = eOut5(seg(t, 19.95 + Math.abs(i - 4) * .04, 20.7 + Math.abs(i - 4) * .04));
-    placeEl(el, { x, y: lerp(900, 470, enter), ry, s: .66, z: zz, o: s5 * enter * clamp(1.6 - Math.abs(dx) * .25) });
-  });
+  revealWords(W_s5h, t, 20.2, .05, .7);
+  revealWords(W_s5b, t, 21.0, .03, .6);
   LANGS.forEach((el, i) => {
-    const a = 20.3 + i * .7;
-    const pin = eOut5(seg(t, a, a + .35)), pout = seg(t, a + .6, a + .85);
-    const last = i === LANGS.length - 1;
-    el.style.opacity = s5 * pin * (last ? 1 : 1 - pout);
-    el.style.transform = `translateY(${(1 - pin) * 40 - (last ? 0 : pout * 40)}px)`;
-    el.style.top = "818px";
+    const a = +el.dataset.at, nxt = i < LANGS.length - 1 ? +LANGS[i + 1].dataset.at : 99;
+    const pin = eOut5(seg(t, a, a + .35)), pout = seg(t, nxt - .05, nxt + .2);
+    el.style.opacity = pin * (1 - pout);
+    el.style.transform = `translateY(${(1 - pin) * 40 - pout * 40}px)`;
+    el.style.filter = pout > .01 ? `blur(${pout * 8}px)` : "none";
   });
-  $("s5b").style.opacity = seg(t, 21.0, 21.6);
 
-  // ---------- S6: vision + end card (25 - 30)
-  op($("s6"), seg(t, 25.0, 25.5));
+  // ---------- S6: end card (25 - 30)
+  op($("s6"), seg(t, 25.0, 25.4));
   const lg = eOut5(seg(t, 25.0, 25.9));
   $("s6logo").style.transform = `translateY(${(1 - lg) * 40}px)`; $("s6logo").style.opacity = lg;
-  revealWords(W_s6.t, t, 25.5, .05, .7);
-  revealWords(W_s6.n, t, 26.3, .02, .6);
-  op($("s6f"), seg(t, 27.0, 27.6));
+  revealWords(W_s6.t, t, 25.45, .05, .7);
+  revealWords(W_s6.a, t, 26.2, .025, .6);
+  revealWords(W_s6.n, t, 26.9, .025, .6);
+  op($("s6f"), seg(t, 27.4, 28.0));
 
-  // ---------- film grain
-  const g = $("grain").getContext("2d"); const id = g.createImageData(960, 540); const r = mulberry(((t * 30) | 0) + 11);
-  const gd = id.data; for (let i = 0; i < gd.length; i += 4) { const v = (r() * 255) | 0; gd[i] = gd[i + 1] = gd[i + 2] = v; gd[i + 3] = 255; }
+  // ---------- grain
+  const g = $("grain").getContext("2d"); const id = g.createImageData(960, 540); const rr = mulberry(((t * 30) | 0) + 11);
+  const gd = id.data; for (let i = 0; i < gd.length; i += 4) { const v = (rr() * 255) | 0; gd[i] = gd[i + 1] = gd[i + 2] = v; gd[i + 3] = 255; }
   g.putImageData(id, 0, 0);
 };
 window.ready = init().then(() => { window.render(0); return true; });

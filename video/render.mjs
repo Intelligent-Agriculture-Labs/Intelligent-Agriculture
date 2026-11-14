@@ -46,7 +46,11 @@ if (STILLS) {
   const t0 = Date.now();
   for (let f = 0; f < n; f++) {
     await page.evaluate(t => window.render(t), FROM + f / FPS);
-    const buf = await page.screenshot({ type: "png" });
+    let buf;
+    for (let attempt = 1; ; attempt++) {  // a busy machine can stall one screenshot: retry instead of losing the render
+      try { buf = await page.screenshot({ type: "png", timeout: 120000 }); break; }
+      catch (e) { if (attempt >= 4) throw e; console.log(`frame ${f}: retry ${attempt} (${e.name})`); await page.evaluate(t => window.render(t), FROM + f / FPS); }
+    }
     if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once("drain", r));
     if (f % 60 === 0) console.log(`frame ${f}/${n}  ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   }
