@@ -98,7 +98,17 @@ def build_deck(repo: str, impact_items: list[str], val: list[str]) -> None:
         print("no Chrome found; deck.html built, PDF skipped")
         return
     pdf = MEDIA / "fieldshift-deck.pdf"
-    subprocess.run([chrome, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", (OUT / "deck.html").as_uri()], check=True, capture_output=True)
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as prof:  # own profile: works while the user's Chrome is open
+        r = subprocess.run(
+            [chrome, "--headless", "--disable-gpu", f"--user-data-dir={prof}", "--no-pdf-header-footer",
+             f"--print-to-pdf={pdf}", (OUT / "deck.html").as_uri()],
+            capture_output=True, text=True,
+        )
+    if r.returncode != 0:
+        print("PDF export failed:", r.stderr[-500:])
+        return
     print("deck", pdf)
 
 
