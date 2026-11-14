@@ -1,5 +1,45 @@
 # PROGRESS
 
+## FINAL SUMMARY (2026-11-14 ~19:50 CET; deadline Sun 2026-11-15 23:59)
+**What was built:** FieldShift, an app on web, iOS and Android, with a FastAPI backend, that turns NASA Earth observations into:
+- weekly farm actions (irrigation amount and date, drought, disease, pests, frost/heat) with a "Why?" for every number;
+- per-field maps: computed terrain layers (erosion, wetness, frost, slope, zones); Sentinel-2 analytics (NDVI history, phenology, cuttings, AI zones); satellite-model data fusion;
+- a season planner;
+- a crop-rotation explorer: current rotation + ≥ 3 alternatives simulated on 15 seasons at the field;
+- What-if scenarios and climate trends;
+- tap-to-detect field boundaries, multiple fields, and account-free phone ↔ PC sync;
+- an AI drought classifier, trained on USDM and validated on held-out counties;
+- six languages and offline mode.
+
+**Where everything is:**
+- `backend/`: API, science, ML model, committed offline demo cache.
+- `app/`: Expo client, plus native capture scripts in `app/scripts/`.
+- `docs/`: all documentation (VALIDATION, EXPERIMENTS, SELF_REVIEW, …).
+- `media/`: web/iOS/Android screenshots, flow videos, the 30 s demo video, BUILDS.md.
+- `SUBMISSION.md`: texts to paste.
+- Git source of truth: Gitea `http://vps-home-node-1:3001/lino/fieldshift`.
+
+**How to run:**
+- `docker compose up --build` → http://localhost:8080 (API docs at `/docs`).
+- `FIELDSHIFT_OFFLINE=1 docker compose up --build` for the fully offline demo.
+- Mobile: `media/BUILDS.md`.
+
+**What the human must still do** (see SUBMISSION.md checklist):
+1. Push the repo to a public host (e.g. GitHub mirror) and paste the link.
+2. Upload `media/fieldshift-demo-30s.mp4` (YouTube unlisted or Drive) and paste the link.
+3. Check team registration, tick both boxes, and submit before Sun 23:59 local time.
+4. Optional: public hosting (owner chose private, ADR-014).
+5. Optional: rotate or revoke the Gitea tokens created for this build (`fieldshift-mac-*`, `fieldshift-sale-readonly-*`) and the Earthdata password stored on the VPS (`~/.config/fieldshift/earthdata`).
+
+**Known limitations:** `docs/LIMITATIONS.md`. In short:
+- coarse weather grids;
+- assumed irrigation history;
+- no IMERG/GRACE yet;
+- terraced plots need manual outline edits;
+- the Esri basemap is licensed for demo use only;
+- the ML model is U.S.-only.
+
+
 Deadline: **Sun 2026-11-15 23:59 CET**. Phase plan: thin slice ≤ ~Sat 23:00 · feature freeze Sun ~16:00 · packaging Sun ~21:00.
 
 ## Log
