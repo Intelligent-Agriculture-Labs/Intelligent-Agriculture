@@ -1,3 +1,4 @@
+import { CropPicker } from "@/components/kit";
 import React, { useEffect, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -10,7 +11,6 @@ import type { IrrigationMethod, PresetLocation } from "@/api/types";
 import MapPicker from "@/components/map/MapPicker";
 import type { MapLayer } from "@/components/map/leafletHtml";
 import { Button, Chip, ChipRow, DateField, OriginBanner, Screen, Section, Txt, styles as ui } from "@/components/ui";
-import { useCrops } from "@/components/domain";
 import { space, useTheme } from "@/lib/theme";
 import { useStore } from "@/state/store";
 
@@ -35,7 +35,6 @@ export default function Onboarding() {
   const t = useTheme();
   const { t: tr } = useTranslation();
   const { field, setField } = useStore();
-  const crops = useCrops();
   // deep link for demos / scripted captures: fieldshift://onboarding?preset=fallon_nv&replay=1
   const params = useLocalSearchParams<{ preset?: string; replay?: string }>();
   const [presets, setPresets] = useState<PresetLocation[]>([]);
@@ -319,13 +318,7 @@ export default function Onboarding() {
       </Section>
 
       <Section title={tr("onboarding.crop")}>
-        <ChipRow>
-          {crops
-            .filter((c) => c.type !== "cover")
-            .map((c) => (
-              <Chip key={c.id} label={c.name} selected={crop === c.id} onPress={() => setCrop(c.id)} testID={`crop-${c.id}`} />
-            ))}
-        </ChipRow>
+        <CropPicker label={tr("onboarding.crop")} value={crop} onChange={(c) => c && setCrop(c)} filter={(c) => c.type !== "cover"} testID="crop-picker" />
       </Section>
 
       <DateField label={tr("onboarding.plantingDate")} value={date} onChange={setDate} testID="planting-date" />

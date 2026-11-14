@@ -1,3 +1,4 @@
+import { CropPicker } from "@/components/kit";
 import React, { useMemo, useState } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import * as Location from "expo-location";
@@ -7,7 +8,6 @@ import type { IrrigationMethod } from "@/api/types";
 import { api, ApiError, type FieldDetectResponse } from "@/api/client";
 import MapPicker from "@/components/map/MapPicker";
 import { isUS, type MapLayer } from "@/components/map/leafletHtml";
-import { useCrops } from "@/components/domain";
 import { Button, Chip, ChipRow, DateField, Screen, Section, Txt, styles as ui } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { fmt, inToMm, mmToIn } from "@/lib/units";
@@ -31,9 +31,8 @@ const LAYERS: { id: MapLayer; icon: "planet" | "map" | "earth" | "leaf" | "image
 export default function FieldEditor() {
   const t = useTheme();
   const { t: tr } = useTranslation();
-  const params = useLocalSearchParams<{ id?: string; mode?: string }>();
+  const params = useLocalSearchParams<{ id?: string; mode?: string; first?: string }>();
   const { fields, field: active, addField, updateField, setActiveField, settings } = useStore();
-  const crops = useCrops();
   const editing = params.mode === "new" ? null : (fields.find((f) => f.id === params.id) ?? (params.id ? null : active));
   const seed = editing ?? active; // a new field starts where the farm is, so neighbouring fields are visible
   const sys = settings.units;
@@ -160,8 +159,8 @@ export default function FieldEditor() {
     } else {
       addField({ ...draft, current_rotation: [crop, crop, crop, crop], presetId: null, replay_date: null, as_of: null });
     }
-    if (router.canGoBack()) router.back();
-    else router.replace("/home");
+    if (params.first === "1" || !router.canGoBack()) router.replace("/home");
+    else router.back();
   };
 
   return (
@@ -320,13 +319,13 @@ export default function FieldEditor() {
       </Section>
 
       <Section title={tr("onboarding.crop")}>
-        <ChipRow>
-          {crops
-            .filter((c) => c.type !== "cover")
-            .map((c) => (
-              <Chip key={c.id} label={c.name} selected={crop === c.id} onPress={() => setCrop(c.id)} testID={`editor-crop-${c.id}`} />
-            ))}
-        </ChipRow>
+        <CropPicker
+          label={tr("onboarding.crop")}
+          value={crop}
+          onChange={(c) => c && setCrop(c)}
+          filter={(c) => c.type !== "cover"}
+          testID="editor-crop-picker"
+        />
       </Section>
 
       <DateField label={tr("onboarding.plantingDate")} value={date} onChange={setDate} />

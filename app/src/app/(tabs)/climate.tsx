@@ -1,6 +1,7 @@
+import { BackLink } from "@/components/kit";
 import React from "react";
 import { View } from "react-native";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "@/api/client";
@@ -27,6 +28,7 @@ export default function Climate() {
 
   return (
     <Screen testID="climate">
+      <BackLink label={tr("tabs.insights")} onPress={() => router.navigate("/insights")} testID="back-insights" />
       <Txt v="h1">{tr("climate.title")}</Txt>
       <Txt muted style={{ marginTop: 4 }}>
         {tr("climate.subtitle", { start: y0 ?? "1985" })}

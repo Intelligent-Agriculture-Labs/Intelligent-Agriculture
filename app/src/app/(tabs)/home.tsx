@@ -7,8 +7,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ActionCard, cropName, useCrops } from "@/components/domain";
 import { IrrigationLog } from "@/components/IrrigationLog";
 import { FieldSwitcher } from "@/components/FieldSwitcher";
-import { Card, ErrorView, KV, Loading, OriginBanner, RiskBadge, Section, Txt, styles as ui } from "@/components/ui";
-import { space, useTheme } from "@/lib/theme";
+import { Disclosure, EmptyState, InfoButton, Segmented, Stat, StatRow, Tip } from "@/components/kit";
+import { ErrorView, KV, Loading, OriginBanner, RiskBadge, Txt, styles as ui } from "@/components/ui";
+import { radius, space, useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/units";
 import { useStore } from "@/state/store";
 import type { Risk } from "@/api/types";
@@ -18,14 +19,19 @@ const droughtRisk = (level: number): Risk => (level <= 0 ? "low" : level <= 2 ? 
 export default function Home() {
   const t = useTheme();
   const { t: tr, i18n } = useTranslation();
-  const { ready, field, setField, advice, refreshAdvice, settings } = useStore();
+  const { ready, field, setField, advice, refreshAdvice, settings, auth } = useStore();
   const crops = useCrops();
   if (!ready) return <Loading />;
-  if (!field) return <Redirect href="/onboarding" />;
+  if (!field) return <Redirect href="/" />;
   const a = advice.data;
   const sys = settings.units;
   const top = a?.cards.slice().sort((x, y) => x.priority - y.priority) ?? [];
   const nasaSources = a ? Array.from(new Set(a.sources.filter((s) => s.status !== "unavailable").map((s) => s.name.split(" ").slice(0, 2).join(" ")))) : [];
+  const dateLong = (iso: string) =>
+    new Date(iso + "T00:00:00Z").toLocaleDateString(i18n.language, { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
+  const water = a?.water;
+  const usedPct = water && water.taw_mm > 0 ? Math.min(100, (water.root_zone_depletion_mm / water.taw_mm) * 100) : 0;
+  const stressed = water ? water.root_zone_depletion_mm > water.raw_mm : false;
 
   return (
     <SafeAreaView edges={["top", "left", "right"]} style={{ flex: 1, backgroundColor: t.bg }}>
@@ -35,68 +41,41 @@ export default function Home() {
       >
         <View style={ui.column} testID="home">
           <FieldSwitcher />
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: space.md }}>
-            <View style={{ flex: 1 }}>
-              <Txt v="h1">{tr("home.title")}</Txt>
-              <Txt muted style={{ marginTop: 2 }}>
-                {tr("home.subtitle", { crop: cropName(crops, field.crop), place: field.name })}
-              </Txt>
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={tr("home.changeField")}
-              onPress={() => router.push(`/field-editor?id=${field.id}`)}
-              style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }}
-              testID="change-field"
-            >
-              <Ionicons name="location" size={24} color={t.primary} />
-              <Txt v="small" color={t.primary}>
-                {tr("common.change")}
-              </Txt>
-            </Pressable>
+          <View style={{ marginTop: space.md }}>
+            <Txt v="small" muted>
+              {a ? dateLong(a.as_of) : " "}
+            </Txt>
+            <Txt v="h1" style={{ marginTop: 2 }}>
+              {tr("home.title")}
+            </Txt>
+            <Txt muted style={{ marginTop: 2 }}>
+              {tr("home.subtitle", { crop: cropName(crops, field.crop), place: field.name })}
+            </Txt>
           </View>
 
           {field.replay_date ? (
-            <View style={{ marginTop: space.md }}>
-              <View accessibilityRole="radiogroup" style={{ flexDirection: "row", backgroundColor: t.cardAlt, borderRadius: 12, padding: 4, gap: 4 }}>
-                {[null, field.replay_date].map((d) => {
-                  const active = (field.as_of ?? null) === d;
-                  const label = d
-                    ? tr("home.modeReplay", {
-                        date: new Date(d + "T00:00:00Z").toLocaleDateString(i18n.language, {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                          timeZone: "UTC",
-                        }),
-                      })
-                    : tr("home.modeToday");
-                  return (
-                    <Pressable
-                      key={d ?? "today"}
-                      accessibilityRole="radio"
-                      accessibilityState={{ checked: active }}
-                      accessibilityLabel={label}
-                      onPress={() => setField({ ...field, as_of: d })}
-                      testID={d ? "mode-replay" : "mode-today"}
-                      style={{
-                        flex: 1,
-                        minHeight: 44,
-                        borderRadius: 9,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: active ? t.card : "transparent",
-                      }}
-                    >
-                      <Txt v="small" style={{ fontWeight: active ? "700" : "500" }} color={active ? t.primary : t.textMuted}>
-                        {label}
-                      </Txt>
-                    </Pressable>
-                  );
-                })}
-              </View>
+            <View style={{ marginTop: space.lg }}>
+              <Segmented
+                value={field.as_of ? "replay" : "today"}
+                onChange={(v) => setField({ ...field, as_of: v === "replay" ? (field.replay_date ?? null) : null })}
+                options={[
+                  { value: "today", label: tr("home.modeToday"), testID: "mode-today" },
+                  {
+                    value: "replay",
+                    label: tr("home.modeReplay", {
+                      date: new Date(field.replay_date + "T00:00:00Z").toLocaleDateString(i18n.language, {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        timeZone: "UTC",
+                      }),
+                    }),
+                    testID: "mode-replay",
+                  },
+                ]}
+              />
               {field.as_of ? (
-                <Txt v="small" muted style={{ marginTop: 4 }}>
+                <Txt v="small" muted style={{ marginTop: space.xs }}>
                   {tr("home.replayNote", {
                     date: new Date(field.as_of + "T00:00:00Z").toLocaleDateString(i18n.language, {
                       day: "numeric",
@@ -118,105 +97,127 @@ export default function Home() {
 
           {a ? (
             <>
-              <Section
-                title={tr("home.topActions")}
-                right={
-                  <Txt v="small" muted>
-                    {tr("home.updated", { date: new Date(a.generated_at).toLocaleDateString(i18n.language) })}
+              <Tip id="today-v2" text={tr("tips.today")} />
+              <View style={{ marginTop: space.sm }}>
+                {top.length ? (
+                  top.slice(0, 3).map((c, i) => <ActionCard key={c.id} card={c} system={sys} testID={`action-card-${i}`} />)
+                ) : (
+                  <EmptyState icon="checkmark-circle-outline" title={tr("home.allClearTitle")} text={tr("home.allClearText")} />
+                )}
+              </View>
+
+              {!auth.user ? (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => router.push("/account")}
+                  testID="account-nudge"
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: space.md,
+                    marginTop: space.lg,
+                    padding: space.md,
+                    borderRadius: radius.lg,
+                    backgroundColor: t.cardAlt,
+                  }}
+                >
+                  <Ionicons name="phone-portrait-outline" size={20} color={t.primary} />
+                  <Txt v="small" style={{ flex: 1 }}>
+                    {tr("account.nudge")}
                   </Txt>
-                }
-              >
-                {top.slice(0, 3).map((c, i) => (
-                  <ActionCard key={c.id} card={c} system={sys} testID={`action-card-${i}`} />
-                ))}
-              </Section>
-
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={`${tr("home.drought")}: ${a.drought.label}`}
-                onPress={() => router.push({ pathname: "/why/[cardId]", params: { cardId: "__drought" } })}
-                testID="drought-chip"
-              >
-                <Card>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <Txt v="h3">{tr("home.drought")}</Txt>
-                    <RiskBadge risk={droughtRisk(a.drought.level)} label={a.drought.label} />
-                  </View>
-                  <View style={{ flexDirection: "row", gap: space.lg, marginTop: space.sm, flexWrap: "wrap" }}>
-                    {a.drought.spi90 !== null ? (
-                      <Txt v="small" muted>
-                        SPI-90: {a.drought.spi90.toFixed(1)}
-                      </Txt>
-                    ) : null}
-                    {a.drought.sm_percentile !== null ? (
-                      <Txt v="small" muted>
-                        SMAP: P{Math.round(a.drought.sm_percentile)}
-                      </Txt>
-                    ) : null}
-                    {a.drought.vhi !== null ? (
-                      <Txt v="small" muted>
-                        VHI: {Math.round(a.drought.vhi)}
-                      </Txt>
-                    ) : null}
-                    <Txt v="small" color={t.link}>
-                      {tr("home.why")} ›
-                    </Txt>
-                  </View>
-                </Card>
-              </Pressable>
-
-              <Section title={tr("home.water")}>
-                <Card>
-                  <Txt v="label">{tr("home.rootZone")}</Txt>
-                  <View style={{ height: 14, borderRadius: 7, backgroundColor: t.cardAlt, marginTop: 6, overflow: "hidden" }}>
-                    <View
-                      style={{
-                        width: `${Math.min(100, (a.water.root_zone_depletion_mm / Math.max(1, a.water.taw_mm)) * 100)}%`,
-                        height: 14,
-                        backgroundColor: a.water.root_zone_depletion_mm > a.water.raw_mm ? t.risk.high.dot : t.chart[1],
-                      }}
-                    />
-                  </View>
-                  <Txt v="small" muted style={{ marginTop: 4 }}>
-                    {fmt(a.water.root_zone_depletion_mm, "mm", sys)} / {fmt(a.water.taw_mm, "mm", sys)}
-                  </Txt>
-                  <View style={{ marginTop: space.sm }}>
-                    <KV
-                      k={tr("home.nextIrrigation")}
-                      v={
-                        a.water.next_irrigation_date
-                          ? `${fmt(a.water.next_irrigation_mm, "mm", sys)} · ${new Date(a.water.next_irrigation_date + "T00:00:00Z").toLocaleDateString(i18n.language, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" })}`
-                          : tr("home.noIrrigationNeeded")
-                      }
-                    />
-                    <KV k={tr("home.rain7d")} v={fmt(a.water.forecast_rain_7d_mm, "mm", sys)} />
-                    <KV k={tr("home.et7d")} v={fmt(a.water.forecast_et0_7d_mm, "mm", sys)} />
-                  </View>
-                  {field.irrigation !== "none" && !field.as_of ? (
-                    <IrrigationLog
-                      date={field.last_irrigation_date}
-                      mm={field.last_irrigation_mm}
-                      today={a.as_of}
-                      system={sys}
-                      onSave={(d, mm) => setField({ ...field, last_irrigation_date: d, last_irrigation_mm: mm })}
-                    />
-                  ) : null}
-                </Card>
-                <Card alt>
-                  <Txt v="label">{tr("home.seasonSoFar")}</Txt>
-                  <KV k={tr("home.seasonEt")} v={fmt(a.water.season_et_mm, "mm", sys)} />
-                  <KV k={tr("home.seasonRain")} v={fmt(a.water.season_rain_mm, "mm", sys)} />
-                  <KV k={tr("home.seasonIrr")} v={fmt(a.water.season_irrigation_mm, "mm", sys)} />
-                </Card>
-              </Section>
-
-              {top.length > 3 ? (
-                <Section title={tr("home.moreActions")}>
-                  {top.slice(3).map((c) => (
-                    <ActionCard key={c.id} card={c} system={sys} compact />
-                  ))}
-                </Section>
+                  <Ionicons name="chevron-forward" size={16} color={t.textMuted} />
+                </Pressable>
               ) : null}
+
+              <Disclosure title={tr("home.moreTitle")} subtitle={tr("home.moreSubtitle")} icon="leaf-outline" testID="more-week">
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${tr("home.drought")}: ${a.drought.label}`}
+                  onPress={() => router.push({ pathname: "/why/[cardId]", params: { cardId: "__drought" } })}
+                  testID="drought-chip"
+                  style={{ flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: space.sm }}
+                >
+                  <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4 }}>
+                    <Txt v="label">{tr("home.drought")}</Txt>
+                    <InfoButton term="drought" />
+                  </View>
+                  <RiskBadge risk={droughtRisk(a.drought.level)} label={a.drought.label} />
+                  <Ionicons name="chevron-forward" size={16} color={t.textMuted} />
+                </Pressable>
+                {settings.expert ? (
+                  <Txt v="small" muted>
+                    {[
+                      a.drought.spi90 !== null ? `SPI-90 ${a.drought.spi90.toFixed(1)}` : null,
+                      a.drought.sm_percentile !== null ? `SMAP P${Math.round(a.drought.sm_percentile)}` : null,
+                      a.drought.vhi !== null ? `VHI ${Math.round(a.drought.vhi)}` : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </Txt>
+                ) : null}
+
+                {water ? (
+                  <View style={{ marginTop: space.lg }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                      <Txt v="label" style={{ flex: 1 }}>
+                        {tr("home.rootZone")}
+                      </Txt>
+                      <InfoButton term="soilWater" />
+                    </View>
+                    <View style={{ height: 10, borderRadius: 5, backgroundColor: t.cardAlt, marginTop: space.sm, overflow: "hidden" }}>
+                      <View style={{ width: `${usedPct}%`, height: 10, backgroundColor: stressed ? t.risk.high.dot : t.chart[1] }} />
+                    </View>
+                    <Txt v="small" muted style={{ marginTop: 4 }}>
+                      {tr("home.waterUsed", { used: fmt(water.root_zone_depletion_mm, "mm", sys), total: fmt(water.taw_mm, "mm", sys) })}
+                    </Txt>
+                    <StatRow>
+                      <Stat
+                        label={tr("home.nextIrrigation")}
+                        value={water.next_irrigation_date ? fmt(water.next_irrigation_mm, "mm", sys) : tr("home.noIrrigationNeededShort")}
+                        sub={
+                          water.next_irrigation_date
+                            ? new Date(water.next_irrigation_date + "T00:00:00Z").toLocaleDateString(i18n.language, {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                                timeZone: "UTC",
+                              })
+                            : null
+                        }
+                      />
+                      <Stat label={tr("home.rain7d")} value={fmt(water.forecast_rain_7d_mm, "mm", sys)} />
+                      <Stat label={tr("home.et7d")} value={fmt(water.forecast_et0_7d_mm, "mm", sys)} />
+                    </StatRow>
+                    {field.irrigation !== "none" && !field.as_of ? (
+                      <IrrigationLog
+                        date={field.last_irrigation_date}
+                        mm={field.last_irrigation_mm}
+                        today={a.as_of}
+                        system={sys}
+                        onSave={(d, mm) => setField({ ...field, last_irrigation_date: d, last_irrigation_mm: mm })}
+                      />
+                    ) : null}
+                  </View>
+                ) : null}
+
+                {water ? (
+                  <View style={{ marginTop: space.lg }}>
+                    <Txt v="label">{tr("home.seasonSoFar")}</Txt>
+                    <KV k={tr("home.seasonEt")} v={fmt(water.season_et_mm, "mm", sys)} />
+                    <KV k={tr("home.seasonRain")} v={fmt(water.season_rain_mm, "mm", sys)} />
+                    <KV k={tr("home.seasonIrr")} v={fmt(water.season_irrigation_mm, "mm", sys)} />
+                  </View>
+                ) : null}
+
+                {top.length > 3 ? (
+                  <View style={{ marginTop: space.lg }}>
+                    <Txt v="label">{tr("home.moreActions")}</Txt>
+                    {top.slice(3).map((c) => (
+                      <ActionCard key={c.id} card={c} system={sys} compact />
+                    ))}
+                  </View>
+                ) : null}
+              </Disclosure>
 
               <Txt v="small" muted style={{ marginTop: space.xl }} testID="attribution">
                 {tr("home.attribution", { list: nasaSources.join(", ") })}

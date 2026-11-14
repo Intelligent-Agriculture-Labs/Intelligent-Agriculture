@@ -9,7 +9,8 @@ import type { BaseLayer } from "@/components/map/terrainHtml";
 import { isUS } from "@/components/map/leafletHtml";
 import { NdviChart } from "@/components/satCharts";
 import { Button, Card, Chip, ChipRow, ErrorView, KV, LabeledSlider, Section, Txt } from "@/components/ui";
-import { space, useTheme } from "@/lib/theme";
+import { Disclosure, InfoButton, Sheet } from "@/components/kit";
+import { radius, space, useTheme } from "@/lib/theme";
 import type { Field } from "@/state/farm";
 
 const POLL_MS = 3000;
@@ -90,7 +91,7 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
   const [overlay, setOverlay] = useState<Overlay>("zones");
   const [base, setBase] = useState<BaseLayer>("esri");
   const [opacity, setOpacity] = useState(0.8);
-  const [showSources, setShowSources] = useState(false);
+  const [layersOpen, setLayersOpen] = useState(false);
   const [fit, setFit] = useState(1);
   const d = sat.data;
   const done = d?.status === "done";
@@ -149,7 +150,39 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
 
       {done && d ? (
         <>
-          <View style={{ marginTop: space.md }}>
+          <View style={{ flexDirection: "row", gap: space.sm, marginTop: space.md }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${tr("map.layersButton")}: ${tr(`sat.overlay.${overlay}`)}`}
+              onPress={() => setLayersOpen(true)}
+              testID="sat-layers-button"
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: space.sm,
+                minHeight: 44,
+                paddingHorizontal: space.md,
+                borderRadius: radius.md,
+                backgroundColor: t.cardAlt,
+              }}
+            >
+              <Ionicons name="layers-outline" size={20} color={t.primary} />
+              <Txt v="label" style={{ flex: 1 }} numberOfLines={1}>
+                {tr(`sat.overlay.${overlay}`)}
+              </Txt>
+              <Ionicons name="chevron-down" size={16} color={t.textMuted} />
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={tr("fields.zoomToField")}
+              onPress={() => setFit((n) => n + 1)}
+              style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center", borderRadius: radius.md, backgroundColor: t.cardAlt }}
+            >
+              <Ionicons name="scan" size={20} color={t.primary} />
+            </Pressable>
+          </View>
+          <View style={{ marginTop: space.sm }}>
             <TerrainMap
               lat={field.lat}
               lon={field.lon}
@@ -162,34 +195,6 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
               accessibilityLabel={tr("sat.mapA11y", { layer: tr(`sat.overlay.${overlay}`) })}
             />
           </View>
-          <ChipRow>
-            {(["zones", "ndvi", "truecolor", "none"] as Overlay[]).map((o) => (
-              <Chip key={o} label={tr(`sat.overlay.${o}`)} selected={overlay === o} onPress={() => setOverlay(o)} testID={`sat-overlay-${o}`} />
-            ))}
-            <Chip icon="scan" label={tr("fields.zoomToField")} onPress={() => setFit((n) => n + 1)} />
-          </ChipRow>
-          <ChipRow>
-            {(["esri", ...(isUS(field.lat, field.lon) ? ["naip"] : []), "s2", "street"] as BaseLayer[]).map((b) => (
-              <Chip
-                key={b}
-                icon={b === "esri" ? "image" : b === "naip" ? "flag" : b === "s2" ? "planet" : "map"}
-                label={tr(`map.base.${b}`)}
-                selected={base === b}
-                onPress={() => setBase(b)}
-              />
-            ))}
-          </ChipRow>
-          {overlay !== "none" ? (
-            <LabeledSlider
-              label={tr("map.opacity")}
-              value={opacity}
-              min={0.2}
-              max={1}
-              step={0.05}
-              onChange={setOpacity}
-              format={(v) => `${Math.round(v * 100)} %`}
-            />
-          ) : null}
           {d.latest ? (
             <Txt v="small" muted>
               {tr("sat.latestScene", { date: fmtDate(d.latest.date) })}
@@ -199,9 +204,12 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
           {d.zones ? (
             <Section title={tr("sat.zonesTitle")}>
               <Card testID="sat-zones">
-                <Txt v="small" muted>
-                  {tr("sat.zonesIntro")}
-                </Txt>
+                <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 4 }}>
+                  <Txt v="small" muted style={{ flex: 1 }}>
+                    {tr("sat.zonesIntro")}
+                  </Txt>
+                  <InfoButton term="zones" />
+                </View>
                 <View style={{ marginTop: space.sm, gap: 6 }}>
                   {d.zones.legend.map((z) => (
                     <View key={z.label} style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
@@ -229,14 +237,22 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
 
           <Section title={tr("sat.seriesTitle")}>
             <Card>
+              <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                <InfoButton term="greenness" />
+              </View>
               <NdviChart data={d} />
-              {d.phenology ? (
-                <View style={{ marginTop: space.sm }} testID="sat-phenology">
+              <Txt v="small" muted style={{ marginTop: space.sm }}>
+                {tr("sat.seriesHint")}
+              </Txt>
+            </Card>
+            {d.phenology ? (
+              <Disclosure title={tr("sat.seasonDetails")} icon="calendar-outline" testID="sat-season">
+                <View testID="sat-phenology">
                   <KV k={tr("sat.seasonType")} v={d.phenology.season_type} />
                   <KV k={tr("sat.greenup")} v={fmtDate(d.phenology.greenup)} />
                   <KV
                     k={tr("sat.peak")}
-                    v={`${fmtDate(d.phenology.peak)}${d.phenology.peak_ndvi !== null ? ` · NDVI ${d.phenology.peak_ndvi.toFixed(2)}` : ""}`}
+                    v={`${fmtDate(d.phenology.peak)}${d.phenology.peak_ndvi !== null ? ` · ${tr("sat.greennessShort")} ${d.phenology.peak_ndvi.toFixed(2)}` : ""}`}
                   />
                   <KV k={tr("sat.senescence")} v={fmtDate(d.phenology.senescence)} />
                   {d.phenology.harvest_events?.length ? (
@@ -257,11 +273,8 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
                     </Txt>
                   ) : null}
                 </View>
-              ) : null}
-              <Txt v="small" muted style={{ marginTop: space.sm }}>
-                {tr("sat.seriesHint")}
-              </Txt>
-            </Card>
+              </Disclosure>
+            ) : null}
           </Section>
 
           {d.kcb_now !== null && d.kcb_now !== undefined ? (
@@ -271,6 +284,7 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
                 <Txt v="h3" style={{ flex: 1 }}>
                   {tr("sat.kcbTitle")}
                 </Txt>
+                <InfoButton term="cropWaterFactor" />
                 <Txt v="h3" color={t.primary}>
                   {d.kcb_now.toFixed(2)}
                 </Txt>
@@ -294,33 +308,55 @@ export function SatellitePanel({ field, expert, mapHeight }: { field: Field; exp
             </Section>
           ) : null}
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ expanded: showSources }}
-            accessibilityLabel={tr("map.sources")}
-            onPress={() => setShowSources((v) => !v)}
-            style={{ minHeight: 44, flexDirection: "row", alignItems: "center", gap: space.sm, marginTop: space.lg }}
-          >
-            <Ionicons name={showSources ? "chevron-down" : "chevron-forward"} size={18} color={t.link} />
-            <Txt color={t.link}>{tr("map.sources")}</Txt>
-          </Pressable>
-          {showSources ? (
-            <Card alt>
-              {(d.sources ?? []).map((s) => (
-                <Txt key={s.id} v="small" style={{ marginBottom: 4 }}>
-                  • {s.name} — {s.provider} · {s.resolution}
-                </Txt>
-              ))}
-              {(d.caveats ?? []).map((c, i) => (
-                <Txt key={i} v="small" muted style={{ marginTop: 4 }}>
-                  ⚠ {c}
-                </Txt>
-              ))}
-            </Card>
-          ) : null}
+          <Disclosure title={tr("map.sources")} icon="document-text-outline" testID="sat-sources">
+            {(d.sources ?? []).map((s) => (
+              <Txt key={s.id} v="small" style={{ marginBottom: 4 }}>
+                • {s.name} — {s.provider} · {s.resolution}
+              </Txt>
+            ))}
+            {(d.caveats ?? []).map((c, i) => (
+              <Txt key={i} v="small" muted style={{ marginTop: 4 }}>
+                ⚠ {c}
+              </Txt>
+            ))}
+          </Disclosure>
           <Button kind="ghost" icon="refresh" label={tr("sat.refresh")} onPress={sat.retry} style={{ marginTop: space.sm }} />
         </>
       ) : null}
+      <Sheet visible={layersOpen} onClose={() => setLayersOpen(false)} title={tr("map.layersButton")} testID="sat-layers-sheet">
+        <Txt v="label">{tr("map.layers")}</Txt>
+        <ChipRow>
+          {(["zones", "ndvi", "truecolor", "none"] as Overlay[]).map((o) => (
+            <Chip key={o} label={tr(`sat.overlay.${o}`)} selected={overlay === o} onPress={() => setOverlay(o)} testID={`sat-overlay-${o}`} />
+          ))}
+        </ChipRow>
+        <Txt v="label" style={{ marginTop: space.lg }}>
+          {tr("map.baseTitle")}
+        </Txt>
+        <ChipRow>
+          {(["esri", ...(isUS(field.lat, field.lon) ? ["naip"] : []), "s2", "street"] as BaseLayer[]).map((b) => (
+            <Chip
+              key={b}
+              icon={b === "esri" ? "image" : b === "naip" ? "flag" : b === "s2" ? "planet" : "map"}
+              label={tr(`map.base.${b}`)}
+              selected={base === b}
+              onPress={() => setBase(b)}
+              testID={`sat-base-${b}`}
+            />
+          ))}
+        </ChipRow>
+        {overlay !== "none" ? (
+          <LabeledSlider
+            label={tr("map.opacity")}
+            value={opacity}
+            min={0.2}
+            max={1}
+            step={0.05}
+            onChange={setOpacity}
+            format={(v) => `${Math.round(v * 100)} %`}
+          />
+        ) : null}
+      </Sheet>
     </View>
   );
 }

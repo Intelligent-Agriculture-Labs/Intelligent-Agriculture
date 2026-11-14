@@ -27,6 +27,10 @@ function RootStack() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ title: tr("app.name"), headerShown: false }} />
         <Stack.Screen name="why/[cardId]" options={{ title: tr("why.title"), presentation: "card" }} />
+        <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="account" options={{ title: tr("account.title") }} />
+        <Stack.Screen name="share" options={{ title: tr("share.title") }} />
+        <Stack.Screen name="glossary" options={{ title: tr("glossary.title") }} />
       </Stack>
     </>
   );

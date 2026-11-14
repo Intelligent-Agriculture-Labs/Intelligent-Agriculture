@@ -12,7 +12,7 @@ import { type SyncState, useStore } from "@/state/store";
 type IonName = React.ComponentProps<typeof Ionicons>["name"];
 
 export function syncIcon(s: SyncState): { name: IonName; colorKey: "primary" | "textMuted" | "risk" } {
-  if (!s.enabled) return { name: "cloud-offline-outline", colorKey: "textMuted" };
+  if (!s.enabled) return { name: "person-circle-outline", colorKey: "textMuted" };
   if (s.status === "ok") return { name: "cloud-done-outline", colorKey: "primary" };
   if (s.status === "syncing") return { name: "sync-outline", colorKey: "primary" };
   if (s.status === "offline") return { name: "cloud-offline-outline", colorKey: "textMuted" };
@@ -64,9 +64,7 @@ export function FieldSwitcher() {
             minHeight: MIN_TOUCH,
             paddingHorizontal: space.md,
             borderRadius: 22,
-            borderWidth: 1,
-            borderColor: t.border,
-            backgroundColor: t.card,
+            backgroundColor: t.cardAlt,
             opacity: pressed ? 0.85 : 1,
           })}
         >
@@ -86,7 +84,7 @@ export function FieldSwitcher() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`${tr("sync.title")}: ${syncLabel}`}
-          onPress={() => router.push("/settings")}
+          onPress={() => router.push("/account")}
           style={{ minWidth: MIN_TOUCH, minHeight: MIN_TOUCH, alignItems: "center", justifyContent: "center" }}
           testID="sync-indicator"
         >

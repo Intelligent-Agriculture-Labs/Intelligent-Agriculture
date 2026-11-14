@@ -7,7 +7,7 @@ import { api } from "@/api/client";
 import type { ActionCard as ActionCardT, CropInfo, RotationMetric, RotationStrategy } from "@/api/types";
 import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 import { fmt, type UnitSystem } from "@/lib/units";
-import { RiskBadge, Txt } from "./ui";
+import { Txt } from "./ui";
 
 type IonName = React.ComponentProps<typeof Ionicons>["name"];
 const ICON_FALLBACK: Record<ActionCardT["category"], IonName> = {
@@ -40,15 +40,13 @@ export function ActionCard({ card, system, compact, testID }: { card: ActionCard
       accessibilityRole="button"
       accessibilityLabel={tr("a11y.openWhy", { title: card.title })}
       accessibilityHint={card.detail}
-      onPress={() => (card.id === "plan_rotation" ? router.push("/rotations") : router.push({ pathname: "/why/[cardId]", params: { cardId: card.id } }))}
+      onPress={() => (card.id === "plan_rotation" ? router.push("/plan?tab=years") : router.push({ pathname: "/why/[cardId]", params: { cardId: card.id } }))}
       testID={testID}
       style={({ pressed }) => [
         {
           backgroundColor: t.card,
           borderColor: t.border,
           borderWidth: 1,
-          borderLeftWidth: 6,
-          borderLeftColor: c.dot,
           borderRadius: radius.lg,
           padding: compact ? space.md : space.lg,
           marginTop: space.md,
@@ -57,19 +55,28 @@ export function ActionCard({ card, system, compact, testID }: { card: ActionCard
       ]}
     >
       <View style={{ flexDirection: "row", gap: space.md, alignItems: "flex-start" }}>
-        <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: c.bg, alignItems: "center", justifyContent: "center" }}>
-          <Ionicons name={safeIcon(card.icon, card.category)} size={24} color={c.fg} />
+        <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: c.bg, alignItems: "center", justifyContent: "center" }}>
+          <Ionicons name={safeIcon(card.icon, card.category)} size={21} color={c.fg} />
         </View>
         <View style={{ flex: 1 }}>
           <Txt v={compact ? "label" : "h3"}>{card.title}</Txt>
           {!compact ? (
-            <Txt muted style={{ marginTop: 4 }}>
+            <Txt muted style={{ marginTop: 2 }} numberOfLines={3}>
               {card.detail}
             </Txt>
           ) : null}
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.sm, marginTop: space.sm, alignItems: "center" }}>
-            <RiskBadge risk={card.risk} />
-            {card.amount ? <Txt v="label">{fmt(card.amount.value, card.amount.unit, system)}</Txt> : null}
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.md, marginTop: space.sm, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: c.dot }} />
+              <Txt v="small" color={c.fg} style={{ fontWeight: "600" }}>
+                {tr(`risk.${card.risk}`)}
+              </Txt>
+            </View>
+            {card.amount ? (
+              <Txt v="small" style={{ fontWeight: "600" }}>
+                {fmt(card.amount.value, card.amount.unit, system)}
+              </Txt>
+            ) : null}
             {due ? (
               <Txt v="small" muted>
                 {tr("common.due", { date: due })}
@@ -78,10 +85,7 @@ export function ActionCard({ card, system, compact, testID }: { card: ActionCard
           </View>
         </View>
         <View style={{ alignItems: "center", justifyContent: "center", minHeight: MIN_TOUCH }}>
-          <Txt v="small" color={t.link}>
-            {tr("home.why")}
-          </Txt>
-          <Ionicons name="chevron-forward" size={18} color={t.link} />
+          <Ionicons name="chevron-forward" size={18} color={t.textMuted} />
         </View>
       </View>
     </Pressable>

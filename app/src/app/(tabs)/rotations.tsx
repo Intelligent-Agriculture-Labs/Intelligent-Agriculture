@@ -1,13 +1,14 @@
+import { BackLink, CropPicker } from "@/components/kit";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "@/api/client";
 import { useQuery } from "@/lib/useQuery";
 import type { Priorities, RotationRequest, RotationResponse, RotationStrategy } from "@/api/types";
 import { CoverCalendar, MetricBar, ScoreRing, cropName, useCrops } from "@/components/domain";
-import { Button, Card, Chip, ChipRow, ErrorView, IconButton, LabeledSlider, Loading, OriginBanner, RiskBadge, Screen, Section, Txt } from "@/components/ui";
+import { Button, Card, Chip, ErrorView, IconButton, LabeledSlider, Loading, OriginBanner, RiskBadge, Screen, Section, Txt } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { useStore } from "@/state/store";
 
@@ -138,6 +139,7 @@ export default function Rotations() {
 
   return (
     <Screen testID="rotations">
+      <BackLink label={tr("tabs.insights")} onPress={() => router.navigate("/insights")} testID="back-insights" />
       <Txt v="h1">{tr("rotations.title")}</Txt>
       <Txt muted style={{ marginTop: 4 }}>
         {tr("rotations.subtitle")}
@@ -161,11 +163,12 @@ export default function Rotations() {
                       <IconButton icon="trash" label={tr("rotations.removeYear")} onPress={() => setRot(rot.filter((_, j) => j !== i))} />
                     ) : null}
                   </View>
-                  <ChipRow>
-                    {crops.map((cr) => (
-                      <Chip key={cr.id} label={cr.name} selected={c === cr.id} onPress={() => setRot(rot.map((x, j) => (j === i ? cr.id : x)))} />
-                    ))}
-                  </ChipRow>
+                  <CropPicker
+                    label={tr("rotations.yearN", { n: i + 1 })}
+                    value={c}
+                    onChange={(id) => id && setRot(rot.map((x, j) => (j === i ? id : x)))}
+                    testID={`rot-crop-${i}`}
+                  />
                 </View>
               ))}
               {rot.length < 6 ? (

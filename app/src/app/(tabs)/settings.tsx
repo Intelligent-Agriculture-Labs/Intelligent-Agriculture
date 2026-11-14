@@ -1,41 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Linking, Platform, Switch, TextInput, View } from "react-native";
+import { Linking, Platform, Switch, View } from "react-native";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "@/api/client";
 import { cropName, useCrops } from "@/components/domain";
 import { DOCS_BASE } from "@/components/WhyView";
-import { Button, Card, Chip, ChipRow, KV, Screen, Section, Txt, styles as ui } from "@/components/ui";
-import { QrCode } from "@/components/QrCode";
+import { Disclosure, Group, ListRow, Segmented, Sheet } from "@/components/kit";
+import { Button, KV, Screen, Section, Txt } from "@/components/ui";
 import { useSyncLabel } from "@/components/FieldSwitcher";
-import { formatSyncCode, isValidSyncCode } from "@/state/farm";
 import { LANGUAGES } from "@/i18n";
 import { space, useTheme } from "@/lib/theme";
 import { toFieldInput, useStore } from "@/state/store";
 
+/** "More": account, sharing, preferences, help and data — calm grouped lists. */
 export default function Settings() {
   const t = useTheme();
   const { t: tr } = useTranslation();
-  const { settings, setSettings, field, fields, sync, enableSync, joinFarm, leaveSync, syncNow, farmName, setFarmName } = useStore();
+  const { settings, setSettings, field, fields, sync, auth } = useStore();
   const syncLabel = useSyncLabel();
-  const [joinCode, setJoinCode] = useState("");
-  const [syncErr, setSyncErr] = useState<string | null>(null);
-  const [syncBusy, setSyncBusy] = useState(false);
-  const runSync = async (fn: () => Promise<void>) => {
-    setSyncErr(null);
-    setSyncBusy(true);
-    try {
-      await fn();
-    } catch (e) {
-      setSyncErr(e instanceof Error ? e.message : String(e));
-    } finally {
-      setSyncBusy(false);
-    }
-  };
   const crops = useCrops();
   const [health, setHealth] = useState<string | null>(null);
   const [cleared, setCleared] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
 
   useEffect(() => {
     api
@@ -48,177 +36,137 @@ export default function Settings() {
     if (Platform.OS === "web") window.open(url, "_blank");
     else Linking.openURL(url);
   };
+  const langLabel = LANGUAGES.find((l) => l.code === settings.lang)?.label ?? settings.lang;
 
   return (
     <Screen testID="settings">
       <Txt v="h1">{tr("settings.title")}</Txt>
 
-      <Section title={tr("sync.title")}>
-        <Card testID="sync-card">
-          <Txt muted>{tr("sync.intro")}</Txt>
-          <View style={{ marginTop: space.md }}>
-            <Txt v="label">{tr("sync.farmName")}</Txt>
-            <TextInput
-              accessibilityLabel={tr("sync.farmName")}
-              value={farmName}
-              onChangeText={setFarmName}
-              style={[ui.input, { color: t.text, borderColor: t.border, backgroundColor: t.card, marginTop: space.xs }]}
-              testID="farm-name"
-            />
-          </View>
-          {sync.enabled && sync.syncCode ? (
-            <View style={{ marginTop: space.md, alignItems: "center", gap: space.sm }}>
-              <Txt v="label">{tr("sync.yourCode")}</Txt>
-              <Txt v="h1" style={{ letterSpacing: 4 }} testID="sync-code" accessibilityRole="text">
-                {formatSyncCode(sync.syncCode)}
-              </Txt>
-              <View style={{ padding: space.sm, backgroundColor: "#ffffff", borderRadius: 12 }}>
-                <QrCode value={`fieldshift://join?code=${formatSyncCode(sync.syncCode)}`} size={180} accessibilityLabel={tr("sync.qrA11y")} />
-              </View>
-              <Txt v="small" muted style={{ textAlign: "center" }}>
-                {tr("sync.codeHint")}
-              </Txt>
-              <Txt v="small" testID="sync-status">
-                {syncLabel}
-              </Txt>
-              <View style={{ flexDirection: "row", gap: space.sm, flexWrap: "wrap", justifyContent: "center" }}>
-                <Button kind="secondary" icon="sync" label={tr("sync.syncNow")} onPress={() => runSync(syncNow)} disabled={syncBusy} testID="sync-now" />
-                <Button kind="ghost" icon="log-out-outline" label={tr("sync.leave")} onPress={leaveSync} />
-              </View>
-            </View>
-          ) : (
-            <View style={{ marginTop: space.md, gap: space.sm }}>
-              <Button icon="cloud-upload" label={tr("sync.enable")} onPress={() => runSync(enableSync)} disabled={syncBusy} testID="sync-enable" />
-              <Txt v="label" style={{ marginTop: space.sm }}>
-                {tr("sync.joinLabel")}
-              </Txt>
-              <View style={{ flexDirection: "row", gap: space.sm }}>
-                <TextInput
-                  accessibilityLabel={tr("sync.joinLabel")}
-                  autoCapitalize="characters"
-                  placeholder="XXXX-XXXX"
-                  placeholderTextColor={t.textMuted}
-                  value={joinCode}
-                  onChangeText={(v) => setJoinCode(formatSyncCode(v).slice(0, 9))}
-                  style={[ui.input, { flex: 1, color: t.text, borderColor: t.border, backgroundColor: t.card, letterSpacing: 2 }]}
-                  testID="join-code"
-                />
-                <Button
-                  kind="secondary"
-                  label={tr("sync.join")}
-                  onPress={() => runSync(() => joinFarm(joinCode))}
-                  disabled={syncBusy || !isValidSyncCode(joinCode)}
-                  testID="join-button"
-                />
-              </View>
-              <Txt v="small" muted>
-                {tr("sync.privacy")}
-              </Txt>
-            </View>
-          )}
-          {syncErr ? (
-            <Txt v="small" color={t.risk.severe.fg} style={{ marginTop: space.sm }}>
-              {syncErr}
-            </Txt>
-          ) : null}
-        </Card>
-      </Section>
-
-      <Section title={tr("settings.language")}>
-        <ChipRow>
-          {LANGUAGES.map((l) => (
-            <Chip key={l.code} label={l.label} selected={settings.lang === l.code} onPress={() => setSettings({ lang: l.code })} testID={`lang-${l.code}`} />
-          ))}
-        </ChipRow>
-      </Section>
-
-      <Section title={tr("settings.units")}>
-        <ChipRow>
-          <Chip label={tr("settings.metric")} selected={settings.units === "metric"} onPress={() => setSettings({ units: "metric" })} testID="units-metric" />
-          <Chip
-            label={tr("settings.imperial")}
-            selected={settings.units === "imperial"}
-            onPress={() => setSettings({ units: "imperial" })}
-            testID="units-imperial"
-          />
-        </ChipRow>
-      </Section>
-
-      <Section title={tr("settings.expert")}>
-        <Card>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.md }}>
-            <Txt muted style={{ flex: 1 }}>
-              {tr("settings.expertHint")}
-            </Txt>
-            <Switch
-              accessibilityLabel={tr("settings.expert")}
-              value={settings.expert}
-              onValueChange={(v) => setSettings({ expert: v })}
-              trackColor={{ true: t.primary, false: t.border }}
-              testID="expert-switch"
-            />
-          </View>
-          {settings.expert && field ? (
-            <View style={{ marginTop: space.md, gap: space.sm }}>
-              <Txt v="label">{tr("settings.export")}</Txt>
-              <Button
-                kind="secondary"
-                icon="document-text"
-                label={tr("settings.exportCsv")}
-                onPress={() => open(api.exportUrl("advice.csv", toFieldInput(field, settings.lang)))}
-              />
-              <Button
-                kind="secondary"
-                icon="map"
-                label={tr("settings.exportGeojson")}
-                onPress={() => open(api.exportUrl("field.geojson", toFieldInput(field, settings.lang)))}
-              />
-              <Button kind="ghost" icon="book" label={tr("settings.methodology")} onPress={() => open(DOCS_BASE)} />
-            </View>
-          ) : null}
-        </Card>
-      </Section>
+      <Group>
+        <ListRow
+          icon={auth.user ? "person-circle-outline" : "person-add-outline"}
+          title={auth.user ? auth.user.name || auth.user.email : tr("account.signInRow")}
+          subtitle={auth.user ? `${auth.user.email} · ${syncLabel}` : tr("account.signInRowSub")}
+          onPress={() => router.push("/account")}
+          testID="row-account"
+        />
+        <ListRow
+          icon="qr-code-outline"
+          title={tr("share.title")}
+          subtitle={sync.enabled ? syncLabel : tr("share.rowSub")}
+          onPress={() => router.push("/share")}
+          testID="row-share"
+        />
+      </Group>
 
       {field ? (
         <Section title={tr("settings.field")}>
-          <Card>
-            <KV k="📍" v={field.name} />
-            <KV k={tr("whatif.crop")} v={cropName(crops, field.crop)} />
-            <KV k={tr("onboarding.plantingDate")} v={field.planting_date} />
-            <KV k={tr("onboarding.irrigation")} v={tr(`irrigation.${field.irrigation}`)} />
-            <KV k="lat, lon" v={`${field.lat.toFixed(4)}, ${field.lon.toFixed(4)}`} />
-            <KV k={tr("fields.title")} v={String(fields.length)} />
-            <View style={{ flexDirection: "row", gap: space.sm, flexWrap: "wrap", marginTop: space.sm }}>
-              <Button kind="secondary" icon="create-outline" label={tr("fields.edit")} onPress={() => router.push(`/field-editor?id=${field.id}`)} />
-              <Button kind="secondary" icon="add" label={tr("fields.add")} onPress={() => router.push("/field-editor?mode=new")} />
-              <Button kind="ghost" icon="albums-outline" label={tr("fields.demoFarms")} onPress={() => router.push("/onboarding")} />
-            </View>
-          </Card>
+          <Group>
+            <ListRow
+              icon="create-outline"
+              title={field.name}
+              subtitle={`${cropName(crops, field.crop)} · ${tr(`irrigation.${field.irrigation}`)} · ${tr("fields.count", { count: fields.length })}`}
+              onPress={() => router.push(`/field-editor?id=${field.id}`)}
+              testID="row-edit-field"
+            />
+            <ListRow icon="add-circle-outline" title={tr("fields.add")} onPress={() => router.push("/field-editor?mode=new")} testID="row-add-field" />
+            <ListRow icon="albums-outline" title={tr("fields.demoFarms")} onPress={() => router.push("/onboarding")} />
+          </Group>
         </Section>
       ) : null}
 
-      <Section title={tr("settings.server")}>
-        <Card>
-          <KV k={tr("settings.serverStatus")} v={health ?? "…"} testID="server-status" />
-          <KV k="URL" v={api.base} />
-          <Button
-            kind="ghost"
-            icon="trash"
-            label={cleared ? tr("settings.cleared") : tr("settings.clearCache")}
-            onPress={async () => {
-              const keys = await AsyncStorage.getAllKeys();
-              await AsyncStorage.multiRemove(keys.filter((k) => k.startsWith("fieldshift:cache:")));
-              setCleared(true);
-            }}
+      <Section title={tr("settings.preferences")}>
+        <Group>
+          <ListRow icon="language-outline" title={tr("settings.language")} subtitle={langLabel} onPress={() => setLangOpen(true)} testID="row-language" />
+          <View style={{ paddingVertical: space.md }}>
+            <Txt v="label" style={{ marginBottom: space.sm }}>
+              {tr("settings.units")}
+            </Txt>
+            <Segmented
+              value={settings.units}
+              onChange={(v) => setSettings({ units: v })}
+              options={[
+                { value: "metric", label: tr("settings.metric"), testID: "units-metric" },
+                { value: "imperial", label: tr("settings.imperial"), testID: "units-imperial" },
+              ]}
+            />
+          </View>
+          <ListRow
+            icon="flask-outline"
+            title={tr("settings.expert")}
+            subtitle={tr("settings.expertHint")}
+            right={
+              <Switch
+                accessibilityLabel={tr("settings.expert")}
+                value={settings.expert}
+                onValueChange={(v) => setSettings({ expert: v })}
+                trackColor={{ true: t.primary, false: t.border }}
+                testID="expert-switch"
+              />
+            }
           />
-        </Card>
+        </Group>
       </Section>
 
-      <Section title={tr("settings.about")}>
-        <Card alt>
-          <Txt>{tr("settings.aboutText")}</Txt>
-        </Card>
+      <Section title={tr("settings.help")}>
+        <Group>
+          <ListRow
+            icon="book-outline"
+            title={tr("glossary.title")}
+            subtitle={tr("glossary.subtitle")}
+            onPress={() => router.push("/glossary")}
+            testID="row-glossary"
+          />
+          <ListRow icon="play-circle-outline" title={tr("welcome.again")} onPress={() => router.push("/welcome")} testID="row-welcome" />
+          <ListRow icon="document-text-outline" title={tr("settings.methodology")} onPress={() => open(DOCS_BASE)} />
+        </Group>
       </Section>
+
+      {settings.expert && field ? (
+        <Section title={tr("settings.export")}>
+          <Group>
+            <ListRow
+              icon="document-text"
+              title={tr("settings.exportCsv")}
+              onPress={() => open(api.exportUrl("advice.csv", toFieldInput(field, settings.lang)))}
+            />
+            <ListRow icon="map" title={tr("settings.exportGeojson")} onPress={() => open(api.exportUrl("field.geojson", toFieldInput(field, settings.lang)))} />
+          </Group>
+        </Section>
+      ) : null}
+
+      <Disclosure title={tr("settings.about")} subtitle={health ?? "…"} icon="information-circle-outline" testID="about">
+        <Txt>{tr("settings.aboutText")}</Txt>
+        <View style={{ marginTop: space.md }}>
+          <KV k={tr("settings.serverStatus")} v={health ?? "…"} testID="server-status" />
+          <KV k="URL" v={api.base} />
+        </View>
+        <Button
+          kind="ghost"
+          icon="trash-outline"
+          label={cleared ? tr("settings.cleared") : tr("settings.clearCache")}
+          onPress={async () => {
+            const keys = await AsyncStorage.getAllKeys();
+            await AsyncStorage.multiRemove(keys.filter((k) => k.startsWith("fieldshift:cache:")));
+            setCleared(true);
+          }}
+        />
+      </Disclosure>
+
+      <Sheet visible={langOpen} onClose={() => setLangOpen(false)} title={tr("settings.language")}>
+        {LANGUAGES.map((l) => (
+          <ListRow
+            key={l.code}
+            title={l.label}
+            onPress={() => {
+              setSettings({ lang: l.code });
+              setLangOpen(false);
+            }}
+            right={settings.lang === l.code ? <Ionicons name="checkmark" size={20} color={t.primary} /> : <View />}
+            testID={`lang-${l.code}`}
+          />
+        ))}
+      </Sheet>
     </Screen>
   );
 }

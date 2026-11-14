@@ -1,5 +1,4 @@
 import React from "react";
-import { useWindowDimensions } from "react-native";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
@@ -13,21 +12,19 @@ const icon = (name: IonName) =>
     return <Ionicons name={name} color={String(color)} size={size} />;
   };
 
+/** Five calm tabs. What-if, Climate and the rotation explorer live under Insights (hidden routes, still deep-linkable). */
 const TABS: { name: string; icon: IonName }[] = [
-  { name: "home", icon: "today" },
-  { name: "map", icon: "map" },
-  { name: "plan", icon: "calendar" },
-  { name: "rotations", icon: "repeat" },
-  { name: "whatif", icon: "flask" },
-  { name: "climate", icon: "trending-up" },
-  { name: "settings", icon: "settings" },
+  { name: "home", icon: "sunny-outline" },
+  { name: "map", icon: "map-outline" },
+  { name: "plan", icon: "calendar-outline" },
+  { name: "insights", icon: "bulb-outline" },
+  { name: "settings", icon: "ellipsis-horizontal-circle-outline" },
 ];
+const HIDDEN = ["rotations", "whatif", "climate"];
 
 export default function TabLayout() {
   const t = useTheme();
   const { t: tr } = useTranslation();
-  const { width } = useWindowDimensions();
-  const narrow = width < 700; // 7 tabs: use short labels on phones (full label stays the accessibility label)
   return (
     <ScreenHeaderContext.Provider value={<FieldSwitcher />}>
       <Tabs
@@ -35,9 +32,8 @@ export default function TabLayout() {
           headerShown: false,
           tabBarActiveTintColor: t.primary,
           tabBarInactiveTintColor: t.textMuted,
-          tabBarStyle: { backgroundColor: t.card, borderTopColor: t.border, minHeight: 56 },
-          tabBarLabelStyle: { fontSize: narrow ? 10 : 12, fontWeight: "600" },
-          tabBarItemStyle: narrow ? { paddingHorizontal: 0 } : undefined,
+          tabBarStyle: { backgroundColor: t.card, borderTopColor: t.border, minHeight: 58 },
+          tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
         }}
       >
         {TABS.map((tab) => (
@@ -45,12 +41,15 @@ export default function TabLayout() {
             key={tab.name}
             name={tab.name}
             options={{
-              title: narrow ? tr(`tabsShort.${tab.name}`) : tr(`tabs.${tab.name}`),
+              title: tr(`tabs.${tab.name}`),
               tabBarAccessibilityLabel: tr(`tabs.${tab.name}`),
               tabBarIcon: icon(tab.icon),
               tabBarButtonTestID: `tab-${tab.name}`,
             }}
           />
+        ))}
+        {HIDDEN.map((name) => (
+          <Tabs.Screen key={name} name={name} options={{ href: null, title: tr(`tabs.${name}`) }} />
         ))}
       </Tabs>
     </ScreenHeaderContext.Provider>

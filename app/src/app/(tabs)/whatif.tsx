@@ -1,12 +1,12 @@
+import { BackLink, CropPicker } from "@/components/kit";
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { api } from "@/api/client";
 import { useQuery } from "@/lib/useQuery";
 import type { SimulateRequest, SimulateResponse } from "@/api/types";
 import { BarChart } from "@/components/charts";
-import { useCrops } from "@/components/domain";
 import { WhyView } from "@/components/WhyView";
 import { Button, Card, Chip, ChipRow, DateField, ErrorView, LabeledSlider, Loading, OriginBanner, Screen, Section, Txt } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
@@ -42,7 +42,6 @@ export default function WhatIf() {
   const t = useTheme();
   const { t: tr } = useTranslation();
   const { field, settings } = useStore();
-  const crops = useCrops();
   const sys = settings.units;
   const [crop, setCrop] = useState(field?.crop ?? "maize");
   const [date, setDate] = useState(field?.planting_date ?? new Date().toISOString().slice(0, 10));
@@ -83,6 +82,7 @@ export default function WhatIf() {
 
   return (
     <Screen testID="whatif">
+      <BackLink label={tr("tabs.insights")} onPress={() => router.navigate("/insights")} testID="back-insights" />
       <Txt v="h1">{tr("whatif.title")}</Txt>
       <Txt muted style={{ marginTop: 4 }}>
         {tr("whatif.subtitle", { years })}
@@ -91,13 +91,9 @@ export default function WhatIf() {
 
       <Card>
         <Txt v="label">{tr("whatif.crop")}</Txt>
-        <ChipRow>
-          {crops
-            .filter((c) => c.type !== "cover")
-            .map((c) => (
-              <Chip key={c.id} label={c.name} selected={crop === c.id} onPress={() => setCrop(c.id)} />
-            ))}
-        </ChipRow>
+        <View style={{ marginTop: space.sm }}>
+          <CropPicker label={tr("whatif.crop")} value={crop} onChange={(c) => c && setCrop(c)} filter={(c) => c.type !== "cover"} testID="whatif-crop" />
+        </View>
         <DateField label={tr("whatif.plantingDate")} value={date} onChange={setDate} testID="whatif-date" />
         <Txt v="label" style={{ marginTop: space.sm }}>
           {tr("whatif.strategy")}
