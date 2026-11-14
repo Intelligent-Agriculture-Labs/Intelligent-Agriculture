@@ -8,9 +8,18 @@ import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 import type { Risk } from "@/api/types";
 import type { Origin } from "@/api/client";
 
+/** Content rendered at the top of every <Screen> inside the tab navigator (the field switcher). */
+export const ScreenHeaderContext = React.createContext<React.ReactNode>(null);
+
 export function Screen({ children, scroll = true, testID }: { children: React.ReactNode; scroll?: boolean; testID?: string }) {
   const t = useTheme();
-  const inner = <View style={styles.column}>{children}</View>;
+  const header = React.useContext(ScreenHeaderContext);
+  const inner = (
+    <View style={styles.column}>
+      {header}
+      {children}
+    </View>
+  );
   return (
     <SafeAreaView edges={["top", "left", "right"]} style={{ flex: 1, backgroundColor: t.bg }} testID={testID}>
       {scroll ? (

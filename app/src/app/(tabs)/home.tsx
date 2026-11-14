@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ActionCard, cropName, useCrops } from "@/components/domain";
 import { IrrigationLog } from "@/components/IrrigationLog";
+import { FieldSwitcher } from "@/components/FieldSwitcher";
 import { Card, ErrorView, KV, Loading, OriginBanner, RiskBadge, Section, Txt, styles as ui } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/units";
@@ -33,6 +34,7 @@ export default function Home() {
         refreshControl={<RefreshControl refreshing={advice.loading && !!a} onRefresh={refreshAdvice} tintColor={t.primary} />}
       >
         <View style={ui.column} testID="home">
+          <FieldSwitcher />
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: space.md }}>
             <View style={{ flex: 1 }}>
               <Txt v="h1">{tr("home.title")}</Txt>
@@ -43,7 +45,7 @@ export default function Home() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={tr("home.changeField")}
-              onPress={() => router.push("/onboarding")}
+              onPress={() => router.push(`/field-editor?id=${field.id}`)}
               style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }}
               testID="change-field"
             >
