@@ -3,6 +3,11 @@ import { Platform } from "react-native";
 import type {
   AdviceResponse,
   ClimateResponse,
+  Farm,
+  FarmSettings,
+  FieldRecord,
+  SatelliteRequest,
+  SatelliteResponse,
   CropInfo,
   FieldInput,
   PlannerRequest,
@@ -46,12 +51,12 @@ export const API_BASE = defaultBase();
 const TIMEOUT_MS = 120000; // first uncached call can take ~1 min (NASA APIs)
 const CACHE_PREFIX = "fieldshift:cache:v1:";
 
-async function http<T>(path: string, body?: unknown): Promise<T> {
+async function http<T>(path: string, body?: unknown, method?: "GET" | "POST" | "PUT", timeoutMs = TIMEOUT_MS): Promise<T> {
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const res = await fetch(`${API_BASE}${path}`, {
-      method: body === undefined ? "GET" : "POST",
+      method: method ?? (body === undefined ? "GET" : "POST"),
       headers: body === undefined ? { Accept: "application/json" } : { "Content-Type": "application/json", Accept: "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: ctrl.signal,
@@ -171,6 +176,19 @@ export const api = {
     withCache<PlannerResponse>(k("plan", r.lat, r.lon, r.crop, r.planting_date, r.irrigation, r.water_allocation_mm ?? "", r.as_of ?? ""), () =>
       http("/api/planner", r),
     ),
+  /* ---- farm sync (no account: random farm_id + short sync code) ---- */
+  farms: {
+    create: (b: { name?: string; fields?: FieldRecord[]; settings?: FarmSettings }) => http<Farm>("/api/farms", b, "POST", 20000),
+    get: (farmId: string) => http<Farm>(`/api/farms/${encodeURIComponent(farmId)}`, undefined, "GET", 20000),
+    put: (farmId: string, b: { name?: string; fields: FieldRecord[]; settings?: FarmSettings }) =>
+      http<Farm>(`/api/farms/${encodeURIComponent(farmId)}`, b, "PUT", 20000),
+    join: (syncCode: string) => http<Farm>("/api/farms/join", { sync_code: syncCode }, "POST", 20000),
+  },
+  /** one call of the async satellite job (start or poll); the caller polls until status === "done" */
+  satelliteOnce: (r: SatelliteRequest) => http<SatelliteResponse>("/api/satellite", r, "POST", 60000),
+  satelliteKey: (r: SatelliteRequest) => k("sat", r.lat, r.lon, JSON.stringify(r.polygon ?? null), r.start ?? "", r.end ?? ""),
+  saveSatellite: (key: string, data: SatelliteResponse) => writeCache(key, data),
+  cachedSatellite: (key: string) => readCache<SatelliteResponse>(key),
   /** absolute URL for server-relative paths such as terrain PNG overlays */
   abs: (path: string) => (path.startsWith("http") ? path : `${API_BASE}${path}`),
   exportUrl: (kind: "advice.csv" | "field.geojson", f: FieldInput) =>
