@@ -25,14 +25,27 @@ from fieldshift.engine import context, service  # noqa: E402
 if "--enrich-only" in sys.argv:  # satellite layers only, one site per process (run in parallel)
     for p in service.presets():
         if p["id"] in sys.argv:
-            for d in (None, {"fallon_nv": "2025-07-15", "machakos_ke": "2025-11-20", "cordoba_es": "2025-04-10", "ames_ia": "2025-07-20"}[p["id"]]):
+            for d in (
+                None,
+                {
+                    "fallon_nv": "2025-07-15",
+                    "machakos_ke": "2025-11-20",
+                    "cordoba_es": "2025-04-10",
+                    "ames_ia": "2025-07-20",
+                }[p["id"]],
+            ):
                 t = dt.date.fromisoformat(d) if d else dt.date.today()
                 e = context.enrichment(p["lat"], p["lon"], t)
                 print(p["id"], d, {k: len(v) for k, v in e.items()}, flush=True)
     sys.exit(0)
 
 # summer replay dates used by the demo (irrigation season; documented in docs/USER_GUIDE.md)
-REPLAY = {"fallon_nv": "2025-07-15", "machakos_ke": "2025-11-20", "cordoba_es": "2025-04-10", "ames_ia": "2025-07-20"}
+REPLAY = {
+    "fallon_nv": "2025-07-15",
+    "machakos_ke": "2025-11-20",
+    "cordoba_es": "2025-04-10",
+    "ames_ia": "2025-07-20",
+}
 
 
 def main() -> None:
@@ -47,18 +60,39 @@ def main() -> None:
             if "--no-enrich" not in sys.argv:
                 enr = context.enrichment(p["lat"], p["lon"], today)
                 print("   enrichment", as_of, {k: len(v) for k, v in enr.items()}, flush=True)
-            inp = {"lat": p["lat"], "lon": p["lon"], "crop": p["crop"], "planting_date": p["planting_date"], "irrigation": p["irrigation"],
-                   "as_of": as_of, "enrich_timeout_s": 5 if "--no-enrich" in sys.argv else 900}
+            inp = {
+                "lat": p["lat"],
+                "lon": p["lon"],
+                "crop": p["crop"],
+                "planting_date": p["planting_date"],
+                "irrigation": p["irrigation"],
+                "as_of": as_of,
+                "enrich_timeout_s": 5 if "--no-enrich" in sys.argv else 900,
+            }
             a = service.advice(inp)
             print("   advice", as_of, [c["title"] for c in a["cards"]], flush=True)
             for lang in ("es", "fr", "sw", "hi", "de"):
                 service.advice({**inp, "lang": lang})
         service.climate_api(p["lat"], p["lon"])
-        r = service.rotations_api({"lat": p["lat"], "lon": p["lon"], "current_rotation": p["current_rotation"], "irrigation": p["irrigation"]})
+        r = service.rotations_api(
+            {
+                "lat": p["lat"],
+                "lon": p["lon"],
+                "current_rotation": p["current_rotation"],
+                "irrigation": p["irrigation"],
+            }
+        )
         print("   rotations", [(s["name"], s["total_score"]) for s in r["strategies"]], flush=True)
-        s = service.simulate_api({"lat": p["lat"], "lon": p["lon"], "crop": p["crop"], "planting_date": p["planting_date"],
-                                  "irrigation_strategy": "full" if p["irrigation"] != "none" else "rainfed",
-                                  "irrigation_method": p["irrigation"] if p["irrigation"] != "none" else "sprinkler"})
+        s = service.simulate_api(
+            {
+                "lat": p["lat"],
+                "lon": p["lon"],
+                "crop": p["crop"],
+                "planting_date": p["planting_date"],
+                "irrigation_strategy": "full" if p["irrigation"] != "none" else "rainfed",
+                "irrigation_method": p["irrigation"] if p["irrigation"] != "none" else "sprinkler",
+            }
+        )
         print("   simulate", s["summary"], flush=True)
         sources.soil(p["lat"], p["lon"])
         print(f"   done in {time.time() - t0:.0f}s", flush=True)

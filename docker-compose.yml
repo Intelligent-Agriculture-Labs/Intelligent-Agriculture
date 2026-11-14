@@ -1,0 +1,22 @@
+# One-command start:  docker compose up --build   ->  web app http://localhost:8080 , API docs http://localhost:8000/docs
+# Offline demo (no network needed, pre-cached NASA data):  FIELDSHIFT_OFFLINE=1 docker compose up --build
+services:
+  api:
+    build: ./backend
+    environment:
+      FIELDSHIFT_OFFLINE: ${FIELDSHIFT_OFFLINE:-0}
+      FIELDSHIFT_ORNL_RETRIES: ${FIELDSHIFT_ORNL_RETRIES:-1}
+    volumes:
+      - cache:/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+  web:
+    build: ./app
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+volumes:
+  cache:

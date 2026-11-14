@@ -53,15 +53,32 @@ def metrics(a: np.ndarray, b: np.ndarray) -> dict[str, float]:
     m = np.isfinite(a) & np.isfinite(b)
     a, b = a[m], b[m]
     r = float(np.corrcoef(a, b)[0, 1]) if len(a) > 2 else float("nan")
-    return {"n": int(m.sum()), "bias": round(float(np.mean(a - b)), 3), "rmse": round(float(np.sqrt(np.mean((a - b) ** 2))), 3),
-            "mae": round(float(np.mean(np.abs(a - b))), 3), "r": round(r, 3), "r2": round(r * r, 3),
-            "mean_model": round(float(np.mean(a)), 3), "mean_ref": round(float(np.mean(b)), 3)}
+    return {
+        "n": int(m.sum()),
+        "bias": round(float(np.mean(a - b)), 3),
+        "rmse": round(float(np.sqrt(np.mean((a - b) ** 2))), 3),
+        "mae": round(float(np.mean(np.abs(a - b))), 3),
+        "r": round(r, 3),
+        "r2": round(r * r, 3),
+        "mean_model": round(float(np.mean(a)), 3),
+        "mean_ref": round(float(np.mean(b)), 3),
+    }
 
 
 def era5_daily(lat: float, lon: float, start: dt.date, end: dt.date, daily: str) -> dict[str, Any]:
-    f = get_json("https://archive-api.open-meteo.com/v1/archive",
-                 {"latitude": round(lat, 3), "longitude": round(lon, 3), "start_date": start.isoformat(), "end_date": end.isoformat(),
-                  "daily": daily, "timezone": "auto"}, ttl_s=30 * 86400, timeout_s=180)
+    f = get_json(
+        "https://archive-api.open-meteo.com/v1/archive",
+        {
+            "latitude": round(lat, 3),
+            "longitude": round(lon, 3),
+            "start_date": start.isoformat(),
+            "end_date": end.isoformat(),
+            "daily": daily,
+            "timezone": "auto",
+        },
+        ttl_s=30 * 86400,
+        timeout_s=180,
+    )
     return f.data["daily"]
 
 
@@ -90,7 +107,9 @@ def exp_et0() -> dict[str, Any]:
             ax.plot([0, lim], [0, lim], "k--", lw=0.8)
             ax.set_xlabel("ERA5 FAO-56 ET₀ (mm/month)")
             ax.set_ylabel("FieldShift ET₀ from NASA POWER (mm/month)")
-            ax.set_title(f"ET₀ monthly, {sid} 2015–2024\nr={res[sid]['monthly_mm']['r']}, bias={res[sid]['monthly_mm']['bias']} mm")
+            ax.set_title(
+                f"ET₀ monthly, {sid} 2015–2024\nr={res[sid]['monthly_mm']['r']}, bias={res[sid]['monthly_mm']['bias']} mm"
+            )
             fig.tight_layout()
             fig.savefig(OUT / f"et0_{sid}.png", dpi=110)
             plt.close(fig)
@@ -100,7 +119,11 @@ def exp_et0() -> dict[str, Any]:
 # --------------------------------------------------------------------------- 2. soil water vs ERA5-Land
 def exp_soil_water() -> dict[str, Any]:
     """Rain-fed FieldShift root-zone relative water (1 − Dr/TAW) vs. ERA5-Land 7–100 cm soil moisture, growing seasons."""
-    cases = {"ames_ia": ("maize", "05-01"), "cordoba_es": ("winter_wheat", "11-15"), "machakos_ke": ("maize", "10-20")}
+    cases = {
+        "ames_ia": ("maize", "05-01"),
+        "cordoba_es": ("winter_wheat", "11-15"),
+        "machakos_ke": ("maize", "10-20"),
+    }
     res = {}
     for sid, (cid, md) in cases.items():
         lat, lon = SITES[sid]
@@ -109,8 +132,21 @@ def exp_soil_water() -> dict[str, Any]:
         all_m, all_r = [], []
         for y in range(2015, 2024):
             p = dt.date(y, int(md[:2]), int(md[3:]))
-            req = gdd_requirement(__import__("fieldshift.science.cropmodel", fromlist=["crop"]).crop(cid), ctx.weather, p, list(range(2005, 2020)))
-            r = simulate(cid, ctx.weather, p, taw_per_m=ctx.taw_per_m, strategy="rainfed", gdd_req=req, record_daily=True)
+            req = gdd_requirement(
+                __import__("fieldshift.science.cropmodel", fromlist=["crop"]).crop(cid),
+                ctx.weather,
+                p,
+                list(range(2005, 2020)),
+            )
+            r = simulate(
+                cid,
+                ctx.weather,
+                p,
+                taw_per_m=ctx.taw_per_m,
+                strategy="rainfed",
+                gdd_req=req,
+                record_daily=True,
+            )
             dates = [dt.date.fromisoformat(x) for x in r.daily["date"]]
             rel = 1 - np.array(r.daily["dr"]) / np.maximum(1, np.array(r.daily["taw"]))
             era = sources.era5_soil_moisture(lat, lon, dates[0], dates[-1])
@@ -121,8 +157,13 @@ def exp_soil_water() -> dict[str, Any]:
             all_m.append((rel[:n] - np.nanmean(rel[:n])) / (np.nanstd(rel[:n]) or 1))
             all_r.append((ref[:n] - np.nanmean(ref[:n])) / (np.nanstd(ref[:n]) or 1))
         pooled = metrics(np.concatenate(all_m), np.concatenate(all_r))
-        res[sid] = {"crop": cid, "seasons": len(rs), "median_r_per_season": round(float(np.nanmedian(rs)), 3),
-                    "pooled_standardized_r": pooled["r"], "per_season_r": rs}
+        res[sid] = {
+            "crop": cid,
+            "seasons": len(rs),
+            "median_r_per_season": round(float(np.nanmedian(rs)), 3),
+            "pooled_standardized_r": pooled["r"],
+            "per_season_r": rs,
+        }
     return res
 
 
@@ -134,8 +175,12 @@ def exp_usdm() -> dict[str, Any]:
     for sid, fips in counties.items():
         lat, lon = SITES[sid]
         ctx = build(lat, lon, AS_OF)
-        f = get_json("https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent",
-                     {"aoi": fips, "startdate": "1/1/2005", "enddate": "12/31/2024", "statisticsType": 1}, ttl_s=60 * 86400, timeout_s=120)
+        f = get_json(
+            "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent",
+            {"aoi": fips, "startdate": "1/1/2005", "enddate": "12/31/2024", "statisticsType": 1},
+            ttl_s=60 * 86400,
+            timeout_s=120,
+        )
         rows = f.data
         w = ctx.weather
         n = ctx.idx(AS_OF) + 1
@@ -167,18 +212,33 @@ def exp_usdm() -> dict[str, Any]:
         rho_lvl = stats.spearmanr(np.array(lvl), dsci_a)
         rho_v2 = stats.spearmanr(np.array(lvl_v2), dsci_a)
 
-        def det(levels: list[int]) -> dict[str, Any]:
+        def det(levels: list[int], dsci_a: np.ndarray = dsci_a) -> dict[str, Any]:
             usdm_d1 = dsci_a >= 200  # ≥ D1 over (roughly) the whole county
             fs_d1 = np.array(levels) >= 2
             tp = int(np.sum(usdm_d1 & fs_d1))
             fp = int(np.sum(~usdm_d1 & fs_d1))
             fn = int(np.sum(usdm_d1 & ~fs_d1))
-            return {"hit_rate": round(tp / max(1, tp + fn), 3), "false_alarm_ratio": round(fp / max(1, tp + fp), 3), "tp": tp, "fp": fp, "fn": fn}
+            return {
+                "hit_rate": round(tp / max(1, tp + fn), 3),
+                "false_alarm_ratio": round(fp / max(1, tp + fp), 3),
+                "tp": tp,
+                "fp": fp,
+                "fn": fn,
+            }
 
-        res[sid] = {"weeks": len(dsci), "spearman_spi90": round(float(rho_spi.statistic), 3), "spearman_spei90": round(float(rho_spei.statistic), 3),
-                    "spearman_level_v1": round(float(rho_lvl.statistic), 3), "spearman_level_v2": round(float(rho_v2.statistic), 3),
-                    **{f"spearman_{k}": round(float(stats.spearmanr(-np.array(v), dsci_a).statistic), 3) for k, v in extra.items()},
-                    "d1_detection_v1": det(lvl), "d1_detection_v2": det(lvl_v2)}
+        res[sid] = {
+            "weeks": len(dsci),
+            "spearman_spi90": round(float(rho_spi.statistic), 3),
+            "spearman_spei90": round(float(rho_spei.statistic), 3),
+            "spearman_level_v1": round(float(rho_lvl.statistic), 3),
+            "spearman_level_v2": round(float(rho_v2.statistic), 3),
+            **{
+                f"spearman_{k}": round(float(stats.spearmanr(-np.array(v), dsci_a).statistic), 3)
+                for k, v in extra.items()
+            },
+            "d1_detection_v1": det(lvl),
+            "d1_detection_v2": det(lvl_v2),
+        }
         if plt is not None:
             fig, ax = plt.subplots(figsize=(8, 3))
             dd = [dt.date.fromisoformat(r["mapDate"][:10]) for r in rows][: len(dsci)]
@@ -186,7 +246,9 @@ def exp_usdm() -> dict[str, Any]:
             ax2 = ax.twinx()
             ax2.plot(dd, spei90, label="FieldShift SPEI-90 (NASA POWER)", color="#2563eb", lw=0.8)
             ax2.invert_yaxis()
-            ax.set_title(f"Drought: FieldShift vs U.S. Drought Monitor — {sid} (ρ = {res[sid]['spearman_spei90']})")
+            ax.set_title(
+                f"Drought: FieldShift vs U.S. Drought Monitor — {sid} (ρ = {res[sid]['spearman_spei90']})"
+            )
             fig.legend(loc="upper left", fontsize=7)
             fig.tight_layout()
             fig.savefig(OUT / f"usdm_{sid}.png", dpi=110)
@@ -205,21 +267,40 @@ def exp_yield_signal() -> dict[str, Any]:
     req = gdd_requirement(crop("maize"), ctx.weather, dt.date(2000, 5, 1), years)
     ys = {}
     for y in years:
-        r = simulate("maize", ctx.weather, dt.date(y, 5, 1), taw_per_m=ctx.taw_per_m, strategy="rainfed", gdd_req=req)
+        r = simulate(
+            "maize", ctx.weather, dt.date(y, 5, 1), taw_per_m=ctx.taw_per_m, strategy="rainfed", gdd_req=req
+        )
         ys[y] = r.yield_t_ha
     order = sorted(ys, key=lambda k: ys[k])
-    out = {"simulated_yield_t_ha": ys, "rank_of_1988": order.index(1988) + 1, "rank_of_2012": order.index(2012) + 1, "n_years": len(years),
-           "median": round(float(np.median(list(ys.values()))), 2)}
+    out = {
+        "simulated_yield_t_ha": ys,
+        "rank_of_1988": order.index(1988) + 1,
+        "rank_of_2012": order.index(2012) + 1,
+        "n_years": len(years),
+        "median": round(float(np.median(list(ys.values()))), 2),
+    }
     # Kenya: documented drought seasons (short rains OND) 2016 and 2005 — FEWS NET / Kenya NDMA
     lat, lon = SITES["machakos_ke"]
     ctx = build(lat, lon, AS_OF)
     yk = {}
     reqk = gdd_requirement(crop("maize"), ctx.weather, dt.date(2000, 10, 20), list(range(1990, 2020)))
     for y in range(1990, 2024):
-        r = simulate("maize", ctx.weather, dt.date(y, 10, 20), taw_per_m=ctx.taw_per_m, strategy="rainfed", gdd_req=reqk)
+        r = simulate(
+            "maize",
+            ctx.weather,
+            dt.date(y, 10, 20),
+            taw_per_m=ctx.taw_per_m,
+            strategy="rainfed",
+            gdd_req=reqk,
+        )
         yk[y] = r.yield_t_ha
     ok = sorted(yk, key=lambda k: yk[k])
-    out["kenya_short_rains"] = {"simulated_yield_t_ha": yk, "rank_of_2016": ok.index(2016) + 1, "rank_of_2005": ok.index(2005) + 1, "n_years": len(yk)}
+    out["kenya_short_rains"] = {
+        "simulated_yield_t_ha": yk,
+        "rank_of_2016": ok.index(2016) + 1,
+        "rank_of_2005": ok.index(2005) + 1,
+        "n_years": len(yk),
+    }
     return out
 
 
@@ -229,7 +310,9 @@ def exp_mod16() -> dict[str, Any]:
     lat, lon = SITES["fallon_nv"]
     ctx = build(lat, lon, AS_OF)
     try:
-        series = sources.ornl_series("mod16", lat, lon, dt.date(2015, 1, 1), dt.date(2023, 12, 31), max_requests=60)
+        series = sources.ornl_series(
+            "mod16", lat, lon, dt.date(2015, 1, 1), dt.date(2023, 12, 31), max_requests=60
+        )
     except DataUnavailable as e:
         return {"status": f"unavailable: {e}"}
     if not series:
@@ -239,16 +322,28 @@ def exp_mod16() -> dict[str, Any]:
         annual[d.year] = annual.get(d.year, 0.0) + v
     model = {}
     for y in sorted(annual):
-        r = simulate("alfalfa", ctx.weather, dt.date(y, 3, 15), taw_per_m=ctx.taw_per_m, strategy="full", method="flood")
+        r = simulate(
+            "alfalfa",
+            ctx.weather,
+            dt.date(y, 3, 15),
+            taw_per_m=ctx.taw_per_m,
+            strategy="full",
+            method="flood",
+        )
         # add non-growing-season soil evaporation, approximated as Kc 0.3 × ET0 outside the season
         i0, i1 = ctx.idx(dt.date(y, 1, 1)), ctx.idx(dt.date(y, 12, 31)) + 1
         js, je = ctx.idx(r.start), ctx.idx(r.end)
-        off = 0.3 * (np.nansum(ctx.weather.et0[i0:js]) + np.nansum(ctx.weather.et0[je + 1:i1]))
+        off = 0.3 * (np.nansum(ctx.weather.et0[i0:js]) + np.nansum(ctx.weather.et0[je + 1 : i1]))
         model[y] = r.et_mm + off
     a = np.array([model[y] for y in sorted(annual)])
     b = np.array([annual[y] for y in sorted(annual)])
-    return {"years": sorted(annual), "model_mm": [round(x) for x in a], "mod16_mm": [round(x) for x in b], **metrics(a, b),
-            "note": "MOD16 is known to underestimate ET of irrigated crops in arid regions (no irrigation input); see docs/VALIDATION.md."}
+    return {
+        "years": sorted(annual),
+        "model_mm": [round(x) for x in a],
+        "mod16_mm": [round(x) for x in b],
+        **metrics(a, b),
+        "note": "MOD16 is known to underestimate ET of irrigated crops in arid regions (no irrigation input); see docs/VALIDATION.md.",
+    }
 
 
 # --------------------------------------------------------------------------- 6. late blight 2009
@@ -258,21 +353,45 @@ def exp_late_blight() -> dict[str, Any]:
     lat, lon = 42.45, -76.48
     res = {}
     for y in range(2005, 2016):
-        f = get_json("https://power.larc.nasa.gov/api/temporal/hourly/point",
-                     {"parameters": "T2M,RH2M", "community": "AG", "latitude": lat, "longitude": lon,
-                      "start": f"{y}0601", "end": f"{y}0831", "format": "JSON", "time-standard": "LST"}, ttl_s=365 * 86400, timeout_s=180)
+        f = get_json(
+            "https://power.larc.nasa.gov/api/temporal/hourly/point",
+            {
+                "parameters": "T2M,RH2M",
+                "community": "AG",
+                "latitude": lat,
+                "longitude": lon,
+                "start": f"{y}0601",
+                "end": f"{y}0831",
+                "format": "JSON",
+                "time-standard": "LST",
+            },
+            ttl_s=365 * 86400,
+            timeout_s=180,
+        )
         p = f.data["properties"]["parameter"]
         keys = sorted(p["T2M"])
-        hourly = {"time": [f"{k[:4]}-{k[4:6]}-{k[6:8]}T{k[8:10]}:00" for k in keys],
-                  "temperature_2m": [p["T2M"][k] if p["T2M"][k] > -998 else None for k in keys],
-                  "relative_humidity_2m": [p["RH2M"][k] if p["RH2M"][k] > -998 else None for k in keys]}
+        hourly = {
+            "time": [f"{k[:4]}-{k[4:6]}-{k[6:8]}T{k[8:10]}:00" for k in keys],
+            "temperature_2m": [p["T2M"][k] if p["T2M"][k] > -998 else None for k in keys],
+            "relative_humidity_2m": [p["RH2M"][k] if p["RH2M"][k] > -998 else None for k in keys],
+        }
         sc = disease.daily_scores(disease.hourly_by_day(hourly))["late_blight"]
-        res[y] = {"hutton_days": int(sum(1 for v in sc.values() if v >= 1.0)), "favourable_days": int(sum(1 for v in sc.values() if v >= 0.6))}
+        res[y] = {
+            "hutton_days": int(sum(1 for v in sc.values() if v >= 1.0)),
+            "favourable_days": int(sum(1 for v in sc.values() if v >= 0.6)),
+        }
     order = sorted(res, key=lambda k: -res[k]["hutton_days"])
     return {"site": "Ithaca, NY", "per_year": res, "rank_of_2009": order.index(2009) + 1, "n_years": len(res)}
 
 
-EXPERIMENTS = {"et0": exp_et0, "soil": exp_soil_water, "usdm": exp_usdm, "yield": exp_yield_signal, "mod16": exp_mod16, "blight": exp_late_blight}
+EXPERIMENTS = {
+    "et0": exp_et0,
+    "soil": exp_soil_water,
+    "usdm": exp_usdm,
+    "yield": exp_yield_signal,
+    "mod16": exp_mod16,
+    "blight": exp_late_blight,
+}
 
 
 def main() -> None:

@@ -68,9 +68,9 @@ def test_deficit_uses_less_water():
 
 
 def test_alfalfa_cuts_follow_thermal_time():
-    w = make_weather(tmax=28, tmin=12, rain=0.0)  # 15 °C·d/day above 5 °C -> a cut every 28 days
+    w = make_weather(tmax=28, tmin=12, rain=0.0)  # 15 °C·d/day above 5 °C -> a cut every 40 days
     r = simulate("alfalfa", w, dt.date(2020, 3, 15), strategy="full")
-    assert 12 <= r.cuts <= 13.5  # 365 days / 28
+    assert 8.5 <= r.cuts <= 9.5  # 15 °C·d/day × 365 / 600
 
 
 def test_warming_shortens_season():

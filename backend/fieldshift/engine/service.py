@@ -321,7 +321,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                     }
                 )
         elif not (stress_day and stress_day <= horizon):
-            steps.append(f"With the forecast, the crop stays above the stress point for at least {ndays} days.")
+            steps.append(
+                f"With the forecast, the crop stays above the stress point for at least {ndays} days."
+            )
             cards.append(
                 {
                     "id": "rainfed_ok",
@@ -1437,10 +1439,21 @@ def _evidence(
 
 
 def _benefits(mets: list[dict[str, Any]]) -> list[str]:
-    out = []
-    for m in mets:
-        if m["vs_current"] >= 8:
-            out.append(f"Better {m['label'].lower()} than your current rotation ({m['value']} {m['unit']}).")
+    phr = {
+        "water": "Uses less water: {v} {u}",
+        "income": "Higher indicative margin: {v} {u}",
+        "soil": "Healthier soil (index {v}/100)",
+        "erosion": "Lower erosion risk (index {v})",
+        "pests": "Breaks pest and disease cycles (score {v}/100)",
+        "risk": "Fewer bad seasons ({v} % risk)",
+        "nitrogen": "More biological nitrogen: {v} {u}",
+        "bare_days": "Fewer bare-soil days: {v} {u}",
+    }
+    out = [
+        phr[m["id"]].format(v=m["value"], u=m["unit"]) + " vs. your current rotation."
+        for m in mets
+        if m["vs_current"] >= 8
+    ]
     return out or ["Similar overall to your current rotation; may suit different priorities."]
 
 

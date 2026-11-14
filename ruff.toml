@@ -1,0 +1,2 @@
+# Root config so scripts/ is linted with the same rules as the backend.
+extend = "backend/pyproject.toml"

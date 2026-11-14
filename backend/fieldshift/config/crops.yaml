@@ -20,7 +20,7 @@ crops:
     kc_ini: 0.40
     kc_mid: 1.20
     kc_end: 1.15
-    cut_gdd: 420          # °C·d (base 5 °C) between cuttings (≈750 °F·d base 41 °F)
+    cut_gdd: 600          # °C·d (base 5 °C) between cuttings; gives 4–5 cuts in the Great Basin, 8–10 in hot deserts
     stages: [10, 20, 20, 10]  # per cutting cycle, FAO-56 Table 11 (individual cutting periods)
     root_m: [1.2, 1.8]
     p: 0.55
@@ -35,7 +35,7 @@ crops:
     n_fix_kg_ha: 120
     residue: high
     erosion_cover: 0.95
-    typical_yield_t_ha: 16
+    typical_yield_t_ha: 13
     price_usd_t: 220
     cost_usd_ha: 1500
     pests: [alfalfa weevil, aphids, Phytophthora root rot, Verticillium wilt]
