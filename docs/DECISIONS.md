@@ -93,3 +93,10 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - The user chose to keep the demo private: no tunnel or public URL.
 - Judges get the 30 s video, the screenshots, and `docker compose up --build` (or the offline mode).
 - SUBMISSION.md lists hosting as an optional human step.
+
+## ADR-019 Award-readiness additions (20:50, after re-reading the Space Apps submission guide)
+- **Public final-project link** (required; no login). The public GitHub repo (owner step) plus a static showcase site (`site/`, GitHub Pages-ready).
+- **Video re-cut to the official 30 s template:** 0:00 team, 0:02 challenge and inspiration, 0:05 title and tagline, 0:10 how it works with NASA and partner data, 0:20–0:30 future vision.
+- **Impact quantification in the rotation planner:** current vs. improved plan in water, fertiliser N, CO₂e (IPCC 2019 direct N₂O emission factor EF1 = 0.01 kg N₂O-N per kg N × 44/28 × GWP100 273 from AR6 = 4.29 kg CO₂e per kg N avoided; manufacturing emissions conservatively not counted), soil loss and margin.
+- **Low-bandwidth plain-text advice** (SMS/WhatsApp) in six languages for farmers without smartphones or data.
+- **7-slide PDF deck** as an alternative demo format.
