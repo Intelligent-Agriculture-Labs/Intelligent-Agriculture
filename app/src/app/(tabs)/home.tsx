@@ -7,6 +7,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ActionCard, cropName, useCrops } from "@/components/domain";
 import { IrrigationLog } from "@/components/IrrigationLog";
 import { FieldSwitcher } from "@/components/FieldSwitcher";
+import { ShareTextButton } from "@/components/ShareText";
 import { Disclosure, EmptyState, InfoButton, Segmented, Stat, StatRow, Tip } from "@/components/kit";
 import { ErrorView, KV, Loading, OriginBanner, RiskBadge, Txt, styles as ui } from "@/components/ui";
 import { radius, space, useTheme } from "@/lib/theme";
@@ -105,6 +106,7 @@ export default function Home() {
                   <EmptyState icon="checkmark-circle-outline" title={tr("home.allClearTitle")} text={tr("home.allClearText")} />
                 )}
               </View>
+              {!field.as_of ? <ShareTextButton /> : null}
 
               {!auth.user ? (
                 <Pressable

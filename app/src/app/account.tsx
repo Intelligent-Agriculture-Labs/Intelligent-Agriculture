@@ -119,12 +119,12 @@ export default function Account() {
     }
   };
 
-  const title = auth.user ? tr("account.title") : tr(mode === "login" ? "account.loginTitle" : "account.registerTitle");
+  const title = tr(mode === "login" ? "account.loginTitle" : "account.registerTitle");
 
   return (
     <Screen testID="account">
       <Stack.Screen options={{ title: tr("account.title") }} />
-      <Txt v="h1">{title}</Txt>
+      {auth.user ? null : <Txt v="h1">{title}</Txt>}
 
       {auth.user ? (
         <>

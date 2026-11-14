@@ -10,6 +10,12 @@ test("core flow: demo farm → at most 3 action cards → Why? with chart", asyn
   expect(cards).toBeLessThanOrEqual(3);
   await expect(page.getByTestId("attribution")).toContainText(/NASA/i);
 
+  // this week's advice as a short text message (SMS / WhatsApp)
+  await page.getByTestId("share-text").click();
+  await expect(page.getByTestId("share-text-preview")).toContainText(/FieldShift/, { timeout: 60_000 });
+  await expect(page.getByTestId("share-text-sms")).toContainText(/SMS/);
+  await page.keyboard.press("Escape");
+
   // everything else lives behind "More about your field this week"
   await page.getByTestId("more-week-toggle").click();
   await expect(page.getByTestId("drought-chip")).toBeVisible();
@@ -117,6 +123,10 @@ test("Plan → next years: check the rotation, then apply an improvement", async
   await expect(page.getByTestId("rplan-check-main")).toBeHidden({ timeout: 240_000 });
   await expect(headline).toBeVisible();
 
+  if (await page.getByTestId("rplan-impact").count()) {
+    await expect(page.locator('[data-testid^="impact-"]').first()).toBeVisible();
+    await page.getByTestId("rplan-impact-method-toggle").click();
+  }
   const apply = page.getByTestId("rplan-optimized-apply").or(page.getByTestId("rplan-suggestion-0-apply")).first();
   if (await apply.count()) {
     const before = await headline.innerText();

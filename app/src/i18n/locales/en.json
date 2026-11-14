@@ -362,6 +362,36 @@
       "history": "What grew before",
       "historyHint": "Past crops matter for disease and nitrogen",
       "pastCrop": "Crop in {{year}}"
+    },
+    "impact": {
+      "title": "Impact of the improved plan",
+      "scopeField": "Your {{area}} ha field · {{years}}-year plan",
+      "scopeHa": "Per hectare · {{years}}-year plan",
+      "how": "How we calculate this",
+      "water": {
+        "good": "water saved per year",
+        "bad": "more water needed per year"
+      },
+      "co2e": {
+        "good": "climate gas avoided",
+        "bad": "more climate gas"
+      },
+      "soil": {
+        "good": "soil kept on your field",
+        "bad": "more soil washed away"
+      },
+      "margin": {
+        "good": "more income (indicative)",
+        "bad": "less income (indicative)"
+      },
+      "nitrogen": {
+        "good": "less nitrogen fertiliser",
+        "bad": "more nitrogen fertiliser needed"
+      },
+      "bare": {
+        "good": "fewer bare-soil days a year",
+        "bad": "more bare-soil days a year"
+      }
     }
   },
   "fields": {
@@ -694,5 +724,14 @@
       "Boraginaceae": "Phacelia family",
       "Mixed": "Mixtures"
     }
+  },
+  "shareText": {
+    "button": "Share this week's advice as a text message",
+    "title": "Share as text",
+    "loading": "Writing a short summary…",
+    "fits": "{{chars}} characters · fits in {{count}} SMS",
+    "copy": "Copy text",
+    "copied": "Copied — paste it into SMS or WhatsApp",
+    "share": "Share…"
   }
 }

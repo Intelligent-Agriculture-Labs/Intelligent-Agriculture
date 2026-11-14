@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import type {
+  AdviceText,
   AdviceResponse,
   ClimateResponse,
   Farm,
@@ -229,6 +230,8 @@ export const api = {
       k("rplan", r.lat, r.lon, r.irrigation, r.lang, JSON.stringify([r.history, r.plan, r.polygon ?? null, r.water_allocation_mm ?? null])),
       () => http("/api/rotations/plan", r, "POST", 180000),
     ),
+  /** Plain-text weekly summary for SMS / WhatsApp (needs the network: it is a share action). */
+  adviceText: (f: FieldInput, name: string, maxChars = 320) => http<AdviceText>(`/api/advice/text?name=${encodeURIComponent(name)}&max_chars=${maxChars}`, f),
   glossary: (lang: string) => withCache<GlossaryEntry[]>(k("glossary", lang), () => http(`/api/glossary?lang=${encodeURIComponent(lang)}`)),
   /** tap-to-delineate: field boundary from high-res imagery around a point (sub-metre Esri or US NAIP) */
   detectField: (b: { lat: number; lon: number; source?: "esri" | "naip" }) => http<FieldDetectResponse>("/api/fields/detect", b, "POST", 45000),

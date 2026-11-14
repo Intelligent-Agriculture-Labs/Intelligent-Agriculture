@@ -362,6 +362,36 @@
       "history": "Was vorher wuchs",
       "historyHint": "Frühere Kulturen zählen für Krankheiten und Stickstoff",
       "pastCrop": "Kultur {{year}}"
+    },
+    "impact": {
+      "title": "Wirkung des verbesserten Plans",
+      "scopeField": "Ihr Feld mit {{area}} ha · Plan über {{years}} Jahre",
+      "scopeHa": "Pro Hektar · Plan über {{years}} Jahre",
+      "how": "So rechnen wir",
+      "water": {
+        "good": "Wasser pro Jahr gespart",
+        "bad": "mehr Wasser pro Jahr nötig"
+      },
+      "co2e": {
+        "good": "Klimagas vermieden",
+        "bad": "mehr Klimagas"
+      },
+      "soil": {
+        "good": "Boden bleibt auf dem Feld",
+        "bad": "mehr Boden abgetragen"
+      },
+      "margin": {
+        "good": "mehr Einkommen (Richtwert)",
+        "bad": "weniger Einkommen (Richtwert)"
+      },
+      "nitrogen": {
+        "good": "weniger Stickstoffdünger",
+        "bad": "mehr Stickstoffdünger nötig"
+      },
+      "bare": {
+        "good": "weniger Tage nackter Boden pro Jahr",
+        "bad": "mehr Tage nackter Boden pro Jahr"
+      }
     }
   },
   "fields": {
@@ -694,5 +724,14 @@
       "Boraginaceae": "Phacelia & Raublattgewächse",
       "Mixed": "Mischungen"
     }
+  },
+  "shareText": {
+    "button": "Rat dieser Woche als Textnachricht teilen",
+    "title": "Als Text teilen",
+    "loading": "Kurze Zusammenfassung wird geschrieben…",
+    "fits": "{{chars}} Zeichen · passt in {{count}} SMS",
+    "copy": "Text kopieren",
+    "copied": "Kopiert — in SMS oder WhatsApp einfügen",
+    "share": "Teilen…"
   }
 }

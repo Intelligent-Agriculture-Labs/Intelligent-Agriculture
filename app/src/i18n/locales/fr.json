@@ -362,6 +362,36 @@
       "history": "Ce qui a poussé avant",
       "historyHint": "Les cultures passées comptent pour les maladies et l'azote",
       "pastCrop": "Culture en {{year}}"
+    },
+    "impact": {
+      "title": "Impact du plan amélioré",
+      "scopeField": "Votre parcelle de {{area}} ha · plan sur {{years}} ans",
+      "scopeHa": "Par hectare · plan sur {{years}} ans",
+      "how": "Comment nous calculons",
+      "water": {
+        "good": "d'eau économisée par an",
+        "bad": "d'eau en plus nécessaire par an"
+      },
+      "co2e": {
+        "good": "de gaz à effet de serre évités",
+        "bad": "de gaz à effet de serre en plus"
+      },
+      "soil": {
+        "good": "de sol conservé sur la parcelle",
+        "bad": "de sol en plus emporté"
+      },
+      "margin": {
+        "good": "de revenu en plus (indicatif)",
+        "bad": "de revenu en moins (indicatif)"
+      },
+      "nitrogen": {
+        "good": "d'engrais azoté en moins",
+        "bad": "d'engrais azoté en plus nécessaire"
+      },
+      "bare": {
+        "good": "jours de sol nu en moins par an",
+        "bad": "jours de sol nu en plus par an"
+      }
     }
   },
   "fields": {
@@ -694,5 +724,14 @@
       "Boraginaceae": "Famille de la phacélie",
       "Mixed": "Mélanges"
     }
+  },
+  "shareText": {
+    "button": "Partager les conseils de la semaine par message texte",
+    "title": "Partager en texte",
+    "loading": "Rédaction d'un court résumé…",
+    "fits": "{{chars}} caractères · tient en {{count}} SMS",
+    "copy": "Copier le texte",
+    "copied": "Copié — collez-le dans un SMS ou WhatsApp",
+    "share": "Partager…"
   }
 }

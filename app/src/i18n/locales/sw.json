@@ -362,6 +362,36 @@
       "history": "Kilichopandwa awali",
       "historyHint": "Mazao ya zamani ni muhimu kwa magonjwa na naitrojeni",
       "pastCrop": "Zao la {{year}}"
+    },
+    "impact": {
+      "title": "Matokeo ya mpango ulioboreshwa",
+      "scopeField": "Shamba lako la ha {{area}} · mpango wa miaka {{years}}",
+      "scopeHa": "Kwa hekta · mpango wa miaka {{years}}",
+      "how": "Jinsi tunavyokokotoa",
+      "water": {
+        "good": "maji yaliyookolewa kwa mwaka",
+        "bad": "maji zaidi yanahitajika kwa mwaka"
+      },
+      "co2e": {
+        "good": "gesi chafu iliyoepukwa",
+        "bad": "gesi chafu zaidi"
+      },
+      "soil": {
+        "good": "udongo unaobaki shambani",
+        "bad": "udongo zaidi unasombwa"
+      },
+      "margin": {
+        "good": "mapato zaidi (makadirio)",
+        "bad": "mapato kidogo (makadirio)"
+      },
+      "nitrogen": {
+        "good": "mbolea ya naitrojeni kidogo",
+        "bad": "mbolea ya naitrojeni zaidi inahitajika"
+      },
+      "bare": {
+        "good": "siku chache za udongo mtupu kwa mwaka",
+        "bad": "siku zaidi za udongo mtupu kwa mwaka"
+      }
     }
   },
   "fields": {
@@ -694,5 +724,14 @@
       "Boraginaceae": "Familia ya phacelia",
       "Mixed": "Michanganyiko"
     }
+  },
+  "shareText": {
+    "button": "Shiriki ushauri wa wiki hii kama ujumbe mfupi",
+    "title": "Shiriki kama maandishi",
+    "loading": "Tunaandika muhtasari mfupi…",
+    "fits": "Herufi {{chars}} · inatosha katika SMS {{count}}",
+    "copy": "Nakili maandishi",
+    "copied": "Imenakiliwa — ibandike kwenye SMS au WhatsApp",
+    "share": "Shiriki…"
   }
 }

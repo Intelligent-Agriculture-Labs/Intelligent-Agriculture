@@ -362,6 +362,36 @@
       "history": "Lo que creció antes",
       "historyHint": "Los cultivos anteriores importan para enfermedades y nitrógeno",
       "pastCrop": "Cultivo en {{year}}"
+    },
+    "impact": {
+      "title": "Impacto del plan mejorado",
+      "scopeField": "Su parcela de {{area}} ha · plan de {{years}} años",
+      "scopeHa": "Por hectárea · plan de {{years}} años",
+      "how": "Cómo lo calculamos",
+      "water": {
+        "good": "agua ahorrada al año",
+        "bad": "más agua necesaria al año"
+      },
+      "co2e": {
+        "good": "gases de efecto invernadero evitados",
+        "bad": "más gases de efecto invernadero"
+      },
+      "soil": {
+        "good": "suelo que se queda en su parcela",
+        "bad": "más suelo arrastrado"
+      },
+      "margin": {
+        "good": "más ingresos (orientativo)",
+        "bad": "menos ingresos (orientativo)"
+      },
+      "nitrogen": {
+        "good": "menos abono nitrogenado",
+        "bad": "más abono nitrogenado necesario"
+      },
+      "bare": {
+        "good": "menos días de suelo desnudo al año",
+        "bad": "más días de suelo desnudo al año"
+      }
     }
   },
   "fields": {
@@ -694,5 +724,14 @@
       "Boraginaceae": "Familia de la facelia",
       "Mixed": "Mezclas"
     }
+  },
+  "shareText": {
+    "button": "Compartir el consejo de la semana como mensaje de texto",
+    "title": "Compartir como texto",
+    "loading": "Escribiendo un resumen corto…",
+    "fits": "{{chars}} caracteres · cabe en {{count}} SMS",
+    "copy": "Copiar texto",
+    "copied": "Copiado: péguelo en un SMS o WhatsApp",
+    "share": "Compartir…"
   }
 }
