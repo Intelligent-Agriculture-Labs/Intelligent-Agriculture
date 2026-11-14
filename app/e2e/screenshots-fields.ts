@@ -35,25 +35,6 @@ async function detectAtCenter(page: Page) {
   await page.waitForTimeout(5000); // fit-to-field + high-res tiles
 }
 
-async function drawSquare(page: Page, half: number) {
-  const frame = page.frameLocator('[data-testid="map-iframe"]');
-  const map = frame.locator("#m.leaflet-container");
-  await map.waitFor({ timeout: 60_000 });
-  await frame.locator(".leaflet-tile-loaded").first().waitFor({ timeout: 60_000 });
-  const box = await page.getByTestId("map-iframe").boundingBox();
-  if (!box) throw new Error("map not laid out");
-  for (const [dx, dy] of [
-    [-half, -half * 0.8],
-    [half, -half * 0.8],
-    [half, half * 0.8],
-    [-half, half * 0.8],
-  ]) {
-    await map.click({ position: { x: box.width / 2 + dx, y: box.height / 2 + dy } });
-    await page.waitForTimeout(300);
-  }
-  await page.waitForTimeout(4000); // high-res imagery tiles
-}
-
 const browser = await chromium.launch();
 
 // 1) desktop: automatic boundary detection on the Fallon alfalfa field, then the field list
