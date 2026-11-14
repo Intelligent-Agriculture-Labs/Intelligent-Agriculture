@@ -1037,7 +1037,8 @@ def _pest_cards(
             k = int(np.searchsorted(cum, lastev["dd"]))
             recent = (len(cum) - 1 - k) <= rules()["pests"]["show_recent_days"]
         if ev and days_until is not None and days_until <= rules()["pests"]["window_days"]:
-            title = t("pest_title", lang, pest=p["name"], event=ev["label"].lower(), days=days_until)
+            key = "pest_soon_title" if days_until <= 1 else "pest_title"
+            title = t(key, lang, pest=p["name"], event=ev["label"].lower(), days=days_until)
             due = (today + dt.timedelta(days=days_until)).isoformat()
             action = ev["action"]
             risk = "moderate" if days_until > 3 else "high"

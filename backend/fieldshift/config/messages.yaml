@@ -77,6 +77,13 @@ pest_title:
   sw: "{pest}: {event} baada ya siku ~{days}"
   hi: "{pest}: ~{days} दिनों में {event}"
   de: "{pest}: {event} in ~{days} Tagen"
+pest_soon_title:
+  en: "{pest}: {event} within a day"
+  es: "{pest}: {event} en un día"
+  fr: "{pest} : {event} d'ici un jour"
+  sw: "{pest}: {event} ndani ya siku moja"
+  hi: "{pest}: एक दिन में {event}"
+  de: "{pest}: {event} innerhalb eines Tages"
 pest_now_title:
   en: "{pest}: {event} now"
   es: "{pest}: {event} ahora"
