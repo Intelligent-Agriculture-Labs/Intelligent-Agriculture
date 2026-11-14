@@ -25,6 +25,7 @@ export function CaptureTour() {
       await sleep(waitMs);
     };
     (async () => {
+      await step("welcome", () => router.replace("/welcome"), 5000);
       await step("onboarding", () => router.replace("/onboarding"), 5000);
       const presets = (await api.presets()).data;
       const p = presets.find((x) => x.id === PRESET) ?? presets[0];
@@ -52,11 +53,14 @@ export function CaptureTour() {
       await step("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "irrigate" } }), 9000);
       await step("map", () => router.replace({ pathname: "/map", params: { view: "terrain" } }), 16000);
       await step("satellite", () => router.replace({ pathname: "/map", params: { view: "satellite" } }), 14000);
-      await step("plan", () => router.replace("/plan"), 16000);
+      await step("plan", () => router.replace({ pathname: "/plan", params: { tab: "season" } }), 16000);
+      await step("plan-years", () => router.replace({ pathname: "/plan", params: { tab: "years" } }), 25000);
+      await step("insights", () => router.replace("/insights"), 6000);
       await step("rotations", () => router.replace("/rotations"), 30000);
       await step("whatif", () => router.replace("/whatif"), 20000);
       await step("climate", () => router.replace("/climate"), 12000);
-      await step("field-editor", () => router.push("/field-editor"), 10000);
+      await step("account", () => router.push("/account"), 6000);
+      await step("field-editor", () => router.replace("/field-editor"), 10000);
       await step("done", () => router.replace("/home"), 1000);
     })();
     return () => {

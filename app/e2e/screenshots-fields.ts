@@ -3,25 +3,9 @@
 // Uses the real demo-farm fields from /api/presets (Fallon alfalfa field with its outline).
 // Fails loudly if the MOCK banner ever appears: screenshots must show real data.
 import { chromium, devices, type Page } from "@playwright/test";
+import { choose, noMock, out } from "./shotlib.ts";
 
-const base = process.env.E2E_BASE_URL ?? "http://localhost:4173";
-const out = process.env.SHOT_DIR ?? "../media";
 const withSatellite = process.argv.includes("--satellite");
-
-async function choose(page: Page, preset: string) {
-  await page.goto(base);
-  await page.evaluate(() => localStorage.clear());
-  await page.goto(base);
-  await page.getByTestId("onboarding").waitFor();
-  await page.getByTestId(`preset-${preset}`).click();
-  await page.waitForTimeout(800);
-  await page.getByTestId("start").click();
-  await page.getByTestId("home").waitFor();
-}
-
-async function noMock(page: Page) {
-  if (await page.getByTestId("mock-banner").count()) throw new Error("MOCK banner visible — refusing to capture");
-}
 
 async function detectAtCenter(page: Page) {
   const frame = page.frameLocator('[data-testid="map-iframe"]');
@@ -81,6 +65,7 @@ const browser = await chromium.launch();
   const page = await ctx.newPage();
   await choose(page, "fallon_nv");
   await page.getByTestId("tab-settings").click();
+  await page.getByTestId("row-share").click();
   await page.getByTestId("sync-enable").click();
   await page.getByTestId("sync-code").waitFor({ timeout: 30_000 });
   await page.waitForTimeout(2500);

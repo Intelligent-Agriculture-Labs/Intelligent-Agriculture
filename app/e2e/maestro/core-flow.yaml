@@ -9,6 +9,13 @@ env:
     clearState: true
 - extendedWaitUntil:
     visible:
+      id: "welcome"
+    timeout: 60000
+- takeScreenshot: ${PLATFORM}-00-welcome
+- tapOn:
+    id: "welcome-skip"
+- extendedWaitUntil:
+    visible:
       id: "preset-fallon_nv"
     timeout: 60000
 - takeScreenshot: ${PLATFORM}-01-onboarding
@@ -35,6 +42,8 @@ env:
     visible:
       text: ".*Irrigate.*"
     timeout: 240000
+- tapOn:
+    id: "more-week-toggle"
 - assertVisible:
     id: "drought-chip"
 - takeScreenshot: ${PLATFORM}-03-home-replay
@@ -56,7 +65,7 @@ env:
     id: "tab-map"
 - extendedWaitUntil:
     visible:
-      id: "layer-legend"
+      id: "layer-legend-compact"
     timeout: 180000
 - assertVisible:
     text: ".*Management zones.*"
@@ -69,7 +78,16 @@ env:
     timeout: 240000
 - takeScreenshot: ${PLATFORM}-05c-plan
 - tapOn:
-    id: "tab-rotations"
+    id: "plan-tab-years"
+- extendedWaitUntil:
+    visible:
+      id: "rplan-headline"
+    timeout: 240000
+- takeScreenshot: ${PLATFORM}-05d-plan-years
+- tapOn:
+    id: "tab-insights"
+- tapOn:
+    id: "insights-rotations"
 - extendedWaitUntil:
     visible:
       id: "strategy-0"
@@ -82,7 +100,9 @@ env:
     timeout: 20000
 - takeScreenshot: ${PLATFORM}-07-rotations-compare
 - tapOn:
-    id: "tab-whatif"
+    id: "tab-insights"
+- tapOn:
+    id: "insights-whatif"
 - extendedWaitUntil:
     visible:
       id: "whatif"
@@ -93,7 +113,9 @@ env:
     timeout: 240000
 - takeScreenshot: ${PLATFORM}-08-whatif
 - tapOn:
-    id: "tab-climate"
+    id: "tab-insights"
+- tapOn:
+    id: "insights-climate"
 - extendedWaitUntil:
     visible:
       id: "climate"

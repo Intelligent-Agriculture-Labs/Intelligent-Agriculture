@@ -10,8 +10,8 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 APP="$ROOT/app"; MEDIA="$ROOT/media"; TMP=${TMPDIR:-/tmp}/fieldshift-capture; mkdir -p "$TMP"
 # offsets (s after launch) -> screenshot name
 # tour timings: onboarding 5, home-today 12, home-replay 14, why 9, map 16, satellite 14, plan 16, rotations 30, whatif 20, climate 12, field-editor 10
-SHOTS=("4:onboarding" "16:home-today" "30:home-replay" "39:why" "54:map" "68:satellite" "84:plan" "114:rotations" "134:whatif" "146:climate" "156:field-editor")
-TOTAL=160
+SHOTS=("4:welcome" "9:onboarding" "20:home-today" "34:home-replay" "44:why" "59:map" "73:satellite" "89:plan" "114:plan-years" "121:insights" "150:rotations" "170:whatif" "182:climate" "189:account" "198:field-editor")
+TOTAL=202
 
 ios_udid() {
   local u; u=$(xcrun simctl list devices | grep -E "FieldShift iPhone 17 \(iOS 27\).*Booted|FieldShift iPhone 17 \(iOS 27\)" | head -1 | grep -oE "[0-9A-F-]{36}" || true)
