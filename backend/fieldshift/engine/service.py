@@ -634,32 +634,47 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     # ---- AI drought classifier (gradient boosting on USDM labels) where it was validated
     ml_info = None
     model_name = "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + satellite indicators"
-    if drought_ml.in_validated_domain(lat, lon) and drought_ml.load() is not None:
+    loaded_ml = drought_ml.load()
+    if loaded_ml is not None and drought_ml.in_validated_domain(lat, lon, loaded_ml[1]):
+        meta = loaded_ml[1]
         try:
-            Xf = drought_ml.feature_matrix(pd_, w.rain[:obs_end], w.et0[:obs_end], w.tmax[:obs_end])
+            Xf = drought_ml.features_for(meta)(pd_, w.rain[:obs_end], w.et0[:obs_end], w.tmax[:obs_end])
             pr = drought_ml.predict(Xf[-1])
         except (ValueError, IndexError):
             pr = None
         if pr is not None:
             ml_level, proba = pr
-            meta = drought_ml.load()[1]  # type: ignore[index]
             hv = meta["ml_heldout"]
+            region = drought_ml.region_of(lat, lon) or "US"
+            reg = meta.get("per_region", {}).get(region)
+            if reg is not None and region != "US":
+                # held-out numbers for this region (leave-one-region-out), on the harmonised None/D0/D1/D2+ scale
+                rv = reg["harmonised"]["new_model"]
+                within1, rho = rv["within1_acc"], rv["spearman"]
+                where = f"held-out sites in this region ({reg['n_sites']} sites, labels: {reg['label'].upper()})"
+            else:
+                within1, rho = hv["within1_acc"], hv["spearman_vs_dsci"]
+                where = "U.S. counties it never saw"
+            n_sites = meta.get("n_sites", meta["n_counties"])
             ml_info = {
                 "level": ml_level,
                 "probabilities": [round(p_, 3) for p_ in proba],
                 "rules_level": level,
-                "model": "Gradient-boosted trees trained on U.S. Drought Monitor maps",
-                "heldout_within1_acc": hv["within1_acc"],
-                "heldout_spearman": hv["spearman_vs_dsci"],
+                "model": "Gradient-boosted trees trained on drought maps (U.S. Drought Monitor"
+                + (", European Drought Observatory, Global Drought Observatory)" if meta.get("feature_set") == "v2" else ")"),
+                "heldout_within1_acc": within1,
+                "heldout_spearman": rho,
                 "n_counties": meta["n_counties"],
+                "n_sites": n_sites,
+                "region": region,
             }
             dsteps.append(
-                f"AI classifier (gradient boosting on {meta['n_samples']:,} weekly U.S. Drought Monitor maps from {meta['n_counties']} counties): "
-                f"{drt.LABELS[ml_level]} with {100 * max(proba):.0f} % probability. On counties it never saw it is within one category "
-                f"{100 * hv['within1_acc']:.0f} % of the time (rule-based blend: {drt.LABELS[level]})."
+                f"AI classifier (gradient boosting on {meta['n_samples']:,} drought-map labels from {n_sites} sites): "
+                f"{drt.LABELS[ml_level]} with {100 * max(proba):.0f} % probability. On {where} it is within one category "
+                f"{100 * within1:.0f} % of the time (rule-based blend: {drt.LABELS[level]})."
             )
             level = ml_level
-            model_name = "AI drought classifier (gradient boosting on USDM labels, NASA POWER features) + rule-based SPI/SPEI blend"
+            model_name = "AI drought classifier (gradient boosting on drought-monitor labels, NASA POWER features) + rule-based SPI/SPEI blend"
     drought = {
         "ml": ml_info,
         "level": level,

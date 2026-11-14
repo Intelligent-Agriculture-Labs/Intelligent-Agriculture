@@ -143,17 +143,91 @@ def render(r: dict[str, Any]) -> str:
     out.append("")
     mlp = RES.parent / "drought_ml.json"
     if mlp.exists():
-        m = json.loads(mlp.read_text())
-        a, b = m["ml_heldout"], m["rules_same_samples"]
-        out.append("### V8 · AI drought classifier vs. rule-based status on U.S. counties the model never saw")
-        out.append(f"_trained: {m['trained_at']} · {m['n_counties']} counties · {m['n_samples']:,} weekly USDM labels · {m['cv']}_\n")
-        out.append("| Metric | AI classifier | Rule-based blend |")
-        out.append("|---|---|---|")
-        for k, lab in (("exact_acc", "Exact category"), ("within1_acc", "Within ±1 category"), ("mae_levels", "Mean abs. error (levels)"),
-                       ("spearman_vs_dsci", "Spearman vs. DSCI"), ("d1_hit_rate", "D1+ hit rate"), ("d1_false_alarm_ratio", "D1+ false-alarm ratio")):
-            out.append(f"| {lab} | {fmt(a[k], 3)} | {fmt(b[k], 3)} |")
-        out.append(f"\nAdopted: **{m['adopted']}** (contiguous U.S. only).\n")
+        out += render_drought_ml(json.loads(mlp.read_text()))
     return "\n".join(out)
+
+
+REGION_NAMES = {
+    "US": "U.S. (USDM)",
+    "EU": "Europe (EDO CDI)",
+    "AUS": "Australia (GDO SMIA, weak)",
+    "SAM": "South America (GDO SMIA, weak)",
+    "AFR": "Sub-Saharan Africa (GDO SMIA, weak)",
+    "SAS": "South Asia (GDO SMIA, weak)",
+    "EAS": "East Asia (GDO SMIA, weak)",
+    "WEAK_POOLED": "All weak-label regions pooled",
+}
+METRICS = (
+    ("exact_acc", "Exact"),
+    ("within1_acc", "Within ±1"),
+    ("mae_levels", "MAE"),
+    ("spearman", "Spearman"),
+    ("d1_hit_rate", "D1+ hit"),
+    ("d1_false_alarm_ratio", "D1+ FAR"),
+)
+
+
+def _rows(models: dict[str, dict[str, Any]], names: dict[str, str]) -> list[str]:
+    out = ["| Model | n | " + " | ".join(lab for _, lab in METRICS) + " |", "|---|---|" + "---|" * len(METRICS)]
+    for k, lab in names.items():
+        if k in models:
+            v = models[k]
+            out.append(f"| {lab} | {v['n']:,} | " + " | ".join(fmt(v[m], 3) for m, _ in METRICS) + " |")
+    return out
+
+
+def render_drought_ml(m: dict[str, Any]) -> list[str]:
+    """V8: drought classifier, held-out by county (U.S.), by region and by climate zone (scripts/train_drought_ml.py)."""
+    out = ["### V8 · AI drought classifier on sites, regions and climate zones the model never saw"]
+    out.append(
+        f"_trained: {m['trained_at']} · {m['n_sites']} sites in {len(m['regions'])} regions · "
+        f"{m['n_samples']:,} labels · {m['cv']}_\n"
+    )
+    names = {"current_model": "Current model (U.S.-trained, v1 features)", "new_model": "Global model (v2 features)", "rules": "Rule-based blend"}
+    us = m["per_region"]["US"]
+    out.append("**U.S., native USDM scale (None…D4), counties held out (GroupKFold 5); Spearman vs. DSCI**\n")
+    out += _rows(us["native_usdm"], names)
+    out.append("")
+    out.append(
+        "**Per region, harmonised scale (None / D0·Watch / D1·Warning / D2+·Alert).** U.S. = county CV; every other "
+        "region = leave-one-region-out (the global model never saw that region; the current model never saw anything "
+        "outside the U.S.). Spearman vs. the label level.\n"
+    )
+    for r, v in m["per_region"].items():
+        out.append(f"_{REGION_NAMES.get(r, r)}: {v['n_sites']} sites_\n")
+        extra = dict(names)
+        extra["v2_trained_on_us_only"] = "v2 features, trained on U.S. only"
+        extra["europe_only_model"] = "v2 features, trained on Europe only"
+        out += _rows(v["harmonised"], extra)
+        out.append("")
+    out.append("**Leave-one-climate-zone-out (harmonised scale)**\n")
+    for z, v in m["per_zone"].items():
+        regs = ", ".join(f"{k} {n}" for k, n in v["regions"].items())
+        out.append(f"_{z}: {v['n_sites']} sites ({regs})_\n")
+        out += _rows(
+            {"new_model": v["new_model_lozo"], "current_model": v["current_model"], "rules": v["rules"]},
+            {"current_model": names["current_model"], "new_model": "Global model, zone held out", "rules": names["rules"]},
+        )
+        out.append("")
+    lq = m["label_quality"]
+    out.append(
+        f"**Weak-label quality.** SMIA thresholds (D0…D4, calibrated on U.S. sites): {m['smia_thresholds_d0_d4']}. "
+        f"Agreement of the SMIA label with USDM (U.S.): within ±1 {fmt(lq['smia_vs_usdm_us']['within1_acc'], 3)}, "
+        f"Spearman {fmt(lq['smia_vs_usdm_us']['spearman'], 3)}"
+        + (
+            f"; with CDI (Europe): within ±1 {fmt(lq['smia_vs_cdi_eu']['within1_acc'], 3)}, "
+            f"Spearman {fmt(lq['smia_vs_cdi_eu']['spearman'], 3)}."
+            if "smia_vs_cdi_eu" in lq
+            else "."
+        )
+        + "\n"
+    )
+    checks = ", ".join(f"{k}: {v}" for k, v in m["adoption_checks"].items())
+    out.append(
+        f"Adoption checks: {checks}. **Adopted: {m['adopted']}.** "
+        f"Model served in: {', '.join(m['model_regions']) or 'none'} (elsewhere: rule-based blend).\n"
+    )
+    return out
 
 
 def main() -> None:
