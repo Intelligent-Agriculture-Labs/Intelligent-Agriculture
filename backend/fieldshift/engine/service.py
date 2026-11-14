@@ -171,7 +171,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     enr_future = _pool.submit(enrichment, lat, lon, today)
     ctx = build(lat, lon, today)
     try:
-        ctx.enrich = enr_future.result(timeout=float(inp.get("enrich_timeout_s", 25)))
+        ctx.enrich = enr_future.result(timeout=float(inp.get("enrich_timeout_s", 8)))
     except FutTimeout:
         log.info("enrichment timed out; continuing without satellite layers")
         ctx.enrich = {}
