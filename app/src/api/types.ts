@@ -280,6 +280,8 @@ export interface PresetLocation {
   cached: boolean;
   /** a past date with an active season, to replay real advice for demos (sent as FieldInput.as_of) */
   replay_date?: string | null;
+  /** field outline [lon, lat] ring (real farm boundary for the demo farm), when the server provides one */
+  polygon?: [number, number][] | null;
 }
 
 /* ---------- Terrain maps (POST /api/terrain) ---------- */

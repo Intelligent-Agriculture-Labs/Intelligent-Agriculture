@@ -37,6 +37,7 @@ export function CaptureTour() {
         name: p.name,
         presetId: p.id,
         current_rotation: p.current_rotation,
+        polygon: p.polygon && p.polygon.length >= 3 ? p.polygon : undefined,
         replay_date: p.replay_date ?? null,
       };
       await step("home-today", () => {

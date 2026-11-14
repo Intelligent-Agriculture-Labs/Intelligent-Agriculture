@@ -77,6 +77,7 @@ export default function Onboarding() {
       name: p.name,
       presetId: p.id,
       current_rotation: p.current_rotation,
+      polygon: p.polygon && p.polygon.length >= 3 ? p.polygon : undefined,
       replay_date: p.replay_date ?? null,
       as_of: params.replay === "1" ? (p.replay_date ?? null) : null,
     });
@@ -106,7 +107,7 @@ export default function Onboarding() {
     setIrrigation(p.irrigation);
     setRotation(p.current_rotation);
     setName(p.name);
-    setPolygon([]);
+    setPolygon(p.polygon && p.polygon.length >= 3 ? p.polygon : []);
     setReplayDate(p.replay_date ?? null);
   };
 
