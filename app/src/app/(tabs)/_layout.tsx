@@ -12,7 +12,7 @@ const icon = (name: IonName) =>
     return <Ionicons name={name} color={String(color)} size={size} />;
   };
 
-/** Five calm tabs. What-if, Climate and the rotation explorer live under Insights (hidden routes, still deep-linkable). */
+/** Five calm tabs. What-if, Climate and the rotation explorer live under Insights (tabs without a button, still deep-linkable). */
 const TABS: { name: string; icon: IonName }[] = [
   { name: "home", icon: "sunny-outline" },
   { name: "map", icon: "map-outline" },
@@ -49,7 +49,8 @@ export default function TabLayout() {
           />
         ))}
         {HIDDEN.map((name) => (
-          <Tabs.Screen key={name} name={name} options={{ href: null, title: tr(`tabs.${name}`) }} />
+          // not `href: null`: in this expo-router version hidden tabs redirect away; an invisible tab button keeps them routable
+          <Tabs.Screen key={name} name={name} options={{ title: tr(`tabs.${name}`), tabBarButton: () => null, tabBarItemStyle: { display: "none" } }} />
         ))}
       </Tabs>
     </ScreenHeaderContext.Provider>

@@ -1,4 +1,3 @@
-import { CropPicker } from "@/components/kit";
 import React, { useEffect, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -13,6 +12,7 @@ import type { MapLayer } from "@/components/map/leafletHtml";
 import { Button, Chip, ChipRow, DateField, OriginBanner, Screen, Section, Txt, styles as ui } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { useStore } from "@/state/store";
+import { CropPicker } from "@/components/kit";
 
 const IRRIGATION: IrrigationMethod[] = ["none", "drip", "sprinkler", "pivot", "furrow", "flood"];
 

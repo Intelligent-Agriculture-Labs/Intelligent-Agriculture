@@ -11,6 +11,13 @@ import { validateCredentials } from "@/lib/authStorage";
 import { MIN_TOUCH, space, useTheme } from "@/lib/theme";
 import { useStore } from "@/state/store";
 
+/** Leave the account screen without stacking a second copy of the tabs underneath. */
+function leaveTo(href: "/home" | "/") {
+  if (href === "/home" && router.canDismiss()) return router.dismissTo("/home");
+  if (router.canDismiss()) router.dismissAll();
+  router.replace(href);
+}
+
 /** Turn API errors into one friendly sentence. */
 export function friendlyError(e: unknown, tr: (k: string) => string): string {
   if (e instanceof ApiError) {
@@ -106,7 +113,7 @@ export default function Account() {
       if (mode === "register") await register({ email, password, name, uploadLocal: upload });
       else await login(email, password);
       setPassword("");
-      router.replace(fields.length || mode === "login" ? "/home" : "/");
+      leaveTo(fields.length || mode === "login" ? "/home" : "/");
     } catch (e) {
       setErr(friendlyError(e, tr));
     }
@@ -145,7 +152,7 @@ export default function Account() {
             label={tr("account.logout")}
             kind="secondary"
             icon="log-out-outline"
-            onPress={() => logout().then(() => router.replace("/"))}
+            onPress={() => logout().then(() => leaveTo("/"))}
             style={{ marginTop: space.lg }}
             testID="logout"
           />
@@ -185,7 +192,7 @@ export default function Account() {
                   setErr(null);
                   try {
                     await deleteAccount(delPw);
-                    router.replace("/");
+                    leaveTo("/");
                   } catch (e) {
                     setErr(friendlyError(e, tr));
                   }

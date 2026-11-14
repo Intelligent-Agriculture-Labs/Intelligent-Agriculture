@@ -1,16 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { API, startWithDemo } from "./helpers";
 
-const API = process.env.E2E_API_URL ?? "http://localhost:8000";
-
-async function startWithFallon(page: Page) {
-  await page.goto("/");
-  await expect(page.getByTestId("onboarding")).toBeVisible();
-  const fallon = page.getByTestId("preset-fallon_nv");
-  const preset = (await fallon.count()) ? fallon : page.locator('[data-testid^="preset-"]').first();
-  await preset.click();
-  await page.getByTestId("start").click();
-  await expect(page.getByTestId("home")).toBeVisible();
-}
+const startWithFallon = (page: Parameters<typeof startWithDemo>[0]) => startWithDemo(page, "fallon_nv");
 
 test("add a second field by drawing it on satellite imagery, then switch between fields", async ({ page }) => {
   await startWithFallon(page);
@@ -56,6 +47,7 @@ test("enable device sync shows a farm code and QR", async ({ page, request }) =>
   test.skip(!health || !health.ok(), "farm sync endpoint not available");
   await startWithFallon(page);
   await page.getByTestId("tab-settings").click();
+  await page.getByTestId("row-share").click();
   await page.getByTestId("sync-enable").click();
   await expect(page.getByTestId("sync-code")).toHaveText(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/, { timeout: 30_000 });
   await expect(page.getByTestId("sync-status")).toContainText(/Synced|Syncing/);
@@ -70,6 +62,7 @@ test("satellite view of a field (Sentinel-2)", async ({ page, request }) => {
   await page.getByTestId("map-view-satellite").click();
   await expect(page.getByTestId("satellite-panel")).toBeVisible();
   await expect(page.getByTestId("ndvi-chart")).toBeVisible({ timeout: 540_000 });
+  await page.getByTestId("sat-season-toggle").click();
   await expect(page.getByTestId("sat-phenology")).toBeVisible();
 });
 

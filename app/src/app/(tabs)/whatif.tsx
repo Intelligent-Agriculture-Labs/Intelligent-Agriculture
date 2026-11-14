@@ -1,4 +1,3 @@
-import { BackLink, CropPicker } from "@/components/kit";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Redirect, router } from "expo-router";
@@ -12,6 +11,7 @@ import { Button, Card, Chip, ChipRow, DateField, ErrorView, LabeledSlider, Loadi
 import { space, useTheme } from "@/lib/theme";
 import { dCToDF, fmt } from "@/lib/units";
 import { useStore } from "@/state/store";
+import { BackLink, CropPicker } from "@/components/kit";
 
 type Strategy = SimulateRequest["irrigation_strategy"];
 const STRATEGIES: Strategy[] = ["rainfed", "full", "deficit_75", "deficit_50", "allocation"];

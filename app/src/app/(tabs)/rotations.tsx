@@ -1,4 +1,3 @@
-import { BackLink, CropPicker } from "@/components/kit";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Redirect, router } from "expo-router";
@@ -8,6 +7,7 @@ import { api } from "@/api/client";
 import { useQuery } from "@/lib/useQuery";
 import type { Priorities, RotationRequest, RotationResponse, RotationStrategy } from "@/api/types";
 import { CoverCalendar, MetricBar, ScoreRing, cropName, useCrops } from "@/components/domain";
+import { BackLink, CropPicker } from "@/components/kit";
 import { Button, Card, Chip, ErrorView, IconButton, LabeledSlider, Loading, OriginBanner, RiskBadge, Screen, Section, Txt } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { useStore } from "@/state/store";

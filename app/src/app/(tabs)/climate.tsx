@@ -1,4 +1,3 @@
-import { BackLink } from "@/components/kit";
 import React from "react";
 import { View } from "react-native";
 import { Redirect, router } from "expo-router";
@@ -12,6 +11,7 @@ import { Card, ErrorView, Loading, OriginBanner, Screen, Section, Txt } from "@/
 import { space, useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/units";
 import { useStore } from "@/state/store";
+import { BackLink } from "@/components/kit";
 
 export default function Climate() {
   const t = useTheme();

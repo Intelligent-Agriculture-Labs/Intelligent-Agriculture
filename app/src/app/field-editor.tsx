@@ -1,4 +1,3 @@
-import { CropPicker } from "@/components/kit";
 import React, { useMemo, useState } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import * as Location from "expo-location";
@@ -13,6 +12,7 @@ import { space, useTheme } from "@/lib/theme";
 import { fmt, inToMm, mmToIn } from "@/lib/units";
 import { deleteVertex, insertVertex, openRing, polygonAreaHa, polygonCentroid } from "@/state/farm";
 import { useStore } from "@/state/store";
+import { CropPicker } from "@/components/kit";
 
 const IRRIGATION: IrrigationMethod[] = ["none", "drip", "sprinkler", "pivot", "furrow", "flood"];
 const LAYERS: { id: MapLayer; icon: "planet" | "map" | "earth" | "leaf" | "image" | "flag" }[] = [
@@ -308,8 +308,9 @@ export default function FieldEditor() {
             onChangeText={setCoordText}
             onSubmitEditing={applyCoords}
             style={[ui.input, { flex: 1, color: t.text, borderColor: t.border, backgroundColor: t.card }]}
+            testID="field-coords"
           />
-          <Button kind="secondary" label="OK" onPress={applyCoords} accessibilityLabel={tr("onboarding.searchPlaceholder")} />
+          <Button kind="secondary" label="OK" onPress={applyCoords} accessibilityLabel={tr("onboarding.searchPlaceholder")} testID="field-coords-go" />
         </View>
         {msg ? (
           <Txt v="small" color={t.risk.severe.fg}>
