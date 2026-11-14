@@ -315,6 +315,20 @@ def satellite_png(key: str, name: str) -> Response:
     )
 
 
+class DetectRequest(BaseModel):
+    lat: float = Field(ge=-60, le=75)
+    lon: float = Field(ge=-180, le=180)
+    source: Literal["esri", "naip"] | None = None
+
+
+@app.post("/api/fields/detect")
+def detect_ep(req: DetectRequest) -> dict[str, Any]:
+    """Tap-to-detect: returns an editable field polygon around the tapped point."""
+    from .engine import fields
+
+    return fields.detect_field(req.lat, req.lon, req.source)
+
+
 class PlannerRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)
