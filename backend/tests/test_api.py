@@ -168,10 +168,26 @@ def test_reported_last_irrigation_changes_state_and_confidence():
 
 
 def test_planner_contract():
-    r = client.post("/api/planner", json={"lat": 39.47, "lon": -118.78, "crop": "maize", "planting_date": "2020-05-01", "irrigation": "drip",
-                                          "water_allocation_mm": 300})
+    r = client.post(
+        "/api/planner",
+        json={
+            "lat": 39.47,
+            "lon": -118.78,
+            "crop": "maize",
+            "planting_date": "2020-05-01",
+            "irrigation": "drip",
+            "water_allocation_mm": 300,
+        },
+    )
     assert r.status_code == 200
     j = r.json()
-    assert j["sowing_scan"] and j["window"] and j["stages"] and j["operations"] and j["water_budget"] and j["risk_calendar"]
+    assert (
+        j["sowing_scan"]
+        and j["window"]
+        and j["stages"]
+        and j["operations"]
+        and j["water_budget"]
+        and j["risk_calendar"]
+    )
     assert j["water"]["full_need_median_mm"] >= j["water"]["season_irrigation_median_mm"]
     assert j["water"]["coverage_pct"] is not None and j["water"]["coverage_pct"] <= 100

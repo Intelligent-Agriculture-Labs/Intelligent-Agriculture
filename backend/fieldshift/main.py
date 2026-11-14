@@ -226,6 +226,62 @@ def export_geojson(
     }
 
 
+class FarmCreate(BaseModel):
+    name: str | None = Field(None, max_length=120)
+    fields: list[dict[str, Any]] | None = None
+    settings: dict[str, Any] | None = None
+
+
+class FarmPush(BaseModel):
+    name: str | None = Field(None, max_length=120)
+    fields: list[dict[str, Any]] = []
+    settings: dict[str, Any] | None = None
+
+
+class FarmJoin(BaseModel):
+    sync_code: str = Field(min_length=8, max_length=12)
+
+
+def _farm_call(fn: Any, *a: Any) -> dict[str, Any]:
+    from .engine import farms
+
+    try:
+        return fn(*a)
+    except farms.FarmNotFound as e:
+        raise HTTPException(404, "farm not found") from e
+    except ValueError as e:
+        raise HTTPException(422, str(e)) from e
+
+
+@app.post("/api/farms")
+def farm_create(req: FarmCreate) -> dict[str, Any]:
+    """Create a synced farm; returns farm_id (keep secret) and a short sync code for other devices."""
+    from .engine import farms
+
+    return _farm_call(farms.create, req.name, req.fields, req.settings)
+
+
+@app.post("/api/farms/join")
+def farm_join(req: FarmJoin) -> dict[str, Any]:
+    from .engine import farms
+
+    return _farm_call(farms.join, req.sync_code)
+
+
+@app.get("/api/farms/{farm_id}")
+def farm_get(farm_id: str) -> dict[str, Any]:
+    from .engine import farms
+
+    return _farm_call(farms.get, farm_id)
+
+
+@app.put("/api/farms/{farm_id}")
+def farm_push(farm_id: str, req: FarmPush) -> dict[str, Any]:
+    from .engine import farms
+
+    return _farm_call(farms.push, farm_id, req.name, req.fields, req.settings)
+
+
 class PlannerRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)
