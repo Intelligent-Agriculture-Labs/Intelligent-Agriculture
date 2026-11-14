@@ -40,7 +40,9 @@ def spi_at(precip: np.ndarray, dates: list[dt.date], target: dt.date, n: int) ->
     i = (target - dates[0]).days
     if i < n or i >= len(dates) or not np.isfinite(acc[i]):
         return None
-    idx = _same_window(dates[: i + 1 - 30] if i > 400 else dates, target)  # climatology excludes the most recent month
+    idx = _same_window(
+        dates[: i + 1 - 30] if i > 400 else dates, target
+    )  # climatology excludes the most recent month
     sample = acc[idx]
     sample = sample[np.isfinite(sample)]
     if len(sample) < 15:
@@ -67,7 +69,9 @@ def standardized_at(series: np.ndarray, dates: list[dt.date], target: dt.date, n
     sample = sample[np.isfinite(sample)]
     if len(sample) < 15:
         return None
-    rank = (np.sum(sample < acc[i]) + 0.5 * np.sum(sample == acc[i]) + 0.5) / (len(sample) + 1)  # Weibull-type plotting position
+    rank = (np.sum(sample < acc[i]) + 0.5 * np.sum(sample == acc[i]) + 0.5) / (
+        len(sample) + 1
+    )  # Weibull-type plotting position
     return round(float(stats.norm.ppf(np.clip(rank, 1e-3, 1 - 1e-3))), 2)
 
 
@@ -108,7 +112,9 @@ def level_from_pct(p: float | None) -> int:
     return 0
 
 
-def combined_level(spi30: float | None, spi90: float | None, spei90: float | None, sm_pct: float | None, vhi: float | None) -> tuple[int, list[str]]:
+def combined_level(
+    spi30: float | None, spi90: float | None, spei90: float | None, sm_pct: float | None, vhi: float | None
+) -> tuple[int, list[str]]:
     """Convergence-of-evidence blend (like the USDM): weighted mean of indicator levels, rounded.
     Long-term water balance (SPI/SPEI-90) weighs most; short-term SPI-30 and satellite indicators refine it."""
     parts: list[tuple[float, float, str]] = []

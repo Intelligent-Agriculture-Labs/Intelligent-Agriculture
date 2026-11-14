@@ -95,7 +95,9 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
 
     doy = np.array([d.timetuple().tm_yday for d in power.dates])
     rs = power["ALLSKY_SFC_SW_DWN"].copy()
-    et0 = et0mod.et0_pm(power["T2M_MAX"], power["T2M_MIN"], rs, power["WS2M"], lat, elev_used, doy, tdew=power["T2MDEW"])
+    et0 = et0mod.et0_pm(
+        power["T2M_MAX"], power["T2M_MIN"], rs, power["WS2M"], lat, elev_used, doy, tdew=power["T2MDEW"]
+    )
     hs = et0mod.et0_hargreaves(power["T2M_MAX"], power["T2M_MIN"], lat, doy)
     et0 = np.where(np.isfinite(et0), et0, hs)  # radiation often lags a few days -> Hargreaves fallback
 
@@ -115,9 +117,16 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
             fmap = {d: i for i, d in enumerate(fc.dates)}
             # bridge: overwrite missing/latest POWER days with Open-Meteo past days
             for i, d in enumerate(dates):
-                if d in fmap and (not np.isfinite(tmax[i]) or not np.isfinite(rain[i]) or d > (power_last or d)):
+                if d in fmap and (
+                    not np.isfinite(tmax[i]) or not np.isfinite(rain[i]) or d > (power_last or d)
+                ):
                     j = fmap[d]
-                    tmax[i], tmin[i], rain[i], rh[i] = fc["T2M_MAX"][j], fc["T2M_MIN"][j], fc["PRECTOTCORR"][j], fc["RH2M"][j]
+                    tmax[i], tmin[i], rain[i], rh[i] = (
+                        fc["T2M_MAX"][j],
+                        fc["T2M_MIN"][j],
+                        fc["PRECTOTCORR"][j],
+                        fc["RH2M"][j],
+                    )
                     et0[i] = fc["ET0_OM"][j]
                     prov[i] = 1
             for j, d in enumerate(fc.dates):
@@ -141,7 +150,9 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
 
     # extend with climatology for long simulations beyond the forecast horizon (marked provenance 3)
     w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0)
-    ctx = FieldContext(lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0)
+    ctx = FieldContext(
+        lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0
+    )
     if enrich:
         ctx.enrich = enrichment(lat, lon, today)
         for sid in ("modis_ndvi", "mod16", "smap_l3e", "modis_lst"):

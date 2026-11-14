@@ -21,7 +21,11 @@ PESTS: dict[str, dict[str, Any]] = {
         "t_high": 30.0,
         "events": [  # (°C·d, label, action)
             (156, "Egg hatch begins", "Start weekly sweep-net sampling"),
-            (319, "Peak larval feeding", "Scout tips for feeding; check economic threshold (UC IPM: 20 larvae / sweep)"),
+            (
+                319,
+                "Peak larval feeding",
+                "Scout tips for feeding; check economic threshold (UC IPM: 20 larvae / sweep)",
+            ),
             (450, "Larval feeding declining", "Consider early cutting instead of spraying if near harvest"),
         ],
         "ref": "UC IPM Alfalfa Pest Management Guidelines; Purdue E-series (48 °F base)",
@@ -43,7 +47,10 @@ PESTS: dict[str, dict[str, Any]] = {
         "crops": ["maize", "maize_silage", "dry_bean"],
         "t_low": 10.0,
         "t_high": 30.0,
-        "events": [(208, "First-generation moth flight", "Scout for egg masses"), (611, "Second-generation moth flight", "Scout ears/stalks")],
+        "events": [
+            (208, "First-generation moth flight", "Scout for egg masses"),
+            (611, "Second-generation moth flight", "Scout ears/stalks"),
+        ],
         "ref": "Mason et al. (1996) NCR-327",
     },
     "corn_earworm": {
@@ -59,7 +66,10 @@ PESTS: dict[str, dict[str, Any]] = {
         "crops": ["potato", "tomato"],
         "t_low": 10.0,
         "t_high": 30.0,
-        "events": [(105, "Overwintered adults emerge", "Scout field edges"), (300, "First-generation larvae", "Scout for small larvae; threshold-based control")],
+        "events": [
+            (105, "Overwintered adults emerge", "Scout field edges"),
+            (300, "First-generation larvae", "Scout for small larvae; threshold-based control"),
+        ],
         "ref": "Ferro et al. (1985); University of Maine IPM",
     },
     "cereal_aphids": {
@@ -93,7 +103,15 @@ def biofix(today: dt.date, lat: float) -> dt.date:
     return dt.date(today.year if today.month >= 7 else today.year - 1, 7, 1)
 
 
-def status(pest_id: str, dates: list[dt.date], tmax: np.ndarray, tmin: np.ndarray, today: dt.date, lat: float, forecast_days: int = 7) -> dict[str, Any]:
+def status(
+    pest_id: str,
+    dates: list[dt.date],
+    tmax: np.ndarray,
+    tmin: np.ndarray,
+    today: dt.date,
+    lat: float,
+    forecast_days: int = 7,
+) -> dict[str, Any]:
     """Accumulated DD to today, projected DD in `forecast_days`, next event and days until it."""
     p = PESTS[pest_id]
     bf = biofix(today, lat)

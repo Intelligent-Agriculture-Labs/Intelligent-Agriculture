@@ -27,7 +27,14 @@ import yaml
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 
-IRRIGATION_EFFICIENCY = {"none": 1.0, "drip": 0.90, "sprinkler": 0.75, "pivot": 0.85, "furrow": 0.60, "flood": 0.55}
+IRRIGATION_EFFICIENCY = {
+    "none": 1.0,
+    "drip": 0.90,
+    "sprinkler": 0.75,
+    "pivot": 0.85,
+    "furrow": 0.60,
+    "flood": 0.55,
+}
 
 
 @lru_cache
@@ -200,7 +207,18 @@ def simulate(
     stress = heat = frost = 0
     frost_penalty = 0.0
     used_alloc = 0.0
-    daily: dict[str, list[Any]] = {"date": [], "kc": [], "dr": [], "taw": [], "raw": [], "eta": [], "etc": [], "irr": [], "rain": [], "ks": []}
+    daily: dict[str, list[Any]] = {
+        "date": [],
+        "kc": [],
+        "dr": [],
+        "taw": [],
+        "raw": [],
+        "eta": [],
+        "etc": [],
+        "irr": [],
+        "rain": [],
+        "ks": [],
+    }
     events: list[dict[str, Any]] = []
     stage = "initial"
     kc = c["kc_ini"]
@@ -213,7 +231,11 @@ def simulate(
         tmax, tmin = w.tmax[i], w.tmin[i]
         et0 = w.et0[i] if np.isfinite(w.et0[i]) else 0.0
         p_mm = w.rain[i] if np.isfinite(w.rain[i]) else 0.0
-        g = float(gdd(np.array([tmax]), np.array([tmin]), c["t_base"])[0]) if np.isfinite(tmax) and np.isfinite(tmin) else 0.0
+        g = (
+            float(gdd(np.array([tmax]), np.array([tmin]), c["t_base"])[0])
+            if np.isfinite(tmax) and np.isfinite(tmin)
+            else 0.0
+        )
 
         if perennial:
             # dormant when cold: no growth, small soil evaporation-only Kc
@@ -263,7 +285,9 @@ def simulate(
             and (irrigate_until_date is None or d <= irrigate_until_date)
         ):
             if dr >= raw:
-                target = {"full": 0.0, "deficit_75": 0.25, "deficit_50": 0.5, "allocation": 0.0}.get(strategy, 0.0)
+                target = {"full": 0.0, "deficit_75": 0.25, "deficit_50": 0.5, "allocation": 0.0}.get(
+                    strategy, 0.0
+                )
                 need = max(0.0, dr - target * taw)
                 if strategy == "allocation" and allocation_mm is not None:
                     need = min(need, max(0.0, allocation_mm * eff - used_alloc))
@@ -314,7 +338,9 @@ def simulate(
     if perennial:
         partial = cycle_g / c["cut_gdd"]
         cuts_eff = cuts + (partial if partial >= 0.7 else 0.0)
-        ym = c["typical_yield_t_ha"] / 4.5 * cuts_eff  # typical yield corresponds to ~4.5 cuts in the U.S. West
+        ym = (
+            c["typical_yield_t_ha"] / 4.5 * cuts_eff
+        )  # typical yield corresponds to ~4.5 cuts in the U.S. West
         cuts = cuts_eff
     else:
         completion = min(1.0, g_sum / gdd_req) if gdd_req > 0 else 1.0

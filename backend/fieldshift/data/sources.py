@@ -28,25 +28,78 @@ ORNL = "https://modis.ornl.gov/rst/api/v1"
 ORNL_RETRIES = int(__import__("os").environ.get("FIELDSHIFT_ORNL_RETRIES", "1"))
 
 SOURCES: dict[str, dict[str, Any]] = {
-    "nasa_power": dict(name="NASA POWER daily agroclimatology", provider="NASA Langley Research Center",
-                       url="https://power.larc.nasa.gov/", resolution="0.5° × 0.625° (~50 km) meteorology, 1° solar",
-                       latency="~2–5 days", is_nasa=True),
-    "openmeteo_forecast": dict(name="Open-Meteo forecast (ECMWF IFS / GFS / ICON blend)", provider="Open-Meteo.com (CC BY 4.0)",
-                               url="https://open-meteo.com/", resolution="~9–25 km", latency="hourly updates", is_nasa=False),
-    "srtm": dict(name="SRTM GL1 30 m elevation (via OpenTopoData)", provider="NASA/USGS SRTM; OpenTopoData",
-                 url="https://www.earthdata.nasa.gov/data/instruments/srtm", resolution="30 m", latency="static (2000)", is_nasa=True),
-    "soilgrids": dict(name="SoilGrids 2.0", provider="ISRIC – World Soil Information (CC BY 4.0)",
-                      url="https://soilgrids.org/", resolution="250 m", latency="static", is_nasa=False),
-    "modis_ndvi": dict(name="MODIS Terra MOD13Q1 NDVI (via ORNL DAAC subsets)", provider="NASA LP DAAC / ORNL DAAC",
-                       url="https://lpdaac.usgs.gov/products/mod13q1v061/", resolution="250 m, 16-day", latency="~2–4 weeks", is_nasa=True),
-    "mod16": dict(name="MODIS MOD16A2GF evapotranspiration (via ORNL DAAC subsets)", provider="NASA LP DAAC / ORNL DAAC",
-                  url="https://lpdaac.usgs.gov/products/mod16a2gfv061/", resolution="500 m, 8-day", latency="yearly gap-filled", is_nasa=True),
-    "modis_lst": dict(name="MODIS Terra MOD11A2 land-surface temperature", provider="NASA LP DAAC / ORNL DAAC",
-                      url="https://lpdaac.usgs.gov/products/mod11a2v061/", resolution="1 km, 8-day", latency="~2 weeks", is_nasa=True),
-    "smap_l3e": dict(name="SMAP Enhanced L3 radiometer soil moisture SPL3SMP_E", provider="NASA NSIDC DAAC / ORNL DAAC",
-                     url="https://nsidc.org/data/spl3smp_e", resolution="9 km, daily (2–3 day revisit)", latency="~2 days", is_nasa=True),
-    "era5_land": dict(name="ERA5 / ERA5-Land reanalysis soil moisture (via Open-Meteo archive)", provider="Copernicus C3S / ECMWF",
-                      url="https://cds.climate.copernicus.eu/", resolution="~9–25 km, hourly", latency="~5 days", is_nasa=False),
+    "nasa_power": dict(
+        name="NASA POWER daily agroclimatology",
+        provider="NASA Langley Research Center",
+        url="https://power.larc.nasa.gov/",
+        resolution="0.5° × 0.625° (~50 km) meteorology, 1° solar",
+        latency="~2–5 days",
+        is_nasa=True,
+    ),
+    "openmeteo_forecast": dict(
+        name="Open-Meteo forecast (ECMWF IFS / GFS / ICON blend)",
+        provider="Open-Meteo.com (CC BY 4.0)",
+        url="https://open-meteo.com/",
+        resolution="~9–25 km",
+        latency="hourly updates",
+        is_nasa=False,
+    ),
+    "srtm": dict(
+        name="SRTM GL1 30 m elevation (via OpenTopoData)",
+        provider="NASA/USGS SRTM; OpenTopoData",
+        url="https://www.earthdata.nasa.gov/data/instruments/srtm",
+        resolution="30 m",
+        latency="static (2000)",
+        is_nasa=True,
+    ),
+    "soilgrids": dict(
+        name="SoilGrids 2.0",
+        provider="ISRIC – World Soil Information (CC BY 4.0)",
+        url="https://soilgrids.org/",
+        resolution="250 m",
+        latency="static",
+        is_nasa=False,
+    ),
+    "modis_ndvi": dict(
+        name="MODIS Terra MOD13Q1 NDVI (via ORNL DAAC subsets)",
+        provider="NASA LP DAAC / ORNL DAAC",
+        url="https://lpdaac.usgs.gov/products/mod13q1v061/",
+        resolution="250 m, 16-day",
+        latency="~2–4 weeks",
+        is_nasa=True,
+    ),
+    "mod16": dict(
+        name="MODIS MOD16A2GF evapotranspiration (via ORNL DAAC subsets)",
+        provider="NASA LP DAAC / ORNL DAAC",
+        url="https://lpdaac.usgs.gov/products/mod16a2gfv061/",
+        resolution="500 m, 8-day",
+        latency="yearly gap-filled",
+        is_nasa=True,
+    ),
+    "modis_lst": dict(
+        name="MODIS Terra MOD11A2 land-surface temperature",
+        provider="NASA LP DAAC / ORNL DAAC",
+        url="https://lpdaac.usgs.gov/products/mod11a2v061/",
+        resolution="1 km, 8-day",
+        latency="~2 weeks",
+        is_nasa=True,
+    ),
+    "smap_l3e": dict(
+        name="SMAP Enhanced L3 radiometer soil moisture SPL3SMP_E",
+        provider="NASA NSIDC DAAC / ORNL DAAC",
+        url="https://nsidc.org/data/spl3smp_e",
+        resolution="9 km, daily (2–3 day revisit)",
+        latency="~2 days",
+        is_nasa=True,
+    ),
+    "era5_land": dict(
+        name="ERA5 / ERA5-Land reanalysis soil moisture (via Open-Meteo archive)",
+        provider="Copernicus C3S / ECMWF",
+        url="https://cds.climate.copernicus.eu/",
+        resolution="~9–25 km, hourly",
+        latency="~5 days",
+        is_nasa=False,
+    ),
 }
 
 
@@ -167,7 +220,11 @@ def era5_soil_moisture(lat: float, lon: float, start: dt.date, end: dt.date) -> 
     n = (end - start).days + 1
     dates = [start + dt.timedelta(days=i) for i in range(n)]
     out = {}
-    for k, name in [("soil_moisture_0_to_7cm", "SM_0_7"), ("soil_moisture_7_to_28cm", "SM_7_28"), ("soil_moisture_28_to_100cm", "SM_28_100")]:
+    for k, name in [
+        ("soil_moisture_0_to_7cm", "SM_0_7"),
+        ("soil_moisture_7_to_28cm", "SM_7_28"),
+        ("soil_moisture_28_to_100cm", "SM_28_100"),
+    ]:
         vals = np.array([np.nan if v is None else v for v in h.get(k, [])], dtype=float)
         vals = vals[: n * 24]
         if len(vals) < n * 24:
@@ -220,7 +277,7 @@ def soil(lat: float, lon: float) -> dict[str, Any] | None:
             vals[name] = float(np.mean(ms)) / d_factor
     if "clay" not in vals or "sand" not in vals:
         return None
-    from ..science.soil import texture_class, taw_mm_per_m
+    from ..science.soil import taw_mm_per_m, texture_class
 
     tex = texture_class(vals["sand"], vals["clay"])
     return {
@@ -244,13 +301,21 @@ ORNL_PRODUCTS = {
 
 
 def _ornl_dates(product: str, lat: float, lon: float) -> list[tuple[str, str]]:
-    f = get_json(f"{ORNL}/{product}/dates", {"latitude": _r(lat, 4), "longitude": _r(lon, 4)}, ttl_s=3 * 86400, timeout_s=60, retries=ORNL_RETRIES)
+    f = get_json(
+        f"{ORNL}/{product}/dates",
+        {"latitude": _r(lat, 4), "longitude": _r(lon, 4)},
+        ttl_s=3 * 86400,
+        timeout_s=60,
+        retries=ORNL_RETRIES,
+    )
     if not isinstance(f.data, dict):
         raise DataUnavailable(str(f.data)[:200])
     return [(x["modis_date"], x["calendar_date"]) for x in f.data["dates"]]
 
 
-def ornl_series(sid: str, lat: float, lon: float, start: dt.date, end: dt.date, max_requests: int = 60) -> list[tuple[dt.date, float]]:
+def ornl_series(
+    sid: str, lat: float, lon: float, start: dt.date, end: dt.date, max_requests: int = 60
+) -> list[tuple[dt.date, float]]:
     """Point time series from ORNL's subset API (chunks of <=10 dates per request, as the API requires)."""
     product, band, scale, (lo, hi) = ORNL_PRODUCTS[sid]
     dates = [(m, dt.date.fromisoformat(c)) for m, c in _ornl_dates(product, lat, lon)]

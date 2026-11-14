@@ -107,7 +107,11 @@ def get_json(
                     url,
                     params=params,
                     timeout=timeout_s,
-                    headers={"Accept": "application/json", "User-Agent": "FieldShift/1.0 (NASA Space Apps 2026)", **(headers or {})},
+                    headers={
+                        "Accept": "application/json",
+                        "User-Agent": "FieldShift/1.0 (NASA Space Apps 2026)",
+                        **(headers or {}),
+                    },
                     follow_redirects=True,
                 )
                 if r.status_code == 200:

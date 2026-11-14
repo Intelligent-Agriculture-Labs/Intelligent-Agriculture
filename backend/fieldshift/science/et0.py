@@ -35,7 +35,12 @@ def ra(lat_deg: float, doy: np.ndarray | int) -> np.ndarray:
     dr = 1 + 0.033 * np.cos(2 * np.pi * j / 365)
     delta = 0.409 * np.sin(2 * np.pi * j / 365 - 1.39)
     ws = np.arccos(np.clip(-np.tan(phi) * np.tan(delta), -1.0, 1.0))
-    return (24 * 60 / np.pi) * GSC * dr * (ws * np.sin(phi) * np.sin(delta) + np.cos(phi) * np.cos(delta) * np.sin(ws))
+    return (
+        (24 * 60 / np.pi)
+        * GSC
+        * dr
+        * (ws * np.sin(phi) * np.sin(delta) + np.cos(phi) * np.cos(delta) * np.sin(ws))
+    )
 
 
 def wind_2m(u_z: np.ndarray | float, z: float) -> np.ndarray:
@@ -79,7 +84,12 @@ def et0_pm(
     rso = (0.75 + 2e-5 * elev_m) * ra_  # eq. 37
     rns = (1 - albedo) * rs  # eq. 38
     ratio = np.clip(np.where(rso > 0, rs / rso, 0.5), 0.25, 1.0)
-    rnl = SIGMA * (((tmax + 273.16) ** 4 + (tmin + 273.16) ** 4) / 2) * (0.34 - 0.14 * np.sqrt(np.maximum(ea, 0))) * (1.35 * ratio - 0.35)  # eq. 39
+    rnl = (
+        SIGMA
+        * (((tmax + 273.16) ** 4 + (tmin + 273.16) ** 4) / 2)
+        * (0.34 - 0.14 * np.sqrt(np.maximum(ea, 0)))
+        * (1.35 * ratio - 0.35)
+    )  # eq. 39
     rn = rns - rnl
     g = 0.0  # daily soil heat flux ≈ 0, eq. 42
     u2 = np.asarray(u2, float)

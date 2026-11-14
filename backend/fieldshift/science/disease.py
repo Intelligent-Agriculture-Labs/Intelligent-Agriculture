@@ -24,18 +24,47 @@ from typing import Any
 import numpy as np
 
 DISEASES: dict[str, dict[str, Any]] = {
-    "late_blight": {"name": "Late blight", "crops": ["potato", "tomato"], "ref": "Hutton criteria (AHDB 2017)"},
-    "stripe_rust": {"name": "Stripe rust", "crops": ["winter_wheat", "barley", "triticale_forage"], "ref": "de Vallavieille-Pope et al. 1995"},
-    "powdery_mildew": {"name": "Powdery mildew", "crops": ["tomato", "sunflower", "dry_bean", "barley"], "ref": "Gubler et al. 1999 (simplified)"},
-    "legume_leaf_disease": {"name": "Leaf spot / spring black stem", "crops": ["alfalfa"], "ref": "Leaf-wetness proxy (Sentelhas et al. 2008)"},
-    "white_mould": {"name": "White mould (Sclerotinia)", "crops": ["dry_bean", "soybean", "sunflower", "safflower"], "ref": "Wet-hours × temperature window"},
-    "downy_mildew_millet": {"name": "Downy mildew", "crops": ["pearl_millet"], "ref": "Wet-hours × temperature window"},
+    "late_blight": {
+        "name": "Late blight",
+        "crops": ["potato", "tomato"],
+        "ref": "Hutton criteria (AHDB 2017)",
+    },
+    "stripe_rust": {
+        "name": "Stripe rust",
+        "crops": ["winter_wheat", "barley", "triticale_forage"],
+        "ref": "de Vallavieille-Pope et al. 1995",
+    },
+    "powdery_mildew": {
+        "name": "Powdery mildew",
+        "crops": ["tomato", "sunflower", "dry_bean", "barley"],
+        "ref": "Gubler et al. 1999 (simplified)",
+    },
+    "legume_leaf_disease": {
+        "name": "Leaf spot / spring black stem",
+        "crops": ["alfalfa"],
+        "ref": "Leaf-wetness proxy (Sentelhas et al. 2008)",
+    },
+    "white_mould": {
+        "name": "White mould (Sclerotinia)",
+        "crops": ["dry_bean", "soybean", "sunflower", "safflower"],
+        "ref": "Wet-hours × temperature window",
+    },
+    "downy_mildew_millet": {
+        "name": "Downy mildew",
+        "crops": ["pearl_millet"],
+        "ref": "Wet-hours × temperature window",
+    },
 }
 
 
 def hourly_by_day(hourly: dict[str, list[Any]]) -> dict[dt.date, dict[str, np.ndarray]]:
     by: dict[dt.date, dict[str, list[float]]] = defaultdict(lambda: {"t": [], "rh": []})
-    for ts, t, rh in zip(hourly.get("time", []), hourly.get("temperature_2m", []), hourly.get("relative_humidity_2m", []), strict=False):
+    for ts, t, rh in zip(
+        hourly.get("time", []),
+        hourly.get("temperature_2m", []),
+        hourly.get("relative_humidity_2m", []),
+        strict=False,
+    ):
         if t is None or rh is None:
             continue
         d = dt.date.fromisoformat(ts[:10])
@@ -75,11 +104,11 @@ def daily_scores(days: dict[dt.date, dict[str, np.ndarray]]) -> dict[str, dict[d
         out["powdery_mildew"][d] = 1.0 if pm_run >= 6 else pm_run / 6 * 0.6
         # legume foliar
         lg = wet & (t >= 10) & (t <= 25)
-        out["legume_leaf_disease"][d] = min(1.0, lg.sum() / 10)
+        out["legume_leaf_disease"][d] = min(1.0, float(lg.sum()) / 10)
         wm = wet & (t >= 15) & (t <= 25)
-        out["white_mould"][d] = min(1.0, wm.sum() / 12)
+        out["white_mould"][d] = min(1.0, float(wm.sum()) / 12)
         dm = wet & (t >= 15) & (t <= 30)
-        out["downy_mildew_millet"][d] = min(1.0, dm.sum() / 10)
+        out["downy_mildew_millet"][d] = min(1.0, float(dm.sum()) / 10)
     for i, d in enumerate(dates):
         if d not in hutton_day:
             continue
