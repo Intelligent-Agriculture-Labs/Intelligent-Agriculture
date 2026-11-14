@@ -10,6 +10,7 @@ from __future__ import annotations
 import datetime as dt
 import logging
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -55,6 +56,7 @@ class FieldContext:
 
 _ctx_cache: dict[tuple[float, float, str], tuple[float, FieldContext]] = {}
 _lock = threading.Lock()
+_io_pool = ThreadPoolExecutor(max_workers=8, thread_name_prefix="ctx-io")
 
 
 def _key(lat: float, lon: float, today: dt.date) -> tuple[float, float, str]:
@@ -79,13 +81,16 @@ def build(lat: float, lon: float, today: dt.date | None = None, *, enrich: bool 
 def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext:
     statuses: dict[str, str] = {}
     is_historic = (dt.date.today() - today).days > 30  # back-testing / demo date in the past
-    elev, slope, st = sources.elevation(lat, lon)
-    statuses["srtm"] = st
-    soil = sources.soil(lat, lon)
-    statuses["soilgrids"] = soil["status"] if soil else "unavailable"
-
     power_end = min(today + dt.timedelta(days=200), dt.date.today()) if is_historic else dt.date.today()
+    # independent sources are fetched concurrently (cold start for a new field: ~40 s -> bounded by the slowest source)
+    f_elev = _io_pool.submit(sources.elevation, lat, lon)
+    f_soil = _io_pool.submit(sources.soil, lat, lon)
+    f_fc = None if is_historic else _io_pool.submit(sources.forecast, lat, lon, 14, 16)
     power = sources.power_daily(lat, lon, HIST_START, power_end)
+    elev, slope, st = f_elev.result()
+    statuses["srtm"] = st
+    soil = f_soil.result()
+    statuses["soilgrids"] = soil["status"] if soil else "unavailable"
     statuses["nasa_power"] = power.status
     elev_used = elev if elev is not None else (power.meta.get("power_elevation_m") or 0.0)
 
@@ -112,7 +117,8 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
 
     if not is_historic:
         try:
-            fc, hourly = sources.forecast(lat, lon, past_days=14, days=16)
+            assert f_fc is not None
+            fc, hourly = f_fc.result()
             statuses["openmeteo_forecast"] = fc.status
             fmap = {d: i for i, d in enumerate(fc.dates)}
             # bridge: overwrite missing/latest POWER days with Open-Meteo past days
