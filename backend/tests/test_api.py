@@ -224,7 +224,9 @@ def test_rotation_plan_flags_short_return_and_optimizes():
     assert r.status_code == 200
     j = r.json()
     y26 = j["years"][0]
-    assert y26["verdict"] == "problem" and any(i["id"] == "return_interval" for i in y26["issues"])
+    assert y26["verdict"] == "problem" and any(
+        i["id"] in ("return_interval", "rule:continuous_maize") for i in y26["issues"]
+    )
     assert j["summary"]["headline"] and j["crops_available"]
     assert j["optimized"] is None or j["optimized"]["score"] >= j["summary"]["score"]
     assert all(c not in ("alfalfa",) for p in (j["optimized"] or {"plan": []})["plan"] for c in [p["crop"]])

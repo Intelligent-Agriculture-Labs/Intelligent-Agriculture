@@ -130,3 +130,11 @@ templates:
       - {crop: sweet_potato, year: 1}
       - {crop: maize, year: 2}
       - {crop: cowpea, year: 3}
+
+# Regional cropping systems (crops commonly grown in each climate type; FAO/GAEZ, USDA NASS, Eurostat, FAOSTAT country
+# statistics). The per-field optimiser proposes crops from the field's system plus the farmer's own crops.
+cropping_systems:
+  temperate: [maize, maize_silage, soybean, winter_wheat, spring_wheat, barley, winter_barley, oats, winter_rye, triticale_forage, winter_rapeseed, field_pea, faba_bean, sugar_beet, sunflower, dry_bean, potato, flax, sorghum, alfalfa, clover_grass_ley]
+  arid_irrigated: [alfalfa, winter_wheat, barley, oats, triticale_forage, maize_silage, maize, sorghum_sudan, sorghum, teff, safflower, dry_bean, potato, onion, sugar_beet, clover_grass_ley]
+  mediterranean: [winter_wheat, durum_wheat, barley, oats, sunflower, chickpea, faba_bean, lentil, field_pea, winter_rapeseed, safflower, maize, cotton, sorghum, alfalfa, potato, tomato]
+  tropical: [maize, sorghum, pearl_millet, cowpea, pigeon_pea, groundnut, dry_bean, mung_bean, cassava, sweet_potato, sunflower, soybean, rice, sugarcane, cotton, chickpea]

@@ -16,7 +16,6 @@ The optimizer is a beam search over climate-feasible crops (+ automatic cover-cr
 
 from __future__ import annotations
 
-import math
 from functools import lru_cache
 from pathlib import Path
 from statistics import median
@@ -29,7 +28,9 @@ from .cropmodel import crop, crops
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 SEVERITY_PENALTY = {"problem": 25.0, "caution": 10.0, "info": 0.0}
-COVER_CANDIDATES = ("cover_rye_vetch", "mustard_cover", "phacelia", "red_clover", "oats")
+COVER_CANDIDATES = ("cover_rye_vetch", "phacelia_cover", "mustard_cover", "mung_bean", "cowpea")
+TROPICAL_COVERS = ("mung_bean", "cowpea")  # quick legumes for the short dry-season gap
+TEMPERATE_COVERS = ("cover_rye_vetch", "phacelia_cover", "mustard_cover")
 
 
 @lru_cache
@@ -73,23 +74,97 @@ def cname(cid: str) -> str:
     return str(crop(cid)["name"])
 
 
+def _short(text: str, n: int = 90) -> str:
+    t = text.split(":")[0].split(". ")[0].strip()
+    return t if len(t) <= n else t[: n - 1] + "…"
+
+
+def apply_rules(seq: list[str], i: int) -> tuple[float, list[dict[str, Any]], list[str], set[str]]:
+    """Cited sequence rules from the knowledge base (applies_to × after within window_years).
+    Returns (yield effect fraction, issues, benefits, matched rule ids)."""
+    cid = seq[i]
+    eff = 0.0
+    issues: list[dict[str, Any]] = []
+    benefits: list[str] = []
+    matched: set[str] = set()
+    for r in knowledge()["rules"]:
+        apps, aft = r.get("applies_to"), r.get("after")
+        if not apps or not aft or cid not in apps or r.get("yield_effect_pct") in (None, 0):
+            continue
+        win = int(r.get("window_years") or 1)
+        prev = [seq[j] for j in range(max(0, i - win), i)]
+        hit = next((p for p in reversed(prev) if p in aft), None)
+        if hit is None:
+            continue
+        pct = float(r["yield_effect_pct"])
+        eff += pct / 100.0
+        matched.add(r["id"])
+        conf = " (estimate)" if r.get("low_confidence") else ""
+        if pct < 0:
+            issues.append(
+                {
+                    "id": f"rule:{r['id']}",
+                    "severity": "problem" if pct <= -15 else "caution",
+                    "title": f"{cname(cid)} after {cname(hit)}: about {pct:.0f} % yield{conf}",
+                    "explanation": str(r.get("text", "")),
+                    "suggestion": f"Put a crop from another family between {cname(hit)} and {cname(cid)}.",
+                    "sources": (r.get("sources") or [])[:2],
+                }
+            )
+        else:
+            benefits.append(
+                f"{cname(hit)} before {cname(cid)}: about +{pct:.0f} % yield{conf} — {_short(str(r.get('text', '')), 140)}"
+            )
+    return eff, issues, benefits, matched
+
+
+# Organisms rotation cannot control (very wide host range or migratory) — excluded from rotation pressure; wireworms are
+# handled by the cited "after grass/ley" rule instead of their host list. See docs/ROTATION_SCIENCE.md.
+NOT_ROTATION_CONTROLLED = {"rhizoctonia", "pythium", "root_knot_nematode", "fall_armyworm", "wireworms"}
+# Geographic ranges for organisms that are absent from large regions (continent codes from pests.region_of).
+PATHOGEN_REGIONS = {
+    "striga": {"africa", "asia"},
+    "corn_rootworm": {"north_america", "europe"},
+    "broomrape": {"europe", "africa", "asia"},
+    "cereal_stem_borers": {"africa", "asia"},
+    "blackgrass": {"europe"},
+}
+_REGION: dict[str, str] = {"value": ""}
+
+
+def set_region(region: str) -> None:
+    _REGION["value"] = region
+
+
+def rotation_relevant(p: dict[str, Any], pid: str = "") -> bool:
+    if pid in NOT_ROTATION_CONTROLLED or not (p.get("hosts") or []):
+        return False
+    reg = PATHOGEN_REGIONS.get(pid)
+    return not (reg and _REGION["value"] and _REGION["value"] not in reg)
+
+
 def pathogen_pressure(seq: list[str], i: int, pid: str, p: dict[str, Any]) -> tuple[float, list[int]]:
-    """Inoculum pressure for year index i from earlier host years in seq (main crops)."""
+    """Risk from earlier host years relative to the published host-free break (break_years):
+    high (1.0)  = a host grew last year, or ≥ 2 host years within the break window;
+    medium (0.5) = one host year within the break window;
+    low (0.2/0) = hosts only longer ago (but within survival_years) / none."""
     hosts = set(p.get("hosts") or [])
-    surv = max(1.0, float(p.get("survival_years", 3)))
-    half = surv / 3.0
-    total = 0.0
-    years = []
-    for j in range(i):
-        if seq[j] in hosts:
-            dt_y = i - j
-            total += math.exp(-dt_y * math.log(2) / half)
-            years.append(j)
-    return total, years
+    brk = max(1, int(float(p.get("break_years", 2) or 2)))
+    years = [j for j in range(i) if seq[j] in hosts]
+    if not years:
+        return 0.0, []
+    gap = i - years[-1]
+    in_window = [j for j in years if i - j <= brk]
+    if gap == 1 or len(in_window) >= 2:
+        return 1.0, years
+    if gap <= brk:
+        return 0.5, years
+    surv = max(brk, int(float(p.get("survival_years", brk) or brk)))
+    return (0.2 if gap <= surv else 0.0), years
 
 
 def pressure_level(x: float) -> str:
-    return "low" if x < 0.25 else ("medium" if x < 0.6 else "high")
+    return "low" if x < 0.4 else ("medium" if x < 0.9 else "high")
 
 
 def check_year(
@@ -109,6 +184,14 @@ def check_year(
     benefits: list[str] = []
     effect = 0.0  # rotation yield effect (fraction)
     pests_pen = 0.0
+    continuing_stand = c["type"] == "perennial" and i > 0 and seq[i - 1] == cid
+    r_eff, r_issues, r_benefits, matched = (0.0, [], [], set()) if continuing_stand else apply_rules(seq, i)
+    neg_rule = any(x["severity"] != "info" for x in r_issues)
+    pos_rule = bool(r_benefits)
+    effect += r_eff
+    issues.extend(r_issues)
+    benefits.extend(r_benefits)
+    pests_pen += sum(15 if x["severity"] == "problem" else 8 for x in r_issues)
 
     # 1. return interval (same crop)
     prev_same = [j for j in range(i) if seq[j] == cid]
@@ -129,12 +212,10 @@ def check_year(
                     "sources": k["sources"][:2],
                 }
             )
-            r = rule("cereal_after_cereal") if c["family"] == "Poaceae" else None
-            effect += (
-                (float(r["yield_effect_pct"]) / 100.0)
-                if r and r.get("yield_effect_pct") is not None
-                else -0.10
-            )
+            if (
+                not neg_rule
+            ):  # cited sequence rules already carry the yield effect; otherwise use a generic −10 %
+                effect -= 0.10
             pests_pen += 30 if sev == "problem" else 15
     # perennial stands: autotoxicity / max years in a row handled by min_return after the stand ends
     if c["type"] == "perennial" and prev_same:
@@ -180,13 +261,15 @@ def check_year(
             effect -= 0.04
             pests_pen += 10
     # 3. shared pathogens / pests
-    for pid, p in hosts_of(cid):
+    for pid, p in [] if continuing_stand else hosts_of(cid):
+        if not rotation_relevant(p, pid):
+            continue
         pres, host_years = pathogen_pressure(seq, i, pid, p)
         lvl = pressure_level(pres)
         if lvl == "low":
             continue
         sev_w = {"high": 1.0, "medium": 0.6, "low": 0.3}.get(str(p.get("severity", "medium")), 0.6)
-        sev = "problem" if (lvl == "high" and sev_w >= 0.6) else "caution"
+        sev = "problem" if (lvl == "high" and sev_w >= 1.0) else "caution"
         hy = ", ".join(f"{cname(seq[j])} {years[j]}" for j in host_years[-3:])
         issues.append(
             {
@@ -206,7 +289,7 @@ def check_year(
     if i > 0:
         prev = seq[i - 1]
         pk = ck(prev)
-        if prev in k["poor_predecessors"]:
+        if prev in k["poor_predecessors"] and not continuing_stand:
             issues.append(
                 {
                     "id": "poor_predecessor",
@@ -219,14 +302,25 @@ def check_year(
                     "sources": k["sources"][:1],
                 }
             )
-            effect -= 0.05
-        elif prev in k["good_predecessors"] or pk["preceding_crop_value"] == "high":
+            if not neg_rule:
+                effect -= 0.05
+        elif not pos_rule and (
+            prev in k["good_predecessors"] or pk["preceding_crop_value"] in ("high", "medium")
+        ):
             benefits.append(
                 f"{cname(prev)} is a good crop before {cname(cid)}"
                 + (f" ({pk['note']})" if pk.get("note") and prev in k["good_predecessors"] else ".")
             )
-            effect += 0.05
-        if pk.get("allelopathy") and prev != cid:
+            scale = (rule("predecessor_value_scale") or {}).get("scale") or {
+                "high": 15,
+                "medium": 5,
+                "low": -5,
+            }
+            effect += float(scale.get(str(pk["preceding_crop_value"]), 0)) / 100.0
+        elif not pos_rule and not neg_rule and pk["preceding_crop_value"] in ("low", "very_low"):
+            scale = (rule("predecessor_value_scale") or {}).get("scale") or {"low": -5, "very_low": -15}
+            effect += float(scale.get(str(pk["preceding_crop_value"]), -5)) / 100.0
+        if pk.get("allelopathy") and prev != cid and "allelopathic_residue" not in matched:
             issues.append(
                 {
                     "id": "allelopathy",
@@ -271,7 +365,7 @@ def check_year(
                 "sources": [],
             }
         )
-    effect = float(np.clip(effect, -0.45, 0.15))
+    effect = float(np.clip(effect, -0.30, 0.15))  # combined rotation effect capped (effects overlap)
     y_med = st["yield_median"] * (1 + effect)
     y_p10 = st["yield_p10"] * (1 + effect)
     price, cost = float(c.get("price_usd_t", 0)), float(c.get("cost_usd_ha", 0))
@@ -334,7 +428,7 @@ def check_year(
 
     # 7. score components (0–100)
     comp = {
-        "pests": max(0.0, 100 - pests_pen),
+        "pests": max(0.0, 100 - min(80.0, pests_pen)),
         "soil": float(
             np.clip(
                 40
@@ -361,8 +455,7 @@ def check_year(
     }
     wsum = sum(priorities.values()) or 1.0
     score = sum(priorities[kk] * comp[kk] for kk in comp) / wsum
-    for iss in issues:
-        score -= SEVERITY_PENALTY[iss["severity"]] * 0.4
+    score -= min(30.0, sum(SEVERITY_PENALTY[iss["severity"]] * 0.4 for iss in issues))
     score = float(np.clip(score, 0, 100))
     verdict = (
         "problem"
@@ -391,9 +484,12 @@ def check_year(
     }
 
 
-def best_cover(prev_main: str, next_main: str | None, available: set[str]) -> str | None:
-    """Pick a cover crop that does not share family/pathogens with the next cash crop (e.g. no brassica cover before canola)."""
-    for cov in COVER_CANDIDATES:
+def best_cover(
+    prev_main: str, next_main: str | None, available: set[str], tropical: bool = False
+) -> str | None:
+    """Pick a cover crop that does not share family/pathogens with the next cash crop (e.g. no brassica cover before canola);
+    quick legumes in the tropics, winter-hardy grass/legume or phacelia/mustard in temperate climates."""
+    for cov in TROPICAL_COVERS if tropical else TEMPERATE_COVERS:
         if cov not in available:
             continue
         if next_main and crop(cov)["family"] == crop(next_main)["family"]:
@@ -421,12 +517,14 @@ def evaluate_plan(
     # disease pressure summary over plan years
     dp = []
     for pid, p in knowledge()["pathogens"].items():
+        if not rotation_relevant(p, pid):
+            continue
         worst = 0.0
         yrs = []
         for i in range(len(history), len(seq)):
             if seq[i] in (p.get("hosts") or []):
                 pres, _ = pathogen_pressure(seq, i, pid, p)
-                if pres >= 0.25:
+                if pres >= 0.4:
                     yrs.append(years[i])
                 worst = max(worst, pres)
         if yrs:
@@ -470,11 +568,19 @@ def optimize(
                 trial = [*plan, {"year": start_year + t, "crop": cid, "cover_crop": None}]
                 seq_hist = [h["crop"] for h in history]
                 if crop(cid)["type"] not in ("perennial",) and stats[cid]["season_days"] < 250:
-                    trial[-1]["cover_crop"] = best_cover(cid, None, available_covers)
+                    trial[-1]["cover_crop"] = best_cover(
+                        cid, None, available_covers, bool(field.get("tropical"))
+                    )
                 if len(trial) >= 2 and trial[-2]["cover_crop"]:  # re-check previous cover against this crop
-                    trial[-2]["cover_crop"] = best_cover(trial[-2]["crop"], cid, available_covers)
+                    trial[-2]["cover_crop"] = best_cover(
+                        trial[-2]["crop"], cid, available_covers, bool(field.get("tropical"))
+                    )
                 ys, _ = evaluate_plan(history, trial, stats, field, priorities)
-                nxt.append((float(np.mean([y["score"] for y in ys])), trial))
+                sc = float(np.mean([y["score"] for y in ys]))
+                main = field.get("main_crop")
+                if main and t == n_years - 1 and n_years >= 3 and not any(q["crop"] == main for q in trial):
+                    sc -= 15.0  # keep the farm's staple/main crop in the rotation (food security, market, know-how)
+                nxt.append((sc, trial))
                 del seq_hist
         nxt.sort(key=lambda x: -x[0])
         # diversity: keep at most 3 states ending with the same crop

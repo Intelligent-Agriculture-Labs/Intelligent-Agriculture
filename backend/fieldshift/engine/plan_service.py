@@ -129,6 +129,21 @@ def is_specialty(cid: str) -> bool:
     )
 
 
+def cropping_system(lat: float, med: bool, annual_p: float, irrigated: bool) -> str:
+    if abs(lat) < 23.5:
+        return "tropical"
+    if med:
+        return "mediterranean"
+    if annual_p < 350:
+        return "arid_irrigated"
+    return "temperate"
+
+
+def regional_filter(cands: list[str], own: list[str], system: str) -> list[str]:
+    allowed = set(rot.rotation_config().get("cropping_systems", {}).get(system, [])) | set(own)
+    return [c for c in cands if c in allowed] if allowed else cands
+
+
 def farm_type_filter(cands: list[str], own: list[str]) -> list[str]:
     """Only propose perennial forages / specialty crops if the farm already grows that kind of crop."""
     grows_perennial = any(crop(c)["type"] == "perennial" for c in own)
@@ -162,7 +177,29 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
         if n and n not in stats:
             stats2, _ = _crop_stats(lat, lon, today, irrigation, alloc, {n})
             stats.update(stats2)
+    ctx = build(lat, lon, today)
+    n_hist = ctx.idx(today) + 1
+    annual_p = float(np.nansum(ctx.weather.rain[:n_hist][-365 * 30 :]) / 30.0)
+    normals = climmod.monthly_normals(
+        ctx.weather.dates[:n_hist],
+        ctx.weather.tmax,
+        ctx.weather.tmin,
+        ctx.weather.rain,
+        ctx.weather.et0,
+        1991,
+        2020,
+    )
+    system = cropping_system(lat, rot.is_mediterranean(normals, lat), annual_p, irrigation != "none")
+    from ..science.pests import region_of
+
+    rp.set_region(region_of(lat, lon))
+    from collections import Counter
+
+    main_crop = Counter(own).most_common(1)[0][0] if own else None
     field = {
+        "main_crop": main_crop,
+        "system": system,
+        "tropical": abs(lat) < 20,
         "irrigated": irrigation != "none",
         "water_allocation_mm": alloc,
         "r_k_ls": _field_rkls(req, plan[0]["crop"]),
@@ -173,7 +210,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     base = summary["score"]
     sugg: list[dict[str, Any]] = []
     ranked_candidates = sorted(
-        farm_type_filter(feasible, own),
+        regional_filter(farm_type_filter(feasible, own), own, system),
         key=lambda c: -stats[c]["yield_median"] * float(crop(c).get("price_usd_t", 0)),
     )[:20]
     for idx, y in enumerate(years):
@@ -205,7 +242,9 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
             )
         if any(i["id"] == "bare_soil" for i in y["issues"]) and not plan[idx].get("cover_crop"):
             nxt = plan[idx + 1]["crop"] if idx + 1 < len(plan) else None
-            cov = rp.best_cover(y["crop"], nxt, {c for c in rp.COVER_CANDIDATES if c in crops()})
+            cov = rp.best_cover(
+                y["crop"], nxt, {c for c in rp.COVER_CANDIDATES if c in crops()}, bool(field.get("tropical"))
+            )
             if cov:
                 trial = [dict(p) for p in plan]
                 trial[idx] = {**trial[idx], "cover_crop": cov}
@@ -235,7 +274,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
         # always allow the farmer's own crops as candidates
         cands = list(dict.fromkeys([*[p["crop"] for p in plan], *cands]))
         # respect the farm type: perennial forage / specialty crops only if the farm already grows that kind (market, machinery, livestock)
-        cands = farm_type_filter(cands, own)
+        cands = regional_filter(farm_type_filter(cands, own), own, system)
         best_plan, best_score = rp.optimize(
             history, len(plan), int(plan[0]["year"]), cands, stats, field, pri
         )

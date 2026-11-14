@@ -220,7 +220,15 @@ An account-free farm document (SQLite) is addressed by a random 128-bit id, whic
 **Per year:**
 1. **Return interval:** a gap below the minimum is a *problem* if ≤ half the minimum, otherwise a *caution*. Yield effect from the rule table (default −10 %).
 2. **Family interval.**
-3. **Pathogen pressure:** P = Σ exp(−Δt · ln 2 / (survival/3)) over earlier host years in the sequence. Low < 0.25 ≤ medium < 0.6 ≤ high. Yield effect −5 % (medium) or −12 % (high), weighted by pathogen severity.
+3. **Pathogen pressure:** for each rotation-controllable soil- or residue-borne organism hosted by the crop:
+   - *High* if a host grew last year, or ≥ 2 host years within the published break (`break_years`).
+   - *Medium* if one host year falls within the break.
+   - *Low* if hosts are older but within `survival_years`.
+   - Yield effect −12 % (high) or −5 % (medium), weighted by severity. Only high-severity organisms at high pressure make a year a red "problem".
+   - Excluded as not rotation-controllable: generalists (Rhizoctonia, Pythium, root-knot nematodes) and the migratory fall armyworm. Wireworms are handled by the cited "after grass/ley" rule.
+   - Regional ranges: Striga (Africa/Asia), corn rootworm (North America/Europe), broomrape, cereal stem borers, black-grass.
+   - **Cited sequence rules** (`applies_to` × `after` within `window_years`, e.g. continuous maize −13 %, legume before cereal +20 %, Striga trap crops +15 %) carry their published effect. The generic return-interval and predecessor-value effects (+15/+5/−5 %, Saxon yield classes) apply only when no cited rule matched, to avoid double counting.
+   - Continuing perennial stands are not "crop after itself"; only stand age is checked.
 4. **Predecessor effect:** +5 % after good predecessors or high-value preceding crops, −5 % after poor ones. Allelopathy notes.
 5. **N carry-over:** the previous crop's residual N plus 50 % of the cover crop's fixation. Fertiliser saving is valued at $1.3/kg N.
 6. **Simulation:** the season model over 15 seasons at the field (median and p10 yield, irrigation, ET, failure share), scaled by the rotation effect (clipped to −45…+15 %). Perennial establishment year at 70 %.
@@ -231,6 +239,8 @@ An account-free farm document (SQLite) is addressed by a random 128-bit id, whic
 **Score** = priority-weighted mean of five 0–100 components (pests and diseases, soil, water, income, climate risk), minus 0.4 × (25 per problem, 10 per caution).
 
 **Suggestions:** for every year that is not "good", the best single-crop replacement among climate-feasible crops, plus "add a cover crop" where the soil lies bare. Only gains are shown.
+
+**Regional cropping systems** (temperate, irrigated arid, Mediterranean, tropical) limit the optimiser and the suggestions to crops grown in that kind of climate, plus the farmer's own crops. Plans that drop the farm's main (staple) crop entirely get a 15-point penalty.
 
 **Optimiser:** beam search (width 24, at most 3 states per last crop) over climate-feasible candidates. A cover crop is added automatically after short-season crops, chosen so it shares no family or pathogen with the next cash crop. The **farm-type constraint**: perennial forage, vegetables and roots/tubers are only proposed if the farm already grows that kind of crop, because of markets, machinery and labour.
 

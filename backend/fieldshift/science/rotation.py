@@ -40,7 +40,13 @@ SMALLHOLDER_INPUT_SHARE = 0.3  # share of gross revenue spent on inputs in low-i
 @lru_cache
 def rotation_config() -> dict[str, Any]:
     with open(CONFIG / "rotations.yaml") as f:
-        return yaml.safe_load(f)
+        cfg: dict[str, Any] = yaml.safe_load(f)
+    extra = CONFIG / "crops_extra.yaml"
+    if extra.exists():  # sowing dates of the expanded crop set
+        with open(extra) as f:
+            dp = (yaml.safe_load(f) or {}).get("default_planting") or {}
+        cfg["default_planting"] = {**dp, **cfg["default_planting"]}
+    return cfg
 
 
 def climate_zone(lat: float) -> str:
