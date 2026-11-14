@@ -204,6 +204,24 @@ That is why the polygon always stays editable.
 
 **Use.** The model is used only inside its validated domain (contiguous U.S.), where it replaces the rule level; class probabilities are shown in the Why. Everywhere else the transparent rule-based status is used.
 
+**Global extension (EXP-11, evaluated, not adopted).**
+- `scripts/drought_labels_global.py` builds labels for 310 sites in seven regions:
+  - U.S.: USDM;
+  - Europe: EDO Combined Drought Indicator;
+  - Australia, South America, Sub-Saharan Africa, South Asia and East Asia: GDO soil-moisture anomaly, a weak label with thresholds calibrated against USDM.
+- `drought_ml.feature_matrix_v2` computes location-agnostic features:
+  - SPI/SPEI;
+  - lagged SPEI-90;
+  - Tmax z-scores;
+  - season phase from the locally warmest week;
+  - climatological wet-season share and 90-day rain;
+  - aridity, mean Tmax and rain seasonality.
+- `scripts/train_drought_ml.py` validates with county CV in the U.S., leave-one-region-out and leave-one-climate-zone-out. It adopts a new model only under the rule in EXP-11.
+- The run did not meet that rule (Europe held out was slightly worse), so the shipped model and its metadata are unchanged.
+- Serving reads `feature_set`, `model_regions` and `served_key` from the metadata:
+  - A future adopted model would be served only in the regions where it beat the rules on held-out sites. The region boxes are in `drought_ml.REGION_BOXES`.
+  - Old metadata without these fields means: v1 features, U.S. only.
+
 ## <a id="sync"></a>14. Farm sync
 An account-free farm document (SQLite) is addressed by a random 128-bit id, which stays secret on each device, plus an 8-character pairing code (alphabet without 0/O/1/I). Fields merge per id by `updated_at` (last writer wins); deletions are tombstones. The client pushes 2 s after a change and pulls on start, on focus and every 60 s.
 

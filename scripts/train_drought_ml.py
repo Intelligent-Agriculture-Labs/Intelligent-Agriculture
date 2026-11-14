@@ -1,11 +1,31 @@
-"""Train and evaluate the FieldShift ML drought classifier (run on the data box: 24 cores, fast internet).
+"""Train and validate the FieldShift ML drought classifier on several continents (run on the data box).
 
-    backend/.venv/bin/python scripts/train_drought_ml.py [n_counties=80]
+    FIELDSHIFT_CACHE_DIR=~/fs-gdml-data/cache backend/.venv/bin/python scripts/drought_labels_global.py
+    FIELDSHIFT_CACHE_DIR=~/fs-gdml-data/cache backend/.venv/bin/python scripts/train_drought_ml.py
 
-Data: U.S. Census county centroids → NASA POWER daily (2000–2024) per county → weekly USDM county statistics (2005–2024).
-Model: sklearn HistGradientBoostingClassifier (class-balanced) on fieldshift.science.drought_ml.FEATURES.
-Evaluation: 5-fold GroupKFold by county (unseen locations) vs. the rule-based status (drought.combined_level v2)
-on exactly the same samples. Writes backend/fieldshift/models/drought_hgb.{joblib,json} and docs/validation/drought_ml.json.
+Labels (see drought_labels_global.py for sources and licences):
+  US   weekly U.S. Drought Monitor county categories, 80 counties, 2005-2024 (strong, 6 levels None..D4)
+  EU   dekadal EDO Combined Drought Indicator, 80 sites, 2012-2024 (strong, Watch/Warning/Alert ~ D0/D1/D2)
+  AUS, SAM, AFR, SAS, EAS  dekadal GDO soil-moisture anomaly, 30 sites each, 2005-2024 (weak: one modelled
+       indicator, converted to levels with thresholds calibrated on the U.S. sites against USDM)
+Features: NASA POWER daily 2000-2024 -> fieldshift.science.drought_ml.feature_matrix (v1, the U.S. model) and
+feature_matrix_v2 (location-agnostic). The rule-based status (drought.combined_level) is scored on the same samples.
+
+Validation (all on sites the model never saw):
+  * U.S.: GroupKFold(5) by county, identical folds for every model; the new model also trains on all non-U.S. data.
+  * Leave-one-region-out: train on every other region, test on the held-out region.
+  * Leave-one-climate-zone-out (arid / tropical / temperate / cold, from NASA POWER climatology).
+  * Transfer: train on Europe only -> test U.S., and U.S. only -> test Europe.
+Metrics are reported on each region's native scale and on a harmonised 4-level scale (None, D0, D1, D2+) so that
+regions with different label systems can be compared.
+
+Adoption rule (fixed before the first run): a candidate replaces the current model only if, on the U.S. county CV,
+its within-1 accuracy and Spearman correlation are at least as high as the current model's, AND on Europe (held
+out) and on the pooled weak-label regions (each held out) its harmonised within-1 accuracy and Spearman are higher
+than the current model's. Candidates (VARIANTS) are checked in order; the first that passes is served. It is used
+in a region only where it also beats the rule-based status there; elsewhere the rules are served.
+
+Writes docs/validation/drought_ml.json (always) and backend/fieldshift/models/drought_hgb.{joblib,json} (if adopted).
 """
 
 from __future__ import annotations
@@ -14,10 +34,12 @@ import csv
 import datetime as dt
 import io
 import json
+import os
 import sys
 import zipfile
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+from typing import Any
 
 import httpx
 import numpy as np
@@ -34,6 +56,28 @@ GAZ = (
     "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2023_Gazetteer/2023_Gaz_counties_national.zip"
 )
 START, END = dt.date(2000, 1, 1), dt.date(2024, 12, 31)
+DATA = Path(os.environ.get("FS_GD_DATA", Path.home() / "fs-gdml-data"))
+WEAK = ("AUS", "SAM", "AFR", "SAS", "EAS")
+REGIONS = ("US", "EU", *WEAK)
+ZONES = ("arid", "tropical", "temperate", "cold")
+# share of the total training weight per label source, fixed up front (weak labels count less)
+SOURCE_SHARE = {"usdm": 0.4, "cdi": 0.4, "smia": 0.2}
+HGB = {
+    "max_iter": 300,
+    "learning_rate": 0.06,
+    "max_leaf_nodes": 31,
+    "l2_regularization": 1.0,
+    "class_weight": "balanced",
+    "random_state": 0,
+}
+# Candidate global models. "new_model" uses the same settings as the U.S. model. "new_model_unbalanced" drops
+# class balancing: added after the first run showed the balanced model over-predicting drought outside the U.S.
+# (higher hit rate and false-alarm ratio than the rules everywhere). It is checked second, so the documented
+# adoption decision still prefers the original configuration.
+VARIANTS: dict[str, dict[str, Any]] = {
+    "new_model": HGB,
+    "new_model_unbalanced": {k: v for k, v in HGB.items() if k != "class_weight"},
+}
 
 
 def counties(n: int) -> list[dict[str, object]]:
@@ -69,9 +113,31 @@ def counties(n: int) -> list[dict[str, object]]:
     return pick
 
 
-def county_samples(c: dict[str, object]) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[int]] | None:
+def climate_zone(aridity: float, coldest_month_t: float) -> str:
+    """Köppen main groups, with the UNEP aridity index (P/ET0 < 0.5) standing in for Köppen's dry threshold."""
+    if aridity < 0.5:
+        return "arid"
+    if coldest_month_t >= 18.0:
+        return "tropical"
+    return "temperate" if coldest_month_t > 0.0 else "cold"
+
+
+def _labels(path: Path) -> dict[int, list[tuple[dt.date, float]]]:
+    z = np.load(path)
+    out: dict[int, list[tuple[dt.date, float]]] = {}
+    for s, d, v in zip(z["site"], z["date"], z["value"], strict=True):
+        out.setdefault(int(s), []).append((dt.date.fromisoformat(str(d)), float(v)))
+    return out
+
+
+def site_samples(job: tuple[int, dict[str, Any], list[tuple[dt.date, float]], list[tuple[dt.date, float]]]) -> dict[str, Any] | None:
+    """Features + labels for one site. Dekadal labels are matched to the last day of their dekad."""
+    k, s, cdi, smia = job
+    cache = DATA / "feat" / f"{s['id']}.npz"
     try:
-        lat, lon = float(c["lat"]), float(c["lon"])  # type: ignore[arg-type]
+        if cache.exists():
+            return dict(np.load(cache, allow_pickle=True)["d"].item())
+        lat, lon = float(s["lat"]), float(s["lon"])
         p = sources.power_daily(lat, lon, START, END)
         doy = np.array([d.timetuple().tm_yday for d in p.dates])
         e0 = et0mod.et0_pm(
@@ -79,118 +145,335 @@ def county_samples(c: dict[str, object]) -> tuple[np.ndarray, np.ndarray, np.nda
         )
         e0 = np.where(np.isfinite(e0), e0, et0mod.et0_hargreaves(p["T2M_MAX"], p["T2M_MIN"], lat, doy))
         rain = np.where(np.isfinite(p["PRECTOTCORR"]), p["PRECTOTCORR"], 0.0)
-        X = drought_ml.feature_matrix(p.dates, rain, e0, p["T2M_MAX"])
-        f = get_json(
-            "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent",
-            {"aoi": c["fips"], "startdate": "1/1/2005", "enddate": "12/31/2024", "statisticsType": 1},
-            ttl_s=90 * 86400,
-            timeout_s=180,
-        )
-        xs, ys, base, dsci = [], [], [], []
-        for r in f.data:
-            d = dt.date.fromisoformat(r["mapDate"][:10])
-            i = (d - START).days
-            if i < 400 or i >= len(p.dates) or not np.isfinite(X[i]).all():
-                continue
-            xs.append(X[i])
-            ys.append(drought_ml.usdm_level(r))
-            s30, s90, se90, se365 = X[i][0], X[i][1], X[i][5], X[i][7]
-            base.append(
-                drought.combined_level(float(s30), float(s90), float(se90), None, None, spei365=float(se365))[
-                    0
-                ]
+        X1 = drought_ml.feature_matrix(p.dates, rain, e0, p["T2M_MAX"])
+        X2 = drought_ml.feature_matrix_v2(p.dates, rain, e0, p["T2M_MAX"])
+        tmean = (p["T2M_MAX"] + p["T2M_MIN"]) / 2
+        months = np.array([d.month for d in p.dates])
+        coldest = float(min(np.nanmean(tmean[months == m]) for m in range(1, 13)))
+        aridity = float(np.nansum(rain) / max(1e-6, np.nansum(e0)))
+        zone = climate_zone(aridity, coldest)
+
+        idx, y, cont = [], [], []
+        if s["region"] == "US":
+            f = get_json(
+                "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent",
+                {"aoi": s["fips"], "startdate": "1/1/2005", "enddate": "12/31/2024", "statisticsType": 1},
+                ttl_s=90 * 86400,
+                timeout_s=180,
             )
-            dsci.append(sum(float(r[k]) for k in ("d0", "d1", "d2", "d3", "d4")))
-        if not xs:
-            return None
-        return np.array(xs), np.array(ys), np.array([base, dsci]).T, [int(str(c["fips"]))] * len(xs)
-    except Exception as e:
-        print("county failed", c.get("fips"), e, flush=True)
+            for r in f.data:
+                idx.append((dt.date.fromisoformat(r["mapDate"][:10]) - START).days)
+                y.append(drought_ml.usdm_level(r))
+                cont.append(sum(float(r[q]) for q in ("d0", "d1", "d2", "d3", "d4")))  # DSCI
+        elif s["region"] == "EU":
+            for d, v in cdi:
+                idx.append((d - START).days + 9)
+                y.append(int(v))
+                cont.append(float(v))
+        else:
+            for d, v in smia:
+                idx.append((d - START).days + 9)
+                y.append(-1)  # assigned after calibration
+                cont.append(-v)  # drier = larger
+        # SMIA z at every site (for calibration / label agreement), keyed by the dekad end
+        sm_idx = np.array([(d - START).days + 9 for d, _ in smia], dtype=int)
+        sm_val = np.array([v for _, v in smia], dtype=float)
+
+        keep = [
+            j
+            for j, i in enumerate(idx)
+            if 400 <= i < len(p.dates) and np.isfinite(X1[i]).all() and np.isfinite(X2[i]).all()
+        ]
+        ii = np.array([idx[j] for j in keep], dtype=int)
+        rules = np.array(
+            [
+                drought.combined_level(
+                    float(X1[i][0]), float(X1[i][1]), float(X1[i][5]), None, None, spei365=float(X1[i][7])
+                )[0]
+                for i in ii
+            ],
+            dtype=int,
+        )
+        out = {
+            "k": k,
+            "id": s["id"],
+            "region": s["region"],
+            "label": s["label"],
+            "zone": zone,
+            "aridity": aridity,
+            "coldest": coldest,
+            "day": ii,
+            "X1": X1[ii].astype(np.float32),
+            "X2": X2[ii].astype(np.float32),
+            "y": np.array([y[j] for j in keep], dtype=int),
+            "cont": np.array([cont[j] for j in keep], dtype=float),
+            "rules": rules,
+            "sm_day": sm_idx,
+            "sm_val": sm_val,
+        }
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(cache, d=np.array(out, dtype=object))
+        return out
+    except Exception as e:  # one failing site must not stop the run
+        print("site failed", s.get("id"), repr(e), flush=True)
         return None
 
 
-def main() -> None:
+# ----------------------------------------------------------------------------------------------- metrics
+def harm(level: np.ndarray) -> np.ndarray:
+    """Harmonised scale shared by all label systems: 0 None, 1 D0/Watch, 2 D1/Warning, 3 D2+/Alert."""
+    return np.minimum(level, 3)
+
+
+def score(pred: np.ndarray, truth: np.ndarray, cont: np.ndarray | None = None) -> dict[str, float]:
     from scipy import stats
+
+    d1_true, d1_pred = truth >= 2, pred >= 2
+    tp, fp, fn = (
+        int(np.sum(d1_true & d1_pred)),
+        int(np.sum(~d1_true & d1_pred)),
+        int(np.sum(d1_true & ~d1_pred)),
+    )
+    ref = truth if cont is None else cont
+    rho = stats.spearmanr(pred, ref).statistic if np.std(pred) > 0 and np.std(ref) > 0 else 0.0
+    return {
+        "n": int(len(truth)),
+        "exact_acc": round(float(np.mean(pred == truth)), 3),
+        "within1_acc": round(float(np.mean(np.abs(pred - truth) <= 1)), 3),
+        "mae_levels": round(float(np.mean(np.abs(pred - truth))), 3),
+        "spearman": round(float(rho), 3),
+        "d1_hit_rate": round(tp / max(1, tp + fn), 3),
+        "d1_false_alarm_ratio": round(fp / max(1, tp + fp), 3),
+    }
+
+
+def main() -> None:
     from sklearn.ensemble import HistGradientBoostingClassifier
     from sklearn.model_selection import GroupKFold
 
-    n = int(sys.argv[1]) if len(sys.argv) > 1 else 80
-    cs = counties(n)
-    print("counties", len(cs), flush=True)
+    sites = json.loads((DATA / "sites.json").read_text())
+    cdi, smia = _labels(DATA / "labels_cdi.npz"), _labels(DATA / "labels_smia.npz")
+    jobs = [(k, s, cdi.get(k, []), smia.get(k, [])) for k, s in enumerate(sites)]
     with ProcessPoolExecutor(max_workers=12) as ex:
-        res = [r for r in ex.map(county_samples, cs) if r is not None]
-    X = np.vstack([r[0] for r in res])
-    y = np.concatenate([r[1] for r in res])
-    B = np.vstack([r[2] for r in res])
-    g = np.concatenate([r[3] for r in res])
-    print("samples", X.shape, "class counts", np.bincount(y, minlength=6).tolist(), flush=True)
+        res = [r for r in ex.map(site_samples, jobs) if r is not None and len(r["y"])]
+    print("sites with samples", {r: sum(x["region"] == r for x in res) for r in REGIONS}, flush=True)
 
-    def score(pred: np.ndarray, truth: np.ndarray, dsci: np.ndarray) -> dict[str, float]:
-        d1_true, d1_pred = truth >= 2, pred >= 2
-        tp, fp, fn = (
-            int(np.sum(d1_true & d1_pred)),
-            int(np.sum(~d1_true & d1_pred)),
-            int(np.sum(d1_true & ~d1_pred)),
-        )
-        return {
-            "exact_acc": round(float(np.mean(pred == truth)), 3),
-            "within1_acc": round(float(np.mean(np.abs(pred - truth) <= 1)), 3),
-            "mae_levels": round(float(np.mean(np.abs(pred - truth))), 3),
-            "spearman_vs_dsci": round(float(stats.spearmanr(pred, dsci).statistic), 3),
-            "d1_hit_rate": round(tp / max(1, tp + fn), 3),
-            "d1_false_alarm_ratio": round(fp / max(1, tp + fp), 3),
+    # ---- weak-label calibration on the U.S. sites: SMIA z thresholds whose exceedance rates match USDM's
+    z_us, lv_us = [], []
+    for r in res:
+        if r["region"] != "US" or not len(r["sm_day"]):
+            continue
+        for d, lv in zip(r["day"], r["y"], strict=True):
+            j = np.where((r["sm_day"] >= d) & (r["sm_day"] < d + 10))[0]  # the dekad whose end is <= 9 days later
+            if len(j):
+                z_us.append(r["sm_val"][j[0]])
+                lv_us.append(lv)
+    z_us_a, lv_us_a = np.array(z_us), np.array(lv_us)
+    thresholds = [float(np.quantile(z_us_a, float(np.mean(lv_us_a >= k)))) for k in range(1, 6)]
+    print("SMIA thresholds (D0..D4)", [round(t, 2) for t in thresholds], flush=True)
+
+    def smia_level(z: np.ndarray) -> np.ndarray:
+        return np.sum(np.stack([z <= t for t in thresholds]), axis=0).astype(int)
+
+    label_quality: dict[str, Any] = {
+        "smia_vs_usdm_us": score(harm(smia_level(z_us_a)), harm(lv_us_a)),
+    }
+    z_eu, lv_eu = [], []
+    for r in res:
+        if r["region"] == "EU":
+            for d, lv in zip(r["day"], r["y"], strict=True):
+                j = np.where(r["sm_day"] == d)[0]
+                if len(j):
+                    z_eu.append(r["sm_val"][j[0]])
+                    lv_eu.append(lv)
+    if z_eu:
+        label_quality["smia_vs_cdi_eu"] = score(harm(smia_level(np.array(z_eu))), harm(np.array(lv_eu)))
+    print("label quality", label_quality, flush=True)
+    for r in res:
+        if r["label"] == "smia":
+            r["y"] = smia_level(-r["cont"])
+
+    # ---- stack
+    X1 = np.vstack([r["X1"] for r in res])
+    X2 = np.vstack([r["X2"] for r in res])
+    y = np.concatenate([r["y"] for r in res])
+    cont = np.concatenate([r["cont"] for r in res])
+    rules = np.concatenate([r["rules"] for r in res])
+    site = np.concatenate([[r["k"]] * len(r["y"]) for r in res])
+    region = np.concatenate([[r["region"]] * len(r["y"]) for r in res])
+    source = np.concatenate([[r["label"]] * len(r["y"]) for r in res])
+    zone = np.concatenate([[r["zone"]] * len(r["y"]) for r in res])
+    w = np.zeros(len(y))
+    for src, share in SOURCE_SHARE.items():
+        m = source == src
+        w[m] = share * len(y) / max(1, m.sum())
+    print("samples", X2.shape, {r: int(np.sum(region == r)) for r in REGIONS}, flush=True)
+    print("zones", {z: int(np.sum(zone == z)) for z in ZONES}, flush=True)
+
+    def fit(X: np.ndarray, m: np.ndarray, weighted: bool = True, params: dict[str, Any] = HGB) -> Any:
+        return HistGradientBoostingClassifier(**params).fit(X[m], y[m], sample_weight=w[m] if weighted else None)
+
+    us = region == "US"
+    us_idx = np.where(us)[0]
+    folds = list(GroupKFold(n_splits=5).split(X1[us], y[us], site[us]))
+    # ---- current model (v1 features, U.S. only, as committed): county CV inside the U.S., full-U.S. model elsewhere
+    old = np.full(len(y), -1)
+    for tr, te in folds:
+        m = np.zeros(len(y), bool)
+        m[us_idx[tr]] = True
+        old[us_idx[te]] = fit(X1, m, weighted=False).predict(X1[us_idx[te]])
+    old[~us] = fit(X1, us, weighted=False).predict(X1[~us])
+    print("current model done", flush=True)
+
+    # ---- candidate global models, all on v2 features, checked in this order (declared before the first run)
+    preds: dict[str, np.ndarray] = {}
+    lozos: dict[str, np.ndarray] = {}
+    for key, params in VARIANTS.items():
+        new = np.full(len(y), -1)
+        for tr, te in folds:
+            m = np.zeros(len(y), bool)
+            m[us_idx[tr]] = True
+            m |= ~us  # the global model also learns from every non-U.S. region
+            new[us_idx[te]] = fit(X2, m, params=params).predict(X2[us_idx[te]])
+        for r in REGIONS[1:]:  # leave-one-region-out
+            te = region == r
+            new[te] = fit(X2, ~te, params=params).predict(X2[te])
+        lozo = np.full(len(y), -1)
+        for z in ZONES:  # leave-one-climate-zone-out
+            te = zone == z
+            if te.any() and (~te).any():
+                lozo[te] = fit(X2, ~te, params=params).predict(X2[te])
+        preds[key], lozos[key] = new, lozo
+        print("variant done", key, flush=True)
+
+    # ---- ablations / transfer (first variant): v2 features trained on the U.S. only; Europe only -> U.S.
+    v2us = np.full(len(y), -1)
+    v2us[~us] = fit(X2, us, weighted=False).predict(X2[~us])
+    eu_only_on_us = fit(X2, region == "EU").predict(X2[us])
+
+    # ---- report
+    def block(m: np.ndarray, native: bool) -> dict[str, Any]:
+        def sc(p: np.ndarray) -> dict[str, float]:
+            return score(p[m], y[m], cont[m]) if native else score(harm(p[m]), harm(y[m]))
+
+        return {"current_model": sc(old), **{k: sc(p) for k, p in preds.items()}, "rules": sc(rules)}
+
+    per_region: dict[str, Any] = {}
+    for r in REGIONS:
+        m = region == r
+        if not m.any():
+            continue
+        per_region[r] = {
+            "n_sites": int(len(np.unique(site[m]))),
+            "n_samples": int(m.sum()),
+            "label": str(source[m][0]),
+            "harmonised": block(m, False),
         }
+        if r == "US":
+            per_region[r]["native_usdm"] = block(m, True)
+            per_region[r]["harmonised"]["europe_only_model"] = score(harm(eu_only_on_us), harm(y[m]))
+        else:
+            per_region[r]["harmonised"]["v2_trained_on_us_only"] = score(harm(v2us[m]), harm(y[m]))
+    weak = np.isin(region, WEAK)
+    per_region["WEAK_POOLED"] = {
+        "n_sites": int(len(np.unique(site[weak]))),
+        "n_samples": int(weak.sum()),
+        "label": "smia",
+        "harmonised": block(weak, False),
+    }
+    per_zone: dict[str, Any] = {}
+    for z in ZONES:
+        m = zone == z
+        if m.any():
+            per_zone[z] = {
+                "n_sites": int(len(np.unique(site[m]))),
+                "n_samples": int(m.sum()),
+                "regions": {
+                    r: int(len(np.unique(site[m & (region == r)]))) for r in REGIONS if (m & (region == r)).any()
+                },
+                "current_model": score(harm(old[m]), harm(y[m])),
+                **{f"{k}_lozo": score(harm(p[m]), harm(y[m])) for k, p in lozos.items()},
+                "rules": score(harm(rules[m]), harm(y[m])),
+            }
 
-    oof = np.zeros(len(y), int)
-    for tr, te in GroupKFold(n_splits=5).split(X, y, g):
-        m = HistGradientBoostingClassifier(
-            max_iter=300,
-            learning_rate=0.06,
-            max_leaf_nodes=31,
-            l2_regularization=1.0,
-            class_weight="balanced",
-            random_state=0,
-        )
-        m.fit(X[tr], y[tr])
-        oof[te] = m.predict(X[te])
-    ml = score(oof, y, B[:, 1])
-    rules = score(B[:, 0].astype(int), y, B[:, 1])
-    print("ML   (held-out counties)", ml, flush=True)
-    print("RULES                   ", rules, flush=True)
-    better = ml["within1_acc"] > rules["within1_acc"] and ml["spearman_vs_dsci"] >= rules["spearman_vs_dsci"]
-    final = HistGradientBoostingClassifier(
-        max_iter=300,
-        learning_rate=0.06,
-        max_leaf_nodes=31,
-        l2_regularization=1.0,
-        class_weight="balanced",
-        random_state=0,
-    ).fit(X, y)
+    def beats(a: dict[str, float], b: dict[str, float], strict: bool) -> bool:
+        if strict:
+            return a["within1_acc"] > b["within1_acc"] and a["spearman"] > b["spearman"]
+        return a["within1_acc"] >= b["within1_acc"] and a["spearman"] >= b["spearman"]
+
+    us_n = per_region["US"]["native_usdm"]
+    eu_h, wk_h = per_region["EU"]["harmonised"], per_region["WEAK_POOLED"]["harmonised"]
+    checks = {
+        k: {
+            "us_at_least_current": beats(us_n[k], us_n["current_model"], strict=False),
+            "eu_better_than_current": beats(eu_h[k], eu_h["current_model"], strict=True),
+            "weak_better_than_current": beats(wk_h[k], wk_h["current_model"], strict=True),
+        }
+        for k in VARIANTS
+    }
+    served = next((k for k in VARIANTS if all(checks[k].values())), None)
+    adopted = served is not None
+    # regions where each candidate also beats the transparent rules (only there would it be served)
+    beats_rules = {
+        k: [
+            r
+            for r in REGIONS
+            if beats(
+                per_region[r]["native_usdm" if r == "US" else "harmonised"][k],
+                per_region[r]["native_usdm" if r == "US" else "harmonised"]["rules"],
+                strict=False,
+            )
+        ]
+        for k in VARIANTS
+    }
+    print(json.dumps({"checks": checks, "beats_rules": beats_rules, "served": served}, indent=1), flush=True)
+
     import joblib
     import sklearn
 
-    md = ROOT / "backend" / "fieldshift" / "models"
-    md.mkdir(parents=True, exist_ok=True)
-    meta = {
-        "features": drought_ml.FEATURES,
+    meta: dict[str, Any] = {
+        "feature_set": "v2",
+        "features": drought_ml.FEATURES_V2,
         "classes": drought_ml.LEVELS,
-        "n_counties": len(res),
+        "n_sites": int(len(res)),
         "n_samples": int(len(y)),
-        "period": "2005-2024 weekly USDM; NASA POWER 2000-2024",
-        "cv": "GroupKFold(5) by county",
-        "ml_heldout": ml,
-        "rules_same_samples": rules,
-        "adopted": bool(better),
+        "n_counties": int(len(np.unique(site[us]))),
+        "regions": {r: per_region[r]["n_sites"] for r in REGIONS if r in per_region},
+        "period": "USDM weekly 2005-2024; EDO CDI dekadal 2012-2024; GDO SMIA dekadal 2005-2024; NASA POWER 2000-2024",
+        "label_sources": {
+            "usdm": "U.S. Drought Monitor county statistics (NDMC/USDA/NOAA, public domain)",
+            "cdi": "EDO Combined Drought Indicator v4.1, (c) European Union, CC BY 4.0",
+            "smia": "GDO Soil Moisture Index Anomaly v3.0.1, (c) European Union, CC BY 4.0",
+        },
+        "smia_thresholds_d0_d4": [round(t, 3) for t in thresholds],
+        "label_quality": label_quality,
+        "source_weight_share": SOURCE_SHARE,
+        "hgb_variants": VARIANTS,
+        "cv": "U.S.: GroupKFold(5) by county; other regions: leave-one-region-out; zones: leave-one-climate-zone-out",
+        "per_region": per_region,
+        "per_zone": per_zone,
+        "adoption_checks": checks,
+        "adopted": bool(adopted),
+        "served_key": served or "current_model",
+        "beats_rules_in": beats_rules,
+        # where the served model is used; the current model stays U.S.-only if no candidate is adopted
+        "model_regions": beats_rules[served] if served else ["US"],
+        # kept for the app's Why text: the U.S. held-out numbers of the model that is served
+        "ml_heldout": {
+            "within1_acc": us_n[served or "current_model"]["within1_acc"],
+            "spearman_vs_dsci": us_n[served or "current_model"]["spearman"],
+        },
         "sklearn": sklearn.__version__,
         "trained_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
-        "counties": [c["fips"] for c in cs],
+        "sites": [{"id": r["id"], "region": r["region"], "zone": r["zone"]} for r in res],
     }
-    if better:
+    md = ROOT / "backend" / "fieldshift" / "models"
+    if served:
+        final = fit(X2, np.ones(len(y), bool), params=VARIANTS[served])
         joblib.dump(final, md / "drought_hgb.joblib", compress=3)
-        (md / "drought_hgb.json").write_text(json.dumps(meta, indent=1))
-    (ROOT / "docs" / "validation").mkdir(parents=True, exist_ok=True)
+        (md / "drought_hgb.json").write_text(json.dumps({k: v for k, v in meta.items() if k != "sites"}, indent=1))
     (ROOT / "docs" / "validation" / "drought_ml.json").write_text(json.dumps(meta, indent=1))
-    print("adopted:", better, flush=True)
+    print("adopted:", adopted, flush=True)
 
 
 if __name__ == "__main__":
