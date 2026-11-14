@@ -58,6 +58,17 @@ MEDITERRANEAN_PLANTING = {
 }
 
 
+def default_sowing(crop_id: str) -> str:
+    """Fallback sowing date (northern temperate calendar) from crop traits when not configured."""
+    c = crop(crop_id)
+    if c.get("winter_hardy"):
+        return "10-01"
+    if c["type"] == "perennial":
+        return "03-20"
+    tb = float(c.get("t_base", 8))
+    return "03-25" if tb <= 3 else ("04-20" if tb <= 7 else "05-15")
+
+
 def is_mediterranean(normals: list[dict[str, float]], lat: float) -> bool:
     cool = [1, 2, 3, 10, 11, 12] if lat >= 0 else [4, 5, 6, 7, 8, 9]
     p_cool = sum(n["precip"] for n in normals if n["month"] in cool)
@@ -79,7 +90,8 @@ def planting_date_for(
     md = (
         override
         or (MEDITERRANEAN_PLANTING.get(crop_id) if mediterranean else None)
-        or rotation_config()["default_planting"].get(crop_id, "05-01")
+        or rotation_config()["default_planting"].get(crop_id)
+        or default_sowing(crop_id)
     )
     m, d = (int(x) for x in md.split("-"))
     zone = climate_zone(lat)

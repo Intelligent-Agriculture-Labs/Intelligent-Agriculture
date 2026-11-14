@@ -206,3 +206,17 @@ def test_planner_allocation_note_present_when_short():
         },
     ).json()
     assert j["water"]["note"] and "%" in j["water"]["note"]
+
+
+def test_rotation_plan_flags_short_return_and_optimizes():
+    body = {"lat": 39.47, "lon": -118.78, "irrigation": "drip",
+            "history": [{"year": 2024, "crop": "maize"}, {"year": 2025, "crop": "maize"}],
+            "plan": [{"year": 2026, "crop": "maize"}, {"year": 2027, "crop": "soybean"}, {"year": 2028, "crop": "maize"}]}
+    r = client.post("/api/rotations/plan", json=body)
+    assert r.status_code == 200
+    j = r.json()
+    y26 = j["years"][0]
+    assert y26["verdict"] == "problem" and any(i["id"] == "return_interval" for i in y26["issues"])
+    assert j["summary"]["headline"] and j["crops_available"]
+    assert j["optimized"] is None or j["optimized"]["score"] >= j["summary"]["score"]
+    assert all(c not in ("alfalfa",) for p in (j["optimized"] or {"plan": []})["plan"] for c in [p["crop"]])

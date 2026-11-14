@@ -434,6 +434,41 @@ def me_farm_push(req: FarmPush, authorization: str | None = Header(None)) -> dic
     return dict(_auth_call(farms.push, farm_id, req.name, req.fields, req.settings))
 
 
+class RotationYearModel(BaseModel):
+    year: int = Field(ge=1950, le=2100)
+    crop: str
+    cover_crop: str | None = None
+
+
+class RotationPlanRequest(BaseModel):
+    lat: float = Field(ge=-60, le=75)
+    lon: float = Field(ge=-180, le=180)
+    polygon: list[list[float]] | None = None
+    irrigation: Irr = "none"
+    water_allocation_mm: float | None = None
+    history: list[RotationYearModel] = Field(default_factory=list, max_length=15)
+    plan: list[RotationYearModel] = Field(min_length=1, max_length=8)
+    priorities: Priorities | None = None
+    lang: Lang = "en"
+    optimize: bool = True
+    as_of: str | None = None
+
+
+@app.post("/api/rotations/plan")
+def rotation_plan_ep(req: RotationPlanRequest) -> dict[str, Any]:
+    """Per-field multi-year rotation plan: biological + agronomic checks per year, suggestions and an optimised plan."""
+    from .engine import plan_service
+
+    for y in [*req.history, *req.plan]:
+        _check_crop(y.crop)
+        if y.cover_crop:
+            _check_crop(y.cover_crop)
+    try:
+        return plan_service.plan_api(req.model_dump())
+    except ValueError as e:
+        raise HTTPException(422, str(e)) from e
+
+
 class PlannerRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)

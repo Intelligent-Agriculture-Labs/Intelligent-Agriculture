@@ -39,8 +39,16 @@ IRRIGATION_EFFICIENCY = {
 
 @lru_cache
 def crops() -> dict[str, dict[str, Any]]:
+    """Crop table: crops.yaml plus crops_extra.yaml (expanded, literature-sourced crop set) when present."""
     with open(CONFIG / "crops.yaml") as f:
-        return yaml.safe_load(f)["crops"]
+        out: dict[str, dict[str, Any]] = yaml.safe_load(f)["crops"]
+    extra = CONFIG / "crops_extra.yaml"
+    if extra.exists():
+        with open(extra) as f:
+            more = (yaml.safe_load(f) or {}).get("crops", {}) or {}
+        for k, v in more.items():
+            out.setdefault(k, v)
+    return out
 
 
 def crop(cid: str) -> dict[str, Any]:
