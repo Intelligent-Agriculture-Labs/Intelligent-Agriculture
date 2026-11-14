@@ -32,3 +32,26 @@ test("rotations tab compares at least three strategies", async ({ page }) => {
   await page.getByTestId("tab-rotations").click();
   await expect(page.getByTestId("strategy-2")).toBeVisible();
 });
+
+test("map tab shows computed terrain zones; plan tab shows the season plan", async ({ page }) => {
+  await page.goto("/");
+  const fallon = page.getByTestId("preset-fallon_nv");
+  const preset = (await fallon.count()) ? fallon : page.locator('[data-testid^="preset-"]').first();
+  await preset.click();
+  await page.getByTestId("start").click();
+  await expect(page.getByTestId("home")).toBeVisible();
+
+  await page.getByTestId("tab-map").click();
+  await expect(page.getByTestId("map-screen")).toBeVisible();
+  await expect(page.getByTestId("layer-legend")).toBeVisible({ timeout: 90_000 });
+  await expect(page.getByTestId("layer-legend")).toContainText(/zones|Management/i);
+  await expect(page.getByTestId("terrain-map-iframe")).toBeVisible();
+  await page.getByTestId("layer-erosion").click();
+  await expect(page.getByTestId("layer-legend")).toContainText(/t\/ha|Erosion/i);
+
+  await page.getByTestId("tab-plan").click();
+  await expect(page.getByTestId("plan-screen")).toBeVisible();
+  await expect(page.getByTestId("plan-timeline")).toBeVisible({ timeout: 90_000 });
+  await expect(page.getByTestId("op-0")).toBeVisible();
+  await expect(page.getByTestId("plan-water")).toBeVisible();
+});

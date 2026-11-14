@@ -53,6 +53,22 @@ env:
 - takeScreenshot: ${PLATFORM}-05-why-confidence
 - back
 - tapOn:
+    id: "tab-map"
+- extendedWaitUntil:
+    visible:
+      id: "layer-legend"
+    timeout: 180000
+- assertVisible:
+    text: ".*Management zones.*"
+- takeScreenshot: ${PLATFORM}-05b-map
+- tapOn:
+    id: "tab-plan"
+- extendedWaitUntil:
+    visible:
+      id: "op-0"
+    timeout: 240000
+- takeScreenshot: ${PLATFORM}-05c-plan
+- tapOn:
     id: "tab-rotations"
 - extendedWaitUntil:
     visible:
