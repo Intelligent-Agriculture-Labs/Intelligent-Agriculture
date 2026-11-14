@@ -19,6 +19,14 @@ Field Shift: Adapting Farms with NASA Data (https://www.spaceappschallenge.org/2
 ## High-level summary (short, ~100 words)
 FieldShift is a free web, iOS and Android app that turns NASA Earth observations into simple farm decisions. A farmer drops a pin, picks a crop and gets at most three action cards for this week, such as "Irrigate 38 mm by Thursday" or "High stripe-rust risk from Friday", each with a one-tap "Why?" showing the NASA data, model, confidence and caveats. Its Field Shift explorer compares the farmer's current crop rotation with three or more alternatives, simulated on 15 seasons of NASA weather at that exact field. They are scored on water, income, soil health, erosion, pest cycles and climate risk.
 
+## Feature highlights (for judges)
+- **Map any field:** tap inside your field on sub-metre imagery and FieldShift detects the boundary (editable by hand). Many fields per farm, synced phone ↔ PC with a code/QR and no account.
+- **Field from space:** 10 m Sentinel-2 greenness history, detected cuttings/harvests, **AI management zones** (k-means on NDVI + terrain), and a satellite crop coefficient fused into the irrigation model.
+- **Computed terrain maps:** RUSLE erosion, wetness, frost hollows and slope from NASA SRTM.
+- **Season planner:** sowing window, stage and pest-scouting timeline, water budget vs. allocation, frost/heat calendar.
+- **AI drought classifier:** trained on 83,600 U.S. Drought Monitor maps; beats the rule baseline on counties it never saw.
+- **NASA data everywhere:** POWER (1984→), SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, SRTM, GIBS.
+
 ## High-level summary (long)
 Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. FieldShift closes that gap with one engine and four simple views:
 
@@ -95,7 +103,7 @@ The rules allow a ≤ 30 s video, with English subtitles if any speech is not in
 | 12–16 | Tap "Why?" → soil-water chart with stress line, sources, confidence | "Every number is one tap from its NASA evidence." |
 | 16–22 | Rotations tab: priority sliders → strategies compared, calendar strip | "Field Shift: compare rotations on 15 seasons of NASA data." |
 | 22–26 | What if? +2 °C, −20 % rain → yield and water change | "Test the future before you plant it." |
-| 26–30 | Android + iPhone side by side, Swahili UI, Kenya preset; end card | "Web · iOS · Android · 6 languages · offline. FieldShift." |
+| 26–30 | Tap inside a field → boundary detected → Satellite tab with AI zones; phone + PC synced; end card | "Tap your field. AI maps it. Every device. FieldShift." |
 
 ## Slide deck outline (alternative format, 7 slides max)
 1. **Title.** FieldShift: 40 years of NASA data, turned into this week's farm decisions (team, challenge name).

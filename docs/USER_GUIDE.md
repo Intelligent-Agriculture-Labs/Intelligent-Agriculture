@@ -13,6 +13,13 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 6. Press **Show my advice**.
 <br clear="right">
 
+## 1b. Your fields, on every device
+- **Add a field:** open the field switcher at the top → **Add field**.
+- **Detect field automatically:** zoom in on the high-resolution satellite image and **tap inside your field**. FieldShift finds the boundary in a second or two and shows its area and a confidence badge.
+- **Fix it by hand:** drag a corner, tap the small handle in the middle of an edge to add a corner, or remove a corner. You can also draw the outline yourself, corner by corner.
+- **Many fields:** switch fields at the top of every screen. Each field has its own crop, sowing date, irrigation and water allocation.
+- **Phone and computer in sync:** Settings → **Sync across devices** → **Enable sync** shows a farm code (e.g. `K7QF-2M9X`) and a QR code. On the other device, choose **Join a farm** and enter the code or scan the QR. Fields, irrigation logs and settings then stay in sync. No account or e-mail is needed; keep the code private.
+
 ## 2. This week
 <img src="../media/web-home-mobile.png" width="260" align="right" alt="This week screen">
 
@@ -45,6 +52,15 @@ The **Map** tab shows your field on a satellite or NDVI background (NASA GIBS), 
 - **Management zones:** all of the above combined.
 
 Below the map, **Planning advice for your field** lists each zone, how much of your field it covers, and what to do about it. Example: "Erosion hotspot, 32 %: keep soil covered, farm along the contour". Draw your field outline during setup for exact numbers.
+
+## 3b-2. Your field from space (Map → Satellite)
+FieldShift reads every clear **Sentinel-2** image of your field from the past year (10 m pixels) and shows:
+- the **latest true-colour and greenness (NDVI) image** of your field;
+- a **greenness curve** across the season, with green-up, peak, ripening, bare-soil periods and **cuttings/harvests seen from space**;
+- **AI management zones**: parts of the field that consistently grow better or worse, with what to check in each (waterlogging, slope, soil sampling, variable seeding);
+- the **satellite crop coefficient**: how much water your actual canopy uses. The irrigation advice uses it automatically.
+
+The first analysis of a new field takes a little while; after that it opens instantly, and offline too.
 
 ## 3c. Plan
 The **Plan** tab is your season planner:

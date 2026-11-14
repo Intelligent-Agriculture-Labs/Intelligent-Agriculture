@@ -11,6 +11,8 @@ Deadline: **Sun 2026-11-15 23:59 CET**. Phase plan: thin slice ≤ ~Sat 23:00 ·
 
 | Sat 17:35 | Depth | Thin slice done well ahead of plan (web + API on real NASA data). Client app complete (web; iOS/Android builds in progress by parallel worker). Validation-driven fixes: late-frost yield collapse (EXP-04), SPEI-12 in drought status (EXP-03), alfalfa cutting interval (EXP-05). Replay mode, off-season planning card, pest ranges, climate-zone + Mediterranean rotation logic. Docker/CI written. Docs: CHALLENGE, PRODUCT, DATA, MODELS, ARCHITECTURE, API, DEPLOYMENT, LIMITATIONS, ROADMAP, EXPERIMENTS, USER_GUIDE, SUBMISSION, README | Docker verify, native builds + media, satellite cache, final validation, video, self-review |
 
+| Sat 18:30–19:15 | Depth (user requests) | Terrain maps (RUSLE, TWI, frost hollows, zones) + season planner; farm sync (no account), multi-field, field editor on sub-metre imagery; tap-to-detect field boundaries (EXP-10); Sentinel-2 field analytics (phenology, harvest detection, AI k-means zones, satellite Kcb fusion); AI drought classifier trained on USDM (EXP-09, adopted); presets moved to real farm fields; ECOSTRESS + SMAP via AppEEARS (Earthdata login) | UI for detection + harvest markers (worker), recaptures, final validation, video |
+
 ## Must-do before packaging
 - Recapture all web screenshots on real data (first capture showed MOCK banner while /api/rotations was 500).
 - Re-run full validation on final code; refresh numbers in VALIDATION.md / README / SUBMISSION.
