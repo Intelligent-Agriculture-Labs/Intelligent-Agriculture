@@ -1,0 +1,23 @@
+# Recommendation rules & thresholds — version 1.0.0 (changes must be logged in docs/DECISIONS.md)
+version: "1.0.0"
+irrigation:
+  lookahead_days: 10          # search window for the next irrigation need
+  urgent_days: 2              # irrigation due within N days -> high risk
+  min_amount_mm: 5            # don't recommend tiny irrigations
+  rain_credit_prob: 0.5       # forecast rain counted only on days with precip probability >= this
+drought:
+  card_min_level: 1           # show drought card at D0 or worse
+disease:
+  window_days: 7
+  min_score_card: 0.25        # 'moderate' or worse produces a card
+pests:
+  window_days: 10             # show if the next life-stage event falls within N days
+  show_recent_days: 7         # or if an event was passed within the last N days
+frost:
+  window_days: 7
+  margin_c: 1.0               # warn when forecast Tmin <= crop kill temperature + margin
+heat:
+  window_days: 7
+ndvi:
+  anomaly_z: -1.5             # NDVI z-score vs same-period 2001+ climatology to trigger a scouting card
+risk_order: {low: 0, moderate: 1, high: 2, severe: 3}

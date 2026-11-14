@@ -1,0 +1,262 @@
+/**
+ * FieldShift API contract (v1) — single source of truth shared by backend (FastAPI/pydantic)
+ * and client (Expo). The backend's pydantic models in backend/fieldshift/schemas.py mirror this.
+ * All units are SI/metric on the wire; the client converts for display.
+ */
+
+export type Risk = "low" | "moderate" | "high" | "severe";
+export type Lang = "en" | "es" | "fr" | "sw" | "hi" | "de";
+export type IrrigationMethod = "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
+
+export interface FieldInput {
+  lat: number;
+  lon: number;
+  crop: string; // crop id from /api/crops, e.g. "alfalfa"
+  planting_date: string; // ISO date, for perennials = stand establishment / season green-up
+  irrigation: IrrigationMethod;
+  /** optional: polygon drawn by user (GeoJSON [lon,lat] ring), area computed server-side */
+  polygon?: [number, number][];
+  /** optional: water available for the season in mm (deficit scheduling) */
+  water_allocation_mm?: number | null;
+  lang?: Lang;
+  /** "today" override for demo / back-testing, ISO date */
+  as_of?: string | null;
+}
+
+export interface SourceRef {
+  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm"
+  name: string;
+  provider: string; // "NASA LaRC", "NASA/ORNL DAAC", ...
+  url: string;
+  resolution: string; // "0.5° × 0.625° (~50 km)", "9 km", "250 m"
+  latency: string; // "~2 days"
+  last_date: string | null; // last observation date actually used
+  is_nasa: boolean;
+  status: "live" | "cache" | "demo" | "unavailable";
+}
+
+export interface SeriesPoint {
+  date: string;
+  value: number | null;
+}
+export interface Series {
+  id: string; // "et0", "precip", "soil_depletion", "smap_sm", "ndvi", "ndvi_normal", "tmax", ...
+  label: string;
+  unit: string;
+  points: SeriesPoint[];
+  normal?: SeriesPoint[]; // climatological normal for the same days, if available
+  source: string; // SourceRef.id
+  kind?: "observed" | "modelled" | "forecast";
+}
+
+export interface WhyBlock {
+  summary: string; // plain-language one paragraph
+  steps: string[]; // the reasoning chain, each a short sentence with numbers
+  series: string[]; // Series ids to plot in the Why view
+  model: string; // "FAO-56 dual... water balance"
+  model_doc: string; // anchor in docs/MODELS.md
+  confidence: number; // 0..1
+  confidence_note: string; // why the confidence is what it is
+  caveats: string[]; // e.g. "SMAP pixel is 9 km; your field is 2 ha"
+  sources: string[]; // SourceRef ids
+}
+
+export interface ActionCard {
+  id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat"
+  category: "water" | "drought" | "disease" | "pest" | "planning" | "weather";
+  priority: number; // 1 = most urgent
+  risk: Risk;
+  icon: string; // ionicons name
+  title: string; // "Irrigate 22 mm before Thursday"
+  detail: string; // one sentence
+  due: string | null; // ISO date
+  amount?: { value: number; unit: string } | null; // e.g. 22 mm
+  why: WhyBlock;
+}
+
+export interface DroughtStatus {
+  level: 0 | 1 | 2 | 3 | 4 | 5; // 0 = none, 1..5 = D0..D4 style
+  label: string; // "Moderate drought (D1)"
+  spi30: number | null;
+  spi90: number | null;
+  spei90?: number | null;
+  sm_percentile: number | null; // 0..100
+  vhi: number | null; // 0..100
+  why: WhyBlock;
+}
+
+export interface AdviceResponse {
+  field: FieldInput & { elevation_m: number | null; slope_pct: number | null; soil: SoilInfo | null; area_ha: number | null };
+  generated_at: string;
+  as_of: string;
+  cards: ActionCard[]; // ALL cards ranked; UI shows top 3 on the home screen
+  drought: DroughtStatus;
+  water: WaterState;
+  series: Series[];
+  sources: SourceRef[];
+  mock: boolean; // true only if any value was synthetic (must be shown in UI)
+  offline: boolean; // served from pre-cached demo data
+}
+
+export interface SoilInfo {
+  texture: string; // "loam"
+  clay_pct: number | null;
+  sand_pct: number | null;
+  soc_g_kg: number | null;
+  taw_mm_per_m: number; // total available water per m root depth
+  source: string;
+}
+
+export interface WaterState {
+  root_zone_depletion_mm: number;
+  taw_mm: number;
+  raw_mm: number;
+  days_to_stress: number | null;
+  next_irrigation_date: string | null;
+  next_irrigation_mm: number | null;
+  season_et_mm: number;
+  season_rain_mm: number;
+  season_irrigation_mm: number;
+  forecast_rain_7d_mm: number;
+  forecast_et0_7d_mm: number;
+}
+
+/* ---------- What-if simulator ---------- */
+export interface SimulateRequest {
+  lat: number;
+  lon: number;
+  crop: string;
+  planting_date: string; // month-day used across years, ISO date with any year
+  irrigation_strategy: "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
+  water_allocation_mm?: number | null;
+  delta_t_c?: number; // climate scenario: + °C
+  rain_factor?: number; // e.g. 0.8 = 20% less rain
+  years?: number; // how many past seasons to simulate (default 20)
+}
+export interface SimYear {
+  year: number;
+  yield_t_ha: number;
+  et_mm: number;
+  irrigation_mm: number;
+  rain_mm: number;
+  stress_days: number;
+  heat_days: number;
+  frost_events: number;
+  harvest_date: string;
+}
+export interface SimulateResponse {
+  crop: string;
+  scenario: SimulateRequest;
+  years: SimYear[];
+  summary: {
+    yield_median: number;
+    yield_p10: number; // bad year
+    yield_p90: number;
+    irrigation_median_mm: number;
+    et_median_mm: number;
+    stress_days_median: number;
+    water_productivity_kg_m3: number;
+    failure_risk_pct: number; // % of years with yield < 50% of median-of-baseline
+  };
+  baseline?: SimulateResponse["summary"]; // same crop/date, no scenario changes
+  daily_example?: Series[]; // daily canopy cover, soil depletion for the median year
+  why: WhyBlock;
+}
+
+/* ---------- Rotation explorer (core of the Field Shift challenge) ---------- */
+export interface Priorities {
+  water: number; // 0..1 weights
+  soil: number;
+  income: number;
+  pests: number;
+  risk: number; // climate-risk aversion
+}
+export interface RotationRequest {
+  lat: number;
+  lon: number;
+  current_rotation: string[]; // crop ids in order, one per season slot; e.g. ["alfalfa","alfalfa","alfalfa","alfalfa"]
+  irrigation: IrrigationMethod;
+  water_allocation_mm?: number | null;
+  priorities: Priorities;
+  lang?: Lang;
+}
+export interface RotationSlot {
+  year: number; // 1..N
+  crop: string;
+  season: "spring" | "summer" | "fall" | "winter" | "perennial" | "cover";
+  start_month: number; // 1..12
+  end_month: number;
+}
+export interface RotationMetric {
+  id: "water" | "soil" | "income" | "pests" | "risk" | "erosion" | "nitrogen" | "bare_days";
+  label: string;
+  value: number; // in unit
+  unit: string;
+  score: number; // 0..100, higher = better for farmer
+  vs_current: number; // delta of score vs current rotation
+}
+export interface RotationStrategy {
+  id: string;
+  name: string; // "Alfalfa → teff → winter wheat + cover"
+  is_current: boolean;
+  slots: RotationSlot[];
+  calendar: { month: number; year: number; crop: string | null; cover: number }[]; // 0..1 ground cover per month
+  metrics: RotationMetric[];
+  total_score: number; // weighted by priorities, 0..100
+  why_suggested: string;
+  evidence: string[]; // numbers from NASA data, e.g. "July ET0 averaged 7.9 mm/day (POWER 1985-2024)"
+  benefits: string[];
+  info_gaps: string[];
+  risks_local_review: string[];
+  sources: string[];
+}
+export interface RotationResponse {
+  strategies: RotationStrategy[]; // current first, then ranked alternatives (>= 3 total)
+  climate_context: string[]; // key local signals: "Frost-free season lengthened 11 days since 1985"
+  vulnerable_periods: { month: number; issue: string; risk: Risk }[];
+  sources: SourceRef[];
+  disclaimer: string;
+}
+
+/* ---------- Climate trends ---------- */
+export interface ClimateResponse {
+  years: number[];
+  metrics: {
+    id: string; // "tmax_summer", "gdd", "frost_free_days", "heat_days", "precip_annual", "precip_growing", "et0_annual", "heavy_rain_days", "last_spring_frost_doy", "first_fall_frost_doy"
+    label: string;
+    unit: string;
+    values: (number | null)[];
+    trend_per_decade: number;
+    p_value: number;
+    baseline_mean: number; // first 15 years
+    recent_mean: number; // last 10 years
+  }[];
+  monthly_normals: { month: number; tmax: number; tmin: number; precip: number; et0: number }[];
+  insights: string[];
+  source: SourceRef;
+}
+
+export interface CropInfo {
+  id: string;
+  name: string;
+  family: string;
+  type: "annual" | "perennial" | "cover";
+  n_fixing: boolean;
+  root_depth_m: number;
+  season_days: number;
+  typical_yield_t_ha: number;
+  icon: string;
+}
+
+export interface PresetLocation {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  crop: string;
+  planting_date: string;
+  irrigation: IrrigationMethod;
+  current_rotation: string[];
+  story: string;
+  cached: boolean;
+}

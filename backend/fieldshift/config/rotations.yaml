@@ -1,0 +1,113 @@
+# Candidate rotation strategies — version 1.0.0
+# Each slot: crop, year (1-based), plant (MM-DD, northern-hemisphere temperate calendar; shifted 6 months
+# in the southern hemisphere; tropics use the local rainy-season onset), optional irrigate_until (MM-DD)
+# for split-season / partial-season irrigation. Strategies that the local climate cannot support (season
+# not completed in >= 80 % of past years, or killing frost risk) are filtered out automatically.
+version: "1.0.0"
+default_planting:
+  alfalfa: "03-15"
+  maize: "05-01"
+  maize_silage: "05-01"
+  winter_wheat: "10-01"
+  barley: "03-20"
+  triticale_forage: "10-01"
+  sorghum: "05-20"
+  teff: "06-01"
+  soybean: "05-15"
+  dry_bean: "06-01"
+  potato: "04-20"
+  tomato: "05-01"
+  safflower: "04-01"
+  sunflower: "05-15"
+  pearl_millet: "06-01"
+  cowpea: "06-01"
+  sweet_potato: "05-20"
+  cover_rye_vetch: "10-01"
+templates:
+  - id: alfalfa_teff_wheat
+    name: "Alfalfa (3 yr) → teff → winter wheat"
+    idea: "Keep the alfalfa income, then break the stand with two short, lower-water grass crops."
+    tags: [water, pests, irrigated]
+    slots:
+      - {crop: alfalfa, year: 1}
+      - {crop: alfalfa, year: 2}
+      - {crop: alfalfa, year: 3}
+      - {crop: teff, year: 4}
+      - {crop: winter_wheat, year: 4, plant: "10-01"}
+  - id: split_season_alfalfa
+    name: "Split-season alfalfa (stop irrigating after mid-July)"
+    idea: "Same crop, less water: alfalfa survives summer dormancy; skip the low-value late cuts in drought years."
+    tags: [water, irrigated]
+    slots:
+      - {crop: alfalfa, year: 1, irrigate_until: "07-15"}
+      - {crop: alfalfa, year: 2, irrigate_until: "07-15"}
+      - {crop: alfalfa, year: 3, irrigate_until: "07-15"}
+      - {crop: alfalfa, year: 4, irrigate_until: "07-15"}
+  - id: alfalfa_silage_triticale
+    name: "Alfalfa (3 yr) → corn silage → winter triticale"
+    idea: "Use the alfalfa nitrogen credit in a high-yield forage crop, then keep the ground covered over winter."
+    tags: [income, soil, irrigated]
+    slots:
+      - {crop: alfalfa, year: 1}
+      - {crop: alfalfa, year: 2}
+      - {crop: alfalfa, year: 3}
+      - {crop: maize_silage, year: 4}
+      - {crop: triticale_forage, year: 4, plant: "10-01"}
+  - id: wheat_safflower_barley_cover
+    name: "Winter wheat → safflower → barley + rye/vetch cover"
+    idea: "Use winter and spring moisture; deep-rooted safflower scavenges water and breaks cereal disease."
+    tags: [water, soil, pests]
+    slots:
+      - {crop: winter_wheat, year: 1, plant: "10-01"}
+      - {crop: safflower, year: 2}
+      - {crop: barley, year: 3}
+      - {crop: cover_rye_vetch, year: 3, plant: "09-15"}
+  - id: maize_soy_wheat_cover
+    name: "Maize → soybean → winter wheat + cover"
+    idea: "Classic legume–cereal rotation that breaks the corn-rootworm cycle and adds residue."
+    tags: [income, pests, soil]
+    slots:
+      - {crop: maize, year: 1}
+      - {crop: soybean, year: 2}
+      - {crop: winter_wheat, year: 2, plant: "10-10"}
+      - {crop: cover_rye_vetch, year: 3, plant: "08-15"}
+  - id: sorghum_cowpea_maize
+    name: "Sorghum → cowpea → maize"
+    idea: "Drought-tolerant cereal, a nitrogen-fixing legume, then maize using that nitrogen."
+    tags: [water, soil, smallholder]
+    slots:
+      - {crop: sorghum, year: 1}
+      - {crop: cowpea, year: 2}
+      - {crop: maize, year: 3}
+  - id: millet_cowpea
+    name: "Pearl millet → cowpea"
+    idea: "Very low water need; cowpea fixes nitrogen and breaks Striga and stem-borer cycles."
+    tags: [water, smallholder]
+    slots:
+      - {crop: pearl_millet, year: 1}
+      - {crop: cowpea, year: 2}
+  - id: potato_wheat_alfalfa
+    name: "Potato → winter wheat → alfalfa (2 yr)"
+    idea: "High-value crop followed by a cereal and a perennial legume that rebuilds soil structure."
+    tags: [income, soil]
+    slots:
+      - {crop: potato, year: 1}
+      - {crop: winter_wheat, year: 1, plant: "10-10"}
+      - {crop: alfalfa, year: 3}
+      - {crop: alfalfa, year: 4}
+  - id: sunflower_wheat_cover
+    name: "Sunflower → winter wheat → cover crop"
+    idea: "Deep-rooted oilseed and a winter cereal; the cover crop protects soil in the bare window."
+    tags: [water, soil]
+    slots:
+      - {crop: sunflower, year: 1}
+      - {crop: winter_wheat, year: 1, plant: "10-10"}
+      - {crop: cover_rye_vetch, year: 2, plant: "08-15"}
+  - id: maize_bean_sorghum
+    name: "Maize → dry bean → sorghum"
+    idea: "Alternates grass and legume families; sorghum tolerates the driest year in the cycle."
+    tags: [smallholder, pests]
+    slots:
+      - {crop: maize, year: 1}
+      - {crop: dry_bean, year: 2}
+      - {crop: sorghum, year: 3}

@@ -1,0 +1,506 @@
+# FieldShift crop parameter table — version 1.0.0
+# Sources (see docs/MODELS.md for full references):
+#   kc_*, stages, root_m, p ............ FAO-56 Tables 11, 12, 22 (Allen et al. 1998); arid-region stage lengths where given
+#   ky ................................... FAO-33 / FAO-56 yield response factor (Doorenbos & Kassam 1979)
+#   wp (g/m2, normalised water productivity), hi ..... AquaCrop defaults (Steduto et al. 2009, Raes et al. 2009) where available
+#   t_base, t_heat, t_kill ............. common agronomic thresholds (cited in docs/MODELS.md); heat = Tmax at flowering
+#   n_fix_kg_ha ........................ typical net symbiotic N credit to the following crop (extension literature, wide ranges)
+#   price_usd_t, cost_usd_ha .......... INDICATIVE 2023–24 U.S. values (USDA NASS prices received; extension enterprise budgets).
+#                                         Edit locally — market suitability must be reviewed by the farmer.
+#   calib ............................... scales WP-based potential biomass to typical irrigated yields (documented calibration)
+# Teff, cover crops and some smallholder crops are not in FAO-56; their values are literature estimates marked low_confidence.
+
+version: "1.0.0"
+crops:
+  alfalfa:
+    name: Alfalfa (hay)
+    family: Fabaceae
+    type: perennial
+    icon: leaf
+    kc_ini: 0.40
+    kc_mid: 1.20
+    kc_end: 1.15
+    cut_gdd: 420          # °C·d (base 5 °C) between cuttings (≈750 °F·d base 41 °F)
+    stages: [10, 20, 20, 10]  # per cutting cycle, FAO-56 Table 11 (individual cutting periods)
+    root_m: [1.2, 1.8]
+    p: 0.55
+    ky: 1.1
+    wp: 15
+    hi: 0.85              # fraction of above-ground biomass harvested as hay
+    calib: 0.95
+    t_base: 5
+    t_heat: 40
+    t_kill: -4
+    season_days: 210
+    n_fix_kg_ha: 120
+    residue: high
+    erosion_cover: 0.95
+    typical_yield_t_ha: 16
+    price_usd_t: 220
+    cost_usd_ha: 1500
+    pests: [alfalfa weevil, aphids, Phytophthora root rot, Verticillium wilt]
+    breaks: [nematodes of cereals, cereal diseases]
+  maize:
+    name: Maize (grain)
+    family: Poaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.30
+    kc_mid: 1.20
+    kc_end: 0.35
+    stages: [30, 40, 50, 30]
+    root_m: [0.3, 1.5]
+    p: 0.55
+    ky: 1.25
+    wp: 33.7
+    hi: 0.48
+    calib: 0.85
+    t_base: 10
+    t_heat: 35
+    t_kill: -1
+    season_days: 150
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.55
+    typical_yield_t_ha: 11
+    price_usd_t: 175
+    cost_usd_ha: 1600
+    pests: [western corn rootworm, European corn borer, corn earworm, gray leaf spot]
+    breaks: []
+  maize_silage:
+    name: Maize (silage)
+    family: Poaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.30
+    kc_mid: 1.20
+    kc_end: 0.60
+    stages: [30, 40, 45, 10]
+    root_m: [0.3, 1.5]
+    p: 0.55
+    ky: 1.25
+    wp: 33.7
+    hi: 0.95
+    calib: 0.75
+    t_base: 10
+    t_heat: 35
+    t_kill: -1
+    season_days: 125
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.35
+    typical_yield_t_ha: 20  # dry matter
+    price_usd_t: 110
+    cost_usd_ha: 1500
+    pests: [western corn rootworm, European corn borer]
+    breaks: []
+  winter_wheat:
+    name: Winter wheat
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.70
+    kc_mid: 1.15
+    kc_end: 0.30
+    stages: [30, 140, 40, 30]   # includes winter dormancy in development stage
+    root_m: [0.3, 1.6]
+    p: 0.55
+    ky: 1.05
+    wp: 15
+    hi: 0.45
+    calib: 0.9
+    t_base: 0
+    t_heat: 32
+    t_kill: -20
+    season_days: 240
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.8
+    typical_yield_t_ha: 6.5
+    price_usd_t: 220
+    cost_usd_ha: 900
+    pests: [stripe rust, Russian wheat aphid, Hessian fly, take-all]
+    breaks: [corn rootworm, alfalfa weevil, broadleaf diseases]
+  barley:
+    name: Spring barley
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.30
+    kc_mid: 1.15
+    kc_end: 0.25
+    stages: [15, 25, 50, 30]
+    root_m: [0.3, 1.2]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.48
+    calib: 0.9
+    t_base: 0
+    t_heat: 32
+    t_kill: -6
+    season_days: 120
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.6
+    typical_yield_t_ha: 5.5
+    price_usd_t: 250
+    cost_usd_ha: 800
+    pests: [net blotch, barley yellow dwarf, aphids]
+    breaks: [corn rootworm, alfalfa weevil]
+  triticale_forage:
+    name: Winter triticale (forage)
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.70
+    kc_mid: 1.10
+    kc_end: 0.90
+    stages: [30, 120, 30, 5]
+    root_m: [0.3, 1.2]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.9
+    calib: 0.8
+    t_base: 0
+    t_heat: 32
+    t_kill: -20
+    season_days: 210
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.85
+    typical_yield_t_ha: 9
+    price_usd_t: 160
+    cost_usd_ha: 700
+    pests: [stripe rust, aphids]
+    breaks: [corn rootworm, alfalfa weevil]
+  sorghum:
+    name: Sorghum (grain/forage)
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.30
+    kc_mid: 1.05
+    kc_end: 0.55
+    stages: [20, 35, 40, 30]
+    root_m: [0.3, 1.8]
+    p: 0.55
+    ky: 0.9
+    wp: 33
+    hi: 0.45
+    calib: 0.75
+    t_base: 10
+    t_heat: 38
+    t_kill: -1
+    season_days: 125
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.55
+    typical_yield_t_ha: 7
+    price_usd_t: 160
+    cost_usd_ha: 900
+    pests: [sugarcane aphid, headworms]
+    breaks: [corn rootworm, alfalfa weevil]
+  teff:
+    name: Teff (summer forage)
+    family: Poaceae
+    type: annual
+    icon: leaf
+    low_confidence: true
+    kc_ini: 0.50
+    kc_mid: 1.00
+    kc_end: 0.70
+    stages: [15, 25, 30, 15]
+    root_m: [0.2, 0.6]
+    p: 0.55
+    ky: 1.0
+    wp: 20
+    hi: 0.9
+    calib: 0.55
+    t_base: 10
+    t_heat: 38
+    t_kill: 0
+    season_days: 85
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.6
+    typical_yield_t_ha: 7
+    price_usd_t: 200
+    cost_usd_ha: 700
+    pests: [armyworm]
+    breaks: [alfalfa weevil, corn rootworm, broadleaf diseases]
+  soybean:
+    name: Soybean
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.40
+    kc_mid: 1.15
+    kc_end: 0.50
+    stages: [20, 30, 60, 25]
+    root_m: [0.3, 1.0]
+    p: 0.50
+    ky: 0.85
+    wp: 15
+    hi: 0.40
+    calib: 0.9
+    t_base: 10
+    t_heat: 35
+    t_kill: -1
+    season_days: 135
+    n_fix_kg_ha: 30
+    residue: low
+    erosion_cover: 0.4
+    typical_yield_t_ha: 3.5
+    price_usd_t: 385
+    cost_usd_ha: 900
+    pests: [soybean aphid, white mould, soybean cyst nematode]
+    breaks: [corn rootworm, cereal diseases]
+  dry_bean:
+    name: Dry bean
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.40
+    kc_mid: 1.15
+    kc_end: 0.35
+    stages: [20, 30, 40, 20]
+    root_m: [0.3, 0.9]
+    p: 0.45
+    ky: 1.15
+    wp: 15
+    hi: 0.40
+    calib: 0.75
+    t_base: 10
+    t_heat: 32
+    t_kill: -1
+    season_days: 110
+    n_fix_kg_ha: 30
+    residue: low
+    erosion_cover: 0.35
+    typical_yield_t_ha: 2.5
+    price_usd_t: 770
+    cost_usd_ha: 1100
+    pests: [white mould, bean rust, lygus bugs]
+    breaks: [cereal diseases, corn rootworm]
+  potato:
+    name: Potato
+    family: Solanaceae
+    type: annual
+    icon: egg
+    kc_ini: 0.50
+    kc_mid: 1.15
+    kc_end: 0.75
+    stages: [25, 30, 45, 30]
+    root_m: [0.2, 0.6]
+    p: 0.35
+    ky: 1.1
+    wp: 18
+    hi: 0.75
+    fresh_factor: 5.0     # dry tuber -> fresh weight
+    calib: 0.85
+    t_base: 7
+    t_heat: 30
+    t_kill: -1
+    season_days: 130
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.3
+    typical_yield_t_ha: 45
+    price_usd_t: 240
+    cost_usd_ha: 7000
+    pests: [late blight, Colorado potato beetle, early blight]
+    breaks: [cereal diseases]
+  tomato:
+    name: Tomato
+    family: Solanaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.60
+    kc_mid: 1.15
+    kc_end: 0.80
+    stages: [30, 40, 40, 25]
+    root_m: [0.2, 1.0]
+    p: 0.40
+    ky: 1.05
+    wp: 18
+    hi: 0.63
+    fresh_factor: 16.0
+    calib: 0.7
+    t_base: 10
+    t_heat: 35
+    t_kill: 0
+    season_days: 135
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.3
+    typical_yield_t_ha: 80
+    price_usd_t: 90
+    cost_usd_ha: 9000
+    pests: [late blight, early blight, tomato fruitworm]
+    breaks: [cereal diseases]
+  safflower:
+    name: Safflower
+    family: Asteraceae
+    type: annual
+    icon: flower
+    kc_ini: 0.35
+    kc_mid: 1.10
+    kc_end: 0.25
+    stages: [20, 35, 45, 25]
+    root_m: [0.3, 2.0]
+    p: 0.60
+    ky: 0.8
+    wp: 17
+    hi: 0.30
+    calib: 0.7
+    t_base: 5
+    t_heat: 38
+    t_kill: -4
+    season_days: 125
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.45
+    typical_yield_t_ha: 2.8
+    price_usd_t: 550
+    cost_usd_ha: 650
+    pests: [Alternaria leaf spot, lygus bugs]
+    breaks: [cereal diseases, corn rootworm, alfalfa weevil]
+  sunflower:
+    name: Sunflower
+    family: Asteraceae
+    type: annual
+    icon: sunny
+    kc_ini: 0.35
+    kc_mid: 1.10
+    kc_end: 0.35
+    stages: [25, 35, 45, 25]
+    root_m: [0.3, 1.5]
+    p: 0.45
+    ky: 0.95
+    wp: 18
+    hi: 0.35
+    calib: 0.7
+    t_base: 6
+    t_heat: 35
+    t_kill: -3
+    season_days: 130
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.4
+    typical_yield_t_ha: 2.5
+    price_usd_t: 480
+    cost_usd_ha: 700
+    pests: [sunflower moth, Sclerotinia]
+    breaks: [cereal diseases, corn rootworm]
+  pearl_millet:
+    name: Pearl millet
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.30
+    kc_mid: 1.00
+    kc_end: 0.30
+    stages: [15, 25, 40, 25]
+    root_m: [0.3, 1.5]
+    p: 0.55
+    ky: 0.9
+    wp: 30
+    hi: 0.30
+    calib: 0.6
+    t_base: 10
+    t_heat: 40
+    t_kill: 0
+    season_days: 105
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.5
+    typical_yield_t_ha: 2.5
+    price_usd_t: 250
+    cost_usd_ha: 300
+    pests: [downy mildew, stem borers]
+    breaks: [legume diseases]
+  cowpea:
+    name: Cowpea
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.40
+    kc_mid: 1.05
+    kc_end: 0.45
+    stages: [20, 30, 30, 20]
+    root_m: [0.3, 1.0]
+    p: 0.45
+    ky: 0.85
+    wp: 15
+    hi: 0.30
+    calib: 0.6
+    t_base: 10
+    t_heat: 38
+    t_kill: 0
+    season_days: 100
+    n_fix_kg_ha: 40
+    residue: low
+    erosion_cover: 0.5
+    typical_yield_t_ha: 1.5
+    price_usd_t: 700
+    cost_usd_ha: 350
+    pests: [aphids, pod borers]
+    breaks: [cereal stem borers, Striga]
+  sweet_potato:
+    name: Sweet potato
+    family: Convolvulaceae
+    type: annual
+    icon: egg
+    kc_ini: 0.50
+    kc_mid: 1.15
+    kc_end: 0.65
+    stages: [20, 30, 60, 40]
+    root_m: [0.3, 1.0]
+    p: 0.65
+    ky: 0.9
+    wp: 18
+    hi: 0.6
+    fresh_factor: 3.5
+    calib: 0.5
+    t_base: 12
+    t_heat: 38
+    t_kill: 0
+    season_days: 150
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.7
+    typical_yield_t_ha: 12
+    price_usd_t: 300
+    cost_usd_ha: 500
+    pests: [sweet potato weevil, viruses]
+    breaks: [cereal stem borers]
+  cover_rye_vetch:
+    name: Cover crop (cereal rye + hairy vetch)
+    family: Mixed
+    type: cover
+    icon: leaf
+    low_confidence: true
+    kc_ini: 0.40
+    kc_mid: 0.90
+    kc_end: 0.80
+    stages: [30, 100, 30, 10]
+    root_m: [0.2, 1.0]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.0
+    calib: 0.6
+    t_base: 0
+    t_heat: 35
+    t_kill: -20
+    season_days: 170
+    n_fix_kg_ha: 60
+    residue: high
+    erosion_cover: 0.9
+    typical_yield_t_ha: 0
+    price_usd_t: 0
+    cost_usd_ha: 150
+    pests: []
+    breaks: [weed cycles, nematodes]
