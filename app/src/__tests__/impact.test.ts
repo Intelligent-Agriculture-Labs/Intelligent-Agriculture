@@ -35,7 +35,11 @@ describe("impactMetrics", () => {
 
 describe("impactValue", () => {
   const m = impactMetrics(base);
-  const get = (k: string) => impactValue(m.find((x) => x.key === k)!, "en");
+  const get = (k: string) =>
+    impactValue(
+      m.find((x) => x.key === k)!,
+      "en",
+    );
   it("shows savings plainly and trade-offs honestly", () => {
     expect(get("water")).toBe("120 m³/ha");
     expect(get("soil")).toBe("1.2 t/ha");
