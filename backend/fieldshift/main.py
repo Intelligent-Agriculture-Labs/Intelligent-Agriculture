@@ -224,3 +224,27 @@ def export_geojson(
             {"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": props}
         ],
     }
+
+
+# --------------------------------------------------------------------------- static web app (single-container deploy)
+_WEB_DIR = os.environ.get("FIELDSHIFT_WEB_DIR")
+if _WEB_DIR and os.path.isdir(_WEB_DIR):
+    from pathlib import Path
+
+    from fastapi.responses import FileResponse
+
+    _web_root = Path(_WEB_DIR).resolve()
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def web_app(path: str) -> FileResponse:
+        """Serve the exported Expo web build with SPA fallback (mirrors nginx try_files $uri $uri.html /index.html)."""
+        if path.startswith("api/"):
+            raise HTTPException(404)
+        for cand in (_web_root / path, _web_root / f"{path}.html", _web_root / path / "index.html"):
+            try:
+                c = cand.resolve()
+            except OSError:
+                continue
+            if c.is_file() and _web_root in c.parents:
+                return FileResponse(c)
+        return FileResponse(_web_root / "index.html")

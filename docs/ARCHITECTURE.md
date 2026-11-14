@@ -42,6 +42,9 @@ flowchart LR
 ## Rotation explorer: `POST /api/rotations`
 The context comes first, then 1991–2020 normals. Next, each unique crop slot is simulated over 15 seasons, with results cached per crop, planting date and irrigation cut-off within the request. Then the feasibility filter, metrics and priority-weighted scores, and finally the current rotation plus the top 4 alternatives with their texts. Runtime is ~1–3 s on a warm cache.
 
+## Deployment shape
+One image (root `Dockerfile`). Stage 1 exports the Expo web bundle; stage 2 is the FastAPI app, which serves `/api/*`, `/docs` and the static web app with SPA fallback. A single container avoids inter-container DNS (which failed on the podman test host) and makes hosting trivial.
+
 ## Why this shape
 - **Point time series instead of rasters.** A farmer asks about one field. Point APIs (POWER, ORNL subsets, Open-Meteo) return 40 years for a location in one request. Payloads stay small (advice ≈ 20 KB gzipped), so there is no raster store to operate.
 - **Config over code.** Crop parameters, rotation templates, rules/thresholds and texts are versioned YAML (`config/`), and changes are logged in DECISIONS.md.

@@ -1,0 +1,16 @@
+**/node_modules
+**/.venv
+**/.cache
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+app/ios
+app/android
+app/dist
+app/.expo
+app/test-results
+app/playwright-report
+media
+docs
+.git

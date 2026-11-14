@@ -54,3 +54,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker compose build
+      - name: Container smoke test (offline demo data)
+        run: |
+          FIELDSHIFT_OFFLINE=1 docker compose up -d
+          sleep 15
+          curl -fsS localhost:8080/api/health
+          curl -fsS localhost:8080/ | head -c 200

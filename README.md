@@ -71,7 +71,7 @@ Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · API: [`docs/API.md`](
 ## Quickstart (one command)
 ```bash
 docker compose up --build
-# app → http://localhost:8080   ·   API docs → http://localhost:8000/docs
+# app → http://localhost:8080   ·   API docs → http://localhost:8080/docs
 FIELDSHIFT_OFFLINE=1 docker compose up --build   # fully offline demo from the pre-cached NASA dataset
 ```
 Without Docker, and for the mobile builds, see [`docs/DEV_ENVIRONMENT.md`](docs/DEV_ENVIRONMENT.md) and [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). User guide: [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md).

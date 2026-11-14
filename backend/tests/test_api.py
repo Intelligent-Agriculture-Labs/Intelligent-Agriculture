@@ -129,3 +129,21 @@ def test_rotations_respect_climate_zone():
     ).json()
     ids = {s["id"] for s in r["strategies"]}
     assert "alfalfa_teff_wheat" not in ids and "split_season_alfalfa" not in ids
+
+
+def test_static_web_serving(tmp_path, monkeypatch):
+    import importlib
+
+    (tmp_path / "index.html").write_text("<html>app</html>")
+    (tmp_path / "rotations.html").write_text("<html>rot</html>")
+    monkeypatch.setenv("FIELDSHIFT_WEB_DIR", str(tmp_path))
+    import fieldshift.main as m
+
+    m2 = importlib.reload(m)
+    c = TestClient(m2.app)
+    assert c.get("/rotations").text == "<html>rot</html>"
+    assert c.get("/some/deep/link").text == "<html>app</html>"
+    assert c.get("/../../etc/passwd").text == "<html>app</html>"
+    assert c.get("/api/health").json()["status"] == "ok"
+    monkeypatch.delenv("FIELDSHIFT_WEB_DIR")
+    importlib.reload(m)

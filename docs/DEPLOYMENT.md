@@ -5,7 +5,7 @@
 git clone <repo> fieldshift && cd fieldshift
 docker compose up --build
 # web app  → http://localhost:8080
-# API docs → http://localhost:8000/docs
+# API docs → http://localhost:8080/docs   (one container: FastAPI serves the API and the exported web app)
 ```
 Fully offline demo (pre-cached NASA data for the four demo farms; no network calls at all):
 ```bash
@@ -19,6 +19,8 @@ FIELDSHIFT_OFFLINE=1 docker compose up --build
 | `FIELDSHIFT_ORNL_RETRIES` | `1` | retries for the slow ORNL subset API |
 | `FIELDSHIFT_CIRCUIT_BREAKER` | `1` | skip a hanging host for 5 min |
 | `EXPO_PUBLIC_API_URL` | same origin | client → API base URL (build time) |
+| `PORT` | `8080` | host port of the container |
+| `FIELDSHIFT_WEB_DIR` | `/srv/web` (image) | serve the exported web app from this folder |
 
 No secrets are needed. `.env.example` lists the optional ones.
 
@@ -34,7 +36,7 @@ See DEV_ENVIRONMENT.md (uv + uvicorn for the backend; `npx expo start` for the c
 ## Public hosting (human step)
 The images are host-agnostic: any VM with Docker works, as do Fly.io, Render or Railway. On the team's VPS:
 ```bash
-ssh fsvps 'cd ~/fieldshift && git pull && podman-compose up -d --build'
+ssh fsvps 'cd ~/fieldshift && git pull && PORT=8090 podman-compose up -d --build'
 ```
 Then expose port 8080 through a reverse proxy or a tunnel (e.g. Tailscale Funnel or Cloudflare Tunnel). Making it public is left to the owner, because it opens the machine to the internet.
 
