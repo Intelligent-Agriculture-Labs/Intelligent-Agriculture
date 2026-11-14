@@ -1,0 +1,38 @@
+# Demo locations (pre-cached for offline demos). Stories are framing only; all numbers come from the models.
+presets:
+  - id: fallon_nv
+    name: "Fallon, Nevada (Lahontan Valley)"
+    lat: 39.472
+    lon: -118.777
+    crop: alfalfa
+    planting_date: "2022-03-15"
+    irrigation: flood
+    current_rotation: [alfalfa, alfalfa, alfalfa, alfalfa]
+    story: "Irrigated alfalfa on the Newlands Project in the high desert, where hot summers and drought years cut water deliveries."
+  - id: machakos_ke
+    name: "Machakos, Kenya"
+    lat: -1.517
+    lon: 37.263
+    crop: maize
+    planting_date: "2026-10-20"
+    irrigation: none
+    current_rotation: [maize, maize, maize]
+    story: "Rain-fed smallholder maize in semi-arid eastern Kenya, depending on two short, erratic rainy seasons."
+  - id: cordoba_es
+    name: "Córdoba, Andalusia (Spain)"
+    lat: 37.885
+    lon: -4.779
+    crop: winter_wheat
+    planting_date: "2025-11-15"
+    irrigation: none
+    current_rotation: [winter_wheat, sunflower, winter_wheat]
+    story: "Rain-fed wheat and sunflower in the Guadalquivir valley after the 2022–2023 drought."
+  - id: ames_ia
+    name: "Ames, Iowa (USA)"
+    lat: 42.03
+    lon: -93.62
+    crop: maize
+    planting_date: "2026-05-01"
+    irrigation: none
+    current_rotation: [maize, soybean]
+    story: "Rain-fed corn–soybean on the U.S. Corn Belt."

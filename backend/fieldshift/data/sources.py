@@ -24,6 +24,8 @@ from .http import DataUnavailable, Fetched, get_json
 POWER_URL = "https://power.larc.nasa.gov/api/temporal/daily/point"
 POWER_PARAMS = ["T2M_MAX", "T2M_MIN", "T2M", "RH2M", "T2MDEW", "WS2M", "ALLSKY_SFC_SW_DWN", "PRECTOTCORR"]
 ORNL = "https://modis.ornl.gov/rst/api/v1"
+# interactive requests give up fast; the precompute job (scripts/build_demo_cache.py) raises this
+ORNL_RETRIES = int(__import__("os").environ.get("FIELDSHIFT_ORNL_RETRIES", "1"))
 
 SOURCES: dict[str, dict[str, Any]] = {
     "nasa_power": dict(name="NASA POWER daily agroclimatology", provider="NASA Langley Research Center",
@@ -242,7 +244,7 @@ ORNL_PRODUCTS = {
 
 
 def _ornl_dates(product: str, lat: float, lon: float) -> list[tuple[str, str]]:
-    f = get_json(f"{ORNL}/{product}/dates", {"latitude": _r(lat, 4), "longitude": _r(lon, 4)}, ttl_s=3 * 86400, timeout_s=90)
+    f = get_json(f"{ORNL}/{product}/dates", {"latitude": _r(lat, 4), "longitude": _r(lon, 4)}, ttl_s=3 * 86400, timeout_s=60, retries=ORNL_RETRIES)
     if not isinstance(f.data, dict):
         raise DataUnavailable(str(f.data)[:200])
     return [(x["modis_date"], x["calendar_date"]) for x in f.data["dates"]]
@@ -267,7 +269,7 @@ def ornl_series(sid: str, lat: float, lon: float, start: dt.date, end: dt.date, 
         }
         ttl = 365 * 86400 if (dt.date.today() - chunk[-1][1]).days > 90 else 86400
         try:
-            f = get_json(f"{ORNL}/{product}/subset", params, ttl_s=ttl, timeout_s=120, retries=4)
+            f = get_json(f"{ORNL}/{product}/subset", params, ttl_s=ttl, timeout_s=120, retries=ORNL_RETRIES)
         except DataUnavailable:
             return []
         out = []

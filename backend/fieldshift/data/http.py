@@ -113,6 +113,7 @@ def get_json(
                 if r.status_code == 200:
                     data = r.json()
                     _write(cpath, {"t": time.time(), "u": url, "p": params, "d": data})
+                    _update_index(key, url, params)
                     return Fetched(data, "live", time.time())
                 if 400 <= r.status_code < 500 and r.status_code != 429:
                     raise DataUnavailable(f"{url} -> HTTP {r.status_code}: {r.text[:200]}")
@@ -129,4 +130,61 @@ def get_json(
     demo = _read(dpath) if dpath.exists() else None
     if demo is not None:
         return Fetched(demo["d"], "demo", demo["t"])
+    fuzzy = _fuzzy_lookup(url, params)
+    if fuzzy is not None:
+        return fuzzy
     raise DataUnavailable(f"no live data and no cache for {url}")
+
+
+DATE_KEYS = {"start", "end", "start_date", "end_date", "startDate", "endDate", "past_days"}
+
+
+def _index_path(d: Path) -> Path:
+    return d / "index.json"
+
+
+def _fuzzy_lookup(url: str, params: dict[str, Any] | None) -> Fetched | None:
+    """Offline fallback: same endpoint + same non-date params (location, variables), any date range.
+    Picks the entry whose date range ends latest. Used so a pre-cached demo keeps working on later days."""
+    want = {k: v for k, v in (params or {}).items() if k not in DATE_KEYS}
+    best: tuple[str, Path, str] | None = None
+    for d, status in ((CACHE_DIR, "cache"), (DEMO_DIR, "demo")):
+        idx_file = _index_path(d)
+        if not idx_file.exists():
+            continue
+        try:
+            idx = json.loads(idx_file.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        for key, meta in idx.items():
+            if meta.get("u") != url:
+                continue
+            p = meta.get("p") or {}
+            if {k: v for k, v in p.items() if k not in DATE_KEYS} != want:
+                continue
+            end = str(p.get("end") or p.get("end_date") or p.get("endDate") or "")
+            if best is None or end > best[0]:
+                best = (end, d / f"{key}.json.gz", status)
+    if best is None:
+        return None
+    payload = _read(best[1])
+    if payload is None:
+        return None
+    return Fetched(payload["d"], "demo" if best[2] == "demo" else "cache", payload["t"])
+
+
+_index_lock = threading.Lock()
+
+
+def _update_index(key: str, url: str, params: dict[str, Any] | None) -> None:
+    with _index_lock:
+        f = _index_path(CACHE_DIR)
+        try:
+            idx = json.loads(f.read_text()) if f.exists() else {}
+        except (OSError, json.JSONDecodeError):
+            idx = {}
+        idx[key] = {"u": url, "p": params}
+        f.parent.mkdir(parents=True, exist_ok=True)
+        tmp = f.with_suffix(".tmp")
+        tmp.write_text(json.dumps(idx, default=str))
+        tmp.replace(f)

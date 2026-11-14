@@ -169,6 +169,7 @@ def simulate(
     assimilation_weight: float = 0.3,
     record_daily: bool = False,
     irrigate_until: tuple[int, int] | None = None,
+    irrigate_until_date: dt.date | None = None,
 ) -> SeasonResult:
     """Run one season from `planting`. `until` stops early (used for 'today' state).
 
@@ -256,7 +257,11 @@ def simulate(
         i_net = 0.0
         if known_irrigations and d in known_irrigations:
             i_net = known_irrigations[d] * eff
-        elif strategy != "rainfed" and (irrigate_until is None or (d.month, d.day) <= irrigate_until):
+        elif (
+            strategy != "rainfed"
+            and (irrigate_until is None or (d.month, d.day) <= irrigate_until)
+            and (irrigate_until_date is None or d <= irrigate_until_date)
+        ):
             if dr >= raw:
                 target = {"full": 0.0, "deficit_75": 0.25, "deficit_50": 0.5, "allocation": 0.0}.get(strategy, 0.0)
                 need = max(0.0, dr - target * taw)
