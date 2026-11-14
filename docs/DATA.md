@@ -18,7 +18,9 @@ All sources were verified reachable on 2026-11-14 from both the Mac and the VPS.
 | Soil texture, SOC → available water | **SoilGrids 2.0** | ISRIC (CC BY 4.0) | 250 m | static | `rest.isric.org` | TAW per metre (FAO-56 Table 19 classes) | Loam default (labelled "default") |
 | 16-day forecast + past 14 days (daily & hourly T, RH, rain, FAO ET₀) | **Open-Meteo forecast** (ECMWF IFS/GFS/ICON blend) | Open-Meteo (CC BY 4.0) | ~9–25 km | hourly | `api.open-meteo.com`, no key (non-commercial) | Irrigation lookahead, disease risk, frost/heat warnings, bridging POWER latency | Advice without forecast (cards note it) |
 | Soil moisture 0–100 cm, ET₀ | **ERA5 / ERA5-Land** via Open-Meteo archive | Copernicus C3S / ECMWF (challenge partner data) | ~9–25 km | ~5 days | `archive-api.open-meteo.com` | Validation of ET₀ and the water balance | — |
-| Drought severity (D0–D4 % area by county) | **U.S. Drought Monitor** | NDMC/USDA/NOAA | county, weekly | weekly | `usdmdataservices.unl.edu` | Validation only | — |
+| Drought severity (D0–D4 % area by county) | **U.S. Drought Monitor** | NDMC/USDA/NOAA | county, weekly | weekly | `usdmdataservices.unl.edu` | Training labels (AI drought classifier) and validation | — |
+| Drought class (Watch / Warning / Alert / recovery) | **EDO Combined Drought Indicator v4.1** | European Commission JRC, Copernicus EMS; © European Union, **CC BY 4.0** | 0.0417°, dekadal, Europe, 2012– | dekadal | `drought.emergency.copernicus.eu/data/Drought_Observatories_datasets/EDO_Combined_Drought_Indicator/` (netCDF, no login) | Training labels and held-out validation for Europe (offline, data box only) | — |
+| Soil-moisture index anomaly (z) | **GDO Soil Moisture Index Anomaly v3.0.1** (LISFLOOD) | European Commission JRC, Copernicus EMS; © European Union, **CC BY 4.0** | 0.05°, dekadal, global, 1995– | dekadal | `…/Drought_Observatories_datasets/GDO_Soil_Moisture_Index_Anomaly/` (netCDF, no login) | *Weak* training labels and validation for Australia, South America, Africa, South and East Asia (offline, data box only) | — |
 | Crop coefficients, stage lengths, root depth, p, Ky | **FAO-56 / FAO-33** | FAO | — | — | literature | Season model | — |
 | Prices / costs | USDA NASS prices received, extension budgets (2023–24, indicative) | USDA (public domain) | national | — | literature, in `config/crops.yaml` | Indicative gross margin | User-editable config |
 
@@ -44,6 +46,11 @@ NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`
 ## Not used (yet) and why
 - **GPM IMERG, GRACE-FO, full ECOSTRESS, HLS (30 m NDVI):** need Earthdata Login (no token was available). The ORNL ECOSTRESS subsets returned "no data" for the demo sites. These are the first upgrades in ROADMAP.md.
 - **OpenET:** needs an API key. **NASS QuickStats:** needs an API key. Yield validation therefore uses documented drought years (VALIDATION.md).
+- **Other drought labels considered for the global drought classifier (EXP-11):**
+  - Australian Bureau of Meteorology rainfall-deficiency maps. They are rainfall-only, so as labels for a rainfall-driven model they would be close to circular. The BoM copyright terms are also not a blanket open licence.
+  - Global SPEIbase (CSIC, ODbL). Climatic and monthly, computed from CRU, and again close to the model's own SPEI features.
+  - GDO Risk of Drought Impact for Agriculture. It mixes in exposure and vulnerability, which is not hazard severity.
+  - So the weak global label is GDO's modelled soil-moisture anomaly. It is independent of NASA POWER rain, but it is still a single indicator, and we say so wherever it is used.
 - **CDL, SSURGO, PRISM:** US-only. FieldShift's backbone is global so smallholders outside the US get the same product; these are planned as US-only enrichments.
 
 ## Harmonisation
@@ -53,4 +60,4 @@ Everything is reduced to daily point time series at the field location. Coarser 
 `scripts/build_demo_cache.py` (run on the VPS) fetches every source for the demo presets (Fallon NV, Machakos KE, Córdoba ES, Ames IA), runs all endpoints in all six languages, and copies the gzip JSON payloads into `backend/demo_cache/`, which is committed. With `FIELDSHIFT_OFFLINE=1` the API never touches the network.
 
 ## Attribution (shown in the app footer and README)
-Data: NASA POWER; NASA SMAP, MODIS (LP DAAC/ORNL DAAC); NASA/USGS SRTM; NASA GIBS; ISRIC SoilGrids (CC BY 4.0); Open-Meteo (CC BY 4.0) incl. ECMWF IFS & Copernicus ERA5; U.S. Drought Monitor (validation); FAO-56/FAO-33 crop parameters.
+Data: NASA POWER; NASA SMAP, MODIS (LP DAAC/ORNL DAAC); NASA/USGS SRTM; NASA GIBS; ISRIC SoilGrids (CC BY 4.0); Open-Meteo (CC BY 4.0) incl. ECMWF IFS & Copernicus ERA5; U.S. Drought Monitor; European Drought Observatory and Global Drought Observatory (© European Union, CC BY 4.0; Copernicus Emergency Management Service, JRC); FAO-56/FAO-33 crop parameters.

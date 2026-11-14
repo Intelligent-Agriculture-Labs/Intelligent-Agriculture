@@ -31,7 +31,11 @@
   - Cloudy regions and seasons yield fewer clear scenes.
   - NDVI saturates over very dense canopies.
 - **AI management zones** are statistical. Their causes (soil, water, pests, management) need ground truth; zones on small (< 1 ha) fields are noisy.
-- **AI drought classifier.** Trained and validated only for the contiguous U.S. (USDM labels). Elsewhere the rule-based status is used.
+- **AI drought classifier.** It is served only in the contiguous U.S. (USDM labels). Elsewhere the rule-based status is used.
+  - A global version trained on European (EDO CDI) and global soil-moisture (GDO) labels was validated on held-out regions and **not adopted** (EXP-11):
+    - It narrowly lost to the current model in Europe.
+    - Outside the U.S., both ML models lost to the rule-based blend on within ±1. They over-predict drought where label systems differ from USDM.
+  - For Australia, South America, Africa and Asia, the only open, gridded, multi-decade labels found were a single modelled soil-moisture anomaly, which is weak. National categorical drought monitors (e.g. NADM, South Africa) were not integrated.
 - **SMAP and ECOSTRESS series** exist only for the pre-extracted demo fields (asynchronous AppEEARS batch with Earthdata Login). New fields get MODIS/POWER-based indicators.
 - **Accounts** have no e-mail verification and no self-service password reset (no mail server in this self-hosted deployment).
 - **Farm sync by code** has no accounts. Anyone with the farm code can see and edit that farm's fields, so keep it private. There is no end-to-end encryption.

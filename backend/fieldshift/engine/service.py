@@ -649,7 +649,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             reg = meta.get("per_region", {}).get(region)
             if reg is not None and region != "US":
                 # held-out numbers for this region (leave-one-region-out), on the harmonised None/D0/D1/D2+ scale
-                rv = reg["harmonised"]["new_model"]
+                rv = reg["harmonised"][meta.get("served_key", "new_model")]
                 within1, rho = rv["within1_acc"], rv["spearman"]
                 where = f"held-out sites in this region ({reg['n_sites']} sites, labels: {reg['label'].upper()})"
             else:

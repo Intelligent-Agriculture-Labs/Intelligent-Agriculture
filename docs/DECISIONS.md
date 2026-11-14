@@ -100,3 +100,24 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - **Impact quantification in the rotation planner:** current vs. improved plan in water, fertiliser N, CO₂e (IPCC 2019 direct N₂O emission factor EF1 = 0.01 kg N₂O-N per kg N × 44/28 × GWP100 273 from AR6 = 4.29 kg CO₂e per kg N avoided; manufacturing emissions conservatively not counted), soil loss and margin.
 - **Low-bandwidth plain-text advice** (SMS/WhatsApp) in six languages for farmers without smartphones or data.
 - **7-slide PDF deck** as an alternative demo format.
+
+## ADR-020 Global drought classifier: evaluated, not adopted (2026-11-15)
+- **Context:** the AI drought classifier (EXP-09) is trained on USDM and served only in the contiguous U.S. The goal was a model that is accurate worldwide, proven by held-out validation.
+- **Labels chosen:**
+  - **EDO Combined Drought Indicator** for Europe: categorical, open netCDF, CC BY 4.0.
+  - **GDO Soil Moisture Index Anomaly** as a global *weak* label: open, CC BY 4.0, and independent of NASA POWER rain.
+  - **Rejected:**
+    - BoM rainfall deficiency and SPEIbase: rainfall- or SPEI-based, so nearly circular with the model's own features. BoM's terms are also not an open licence.
+    - GDO RDrI-Agri: includes exposure and vulnerability, not only hazard.
+  - Data stays on the data box. Only scripts, metrics and the model are committed.
+- **Validation design:**
+  - U.S. county GroupKFold, leave-one-region-out and leave-one-climate-zone-out, against the current model and the rules on identical samples.
+  - The adoption rule was declared in the script before the first run: at least as good in the U.S., better in held-out Europe and in the pooled weak regions.
+  - One extra candidate (no class balancing) was added after seeing the first run. It is labelled as post hoc and checked second.
+- **Decision:** keep the current U.S.-only model and the rule-based status elsewhere.
+  - The class-balanced global model passed the U.S. and weak-region checks but failed Europe: within ±1 0.847 vs. 0.859, Spearman 0.488 vs. 0.493.
+  - The unbalanced one failed all three.
+  - Outside the U.S. the rules beat both the current and the global model on within ±1 in every held-out region.
+- **Consequences:**
+  - The serving code is now region-gated by model metadata (`model_regions`, `feature_set`, `served_key`), so a future model can be switched on per validated region without code changes.
+  - The cache writer uses a per-process temporary file. Parallel training workers had raced on it.

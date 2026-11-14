@@ -61,19 +61,143 @@ _run: 2026-11-14T18:28:15+00:00_
 
 2009 (documented epidemic) ranks **3 of 11**.
 
-### V8 · AI drought classifier vs. rule-based status on U.S. counties the model never saw
-_trained: 2026-11-14T17:59:37+00:00 · 80 counties · 83,600 weekly USDM labels · GroupKFold(5) by county_
+### V8 · AI drought classifier on sites, regions and climate zones the model never saw
+_trained: 2026-11-14T23:48:40+00:00 · 310 sites in 7 regions · 229,040 labels · U.S.: GroupKFold(5) by county; other regions: leave-one-region-out; zones: leave-one-climate-zone-out_
 
-| Metric | AI classifier | Rule-based blend |
-|---|---|---|
-| Exact category | 0.610 | 0.590 |
-| Within ±1 category | 0.889 | 0.862 |
-| Mean abs. error (levels) | 0.536 | 0.595 |
-| Spearman vs. DSCI | 0.679 | 0.548 |
-| D1+ hit rate | 0.700 | 0.449 |
-| D1+ false-alarm ratio | 0.389 | 0.423 |
+**U.S., native USDM scale (None…D4), counties held out (GroupKFold 5); Spearman vs. DSCI**
 
-Adopted: **True** (contiguous U.S. only).
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 83,600 | 0.592 | 0.879 | 0.569 | 0.654 | 0.703 | 0.411 |
+| Global model (v2 features, class-balanced) | 83,600 | 0.635 | 0.894 | 0.503 | 0.687 | 0.647 | 0.388 |
+| Global model (v2 features, unbalanced) | 83,600 | 0.667 | 0.878 | 0.502 | 0.595 | 0.431 | 0.243 |
+| Rule-based blend | 83,600 | 0.590 | 0.862 | 0.595 | 0.548 | 0.449 | 0.423 |
+
+**Per region, harmonised scale (None / D0·Watch / D1·Warning / D2+·Alert).** U.S. = county CV; every other region = leave-one-region-out (the global model never saw that region; the current model never saw anything outside the U.S.). Spearman vs. the label level.
+
+_U.S. (USDM): 80 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 83,600 | 0.625 | 0.898 | 0.501 | 0.625 | 0.703 | 0.411 |
+| Global model (v2 features, class-balanced) | 83,600 | 0.658 | 0.911 | 0.446 | 0.663 | 0.647 | 0.388 |
+| Global model (v2 features, unbalanced) | 83,600 | 0.679 | 0.896 | 0.454 | 0.592 | 0.431 | 0.243 |
+| Rule-based blend | 83,600 | 0.604 | 0.879 | 0.539 | 0.533 | 0.449 | 0.423 |
+| v2 features, trained on Europe only | 83,600 | 0.592 | 0.864 | 0.571 | 0.510 | 0.576 | 0.507 |
+
+_Europe (EDO CDI): 80 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 37,440 | 0.576 | 0.859 | 0.604 | 0.493 | 0.594 | 0.514 |
+| Global model (v2 features, class-balanced) | 37,440 | 0.581 | 0.847 | 0.619 | 0.488 | 0.592 | 0.539 |
+| Global model (v2 features, unbalanced) | 37,440 | 0.667 | 0.876 | 0.479 | 0.490 | 0.433 | 0.439 |
+| Rule-based blend | 37,440 | 0.590 | 0.887 | 0.533 | 0.526 | 0.447 | 0.499 |
+| v2 features, trained on U.S. only | 37,440 | 0.535 | 0.847 | 0.665 | 0.449 | 0.550 | 0.558 |
+
+_Australia (GDO SMIA, weak): 30 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 21,600 | 0.337 | 0.647 | 1.122 | 0.465 | 0.823 | 0.738 |
+| Global model (v2 features, class-balanced) | 21,600 | 0.522 | 0.847 | 0.681 | 0.486 | 0.616 | 0.641 |
+| Global model (v2 features, unbalanced) | 21,600 | 0.569 | 0.885 | 0.570 | 0.438 | 0.396 | 0.586 |
+| Rule-based blend | 21,600 | 0.524 | 0.877 | 0.614 | 0.424 | 0.409 | 0.580 |
+| v2 features, trained on U.S. only | 21,600 | 0.404 | 0.706 | 0.961 | 0.497 | 0.817 | 0.719 |
+
+_South America (GDO SMIA, weak): 30 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 21,600 | 0.514 | 0.794 | 0.763 | 0.406 | 0.547 | 0.578 |
+| Global model (v2 features, class-balanced) | 21,600 | 0.519 | 0.734 | 0.897 | 0.400 | 0.682 | 0.610 |
+| Global model (v2 features, unbalanced) | 21,600 | 0.638 | 0.834 | 0.603 | 0.372 | 0.282 | 0.366 |
+| Rule-based blend | 21,600 | 0.550 | 0.836 | 0.661 | 0.416 | 0.472 | 0.502 |
+| v2 features, trained on U.S. only | 21,600 | 0.558 | 0.790 | 0.723 | 0.404 | 0.567 | 0.572 |
+
+_Sub-Saharan Africa (GDO SMIA, weak): 30 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 21,600 | 0.394 | 0.696 | 1.029 | 0.241 | 0.494 | 0.725 |
+| Global model (v2 features, class-balanced) | 21,600 | 0.464 | 0.733 | 0.950 | 0.244 | 0.528 | 0.707 |
+| Global model (v2 features, unbalanced) | 21,600 | 0.601 | 0.831 | 0.642 | 0.299 | 0.248 | 0.612 |
+| Rule-based blend | 21,600 | 0.519 | 0.817 | 0.730 | 0.253 | 0.299 | 0.639 |
+| v2 features, trained on U.S. only | 21,600 | 0.449 | 0.697 | 0.963 | 0.277 | 0.520 | 0.718 |
+
+_South Asia (GDO SMIA, weak): 30 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 21,600 | 0.402 | 0.714 | 0.996 | 0.204 | 0.482 | 0.763 |
+| Global model (v2 features, class-balanced) | 21,600 | 0.467 | 0.759 | 0.896 | 0.267 | 0.532 | 0.704 |
+| Global model (v2 features, unbalanced) | 21,600 | 0.594 | 0.841 | 0.635 | 0.170 | 0.133 | 0.668 |
+| Rule-based blend | 21,600 | 0.557 | 0.850 | 0.633 | 0.288 | 0.287 | 0.629 |
+| v2 features, trained on U.S. only | 21,600 | 0.457 | 0.697 | 0.965 | 0.232 | 0.548 | 0.757 |
+
+_East Asia (GDO SMIA, weak): 30 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 21,600 | 0.497 | 0.793 | 0.778 | 0.398 | 0.527 | 0.624 |
+| Global model (v2 features, class-balanced) | 21,600 | 0.540 | 0.817 | 0.710 | 0.413 | 0.503 | 0.564 |
+| Global model (v2 features, unbalanced) | 21,600 | 0.614 | 0.821 | 0.638 | 0.326 | 0.274 | 0.490 |
+| Rule-based blend | 21,600 | 0.558 | 0.836 | 0.650 | 0.375 | 0.341 | 0.531 |
+| v2 features, trained on U.S. only | 21,600 | 0.521 | 0.754 | 0.816 | 0.415 | 0.648 | 0.625 |
+
+_All weak-label regions pooled: 150 sites_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 108,000 | 0.429 | 0.729 | 0.938 | 0.350 | 0.572 | 0.697 |
+| Global model (v2 features, class-balanced) | 108,000 | 0.502 | 0.778 | 0.827 | 0.361 | 0.574 | 0.649 |
+| Global model (v2 features, unbalanced) | 108,000 | 0.603 | 0.842 | 0.618 | 0.329 | 0.269 | 0.545 |
+| Rule-based blend | 108,000 | 0.542 | 0.843 | 0.658 | 0.353 | 0.365 | 0.571 |
+
+**Leave-one-climate-zone-out (harmonised scale)**
+
+_arid: 87 sites (US 13, EU 11, AUS 26, SAM 3, AFR 14, SAS 12, EAS 8)_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 64,093 | 0.352 | 0.684 | 1.077 | 0.438 | 0.820 | 0.629 |
+| Global model (v2 features, class-balanced) — zone held out | 64,093 | 0.414 | 0.749 | 0.923 | 0.436 | 0.732 | 0.576 |
+| Global model (v2 features, unbalanced) — zone held out | 64,093 | 0.502 | 0.801 | 0.752 | 0.436 | 0.575 | 0.513 |
+| Rule-based blend | 64,093 | 0.505 | 0.837 | 0.693 | 0.411 | 0.357 | 0.456 |
+
+_tropical: 42 sites (AUS 3, SAM 18, AFR 15, SAS 6)_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 30,240 | 0.498 | 0.777 | 0.807 | 0.238 | 0.380 | 0.675 |
+| Global model (v2 features, class-balanced) — zone held out | 30,240 | 0.476 | 0.694 | 1.020 | 0.279 | 0.590 | 0.694 |
+| Global model (v2 features, unbalanced) — zone held out | 30,240 | 0.627 | 0.819 | 0.636 | 0.272 | 0.235 | 0.575 |
+| Rule-based blend | 30,240 | 0.535 | 0.805 | 0.729 | 0.267 | 0.336 | 0.643 |
+
+_temperate: 79 sites (US 28, EU 21, AUS 1, SAM 9, AFR 1, SAS 9, EAS 10)_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 60,688 | 0.611 | 0.883 | 0.533 | 0.532 | 0.546 | 0.442 |
+| Global model (v2 features, class-balanced) — zone held out | 60,688 | 0.648 | 0.859 | 0.541 | 0.524 | 0.512 | 0.468 |
+| Global model (v2 features, unbalanced) — zone held out | 60,688 | 0.670 | 0.846 | 0.539 | 0.392 | 0.225 | 0.304 |
+| Rule-based blend | 60,688 | 0.610 | 0.888 | 0.524 | 0.536 | 0.483 | 0.424 |
+
+_cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
+
+| Model | n | Exact | Within ±1 | MAE | Spearman | D1+ hit | D1+ FAR |
+|---|---|---|---|---|---|---|---|
+| Current model (U.S.-trained, v1 features) | 74,019 | 0.613 | 0.879 | 0.539 | 0.490 | 0.560 | 0.561 |
+| Global model (v2 features, class-balanced) — zone held out | 74,019 | 0.658 | 0.849 | 0.508 | 0.483 | 0.678 | 0.622 |
+| Global model (v2 features, unbalanced) — zone held out | 74,019 | 0.718 | 0.885 | 0.423 | 0.436 | 0.385 | 0.481 |
+| Rule-based blend | 74,019 | 0.616 | 0.890 | 0.511 | 0.492 | 0.447 | 0.557 |
+
+**Weak-label quality.** SMIA thresholds (D0…D4, calibrated on U.S. sites): [-0.235, -0.762, -1.208, -1.732, -2.465]. Agreement of the SMIA label with USDM (U.S.): within ±1 0.844, Spearman 0.488; with CDI (Europe): within ±1 0.892, Spearman 0.540.
+
+- Global model (v2 features, class-balanced): us_at_least_current: True, eu_better_than_current: False, weak_better_than_current: True
+- Global model (v2 features, unbalanced): us_at_least_current: False, eu_better_than_current: False, weak_better_than_current: False
+
+**Adopted: False** (served: Current model (U.S.-trained, v1 features)). Model used in: US; elsewhere the rule-based blend.
 
 <!-- RESULTS:END -->
 
@@ -103,6 +227,12 @@ Adopted: **True** (contiguous U.S. only).
 - **MOD16 (V6).**
   - MOD16 has no irrigation input and is known to underestimate ET over irrigated fields in arid regions.
   - A large gap to the model is *expected* there. It is shown for transparency, not as a calibration target.
+
+- **AI drought classifier outside the U.S. (V8, EXP-11).**
+  - A global model (EDO CDI + GDO soil-moisture labels, location-agnostic features) beats the current U.S. model on held-out U.S. counties and on most held-out weak-label regions. On held-out Europe it falls narrowly behind.
+  - Outside the U.S. the rule-based blend beats both the current and the global model on within ±1 in every region. The ML models over-predict drought there: high hit rates, high false-alarm ratios.
+  - The ML classifier therefore stays U.S.-only, and the rules serve the rest of the world.
+  - The weak SMIA labels agree with USDM and CDI only moderately (Spearman 0.49 / 0.54), so those regional numbers are indicative.
 
 ### What was not validated (and why)
 - Field-level irrigation timing: this needs farm irrigation logs.

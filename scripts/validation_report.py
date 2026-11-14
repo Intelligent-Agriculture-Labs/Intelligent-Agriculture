@@ -1,6 +1,7 @@
 """Render the numeric tables of docs/VALIDATION.md from docs/validation/results.json.
 
-    python3 scripts/validation_report.py
+    python3 scripts/validation_report.py                    # all tables
+    python3 scripts/validation_report.py --drought-ml-only  # only V8 (from docs/validation/drought_ml.json)
 
 Only the block between <!-- RESULTS:BEGIN --> and <!-- RESULTS:END --> is replaced, so the hand-written
 interpretation around it stays. Numbers in the doc therefore always match the last validation run.
@@ -9,6 +10,7 @@ interpretation around it stays. Numbers in the doc therefore always match the la
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -183,7 +185,12 @@ def render_drought_ml(m: dict[str, Any]) -> list[str]:
         f"_trained: {m['trained_at']} · {m['n_sites']} sites in {len(m['regions'])} regions · "
         f"{m['n_samples']:,} labels · {m['cv']}_\n"
     )
-    names = {"current_model": "Current model (U.S.-trained, v1 features)", "new_model": "Global model (v2 features)", "rules": "Rule-based blend"}
+    names = {
+        "current_model": "Current model (U.S.-trained, v1 features)",
+        "new_model": "Global model (v2 features, class-balanced)",
+        "new_model_unbalanced": "Global model (v2 features, unbalanced)",
+        "rules": "Rule-based blend",
+    }
     us = m["per_region"]["US"]
     out.append("**U.S., native USDM scale (None…D4), counties held out (GroupKFold 5); Spearman vs. DSCI**\n")
     out += _rows(us["native_usdm"], names)
@@ -204,10 +211,8 @@ def render_drought_ml(m: dict[str, Any]) -> list[str]:
     for z, v in m["per_zone"].items():
         regs = ", ".join(f"{k} {n}" for k, n in v["regions"].items())
         out.append(f"_{z}: {v['n_sites']} sites ({regs})_\n")
-        out += _rows(
-            {"new_model": v["new_model_lozo"], "current_model": v["current_model"], "rules": v["rules"]},
-            {"current_model": names["current_model"], "new_model": "Global model, zone held out", "rules": names["rules"]},
-        )
+        zone_models = {k.removesuffix("_lozo"): x for k, x in v.items() if isinstance(x, dict) and "n" in x}
+        out += _rows(zone_models, {k: lab + (" — zone held out" if k.startswith("new_model") else "") for k, lab in names.items()})
         out.append("")
     lq = m["label_quality"]
     out.append(
@@ -222,20 +227,27 @@ def render_drought_ml(m: dict[str, Any]) -> list[str]:
         )
         + "\n"
     )
-    checks = ", ".join(f"{k}: {v}" for k, v in m["adoption_checks"].items())
+    for k, c in m["adoption_checks"].items():
+        out.append(f"- {names.get(k, k)}: " + ", ".join(f"{a}: {b}" for a, b in c.items()))
     out.append(
-        f"Adoption checks: {checks}. **Adopted: {m['adopted']}.** "
-        f"Model served in: {', '.join(m['model_regions']) or 'none'} (elsewhere: rule-based blend).\n"
+        f"\n**Adopted: {m['adopted']}** (served: {names.get(m['served_key'], m['served_key'])}). "
+        f"Model used in: {', '.join(m['model_regions'])}; elsewhere the rule-based blend.\n"
     )
     return out
 
 
 def main() -> None:
-    r = json.loads(RES.read_text())
     doc = DOC.read_text()
     a, b = "<!-- RESULTS:BEGIN -->", "<!-- RESULTS:END -->"
     i, j = doc.index(a) + len(a), doc.index(b)
-    DOC.write_text(doc[:i] + "\n" + render(r) + "\n" + doc[j:])
+    if "--drought-ml-only" in sys.argv:
+        # replace only the V8 subsection (keeps hand-written notes on pending checks elsewhere in the block)
+        k = doc.index("### V8 ", i)
+        v8 = "\n".join(render_drought_ml(json.loads((RES.parent / "drought_ml.json").read_text())))
+        DOC.write_text(doc[:k] + v8 + "\n" + doc[j:])
+    else:
+        r = json.loads(RES.read_text())
+        DOC.write_text(doc[:i] + "\n" + render(r) + "\n" + doc[j:])
     print("updated", DOC)
 
 

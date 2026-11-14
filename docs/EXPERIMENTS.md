@@ -85,6 +85,61 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
 
 - **Decision:** adopted for the contiguous U.S. (the validated domain), with probabilities shown. Outside the U.S. the rules stay, because transferring the model there is unvalidated.
 
+## EXP-11 Can the drought classifier work outside the U.S.? (not adopted)
+- **Question:** the EXP-09 classifier was trained and validated on U.S. counties only, so it is served only in the contiguous U.S. Could it be made accurate worldwide? We tested this with labels from other continents, location-agnostic features and block cross-validation that holds out whole regions.
+- **Labels** (`scripts/drought_labels_global.py`; sources and licences in DATA.md):
+  - **U.S.:** USDM, the same 80 counties as EXP-09.
+  - **Europe:** EDO Combined Drought Indicator v4.1, 80 sites, 2012–2024. Watch → D0, Warning → D1, Alert → D2+. Recovery → None; the temporary-recovery classes → D0. Each 0.5° box uses the same ≥ 50 %-area rule as the USDM labels.
+  - **Australia, South America, Sub-Saharan Africa, South Asia, East Asia:** 30 sites each, labelled from the GDO Soil Moisture Index Anomaly (2005–2024). This is a *weak* label: a single modelled indicator. Its D0–D4 thresholds are calibrated on the U.S. sites so that exceedance rates match USDM.
+  - **How weak:** the SMIA label agrees with USDM at within ±1 0.84 and Spearman 0.49, and with CDI at within ±1 0.89 and Spearman 0.54.
+- **Features v2** (`drought_ml.feature_matrix_v2`), each relative to the site's own climate:
+  - multi-scale SPI/SPEI, plus SPEI-90 three months earlier;
+  - Tmax anomalies as z-scores instead of °C;
+  - season phase measured from the locally warmest week, which replaces calendar day of year and works in both hemispheres;
+  - the climatological share of annual rain falling in the current 90-day window, and that rain in mm;
+  - aridity P/ET₀, mean Tmax and Walsh–Lawler rain seasonality.
+- **Validation** (`scripts/train_drought_ml.py`, 310 sites, 229,040 labels):
+  - U.S.: GroupKFold(5) by county; the global model also trains on all non-U.S. data.
+  - Every other region: leave-one-region-out.
+  - Climate zones (arid / tropical / temperate / cold): leave-one-zone-out.
+  - Transfer tests: Europe → U.S. and U.S. → Europe.
+  - Non-U.S. regions are compared on a harmonised None / D0 / D1 / D2+ scale.
+- **Adoption rule, declared before the first run:**
+  - U.S. within ±1 and Spearman must be at least as high as the current model's;
+  - **and** on held-out Europe and on the pooled weak-label regions, both must be higher.
+- **Result** (full tables in VALIDATION.md V8). "Current" = the U.S.-only model in production; "global" = the v2 class-balanced model.
+
+  | Held-out set | Within ±1: current / global / rules | Spearman: current / global / rules |
+  |---|---|---|
+  | U.S. counties (native D0–D4; Spearman vs. DSCI) | 0.879 / **0.894** / 0.862 | 0.654 / **0.687** / 0.548 |
+  | Europe (CDI) | 0.859 / 0.847 / **0.887** | 0.493 / 0.488 / **0.526** |
+  | Australia (SMIA) | 0.647 / 0.847 / **0.877** | 0.465 / **0.486** / 0.424 |
+  | South America (SMIA) | 0.794 / 0.734 / **0.836** | 0.406 / 0.400 / **0.416** |
+  | Sub-Saharan Africa (SMIA) | 0.696 / 0.733 / **0.817** | 0.241 / 0.244 / **0.253** |
+  | South Asia (SMIA) | 0.714 / 0.759 / **0.850** | 0.204 / 0.267 / **0.288** |
+  | East Asia (SMIA) | 0.793 / 0.817 / **0.836** | 0.398 / **0.413** / 0.375 |
+  | Weak regions pooled | 0.729 / 0.778 / **0.843** | 0.350 / **0.361** / 0.353 |
+
+- **Reading:**
+  - The location-agnostic features help:
+    - The global model is better than the current one in the U.S. and in four of five weak-label regions.
+    - The v2 features alone, trained only on U.S. data, transfer to Europe *worse* (within ±1 0.847, Spearman 0.449). The gain therefore needs the multi-continent labels, not just new features.
+  - It still loses to the current model in Europe, narrowly: within ±1 −0.012, Spearman −0.005.
+  - Outside the U.S., *both* ML models lose to the transparent rule-based blend on within ±1. In most regions they also lose on Spearman.
+  - The ML models flag drought far more often than the label systems do. Their D1+ hit rate and false-alarm ratio are both higher than the rules'.
+- **Second candidate (added after the first run, so declared as post hoc):** the same model without class balancing, on the hypothesis that balancing to U.S. class frequencies causes the over-prediction.
+  - Within ±1 rises everywhere (Europe 0.876, weak regions 0.842).
+  - But Spearman and D1+ detection fall sharply (U.S. 0.595 vs. 0.654; U.S. D1+ hit rate 0.43 vs. 0.70).
+  - It fails all three checks.
+- **Decision:** **not adopted.**
+  - The current U.S. model stays, served only in the contiguous U.S. Everywhere else the rule-based blend stays. On within ±1 it beat the current and the global model in every held-out region and was best overall in Europe and on the pooled weak regions (the unbalanced variant edged it only in Australia and Africa, at the cost of Spearman in Australia and of detection everywhere). So this is now evidence-based rather than a default.
+  - The serving code is ready for a region-gated global model (`model_regions` in the model metadata), but no such model ships.
+- **Caveats:**
+  - Re-running the current configuration on today's folds gives 0.879 / 0.654, not EXP-09's 0.889 / 0.679. The folds group counties differently, so differences of about 0.01 in within ±1 are at the level of fold noise.
+  - All comparisons above use identical samples and folds.
+  - Weak-label results measure agreement with one modelled soil-moisture product, not with expert drought maps.
+- **Next:** add expert-curated categorical labels where they exist (e.g. national drought monitors in Mexico/NADM, Canada and South Africa). Try an ordinal or regression target with per-region calibration instead of class balancing.
+
 ## EXP-10 Field boundary detection: superpixel growing vs. field-scale graph segmentation
 - **v1:** SLIC superpixels (~1,600) + colour/edge region growing at native resolution. It under-segmented badly: Fallon 1.6 of ~5.5 ha, Machakos one stripe, Córdoba 0.03 ha (the tap was on a hedge).
 - **v2 (adopted):**

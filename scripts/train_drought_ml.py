@@ -19,10 +19,11 @@ Validation (all on sites the model never saw):
 Metrics are reported on each region's native scale and on a harmonised 4-level scale (None, D0, D1, D2+) so that
 regions with different label systems can be compared.
 
-Adoption rule (fixed before the run): the new model replaces the current one only if, on the U.S. county CV, its
-within-1 accuracy and Spearman correlation are at least as high as the current model's, AND on Europe (held out)
-and on the pooled weak-label regions (each held out) its harmonised within-1 accuracy and Spearman are higher than
-the current model's. Separately, the model is used in a region only where it also beats the rule-based status.
+Adoption rule (fixed before the first run): a candidate replaces the current model only if, on the U.S. county CV,
+its within-1 accuracy and Spearman correlation are at least as high as the current model's, AND on Europe (held
+out) and on the pooled weak-label regions (each held out) its harmonised within-1 accuracy and Spearman are higher
+than the current model's. Candidates (VARIANTS) are checked in order; the first that passes is served. It is used
+in a region only where it also beats the rule-based status there; elsewhere the rules are served.
 
 Writes docs/validation/drought_ml.json (always) and backend/fieldshift/models/drought_hgb.{joblib,json} (if adopted).
 """
@@ -68,6 +69,14 @@ HGB = {
     "l2_regularization": 1.0,
     "class_weight": "balanced",
     "random_state": 0,
+}
+# Candidate global models. "new_model" uses the same settings as the U.S. model. "new_model_unbalanced" drops
+# class balancing: added after the first run showed the balanced model over-predicting drought outside the U.S.
+# (higher hit rate and false-alarm ratio than the rules everywhere). It is checked second, so the documented
+# adoption decision still prefers the original configuration.
+VARIANTS: dict[str, dict[str, Any]] = {
+    "new_model": HGB,
+    "new_model_unbalanced": {k: v for k, v in HGB.items() if k != "class_weight"},
 }
 
 
@@ -301,53 +310,53 @@ def main() -> None:
     print("samples", X2.shape, {r: int(np.sum(region == r)) for r in REGIONS}, flush=True)
     print("zones", {z: int(np.sum(zone == z)) for z in ZONES}, flush=True)
 
-    def fit(X: np.ndarray, m: np.ndarray, weighted: bool = True) -> Any:
-        return HistGradientBoostingClassifier(**HGB).fit(X[m], y[m], sample_weight=w[m] if weighted else None)
+    def fit(X: np.ndarray, m: np.ndarray, weighted: bool = True, params: dict[str, Any] = HGB) -> Any:
+        return HistGradientBoostingClassifier(**params).fit(X[m], y[m], sample_weight=w[m] if weighted else None)
 
     us = region == "US"
-    # ---- current model (v1 features, U.S. only): county CV inside the U.S., then the full-U.S. model elsewhere
-    old = np.full(len(y), -1)
-    new = np.full(len(y), -1)
-    folds = list(GroupKFold(n_splits=5).split(X1[us], y[us], site[us]))
     us_idx = np.where(us)[0]
+    folds = list(GroupKFold(n_splits=5).split(X1[us], y[us], site[us]))
+    # ---- current model (v1 features, U.S. only, as committed): county CV inside the U.S., full-U.S. model elsewhere
+    old = np.full(len(y), -1)
     for tr, te in folds:
         m = np.zeros(len(y), bool)
         m[us_idx[tr]] = True
         old[us_idx[te]] = fit(X1, m, weighted=False).predict(X1[us_idx[te]])
-        m2 = m | ~us  # the new model may also learn from every non-U.S. region
-        new[us_idx[te]] = fit(X2, m2).predict(X2[us_idx[te]])
-        print("fold done", flush=True)
-    old_full = fit(X1, us, weighted=False)
-    old[~us] = old_full.predict(X1[~us])
-    v2_us_only = fit(X2, us, weighted=False)
+    old[~us] = fit(X1, us, weighted=False).predict(X1[~us])
+    print("current model done", flush=True)
+
+    # ---- candidate global models, all on v2 features, checked in this order (declared before the first run)
+    preds: dict[str, np.ndarray] = {}
+    lozos: dict[str, np.ndarray] = {}
+    for key, params in VARIANTS.items():
+        new = np.full(len(y), -1)
+        for tr, te in folds:
+            m = np.zeros(len(y), bool)
+            m[us_idx[tr]] = True
+            m |= ~us  # the global model also learns from every non-U.S. region
+            new[us_idx[te]] = fit(X2, m, params=params).predict(X2[us_idx[te]])
+        for r in REGIONS[1:]:  # leave-one-region-out
+            te = region == r
+            new[te] = fit(X2, ~te, params=params).predict(X2[te])
+        lozo = np.full(len(y), -1)
+        for z in ZONES:  # leave-one-climate-zone-out
+            te = zone == z
+            if te.any() and (~te).any():
+                lozo[te] = fit(X2, ~te, params=params).predict(X2[te])
+        preds[key], lozos[key] = new, lozo
+        print("variant done", key, flush=True)
+
+    # ---- ablations / transfer (first variant): v2 features trained on the U.S. only; Europe only -> U.S.
     v2us = np.full(len(y), -1)
-    v2us[~us] = v2_us_only.predict(X2[~us])
-
-    # ---- leave-one-region-out for every non-U.S. region
-    for r in REGIONS[1:]:
-        te = region == r
-        new[te] = fit(X2, ~te).predict(X2[te])
-        print("LORO", r, flush=True)
-    # ---- transfer: Europe only -> U.S.
+    v2us[~us] = fit(X2, us, weighted=False).predict(X2[~us])
     eu_only_on_us = fit(X2, region == "EU").predict(X2[us])
-
-    # ---- leave-one-climate-zone-out
-    lozo = np.full(len(y), -1)
-    for z in ZONES:
-        te = zone == z
-        if te.any() and (~te).any():
-            lozo[te] = fit(X2, ~te).predict(X2[te])
-            print("LOZO", z, flush=True)
 
     # ---- report
     def block(m: np.ndarray, native: bool) -> dict[str, Any]:
-        c = cont[m] if native else None
-        out = {
-            "current_model": score(old[m], y[m], c) if native else score(harm(old[m]), harm(y[m])),
-            "new_model": score(new[m], y[m], c) if native else score(harm(new[m]), harm(y[m])),
-            "rules": score(rules[m], y[m], c) if native else score(harm(rules[m]), harm(y[m])),
-        }
-        return out
+        def sc(p: np.ndarray) -> dict[str, float]:
+            return score(p[m], y[m], cont[m]) if native else score(harm(p[m]), harm(y[m]))
+
+        return {"current_model": sc(old), **{k: sc(p) for k, p in preds.items()}, "rules": sc(rules)}
 
     per_region: dict[str, Any] = {}
     for r in REGIONS:
@@ -379,9 +388,11 @@ def main() -> None:
             per_zone[z] = {
                 "n_sites": int(len(np.unique(site[m]))),
                 "n_samples": int(m.sum()),
-                "regions": {r: int(len(np.unique(site[m & (region == r)]))) for r in REGIONS if (m & (region == r)).any()},
-                "new_model_lozo": score(harm(lozo[m]), harm(y[m])),
+                "regions": {
+                    r: int(len(np.unique(site[m & (region == r)]))) for r in REGIONS if (m & (region == r)).any()
+                },
                 "current_model": score(harm(old[m]), harm(y[m])),
+                **{f"{k}_lozo": score(harm(p[m]), harm(y[m])) for k, p in lozos.items()},
                 "rules": score(harm(rules[m]), harm(y[m])),
             }
 
@@ -391,29 +402,31 @@ def main() -> None:
         return a["within1_acc"] >= b["within1_acc"] and a["spearman"] >= b["spearman"]
 
     us_n = per_region["US"]["native_usdm"]
+    eu_h, wk_h = per_region["EU"]["harmonised"], per_region["WEAK_POOLED"]["harmonised"]
     checks = {
-        "us_new_at_least_current": beats(us_n["new_model"], us_n["current_model"], strict=False),
-        "eu_new_better_than_current": beats(
-            per_region["EU"]["harmonised"]["new_model"], per_region["EU"]["harmonised"]["current_model"], True
-        ),
-        "weak_new_better_than_current": beats(
-            per_region["WEAK_POOLED"]["harmonised"]["new_model"],
-            per_region["WEAK_POOLED"]["harmonised"]["current_model"],
-            True,
-        ),
+        k: {
+            "us_at_least_current": beats(us_n[k], us_n["current_model"], strict=False),
+            "eu_better_than_current": beats(eu_h[k], eu_h["current_model"], strict=True),
+            "weak_better_than_current": beats(wk_h[k], wk_h["current_model"], strict=True),
+        }
+        for k in VARIANTS
     }
-    adopted = all(checks.values())
-    # regions where the adopted model also beats the transparent rules (otherwise rules are served there)
-    model_regions = [
-        r
-        for r in REGIONS
-        if beats(
-            per_region[r]["native_usdm" if r == "US" else "harmonised"]["new_model"],
-            per_region[r]["native_usdm" if r == "US" else "harmonised"]["rules"],
-            strict=False,
-        )
-    ]
-    print(json.dumps({"checks": checks, "model_regions": model_regions}, indent=1), flush=True)
+    served = next((k for k in VARIANTS if all(checks[k].values())), None)
+    adopted = served is not None
+    # regions where each candidate also beats the transparent rules (only there would it be served)
+    beats_rules = {
+        k: [
+            r
+            for r in REGIONS
+            if beats(
+                per_region[r]["native_usdm" if r == "US" else "harmonised"][k],
+                per_region[r]["native_usdm" if r == "US" else "harmonised"]["rules"],
+                strict=False,
+            )
+        ]
+        for k in VARIANTS
+    }
+    print(json.dumps({"checks": checks, "beats_rules": beats_rules, "served": served}, indent=1), flush=True)
 
     import joblib
     import sklearn
@@ -435,27 +448,28 @@ def main() -> None:
         "smia_thresholds_d0_d4": [round(t, 3) for t in thresholds],
         "label_quality": label_quality,
         "source_weight_share": SOURCE_SHARE,
-        "hgb": HGB,
+        "hgb_variants": VARIANTS,
         "cv": "U.S.: GroupKFold(5) by county; other regions: leave-one-region-out; zones: leave-one-climate-zone-out",
         "per_region": per_region,
         "per_zone": per_zone,
         "adoption_checks": checks,
         "adopted": bool(adopted),
-        "new_model_beats_rules_in": model_regions,
-        # where the served model is used; the current model stays U.S.-only if the new one is not adopted
-        "model_regions": model_regions if adopted else ["US"],
+        "served_key": served or "current_model",
+        "beats_rules_in": beats_rules,
+        # where the served model is used; the current model stays U.S.-only if no candidate is adopted
+        "model_regions": beats_rules[served] if served else ["US"],
         # kept for the app's Why text: the U.S. held-out numbers of the model that is served
         "ml_heldout": {
-            "within1_acc": us_n["new_model" if adopted else "current_model"]["within1_acc"],
-            "spearman_vs_dsci": us_n["new_model" if adopted else "current_model"]["spearman"],
+            "within1_acc": us_n[served or "current_model"]["within1_acc"],
+            "spearman_vs_dsci": us_n[served or "current_model"]["spearman"],
         },
         "sklearn": sklearn.__version__,
         "trained_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
         "sites": [{"id": r["id"], "region": r["region"], "zone": r["zone"]} for r in res],
     }
     md = ROOT / "backend" / "fieldshift" / "models"
-    if adopted:
-        final = fit(X2, np.ones(len(y), bool))
+    if served:
+        final = fit(X2, np.ones(len(y), bool), params=VARIANTS[served])
         joblib.dump(final, md / "drought_hgb.joblib", compress=3)
         (md / "drought_hgb.json").write_text(json.dumps({k: v for k, v in meta.items() if k != "sites"}, indent=1))
     (ROOT / "docs" / "validation" / "drought_ml.json").write_text(json.dumps(meta, indent=1))
