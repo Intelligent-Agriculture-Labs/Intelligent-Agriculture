@@ -16,6 +16,7 @@ dependencies = [
   "rasterio>=1.4",
   "scikit-learn>=1.5",
   "scikit-image>=0.24",
+  "joblib>=1.4",
 ]
 
 [project.optional-dependencies]
