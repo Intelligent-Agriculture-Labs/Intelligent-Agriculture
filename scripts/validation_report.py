@@ -141,6 +141,18 @@ def render(r: dict[str, Any]) -> str:
         out.append("| Hutton days | " + " | ".join(str(b["per_year"][x]["hutton_days"]) for x in yrs) + " |")
         out.append(f"\n2009 (documented epidemic) ranks **{b['rank_of_2009']} of {b['n_years']}**.")
     out.append("")
+    mlp = RES.parent / "drought_ml.json"
+    if mlp.exists():
+        m = json.loads(mlp.read_text())
+        a, b = m["ml_heldout"], m["rules_same_samples"]
+        out.append("### V8 · AI drought classifier vs. rule-based status on U.S. counties the model never saw")
+        out.append(f"_trained: {m['trained_at']} · {m['n_counties']} counties · {m['n_samples']:,} weekly USDM labels · {m['cv']}_\n")
+        out.append("| Metric | AI classifier | Rule-based blend |")
+        out.append("|---|---|---|")
+        for k, lab in (("exact_acc", "Exact category"), ("within1_acc", "Within ±1 category"), ("mae_levels", "Mean abs. error (levels)"),
+                       ("spearman_vs_dsci", "Spearman vs. DSCI"), ("d1_hit_rate", "D1+ hit rate"), ("d1_false_alarm_ratio", "D1+ false-alarm ratio")):
+            out.append(f"| {lab} | {fmt(a[k], 3)} | {fmt(b[k], 3)} |")
+        out.append(f"\nAdopted: **{m['adopted']}** (contiguous U.S. only).\n")
     return "\n".join(out)
 
 

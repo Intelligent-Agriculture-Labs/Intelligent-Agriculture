@@ -8,7 +8,7 @@ How to read this page:
 
 <!-- RESULTS:BEGIN -->
 ### V1 · Reference ET₀ (FieldShift FAO-56 PM from NASA POWER) vs. ERA5 FAO-56 ET₀, daily 2015–2024
-_run: 2026-11-14T15:39:14+00:00_
+_run: 2026-11-14T18:26:34+00:00_
 
 | Site | n days | daily r | daily RMSE (mm/d) | daily bias (mm/d) | monthly r | monthly bias (mm/mo) |
 |---|---|---|---|---|---|---|
@@ -18,7 +18,7 @@ _run: 2026-11-14T15:39:14+00:00_
 | Machakos, KE | 3653 | 0.86 | 0.77 | 0.56 | 0.905 | 16.9 |
 
 ### V2 · Rain-fed root-zone water (1 − Dr/TAW) vs. ERA5-Land 7–100 cm soil moisture
-_run: 2026-11-14T15:39:20+00:00_
+_run: 2026-11-14T18:26:35+00:00_
 
 | Site | crop | seasons | median r per season | pooled standardized r |
 |---|---|---|---|---|
@@ -33,36 +33,50 @@ _run: –_
 |---|---|---|---|---|
 
 ### V4 · Drought status vs. U.S. Drought Monitor (weekly 2005–2024, county DSCI)
-_run: 2026-11-14T15:40:01+00:00_
+_run: 2026-11-14T18:28:15+00:00_
 
 | County | weeks | ρ SPI-90 | ρ SPEI-90 | ρ SPEI-12 | ρ status v1 | ρ status v2 (used) | D1 hit rate v2 | D1 false-alarm ratio v2 |
 |---|---|---|---|---|---|---|---|---|
-| Fallon, NV | 1045 | 0.14 | 0.29 | – | – | – | – | – |
-| Ames, IA | 1045 | 0.63 | 0.70 | – | – | – | – | – |
+| Fallon, NV | 1045 | 0.14 | 0.29 | 0.67 | 0.22 | 0.38 | 0.42 | 0.25 |
+| Ames, IA | 1045 | 0.63 | 0.70 | 0.65 | 0.66 | 0.74 | 0.68 | 0.37 |
 
 ### V5 · Documented drought years in simulated rain-fed yields
-_run: 2026-11-14T15:40:01+00:00_
+_run: 2026-11-14T18:28:15+00:00_
 
 | Site / season | years simulated | documented drought year | rank (1 = worst) |
 |---|---|---|---|
-| Ames, IA maize | 40 | 2012 | **5** |
-| Ames, IA maize | 40 | 1988 | **6** |
+| Ames, IA maize | 40 | 2012 | **1** |
+| Ames, IA maize | 40 | 1988 | **2** |
 | Machakos, KE maize (short rains) | 34 | 2016 | **6** |
 | Machakos, KE maize (short rains) | 34 | 2005 | **8** |
 
-### V6 · Irrigated alfalfa ET (season model + off-season evaporation) vs. MODIS MOD16A2GF, Fallon
+### V6 · Irrigated alfalfa ET at the Fallon field: model vs NASA ECOSTRESS (70 m) and MODIS MOD16 (500 m)
 _run: 2026-11-14T15:44:56+00:00_
 
 *unavailable: no live data and no cache for https://modis.ornl.gov/rst/api/v1/MOD16A2GF/dates*
 
 ### V7 · Late-blight weather risk (Hutton criteria, NASA POWER hourly), Ithaca NY, Jun–Aug
-_run: 2026-11-14T15:40:11+00:00_
+_run: 2026-11-14T18:28:15+00:00_
 
 | Year | 2005 | 2006 | 2007 | 2008 | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Hutton days | 42 | 60 | 34 | 62 | 57 | 33 | 47 | 25 | 57 | 49 | 45 |
 
 2009 (documented epidemic) ranks **3 of 11**.
+
+### V8 · AI drought classifier vs. rule-based status on U.S. counties the model never saw
+_trained: 2026-11-14T17:59:37+00:00 · 80 counties · 83,600 weekly USDM labels · GroupKFold(5) by county_
+
+| Metric | AI classifier | Rule-based blend |
+|---|---|---|
+| Exact category | 0.610 | 0.590 |
+| Within ±1 category | 0.889 | 0.862 |
+| Mean abs. error (levels) | 0.536 | 0.595 |
+| Spearman vs. DSCI | 0.679 | 0.548 |
+| D1+ hit rate | 0.700 | 0.449 |
+| D1+ false-alarm ratio | 0.389 | 0.423 |
+
+Adopted: **True** (contiguous U.S. only).
 
 <!-- RESULTS:END -->
 
