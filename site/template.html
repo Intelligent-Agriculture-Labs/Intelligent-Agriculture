@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FieldShift</title>
+<meta name="description" content="FieldShift turns 40 years of NASA Earth observations into this week's farm decisions and a science-based crop-rotation plan for every field. NASA Space Apps Challenge 2026.">
+<link rel="icon" href="assets/icon.svg">
+<style>
+:root{--bg:#f6f7f2;--card:#fff;--ink:#17231a;--muted:#55635a;--line:#e3e8df;--accent:#2f6b3a;--accent-ink:#fff;--soft:#eaf1e5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101611;--card:#172019;--ink:#e8efe6;--muted:#a3b2a6;--line:#25302a;--accent:#7fc28b;--accent-ink:#0d1a10;--soft:#1c2a1f}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.hero{padding:72px 0 40px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:10px 0 16px;letter-spacing:-.02em}
+.lead{font-size:clamp(17px,2.2vw,21px);color:var(--muted);max-width:720px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600}
+.btn.secondary{background:transparent;color:var(--accent);border:1px solid var(--line)}
+section{padding:48px 0;border-top:1px solid var(--line)}
+h2{font-size:28px;margin:0 0 8px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 28px;max-width:720px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}.card p{margin:0;color:var(--muted);font-size:15px}
+.shots{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));align-items:start}
+.shots figure{margin:0}.shots img{width:100%;border-radius:18px;border:1px solid var(--line);background:var(--card)}
+.shots figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+video{width:100%;border-radius:16px;border:1px solid var(--line);background:#000}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.stat{background:var(--soft);border-radius:14px;padding:16px}.stat b{display:block;font-size:26px}.stat span{color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+code{background:var(--soft);padding:2px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data</div>
+  <h1>FieldShift</h1>
+  <p class="lead">40 years of NASA Earth observations, turned into <strong>this week's farm decisions</strong> and a <strong>science-based crop-rotation plan for every field</strong>, in plain language and six languages. Works on web, iOS and Android, online or offline.</p>
+  <div class="cta"><a class="btn" href="#video">Watch the 30-second demo</a><a class="btn secondary" href="{{REPO_URL}}">Source code</a><a class="btn secondary" href="#run">Run it yourself</a></div>
+</header>
+
+<section id="video"><h2>Demo</h2><p class="sub">Real screen captures of the running app with English captions.</p>
+<video controls preload="metadata" poster="assets/poster.png"><source src="assets/fieldshift-demo-30s.mp4" type="video/mp4"></video></section>
+
+<section><h2>What a farmer gets</h2><p class="sub">Simple on the surface, deep underneath: every number is one tap from its NASA evidence.</p>
+<div class="grid">
+<div class="card"><h3>This week</h3><p>At most three actions: when and how much to irrigate, drought status, disease and pest risk, frost and heat — each with a plain "Why?".</p></div>
+<div class="card"><h3>Your field from space</h3><p>Tap your field and AI finds its boundary. 10 m Sentinel-2 greenness history, cuttings seen from space, AI management zones, terrain maps of erosion, wetness and frost.</p></div>
+<div class="card"><h3>Plan the next years</h3><p>A multi-year rotation plan per field, checked against 30 soil-borne diseases and pests, nitrogen, soil cover and water — with an AI-optimised alternative and its impact.</p></div>
+<div class="card"><h3>Everywhere</h3><p>Accounts that sync phone and PC, offline mode, SMS-length summaries, and six languages incl. Swahili and Hindi.</p></div>
+</div></section>
+
+<section><h2>Screens</h2>
+<div class="shots">{{SHOTS}}</div></section>
+
+<section><h2>Measured impact</h2><p class="sub">FieldShift planner on the four demo farm fields: the current crop every year vs. the plan FieldShift suggests, simulated with NASA POWER weather at each field (<code>scripts/site_impact.py</code>; model estimates, not measured on farms).</p>
+<div class="stats">{{IMPACT}}</div></section>
+
+<section><h2>NASA data, used for real</h2>
+<table><tr><th>Data</th><th>What FieldShift computes</th></tr>
+<tr><td>NASA POWER (1984 → today)</td><td>FAO-56 crop water demand and soil-water balance, crop and pest development, drought indices, 40-year climate trends, every simulated season</td></tr>
+<tr><td>SMAP L3E / L4 soil moisture</td><td>Root-zone moisture percentile in the drought status; validation</td></tr>
+<tr><td>ECOSTRESS (70 m) · MODIS NDVI / ET / LST</td><td>Measured field water use; vegetation anomalies; ET cross-checks</td></tr>
+<tr><td>SRTM elevation · NASA GIBS</td><td>Slope, erosion (RUSLE), wetness, frost hollows, management zones; map layers</td></tr>
+<tr><td>Partner data: Copernicus Sentinel-2, ERA5</td><td>10 m field greenness, phenology, AI zones, satellite crop coefficient; validation</td></tr>
+</table></section>
+
+<section><h2>Validated</h2><p class="sub">Every model output that drives advice is compared with an independent reference — including where it is weak.</p>
+<div class="stats">{{VALIDATION}}</div></section>
+
+<section id="run"><h2>Run it yourself</h2><p class="sub">One command, no account, works offline with the bundled NASA demo data.</p>
+<p><code>git clone {{REPO_URL}} &amp;&amp; cd fieldshift &amp;&amp; FIELDSHIFT_OFFLINE=1 docker compose up --build</code> → open <code>http://localhost:8080</code></p></section>
+
+<footer>FieldShift · Apache-2.0 · Built for the NASA Space Apps Challenge 2026. Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, GIBS; Copernicus Sentinel-2 &amp; ERA5; ISRIC SoilGrids; Open-Meteo; U.S. Drought Monitor. Imagery: Esri, Maxar, Earthstar Geographics. Use of SI (AI) tools is disclosed in the repository README. FieldShift supports, and does not replace, farmer judgement and local advice.</footer>
+</div>
+</body>
+</html>

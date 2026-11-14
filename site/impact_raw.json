@@ -1,0 +1,94 @@
+{
+ "fallon_nv": {
+  "vs": "optimised plan",
+  "years": 4,
+  "per_ha": {
+   "water_saved_mm_per_yr": 355,
+   "water_saved_m3_per_ha_per_yr": 3548,
+   "n_fertiliser_saved_kg_ha": 0,
+   "co2e_avoided_kg_ha": 0,
+   "soil_kept_t_ha": -0.0,
+   "margin_gain_usd_ha": -1201,
+   "bare_days_fewer_per_yr": -5
+  },
+  "field_area_ha": 5.53,
+  "field_total": {
+   "water_saved_m3_per_yr": 19618,
+   "n_fertiliser_saved_kg": 0,
+   "co2e_avoided_kg": 0,
+   "soil_kept_t": 0,
+   "margin_gain_usd": -6642
+  },
+  "headline": "Over these years the optimised plan would give 355 mm less irrigation per year. Trade-off: $1201/ha less indicative margin.",
+  "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted."
+ },
+ "machakos_ke": {
+  "vs": "optimised plan",
+  "years": 4,
+  "per_ha": {
+   "water_saved_mm_per_yr": 0,
+   "water_saved_m3_per_ha_per_yr": 0,
+   "n_fertiliser_saved_kg_ha": 105,
+   "co2e_avoided_kg_ha": 450,
+   "soil_kept_t_ha": 3.1,
+   "margin_gain_usd_ha": 3911,
+   "bare_days_fewer_per_yr": -20
+  },
+  "field_area_ha": 2.39,
+  "field_total": {
+   "water_saved_m3_per_yr": 0,
+   "n_fertiliser_saved_kg": 251,
+   "co2e_avoided_kg": 1076,
+   "soil_kept_t": 7,
+   "margin_gain_usd": 9339
+  },
+  "headline": "Over these years the optimised plan would give 105 kg less fertiliser N per ha (≈ 450 kg CO₂e); 3.1 t/ha more topsoil kept; +$3911/ha indicative margin.",
+  "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted."
+ },
+ "cordoba_es": {
+  "vs": "optimised plan",
+  "years": 4,
+  "per_ha": {
+   "water_saved_mm_per_yr": 0,
+   "water_saved_m3_per_ha_per_yr": 0,
+   "n_fertiliser_saved_kg_ha": 55,
+   "co2e_avoided_kg_ha": 236,
+   "soil_kept_t_ha": 1.1,
+   "margin_gain_usd_ha": 1328,
+   "bare_days_fewer_per_yr": 71
+  },
+  "field_area_ha": 11.27,
+  "field_total": {
+   "water_saved_m3_per_yr": 0,
+   "n_fertiliser_saved_kg": 620,
+   "co2e_avoided_kg": 2659,
+   "soil_kept_t": 12,
+   "margin_gain_usd": 14964
+  },
+  "headline": "Over these years the optimised plan would give 55 kg less fertiliser N per ha (≈ 236 kg CO₂e); 1.1 t/ha more topsoil kept; +$1328/ha indicative margin.",
+  "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted."
+ },
+ "ames_ia": {
+  "vs": "optimised plan",
+  "years": 4,
+  "per_ha": {
+   "water_saved_mm_per_yr": 0,
+   "water_saved_m3_per_ha_per_yr": 0,
+   "n_fertiliser_saved_kg_ha": 0,
+   "co2e_avoided_kg_ha": 0,
+   "soil_kept_t_ha": 13.6,
+   "margin_gain_usd_ha": 1311,
+   "bare_days_fewer_per_yr": 148
+  },
+  "field_area_ha": 47.89,
+  "field_total": {
+   "water_saved_m3_per_yr": 0,
+   "n_fertiliser_saved_kg": 0,
+   "co2e_avoided_kg": 0,
+   "soil_kept_t": 652,
+   "margin_gain_usd": 62780
+  },
+  "headline": "Over these years the optimised plan would give 13.6 t/ha more topsoil kept; +$1311/ha indicative margin.",
+  "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted."
+ }
+}

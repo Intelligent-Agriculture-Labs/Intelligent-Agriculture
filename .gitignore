@@ -21,3 +21,4 @@ app/playwright-report/
 *.ipa
 /data_raw/
 app/build-artifacts/
+site/dist/
