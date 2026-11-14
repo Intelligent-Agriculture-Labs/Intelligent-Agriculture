@@ -167,6 +167,64 @@ def exp_soil_water() -> dict[str, Any]:
     return res
 
 
+# --------------------------------------------------------------------------- 2b. soil water vs SMAP L4
+def exp_smap() -> dict[str, Any]:
+    """Rain-fed FieldShift root-zone relative water vs. NASA SMAP L4 root-zone soil moisture (AppEEARS), growing seasons."""
+    from fieldshift.science.cropmodel import crop
+
+    cases = {
+        "ames_ia": ("maize", "05-01"),
+        "cordoba_es": ("winter_wheat", "11-15"),
+        "machakos_ke": ("maize", "10-20"),
+    }
+    res: dict[str, Any] = {}
+    for sid, (cid, md) in cases.items():
+        lat, lon = SITES[sid]
+        pts = sources.smap_points(lat, lon)
+        if not pts:
+            res[sid] = {"status": "no SMAP points file"}
+            continue
+        smap = {
+            dt.date.fromisoformat(d): v
+            for d, v in zip(pts["dates"], pts["l4_rootzone"], strict=True)
+            if v is not None
+        }
+        ctx = build(lat, lon, AS_OF)
+        rs, all_m, all_r = [], [], []
+        for y in range(2015, 2024):
+            p = dt.date(y, int(md[:2]), int(md[3:]))
+            if p < dt.date(2015, 4, 1):
+                continue
+            req = gdd_requirement(crop(cid), ctx.weather, p, list(range(2005, 2020)))
+            r = simulate(
+                cid,
+                ctx.weather,
+                p,
+                taw_per_m=ctx.taw_per_m,
+                strategy="rainfed",
+                gdd_req=req,
+                record_daily=True,
+            )
+            dates = [dt.date.fromisoformat(x) for x in r.daily["date"]]
+            rel = 1 - np.array(r.daily["dr"]) / np.maximum(1, np.array(r.daily["taw"]))
+            ref = np.array([smap.get(d, np.nan) for d in dates])
+            m = metrics(rel, ref)
+            if m["n"] > 30:
+                rs.append(m["r"])
+                ok = np.isfinite(ref)
+                all_m.append((rel[ok] - rel[ok].mean()) / (rel[ok].std() or 1))
+                all_r.append((ref[ok] - ref[ok].mean()) / (ref[ok].std() or 1))
+        pooled = metrics(np.concatenate(all_m), np.concatenate(all_r)) if all_m else {"r": None}
+        res[sid] = {
+            "crop": cid,
+            "seasons": len(rs),
+            "median_r_per_season": round(float(np.nanmedian(rs)), 3) if rs else None,
+            "pooled_standardized_r": pooled["r"],
+            "per_season_r": rs,
+        }
+    return res
+
+
 # --------------------------------------------------------------------------- 3. drought vs U.S. Drought Monitor
 def exp_usdm() -> dict[str, Any]:
     """Weekly FieldShift drought indicators vs. USDM county Drought Severity & Coverage Index (DSCI = Σ cumulative % area D0–D4)."""

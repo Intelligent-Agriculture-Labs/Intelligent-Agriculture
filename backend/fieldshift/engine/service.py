@@ -572,7 +572,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 "SPI uses ~50 km NASA POWER rain; local storms can be missed.",
                 "SMAP soil moisture is a 9 km footprint and only the top ~5 cm.",
             ],
-            ["nasa_power", "smap_l3e", "modis_ndvi"],
+            ["nasa_power", "smap_l3e", "smap_l4", "modis_ndvi"],
         ),
     }
     if level >= rules()["drought"]["card_min_level"]:
@@ -622,6 +622,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "soilgrids",
             "modis_ndvi",
             "smap_l3e",
+            "smap_l4",
             "mod16",
         )
     ]
@@ -755,13 +756,59 @@ def _ndvi_block(
 
 
 def _smap_block(ctx: FieldContext, series: list[dict[str, Any]]) -> float | None:
+    """SMAP soil moisture: L4 root-zone percentile (preferred, already a climatological percentile) or L3E surface."""
+    today = ctx.today
+    pts = sources.smap_points(ctx.lat, ctx.lon)
+    if pts:
+        dates = [dt.date.fromisoformat(x) for x in pts["dates"]]
+        keep = [k for k, d in enumerate(dates) if (today - dt.timedelta(days=365)) <= d <= today]
+        if keep:
+            kd = [dates[k] for k in keep]
+            series.append(
+                _series(
+                    "smap_sm",
+                    "Surface soil moisture (SMAP L3E, 9 km)",
+                    "m³/m³",
+                    kd,
+                    [np.nan if pts["l3e_sm"][k] is None else pts["l3e_sm"][k] for k in keep],
+                    "smap_l3e",
+                    "observed",
+                )
+            )
+            series.append(
+                _series(
+                    "smap_rootzone",
+                    "Root-zone soil moisture (SMAP L4, 0–100 cm, 9 km)",
+                    "m³/m³",
+                    kd,
+                    [np.nan if pts["l4_rootzone"][k] is None else pts["l4_rootzone"][k] for k in keep],
+                    "smap_l4",
+                    "observed",
+                )
+            )
+            ctx.statuses["smap_l3e"] = "cache"
+            ctx.statuses["smap_l4"] = "cache"
+            if not ctx.enrich.get("smap_l3e"):
+                ctx.enrich["smap_l3e"] = [
+                    (dates[k], pts["l3e_sm"][k]) for k in keep if pts["l3e_sm"][k] is not None
+                ]
+            ctx.enrich.setdefault(
+                "smap_l4",
+                [(dates[k], pts["l4_rootzone"][k]) for k in keep if pts["l4_rootzone"][k] is not None],
+            )
+            recent = [pts["l4_rootzone_pctl"][k] for k in keep[-3:] if pts["l4_rootzone_pctl"][k] is not None]
+            if recent and (today - kd[-1]).days <= 10:
+                p = float(np.mean(recent))
+                return round(p * 100 if p <= 1.0 else p, 1)
     sm = ctx.enrich.get("smap_l3e") or []
     if len(sm) < 5:
         return None
-    dates = [d for d, _ in sm]
+    sdates = [d for d, _ in sm]
     vals = np.array([v for _, v in sm])
     series.append(
-        _series("smap_sm", "Surface soil moisture (SMAP, 9 km)", "m³/m³", dates, vals, "smap_l3e", "observed")
+        _series(
+            "smap_sm", "Surface soil moisture (SMAP, 9 km)", "m³/m³", sdates, vals, "smap_l3e", "observed"
+        )
     )
     if len(vals) >= 20:
         return drt.percentile_of(float(np.mean(vals[-3:])), vals)

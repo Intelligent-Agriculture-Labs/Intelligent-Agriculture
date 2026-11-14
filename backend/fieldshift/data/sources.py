@@ -12,9 +12,12 @@ Enrichment (NASA products via ORNL DAAC Global Subsets REST API, no auth, can be
 from __future__ import annotations
 
 import datetime as dt
+import gzip
+import json
 import math
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -90,6 +93,14 @@ SOURCES: dict[str, dict[str, Any]] = {
         url="https://nsidc.org/data/spl3smp_e",
         resolution="9 km, daily (2–3 day revisit)",
         latency="~2 days",
+        is_nasa=True,
+    ),
+    "smap_l4": dict(
+        name="SMAP L4 surface & root-zone soil moisture SPL4SMGP (via AppEEARS)",
+        provider="NASA GMAO / NSIDC DAAC, AppEEARS",
+        url="https://nsidc.org/data/spl4smgp",
+        resolution="9 km, 3-hourly (daily mean)",
+        latency="~3 days",
         is_nasa=True,
     ),
     "era5_land": dict(
@@ -377,3 +388,22 @@ def power_hourly(lat: float, lon: float, start: dt.date, end: dt.date) -> dict[s
         "temperature_2m": [p["T2M"][k] if p["T2M"][k] > -998 else None for k in keys],
         "relative_humidity_2m": [p["RH2M"][k] if p["RH2M"].get(k, -999) > -998 else None for k in keys],
     }
+
+
+SMAP_DIR = Path(__file__).resolve().parent / "smap_points"
+
+
+def smap_points(lat: float, lon: float, max_km: float = 5.0) -> dict[str, Any] | None:
+    """Pre-extracted SMAP (L3E + L4) daily series for the nearest demo site within max_km (AppEEARS batch job).
+    Live SMAP extraction for arbitrary points needs Earthdata Login + an async AppEEARS task (ROADMAP)."""
+    best = None
+    for f in sorted(SMAP_DIR.glob("*.json.gz")):
+        try:
+            with gzip.open(f, "rt") as fh:
+                d = json.load(fh)
+        except (OSError, json.JSONDecodeError):
+            continue
+        km = math.hypot((d["lat"] - lat) * 111.3, (d["lon"] - lon) * 111.3 * math.cos(math.radians(lat)))
+        if km <= max_km and (best is None or km < best[0]):
+            best = (km, d)
+    return best[1] if best else None
