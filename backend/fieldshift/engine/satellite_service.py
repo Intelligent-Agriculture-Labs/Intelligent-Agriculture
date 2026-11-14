@@ -186,7 +186,9 @@ def _analyse(key: str, req: dict[str, Any], start: dt.date, end: dt.date) -> Non
         if r is None:
             continue
         nd = sat.ndvi(r["red"], r["nir"])
-        valid = np.isin(r["scl"], sat.VALID_SCL) & np.isfinite(nd)
+        valid = (
+            np.isin(r["scl"], sat.VALID_SCL) & np.isfinite(nd) & (r["red"] > 0.002) & (r["nir"] > 0.02)
+        )  # physical reflectance only
         nd = np.where(valid, nd, np.nan)
         vf = float(valid[mask].mean())
         f = nd[mask]

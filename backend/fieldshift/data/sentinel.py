@@ -97,10 +97,18 @@ def search(
         if d not in out or cc < out[d]["cloud_pct"]:  # same day from overlapping tiles: keep the clearest
             assets = it["assets"]
 
-            def band(name: str, assets: dict[str, Any] = assets) -> dict[str, Any]:
+            # Earth Search v1: when `earthsearch:boa_offset_applied` is true the DNs are already harmonized to the pre-04.00
+            # convention (reflectance = DN / 10000) even though raster:bands still lists offset −0.1 — applying it twice
+            # pushes dark red reflectance below zero and saturates NDVI at 1 (found in the Fallon test, see EXPERIMENTS EXP-11).
+            offset_applied = bool(it["properties"].get("earthsearch:boa_offset_applied", False))
+
+            def band(
+                name: str, assets: dict[str, Any] = assets, offset_applied: bool = offset_applied
+            ) -> dict[str, Any]:
                 a = assets[name]
                 rb = (a.get("raster:bands") or [{}])[0]
-                return {"href": a["href"], "scale": rb.get("scale", 0.0001), "offset": rb.get("offset", 0.0)}
+                off = 0.0 if offset_applied else rb.get("offset", 0.0)
+                return {"href": a["href"], "scale": rb.get("scale", 0.0001), "offset": off}
 
             try:
                 out[d] = {
