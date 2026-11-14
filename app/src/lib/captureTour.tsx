@@ -50,9 +50,13 @@ export function CaptureTour() {
       );
       await step("home-replay", () => setField({ ...base, as_of: p.replay_date ?? null }), 14000);
       await step("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "irrigate" } }), 9000);
+      await step("map", () => router.replace({ pathname: "/map", params: { view: "terrain" } }), 16000);
+      await step("satellite", () => router.replace({ pathname: "/map", params: { view: "satellite" } }), 14000);
+      await step("plan", () => router.replace("/plan"), 16000);
       await step("rotations", () => router.replace("/rotations"), 30000);
       await step("whatif", () => router.replace("/whatif"), 20000);
       await step("climate", () => router.replace("/climate"), 12000);
+      await step("field-editor", () => router.push("/field-editor"), 10000);
       await step("done", () => router.replace("/home"), 1000);
     })();
     return () => {

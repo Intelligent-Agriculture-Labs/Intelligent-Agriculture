@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
-import { Redirect } from "expo-router";
+import { Redirect, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "@/api/client";
@@ -40,7 +40,10 @@ export default function MapScreen() {
   const sys = settings.units;
   const [active, setActive] = useState<LayerId>("zones");
   const [base, setBase] = useState<BaseLayer>("esri");
-  const [view, setView] = useState<"terrain" | "satellite">("terrain");
+  const params = useLocalSearchParams<{ view?: string }>();
+  // the URL parameter (?view=satellite) decides until the user toggles the segmented control
+  const [viewChoice, setView] = useState<"terrain" | "satellite" | null>(null);
+  const view: "terrain" | "satellite" = viewChoice ?? (params.view === "satellite" ? "satellite" : "terrain");
   const [opacity, setOpacity] = useState(0.75);
   const [showSources, setShowSources] = useState(false);
   const retries = useRef(0);
