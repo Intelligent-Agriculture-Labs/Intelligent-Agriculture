@@ -1,0 +1,1273 @@
+# FieldShift EXTRA crop parameter table — version 1.0.0
+# Same schema as crops.yaml (see header there). Each crop carries its own `sources:` list.
+#   kc_*, stages, root_m, p ... FAO-56 Tables 11, 12, 22 (Allen et al. 1998) — the table row is named in `sources`.
+#                              root_m = [initial, maximum]; maximum usually the midpoint of the Table 22 range.
+#                              When a range is given in FAO-56 (e.g. Kc_end 0.25–0.4) the midpoint is used.
+#   ky ........................ FAO-33 seasonal values as reproduced in FAO-66 Table 1; crops without an FAO-33 value
+#                              say so in `sources` (estimate).
+#   wp, hi .................... AquaCrop (Steduto et al. 2009; Raes et al. 2009; FAO-66) where available, else estimates.
+#   prices / costs ............ INDICATIVE 2023–24 orders of magnitude (USD per tonne of MARKETED product; USD/ha).
+#                              Edit locally — they are not a market forecast.
+#   typical_yield_t_ha ........ grain for cereals/pulses/oilseeds, FRESH weight for vegetables/roots/cane,
+#                              hay dry matter for forages, lint for cotton, 0 for cover crops.
+#   low_confidence: true ...... crop or key values not from FAO-56 (analogues or literature estimates).
+# Sugarcane and cassava are multi-season crops; they are modelled as one cycle per year (type annual).
+# `default_planting` (bottom) mirrors rotations.yaml default_planting (northern-hemisphere temperate calendar).
+
+version: "1.0.0"
+crops:
+  oats:
+    name: Oats (spring)
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.3
+    kc_mid: 1.15
+    kc_end: 0.25
+    stages: [20, 25, 60, 30]
+    root_m: [0.3, 1.25]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.4
+    calib: 0.85
+    t_base: 0
+    t_heat: 32
+    t_kill: -6
+    season_days: 135
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.6
+    typical_yield_t_ha: 4.0
+    price_usd_t: 260
+    cost_usd_ha: 550
+    pests: [crown rust, cereal cyst nematode, barley yellow dwarf, frit fly]
+    breaks: [take-all, eyespot (partial)]
+    sources:
+    - 'Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Kc: Table 12 ''Oats''; stages: Table 11 ''Barley/Oats/Wheat'' (Mar/Apr, 35–45°L); Zr 1.0–1.5 m,
+      p 0.55: Table 22'
+    - 'Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky: no FAO-33 value for oats; spring-cereal value 1.0
+      used (as for barley in crops.yaml)'
+    - 'Steduto P. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: I, https://doi.org/10.2134/agronj2008.0139s — WP* 15 g/m² (C3 cereal default)'
+    - 'Porter J.R. et al. 1999, Temperatures and the growth and development of wheat: a review, https://doi.org/10.1016/S1161-0301(98)00047-1'
+    - 'Luo Q. 2011, Temperature thresholds and crop production: a review, https://doi.org/10.1007/s10584-011-0028-6'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  winter_rye:
+    name: Winter rye (grain)
+    family: Poaceae
+    type: annual
+    icon: flower
+    low_confidence: true
+    kc_ini: 0.7
+    kc_mid: 1.15
+    kc_end: 0.25
+    stages: [30, 140, 35, 25]
+    root_m: [0.3, 1.8]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.4
+    calib: 0.85
+    t_base: 0
+    t_heat: 32
+    t_kill: -30
+    winter_hardy: true
+    t_kill_spring: -4
+    season_days: 230
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.85
+    typical_yield_t_ha: 5.0
+    price_usd_t: 210
+    cost_usd_ha: 550
+    pests: [ergot, brown rust, snow mould, Fusarium head blight]
+    breaks: [broadleaf diseases, potato cyst nematode, Sclerotinia]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — rye is not tabulated; Kc and stages from Table 12/11 'Winter wheat' (non-frozen soils), Zr upper
+      value of Table 22 winter wheat (1.5–1.8 m)
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf —
+      rye largely self-tolerant (1–2 yr break)
+    - 'Porter J.R. et al. 1999, Temperatures and the growth and development of wheat: a review, https://doi.org/10.1016/S1161-0301(98)00047-1 — wheat thresholds used as analogue; rye is the most winter-hardy
+      cereal'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  durum_wheat:
+    name: Durum wheat
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.3
+    kc_mid: 1.15
+    kc_end: 0.32
+    stages: [20, 25, 60, 30]
+    root_m: [0.3, 1.25]
+    p: 0.55
+    ky: 1.15
+    wp: 15
+    hi: 0.42
+    calib: 0.85
+    t_base: 0
+    t_heat: 32
+    t_kill: -8
+    season_days: 135
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.55
+    typical_yield_t_ha: 3.5
+    price_usd_t: 300
+    cost_usd_ha: 700
+    pests: [Fusarium head blight / DON, crown rot, root-lesion nematode, Septoria]
+    breaks: [broadleaf diseases, Ascochyta (pulses)]
+    sources:
+    - 'Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 ''Spring wheat'' (Kc_end 0.25–0.4, midpoint 0.32); Table 11 ''Barley/Oats/Wheat'' Mar/Apr.
+      Mediterranean autumn-sown durum: use Table 11 ''Grains (small)'' 25/35/65/40'
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky spring wheat 1.15 (Table 1, from FAO-33)
+    - 'Steduto P. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: I, https://doi.org/10.2134/agronj2008.0139s — WP* 15 g/m²'
+    - 'Porter J.R. et al. 1999, Temperatures and the growth and development of wheat: a review, https://doi.org/10.1016/S1161-0301(98)00047-1'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  spring_wheat:
+    name: Spring wheat
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.3
+    kc_mid: 1.15
+    kc_end: 0.32
+    stages: [20, 25, 60, 30]
+    root_m: [0.3, 1.25]
+    p: 0.55
+    ky: 1.15
+    wp: 15
+    hi: 0.45
+    calib: 0.9
+    t_base: 0
+    t_heat: 32
+    t_kill: -8
+    season_days: 135
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.55
+    typical_yield_t_ha: 3.8
+    price_usd_t: 260
+    cost_usd_ha: 650
+    pests: [Fusarium head blight, tan spot, take-all, wheat midge]
+    breaks: [broadleaf diseases, corn rootworm]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Spring wheat' (Kc_end midpoint of 0.25–0.4); Table 11 'Barley/Oats/Wheat' Mar/Apr 35–45°L;
+      Table 22 Zr 1.0–1.5 m, p 0.55
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 1.15 (spring wheat, FAO-33)
+    - 'Steduto P. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: I, https://doi.org/10.2134/agronj2008.0139s'
+    - 'Porter J.R. et al. 1999, Temperatures and the growth and development of wheat: a review, https://doi.org/10.1016/S1161-0301(98)00047-1'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  winter_barley:
+    name: Winter barley
+    family: Poaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.7
+    kc_mid: 1.15
+    kc_end: 0.25
+    stages: [30, 140, 35, 25]
+    root_m: [0.3, 1.5]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.5
+    calib: 0.9
+    t_base: 0
+    t_heat: 32
+    t_kill: -15
+    winter_hardy: true
+    t_kill_spring: -4
+    season_days: 230
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.8
+    typical_yield_t_ha: 7.0
+    price_usd_t: 220
+    cost_usd_ha: 850
+    pests: [net blotch, Rhynchosporium, barley yellow dwarf, take-all, eyespot]
+    breaks: [broadleaf diseases, corn rootworm]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Kc Table 12 'Barley' with non-frozen-soil winter Kc_ini 0.7; stages adapted from Table 11 'Winter
+      wheat' (Mediterranean 30/140/40/30) shortened by ~10 d for earlier barley maturity; Zr/p Table 22
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — no FAO-33 Ky for barley; 1.0 as in crops.yaml
+    - 'Porter J.R. et al. 1999, Temperatures and the growth and development of wheat: a review, https://doi.org/10.1016/S1161-0301(98)00047-1 — winter barley is less hardy than winter wheat (≈ −12 to −15
+      °C)'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  spelt:
+    name: Spelt (winter, in husk)
+    family: Poaceae
+    type: annual
+    icon: flower
+    low_confidence: true
+    kc_ini: 0.7
+    kc_mid: 1.15
+    kc_end: 0.3
+    stages: [30, 140, 40, 30]
+    root_m: [0.3, 1.6]
+    p: 0.55
+    ky: 1.05
+    wp: 15
+    hi: 0.4
+    calib: 0.8
+    t_base: 0
+    t_heat: 32
+    t_kill: -20
+    winter_hardy: true
+    t_kill_spring: -4
+    season_days: 240
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.8
+    typical_yield_t_ha: 5.0
+    price_usd_t: 300
+    cost_usd_ha: 600
+    pests: [yellow rust, take-all, eyespot, Fusarium head blight]
+    breaks: [broadleaf diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — not tabulated; winter wheat analogue (Tables 11, 12, 22)
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky winter wheat 1.05 used as analogue
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf —
+      spelt break 2–3 yr
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally Spelt price strongly market/organic dependent.
+  rice:
+    name: Rice (paddy)
+    family: Poaceae
+    type: annual
+    icon: water
+    kc_ini: 1.05
+    kc_mid: 1.2
+    kc_end: 0.75
+    stages: [30, 30, 60, 30]
+    root_m: [0.3, 0.75]
+    p: 0.2
+    ky: 1.1
+    wp: 19
+    hi: 0.43
+    calib: 0.8
+    t_base: 10
+    t_heat: 35
+    t_kill: 0
+    season_days: 150
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.7
+    typical_yield_t_ha: 6.5
+    price_usd_t: 330
+    cost_usd_ha: 2000
+    pests: [rice blast, sheath blight, stem borers, brown planthopper]
+    breaks: [upland weeds, soil-borne diseases of upland crops (flooding)]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Rice' (Kc_end midpoint of 0.90–0.60), Table 11 'Rice' Tropics/Mediterranean 30/30/60/30,
+      Table 22 Zr 0.5–1.0 m; p 0.20 is 'of saturation' (paddy flooding is not simulated by the bucket model — treat as aerobic/upland approximation)
+    - 'Raes D. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: II, https://doi.org/10.2134/agronj2008.0140s — AquaCrop rice WP* 19 g/m², HIo 43 %'
+    - 'Sánchez B. et al. 2014, Temperatures and the growth and development of maize and rice: a review, https://doi.org/10.1111/gcb.12389 — anthesis Tmax ≈ 35 °C spikelet sterility'
+    - 'Ky 1.1: no FAO-33 seasonal value for rice; literature estimate (rice is among the most water-sensitive cereals)'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  sugar_beet:
+    name: Sugar beet
+    family: Amaranthaceae
+    type: annual
+    icon: egg
+    kc_ini: 0.35
+    kc_mid: 1.2
+    kc_end: 0.7
+    stages: [30, 45, 90, 15]
+    root_m: [0.3, 1.0]
+    p: 0.55
+    ky: 1.0
+    wp: 17
+    hi: 0.7
+    fresh_factor: 4.3
+    calib: 0.85
+    t_base: 3
+    t_heat: 35
+    t_kill: -4
+    season_days: 180
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.35
+    typical_yield_t_ha: 70
+    price_usd_t: 55
+    cost_usd_ha: 3000
+    pests: [beet cyst nematode, rhizomania, Cercospora leaf spot, Rhizoctonia crown and root rot]
+    breaks: [cereal diseases, grass weeds]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Sugar beet' 0.35/1.20/0.70; Table 11 Calif. March 30/45/90/15; Table 22 Zr 0.7–1.2, p
+      0.55
+    - 'Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 1.0 (FAO-33); sugar beet chapter: 40–60 t/ha fresh
+      beet commercial yield, sucrose 14–18 % fresh mass'
+    - 'Raes D. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: II, https://doi.org/10.2134/agronj2008.0140s — WP* 17 g/m², HIo 70 % (storage root)'
+    - fresh_factor 4.3 ≈ 1/0.23 storage-root dry-matter fraction (FAO-66 sugar beet chapter)
+    - 'Luo Q. 2011, Temperature thresholds and crop production: a review, https://doi.org/10.1007/s10584-011-0028-6'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  winter_rapeseed:
+    name: Winter oilseed rape / canola
+    family: Brassicaceae
+    type: annual
+    icon: flower
+    low_confidence: true
+    kc_ini: 0.35
+    kc_mid: 1.08
+    kc_end: 0.35
+    stages: [40, 190, 60, 35]
+    root_m: [0.3, 1.25]
+    p: 0.6
+    ky: 1.0
+    wp: 15
+    hi: 0.28
+    calib: 0.8
+    t_base: 0
+    t_heat: 30
+    t_kill: -15
+    winter_hardy: true
+    t_kill_spring: -4
+    season_days: 325
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.75
+    typical_yield_t_ha: 3.5
+    price_usd_t: 480
+    cost_usd_ha: 950
+    pests: [blackleg (phoma stem canker), Sclerotinia stem rot, clubroot, cabbage stem flea beetle, pollen beetle]
+    breaks: [take-all, eyespot, cereal cyst nematode, grass weeds]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Kc Table 12 'Rapeseed, Canola' (Kc_mid midpoint of 1.0–1.15); Zr 1.0–1.5, p 0.60 Table 22. Winter-rape
+      stage lengths are NOT in Table 11 (estimated for Aug sowing / July harvest)
+    - 'Ky 1.0: no FAO-33 value (estimate)'
+    - West J.S. et al. 2001, Epidemiology and management of Leptosphaeria maculans (phoma stem canker) on oilseed rape in Australia, Canada and Europe, https://doi.org/10.1046/j.1365-3059.2001.00546.x
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - 'Luo Q. 2011, Temperature thresholds and crop production: a review, https://doi.org/10.1007/s10584-011-0028-6 — flowering heat stress ≈ 30 °C'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  mustard_cover:
+    name: Mustard (cover / biofumigant)
+    family: Brassicaceae
+    type: cover
+    icon: leaf
+    low_confidence: true
+    kc_ini: 0.35
+    kc_mid: 1.0
+    kc_end: 0.9
+    stages: [15, 25, 25, 10]
+    root_m: [0.2, 1.2]
+    p: 0.6
+    ky: 1.0
+    wp: 15
+    hi: 0.0
+    calib: 0.6
+    t_base: 3
+    t_heat: 32
+    t_kill: -7
+    season_days: 75
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.7
+    typical_yield_t_ha: 0
+    price_usd_t: 0
+    cost_usd_ha: 120
+    pests: [clubroot (host), flea beetles, blackleg (host)]
+    breaks: [some soil-borne fungi and nematodes (biofumigation), N leaching (catch crop)]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — analogue of Table 12 'Rapeseed, Canola' with green termination (Kc_end kept high)
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/ — brassica covers winter-kill around −7 °C (≈20 °F)
+    - 'Matthiessen J.N. et al. 2006, Biofumigation and enhanced biodegradation: opportunity and challenge in soilborne pest and disease management, https://doi.org/10.1080/07352680600611543'
+    - Kirkegaard J.A. et al. 1998, Biofumigation potential of brassicas I, https://doi.org/10.1023/A:1004364713152
+    - Cost indicative (seed + sowing).
+  flax:
+    name: Flax / linseed
+    family: Linaceae
+    type: annual
+    icon: flower
+    kc_ini: 0.35
+    kc_mid: 1.1
+    kc_end: 0.25
+    stages: [25, 35, 50, 40]
+    root_m: [0.3, 1.25]
+    p: 0.5
+    ky: 1.0
+    wp: 15
+    hi: 0.3
+    calib: 0.75
+    t_base: 3
+    t_heat: 32
+    t_kill: -3
+    season_days: 150
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.4
+    typical_yield_t_ha: 1.8
+    price_usd_t: 480
+    cost_usd_ha: 550
+    pests: [Fusarium wilt, pasmo, flea beetles]
+    breaks: [cereal diseases, take-all]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Flax' 0.35/1.10/0.25; Table 11 'Flax' Europe April 25/35/50/40; Table 22 Zr 1.0–1.5, p
+      0.50
+    - 'Ky 1.0: no FAO-33 value (estimate)'
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf —
+      flax break 6 yr (Fusarium, self-intolerance)
+    - Thompson J.P. 1987, Decline of vesicular-arbuscular mycorrhizae in long fallow disorder of field crops and its expression in phosphorus deficiency of sunflower, https://doi.org/10.1071/AR9870847 —
+      linseed strongly mycorrhiza-dependent
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  cotton:
+    name: Cotton (lint)
+    family: Malvaceae
+    type: annual
+    icon: cloud
+    kc_ini: 0.35
+    kc_mid: 1.18
+    kc_end: 0.6
+    stages: [30, 50, 60, 55]
+    root_m: [0.3, 1.35]
+    p: 0.65
+    ky: 0.85
+    wp: 15
+    hi: 0.14
+    calib: 0.8
+    t_base: 15.6
+    t_heat: 38
+    t_kill: -1
+    season_days: 195
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.35
+    typical_yield_t_ha: 1.5
+    price_usd_t: 1650
+    cost_usd_ha: 1800
+    pests: [bollworms (Helicoverpa), pink bollworm, Verticillium wilt, root-knot & reniform nematodes, whitefly]
+    breaks: [Striga (trap crop), cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Cotton' (Kc_mid 1.15–1.20, Kc_end 0.70–0.50 midpoints); Table 11 Egypt/Pakistan/Calif.
+      30/50/60/55; Table 22 Zr 1.0–1.7, p 0.65
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 0.85 (FAO-33)
+    - 'Raes D. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: II, https://doi.org/10.2134/agronj2008.0140s — WP* 15 g/m², HIo 35 % (seed cotton); hi here is for LINT (≈ 0.35
+      × 0.40 gin turnout)'
+    - t_base 15.6 °C = standard cotton DD60 base
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally Yield/price are for lint; cottonseed is an extra by-product.
+  field_pea:
+    name: Field pea (dry)
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.4
+    kc_mid: 1.15
+    kc_end: 0.3
+    stages: [20, 30, 35, 15]
+    root_m: [0.3, 0.8]
+    p: 0.4
+    ky: 1.15
+    wp: 15
+    hi: 0.45
+    calib: 0.8
+    t_base: 4
+    t_heat: 30
+    t_kill: -6
+    season_days: 100
+    n_fix_kg_ha: 40
+    residue: low
+    erosion_cover: 0.4
+    typical_yield_t_ha: 3.0
+    price_usd_t: 300
+    cost_usd_ha: 550
+    pests: [Aphanomyces root rot, Ascochyta blight, pea aphid, pea weevil]
+    breaks: [take-all, cereal cyst nematode, grass weeds, Fusarium head blight inoculum]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Peas dry/seed' (Kc_ini of legume group 0.4), Table 11 Mediterranean 20/30/35/15, Table
+      22 dry pea Zr 0.6–1.0, p 0.40
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky peas 1.15 (FAO-33)
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - 'Luo Q. 2011, Temperature thresholds and crop production: a review, https://doi.org/10.1007/s10584-011-0028-6'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  lentil:
+    name: Lentil
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.4
+    kc_mid: 1.1
+    kc_end: 0.3
+    stages: [20, 30, 60, 40]
+    root_m: [0.3, 0.7]
+    p: 0.5
+    ky: 1.0
+    wp: 15
+    hi: 0.35
+    calib: 0.75
+    t_base: 2
+    t_heat: 32
+    t_kill: -6
+    season_days: 150
+    n_fix_kg_ha: 25
+    residue: low
+    erosion_cover: 0.3
+    typical_yield_t_ha: 1.5
+    price_usd_t: 650
+    cost_usd_ha: 550
+    pests: [Ascochyta blight, Aphanomyces root rot, anthracnose, Sclerotinia]
+    breaks: [cereal diseases, grass weeds]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Lentil' 1.10/0.30; Table 11 Europe April 20/30/60/40; Table 22 Zr 0.6–0.8, p 0.50
+    - 'Ky 1.0: no FAO-33 lentil value (estimate; lentil is more drought-tolerant than pea)'
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Tivoli B. et al. 2007, Comparison of the epidemiology of ascochyta blights on grain legumes, https://doi.org/10.1007/s10658-007-9117-9
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  chickpea:
+    name: Chickpea
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    low_confidence: true
+    kc_ini: 0.4
+    kc_mid: 1.0
+    kc_end: 0.35
+    stages: [20, 30, 50, 30]
+    root_m: [0.3, 0.8]
+    p: 0.5
+    ky: 1.0
+    wp: 15
+    hi: 0.4
+    calib: 0.75
+    t_base: 4
+    t_heat: 35
+    t_kill: -4
+    season_days: 130
+    n_fix_kg_ha: 30
+    residue: low
+    erosion_cover: 0.3
+    typical_yield_t_ha: 1.8
+    price_usd_t: 750
+    cost_usd_ha: 600
+    pests: [Ascochyta blight, Fusarium wilt, Helicoverpa pod borer, root-lesion nematode]
+    breaks: [cereal diseases, crown rot of wheat]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Kc Table 12 'Chick pea' (1.00/0.35), Zr 0.6–1.0, p 0.50 Table 22; chickpea is not in Table 11 (stage
+      lengths estimated from the lentil row)
+    - 'Ky 1.0: no FAO-33 value (estimate)'
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Tivoli B. et al. 2007, Comparison of the epidemiology of ascochyta blights on grain legumes, https://doi.org/10.1007/s10658-007-9117-9
+    - Thompson J.P. et al. 2008, Root-lesion nematodes (Pratylenchus thornei and P, https://doi.org/10.1071/AP08021
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  faba_bean:
+    name: Faba bean (dry)
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.5
+    kc_mid: 1.15
+    kc_end: 0.3
+    stages: [20, 30, 35, 15]
+    root_m: [0.3, 0.6]
+    p: 0.45
+    ky: 1.15
+    wp: 15
+    hi: 0.45
+    calib: 0.8
+    t_base: 2
+    t_heat: 30
+    t_kill: -6
+    season_days: 100
+    n_fix_kg_ha: 45
+    residue: medium
+    erosion_cover: 0.45
+    typical_yield_t_ha: 3.5
+    price_usd_t: 350
+    cost_usd_ha: 600
+    pests: [chocolate spot, Ascochyta, broomrape (Orobanche crenata), black bean aphid, bruchid beetle]
+    breaks: [take-all, cereal cyst nematode, grass weeds]
+    sources:
+    - 'Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 ''Fababean dry/seed'' 0.5/1.15/0.30; Table 11 Mediterranean 20/30/35/15 (winter-sown Europe:
+      90/45/40/60); Table 22 Zr 0.5–0.7, p 0.45'
+    - Ky 1.15 = FAO-33 'beans' used as analogue
+    - Jensen E.S. et al. 2010, Faba bean in cropping systems, https://doi.org/10.1016/j.fcr.2009.10.008
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  groundnut:
+    name: Groundnut / peanut (in shell)
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.4
+    kc_mid: 1.15
+    kc_end: 0.6
+    stages: [25, 35, 45, 25]
+    root_m: [0.3, 0.75]
+    p: 0.5
+    ky: 0.7
+    wp: 18
+    hi: 0.35
+    calib: 0.75
+    t_base: 10
+    t_heat: 35
+    t_kill: 0
+    season_days: 130
+    n_fix_kg_ha: 30
+    residue: low
+    erosion_cover: 0.4
+    typical_yield_t_ha: 3.5
+    price_usd_t: 590
+    cost_usd_ha: 1200
+    pests: [early & late leaf spot, southern blight / white mould (Sclerotium rolfsii), root-knot nematode (M. arenaria), aflatoxin (Aspergillus), groundnut rosette virus]
+    breaks: [Striga (trap crop), cereal stem borers]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Groundnut' 0.40/1.15/0.60; Table 11 West Africa 25/35/45/25; Table 22 Zr 0.5–1.0, p 0.50
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 0.70 (FAO-33)
+    - 'WP* 18 g/m² and HI 0.35: literature estimates for a C3 oil-rich legume (low confidence)'
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  pigeon_pea:
+    name: Pigeon pea
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    low_confidence: true
+    kc_ini: 0.4
+    kc_mid: 1.05
+    kc_end: 0.48
+    stages: [20, 40, 70, 30]
+    root_m: [0.3, 1.8]
+    p: 0.5
+    ky: 0.85
+    wp: 15
+    hi: 0.25
+    calib: 0.6
+    t_base: 10
+    t_heat: 38
+    t_kill: 0
+    season_days: 160
+    n_fix_kg_ha: 40
+    residue: high
+    erosion_cover: 0.6
+    typical_yield_t_ha: 1.0
+    price_usd_t: 650
+    cost_usd_ha: 300
+    pests: [Fusarium wilt, sterility mosaic, Helicoverpa pod borer, pod fly]
+    breaks: [Striga (trap crop), cereal stem borers, cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — not tabulated; Kc from Table 12 'Green gram and cowpeas' (Kc_end midpoint of 0.60–0.35); medium-duration
+      (≈160 d) stage lengths estimated
+    - Ae N. et al. 1990, Phosphorus uptake by pigeon pea and its role in cropping systems of the Indian subcontinent, https://doi.org/10.1126/science.248.4954.477 — deep roots mobilise iron-bound P; leaf
+      litter benefits the following cereal
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  mung_bean:
+    name: Mung bean (green gram)
+    family: Fabaceae
+    type: annual
+    icon: ellipse
+    kc_ini: 0.4
+    kc_mid: 1.05
+    kc_end: 0.48
+    stages: [15, 25, 30, 15]
+    root_m: [0.3, 0.8]
+    p: 0.45
+    ky: 0.85
+    wp: 15
+    hi: 0.3
+    calib: 0.6
+    t_base: 10
+    t_heat: 38
+    t_kill: 0
+    season_days: 85
+    n_fix_kg_ha: 25
+    residue: low
+    erosion_cover: 0.4
+    typical_yield_t_ha: 1.0
+    price_usd_t: 900
+    cost_usd_ha: 350
+    pests: [mungbean yellow mosaic virus (whitefly), Cercospora leaf spot, bruchids, pod borers]
+    breaks: [cereal diseases, rice–wheat weeds]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Green gram and cowpeas' (Kc_end midpoint 0.60–0.35); Table 22 Zr 0.6–1.0, p 0.45; stages
+      shortened from Table 11 (20/30/30/20) to typical 85-day tropical cultivars
+    - 'Ky 0.85: cowpea/soybean analogue as in crops.yaml (FAO-33 has no mung bean value)'
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - 'Timsina J. et al. 2001, Productivity and management of rice–wheat cropping systems: issues and challenges, https://doi.org/10.1016/S0378-4290(00)00143-X'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  cassava:
+    name: Cassava (fresh roots)
+    family: Euphorbiaceae
+    type: annual
+    icon: egg
+    kc_ini: 0.3
+    kc_mid: 0.8
+    kc_end: 0.3
+    stages: [20, 40, 90, 60]
+    root_m: [0.3, 0.8]
+    p: 0.35
+    ky: 1.0
+    wp: 18
+    hi: 0.6
+    fresh_factor: 2.8
+    calib: 0.6
+    t_base: 12
+    t_heat: 40
+    t_kill: 0
+    season_days: 210
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.35
+    typical_yield_t_ha: 15
+    price_usd_t: 80
+    cost_usd_ha: 600
+    pests: [cassava mosaic disease, cassava brown streak, cassava mealybug, green mite, root-knot nematodes]
+    breaks: [cereal stem borers, Striga]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Cassava year 1' 0.3/0.80/0.30; Table 11 'Cassava year 1' 20/40/90/60; Table 22 year 1
+      Zr 0.5–0.8, p 0.35
+    - 'FAO 2013, Save and Grow: Cassava — a guide to sustainable production intensification, https://www.fao.org/3/i3278e/i3278e.pdf — rotation/intercropping with legumes; erosion risk under slow early
+      canopy'
+    - 'Ky 1.0, WP* 18, HI 0.6: literature estimates (no FAO-33/AquaCrop default); fresh_factor 2.8 ≈ 35 % root dry matter'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  sugarcane:
+    name: Sugarcane (ratoon cycle)
+    family: Poaceae
+    type: annual
+    icon: leaf
+    kc_ini: 0.4
+    kc_mid: 1.25
+    kc_end: 0.75
+    stages: [25, 70, 135, 50]
+    root_m: [0.3, 1.6]
+    p: 0.65
+    ky: 1.2
+    wp: 30
+    hi: 0.8
+    fresh_factor: 3.3
+    calib: 0.8
+    t_base: 12
+    t_heat: 40
+    t_kill: -2
+    season_days: 280
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.8
+    typical_yield_t_ha: 75
+    price_usd_t: 40
+    cost_usd_ha: 2500
+    pests: [stem borers, smut, ratoon stunting disease, root-lesion & root-knot nematodes]
+    breaks: []
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Sugar cane' 0.40/1.25/0.75; Table 11 'Sugarcane, ratoon' low latitudes 25/70/135/50; Table
+      22 Zr 1.2–2.0, p 0.65. Multi-year crop modelled as one ratoon cycle per year (plant cane + 3–5 ratoons, then a legume break)
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 1.2 (FAO-33)
+    - 'Raes D. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: II, https://doi.org/10.2134/agronj2008.0140s — C4 WP* ≈ 30 g/m²'
+    - 'Bennett A.J. et al. 2012, Meeting the demand for crop production: the challenge of yield decline in crops grown in short rotations, https://doi.org/10.1111/j.1469-185X.2011.00184.x — sugarcane yield
+      decline under monoculture'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally Yield is fresh cane.
+  onion:
+    name: Onion (dry bulb)
+    family: Amaryllidaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.7
+    kc_mid: 1.05
+    kc_end: 0.75
+    stages: [15, 25, 70, 40]
+    root_m: [0.2, 0.45]
+    p: 0.3
+    ky: 1.1
+    wp: 15
+    hi: 0.8
+    fresh_factor: 8.0
+    calib: 0.7
+    t_base: 6
+    t_heat: 35
+    t_kill: -3
+    season_days: 150
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.2
+    typical_yield_t_ha: 50
+    price_usd_t: 350
+    cost_usd_ha: 9000
+    pests: [white rot (Sclerotium cepivorum), Fusarium basal rot, onion thrips, onion fly / maggot]
+    breaks: [cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Onions dry' 0.7/1.05/0.75; Table 11 Mediterranean April 15/25/70/40; Table 22 Zr 0.3–0.6,
+      p 0.30
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 1.1 (FAO-33)
+    - 'Vegetable WP*/HI: literature estimates; yield in FRESH marketable weight'
+    - UC IPM. Onion and garlic — White rot (Sclerotium cepivorum). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/onion-and-garlic/white-rot/
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  carrot:
+    name: Carrot
+    family: Apiaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.7
+    kc_mid: 1.05
+    kc_end: 0.95
+    stages: [20, 30, 50, 20]
+    root_m: [0.2, 0.75]
+    p: 0.35
+    ky: 1.0
+    wp: 18
+    hi: 0.7
+    fresh_factor: 8.0
+    calib: 0.7
+    t_base: 4
+    t_heat: 30
+    t_kill: -4
+    season_days: 120
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.3
+    typical_yield_t_ha: 50
+    price_usd_t: 400
+    cost_usd_ha: 8000
+    pests: [carrot fly, cavity spot (Pythium), Sclerotinia, root-knot nematodes, Alternaria leaf blight]
+    breaks: [cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Carrots' 0.7/1.05/0.95; Table 11 arid 20/30/50/20; Table 22 Zr 0.5–1.0, p 0.35
+    - 'Ky 1.0: no FAO-33 value (estimate)'
+    - 'Vegetable WP*/HI: literature estimates; yield in FRESH marketable weight'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  cabbage:
+    name: Cabbage / brassica vegetables
+    family: Brassicaceae
+    type: annual
+    icon: leaf
+    kc_ini: 0.7
+    kc_mid: 1.05
+    kc_end: 0.95
+    stages: [25, 35, 25, 10]
+    root_m: [0.2, 0.65]
+    p: 0.45
+    ky: 0.95
+    wp: 18
+    hi: 0.65
+    fresh_factor: 12.0
+    calib: 0.7
+    t_base: 4
+    t_heat: 30
+    t_kill: -6
+    season_days: 95
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.45
+    typical_yield_t_ha: 50
+    price_usd_t: 300
+    cost_usd_ha: 7000
+    pests: [clubroot, cabbage root fly, diamondback moth, black rot (Xanthomonas)]
+    breaks: [cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Cabbage' 0.7/1.05/0.95; Table 11 'Crucifers' Mediterranean Feb 25/35/25/10; Table 22 Zr
+      0.5–0.8, p 0.45
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 0.95 (FAO-33)
+    - 'Vegetable WP*/HI: literature estimates; yield in FRESH marketable weight'
+    - Dixon G.R. 2009, The occurrence and economic impact of Plasmodiophora brassicae and clubroot disease, https://doi.org/10.1007/s00344-009-9090-y
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  pepper:
+    name: Pepper (bell / chilli)
+    family: Solanaceae
+    type: annual
+    icon: flame
+    kc_ini: 0.6
+    kc_mid: 1.05
+    kc_end: 0.9
+    stages: [25, 35, 40, 20]
+    root_m: [0.2, 0.75]
+    p: 0.3
+    ky: 1.1
+    wp: 18
+    hi: 0.5
+    fresh_factor: 12.0
+    calib: 0.7
+    t_base: 10
+    t_heat: 32
+    t_kill: 0
+    season_days: 120
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.3
+    typical_yield_t_ha: 35
+    price_usd_t: 900
+    cost_usd_ha: 15000
+    pests: [Phytophthora blight (P. capsici), Verticillium wilt, root-knot nematodes, thrips / TSWV, aphids]
+    breaks: [cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Sweet peppers' 0.6/1.05/0.90; Table 11 Europe/Med. 25/35/40/20; Table 22 Zr 0.5–1.0, p
+      0.30
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 1.1 (FAO-33)
+    - 'Vegetable WP*/HI: literature estimates; yield in FRESH marketable weight'
+    - 'Hausbeck M.K. et al. 2004, Phytophthora capsici on vegetable crops: research progress and management challenges, https://doi.org/10.1094/PDIS.2004.88.12.1292'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  watermelon:
+    name: Watermelon / melon
+    family: Cucurbitaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.4
+    kc_mid: 1.0
+    kc_end: 0.75
+    stages: [20, 30, 30, 30]
+    root_m: [0.3, 1.15]
+    p: 0.4
+    ky: 1.1
+    wp: 18
+    hi: 0.6
+    fresh_factor: 12.0
+    calib: 0.7
+    t_base: 10
+    t_heat: 35
+    t_kill: 0
+    season_days: 110
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.5
+    typical_yield_t_ha: 45
+    price_usd_t: 250
+    cost_usd_ha: 6000
+    pests: [Fusarium wilt, Phytophthora blight, gummy stem blight, root-knot nematodes, aphids / viruses]
+    breaks: [cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Watermelon' 0.4/1.00/0.75; Table 11 Italy April 20/30/30/30; Table 22 Zr 0.8–1.5, p 0.40
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky 1.1 (FAO-33)
+    - 'Vegetable WP*/HI: literature estimates; yield in FRESH marketable weight'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  squash:
+    name: Squash / pumpkin
+    family: Cucurbitaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.5
+    kc_mid: 1.0
+    kc_end: 0.8
+    stages: [25, 35, 35, 25]
+    root_m: [0.3, 1.25]
+    p: 0.35
+    ky: 1.0
+    wp: 18
+    hi: 0.55
+    fresh_factor: 10.0
+    calib: 0.7
+    t_base: 10
+    t_heat: 35
+    t_kill: 0
+    season_days: 120
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.55
+    typical_yield_t_ha: 30
+    price_usd_t: 250
+    cost_usd_ha: 4000
+    pests: [powdery mildew, Phytophthora blight, squash bug / cucumber beetles, viruses]
+    breaks: [cereal diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Pumpkin, Winter squash' 0.5/1.00/0.80; Table 11 Europe June 25/35/35/25; Table 22 Zr 1.0–1.5,
+      p 0.35
+    - 'Ky 1.0: no FAO-33 value (estimate)'
+    - 'Vegetable WP*/HI: literature estimates; yield in FRESH marketable weight'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  sweet_corn:
+    name: Sweet corn (fresh ears)
+    family: Poaceae
+    type: annual
+    icon: nutrition
+    kc_ini: 0.3
+    kc_mid: 1.15
+    kc_end: 1.05
+    stages: [20, 25, 25, 10]
+    root_m: [0.3, 1.0]
+    p: 0.5
+    ky: 1.25
+    wp: 33.7
+    hi: 0.45
+    fresh_factor: 2.5
+    calib: 0.7
+    t_base: 10
+    t_heat: 35
+    t_kill: -1
+    season_days: 80
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.45
+    typical_yield_t_ha: 18
+    price_usd_t: 300
+    cost_usd_ha: 3500
+    pests: [corn earworm, European corn borer, corn rootworm, fall armyworm]
+    breaks: [broadleaf diseases]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Maize, sweet' 1.15/1.05 (cereal Kc_ini 0.3); Table 11 Mediterranean May/June 20/25/25/10;
+      Table 22 Zr 0.8–1.2, p 0.50
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky maize 1.25 (FAO-33)
+    - 'Raes D. et al. 2009, AquaCrop—The FAO crop model to simulate yield response to water: II, https://doi.org/10.2134/agronj2008.0140s — maize WP* 33.7 g/m²'
+    - 'Sánchez B. et al. 2014, Temperatures and the growth and development of maize and rice: a review, https://doi.org/10.1111/gcb.12389'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  buckwheat:
+    name: Buckwheat
+    family: Polygonaceae
+    type: annual
+    icon: flower
+    low_confidence: true
+    kc_ini: 0.35
+    kc_mid: 1.0
+    kc_end: 0.4
+    stages: [10, 20, 30, 15]
+    root_m: [0.2, 0.8]
+    p: 0.5
+    ky: 1.0
+    wp: 15
+    hi: 0.3
+    calib: 0.6
+    t_base: 6
+    t_heat: 32
+    t_kill: -1
+    season_days: 75
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.5
+    typical_yield_t_ha: 1.5
+    price_usd_t: 450
+    cost_usd_ha: 350
+    pests: [few specific pests]
+    breaks: [weed cycles (smother crop), cereal diseases]
+    sources:
+    - 'Not in FAO-56: Kc/stages/root/p are literature estimates for a 75-day frost-sensitive pseudo-cereal'
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/ — buckwheat as short smother crop, P scavenger; killed by
+      first frost
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  quinoa:
+    name: Quinoa
+    family: Amaranthaceae
+    type: annual
+    icon: flower
+    low_confidence: true
+    kc_ini: 0.52
+    kc_mid: 1.0
+    kc_end: 0.7
+    stages: [25, 40, 60, 30]
+    root_m: [0.3, 1.0]
+    p: 0.6
+    ky: 0.8
+    wp: 10.5
+    hi: 0.4
+    calib: 0.7
+    t_base: 3
+    t_heat: 32
+    t_kill: -4
+    season_days: 155
+    n_fix_kg_ha: 0
+    residue: low
+    erosion_cover: 0.35
+    typical_yield_t_ha: 2.0
+    price_usd_t: 1800
+    cost_usd_ha: 900
+    pests: [downy mildew (Peronospora variabilis), quinoa moth (Eurysacca), beet cyst nematode (host)]
+    breaks: [cereal diseases]
+    sources:
+    - Garcia M. et al. 2003, Evapotranspiration analysis and irrigation requirements of quinoa (Chenopodium quinoa) in the Bolivian highlands, https://doi.org/10.1016/S0378-3774(02)00162-2 — Kc 0.52 (ini)
+      / 1.00 (mid) / 0.70 (end)
+    - 'Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — quinoa chapter: WP* 10.5 g/m² (low-fertility Altiplano),
+      HI 0.3–0.5 (midpoint 0.4); better after potato'
+    - Geerts S. et al. 2009, Simulating yield response of quinoa to water availability with AquaCrop, https://doi.org/10.2134/agronj2008.0137s
+    - Jacobsen S.-E. 2003, The worldwide potential for quinoa (Chenopodium quinoa Willd.), https://doi.org/10.1081/FRI-120018883 — frost tolerance to about −4 °C before flowering; germination base ≈ 3 °C
+    - 'Ky 0.8: estimate reflecting high drought tolerance'
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally
+  hemp:
+    name: Hemp (grain)
+    family: Cannabaceae
+    type: annual
+    icon: leaf
+    low_confidence: true
+    kc_ini: 0.35
+    kc_mid: 1.05
+    kc_end: 0.6
+    stages: [20, 35, 40, 25]
+    root_m: [0.3, 1.8]
+    p: 0.5
+    ky: 1.0
+    wp: 15
+    hi: 0.2
+    calib: 0.7
+    t_base: 2
+    t_heat: 35
+    t_kill: -4
+    season_days: 120
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.6
+    typical_yield_t_ha: 1.0
+    price_usd_t: 1100
+    cost_usd_ha: 1200
+    pests: [Sclerotinia, Botrytis, hemp broomrape (Phelipanche ramosa)]
+    breaks: [cereal diseases, weed cycles (competitive canopy)]
+    sources:
+    - 'Not in FAO-56: water parameters are literature estimates'
+    - Amaducci S. et al. 2015, Key cultivation techniques for hemp in Europe and China, https://doi.org/10.1016/j.indcrop.2014.06.041 — deep taproot, strong weed suppression, good preceding crop for cereals;
+      low base temperature
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally Hemp prices are volatile and market-specific.
+  clover_grass_ley:
+    name: Grass–clover ley (hay/silage)
+    family: Mixed
+    type: perennial
+    icon: leaf
+    low_confidence: true
+    kc_ini: 0.4
+    kc_mid: 1.15
+    kc_end: 1.1
+    cut_gdd: 500
+    stages: [10, 15, 15, 5]
+    root_m: [0.3, 0.9]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.85
+    calib: 0.9
+    t_base: 5
+    t_heat: 32
+    t_kill: -4
+    season_days: 210
+    n_fix_kg_ha: 100
+    residue: high
+    erosion_cover: 0.95
+    typical_yield_t_ha: 10
+    price_usd_t: 180
+    cost_usd_ha: 700
+    pests: [clover rot (Sclerotinia trifoliorum), stem nematode (Ditylenchus dipsaci), wireworm / leatherjacket build-up]
+    breaks: [grass weeds (frequent cutting), cereal diseases except take-all, annual weed seedbank]
+    sources:
+    - 'Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Kc ''Clover hay, individual cutting periods'' (Table 12: 0.40/1.15/1.10); Zr clover 0.6–0.9 / ryegrass
+      0.6–1.0 and p 0.50 / 0.60 (Table 22, averaged); season from Table 11 footnote 4 (−4 °C)'
+    - cut_gdd 500 °C·d (base 5 °C) is an estimate giving 3–5 cuts in temperate climates
+    - Nyfeler D. et al. 2011, Grass–legume mixtures can yield more nitrogen than legume pure stands due to mutual stimulation of nitrogen uptake from symbiotic and non-symbiotic sources, https://doi.org/10.1016/j.agee.2010.11.022
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally Yield is hay dry matter.
+  phacelia_cover:
+    name: Phacelia (cover)
+    family: Boraginaceae
+    type: cover
+    icon: flower
+    low_confidence: true
+    kc_ini: 0.35
+    kc_mid: 1.0
+    kc_end: 0.9
+    stages: [15, 25, 30, 10]
+    root_m: [0.2, 0.6]
+    p: 0.55
+    ky: 1.0
+    wp: 15
+    hi: 0.0
+    calib: 0.6
+    t_base: 3
+    t_heat: 32
+    t_kill: -8
+    season_days: 80
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.75
+    typical_yield_t_ha: 0
+    price_usd_t: 0
+    cost_usd_ha: 100
+    pests: []
+    breaks:
+    - no crop relatives — phytosanitarily neutral in most rotations
+    - N leaching (catch crop)
+    sources:
+    - 'Not in FAO-56: green-cover analogue values (estimates)'
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+    - Phacelia winter-kills at roughly −7 to −8 °C (European cover-crop guidance; estimate)
+    - Cost indicative (seed + sowing).
+  sorghum_sudan:
+    name: Sorghum-sudangrass (forage / cover)
+    family: Poaceae
+    type: annual
+    icon: leaf
+    kc_ini: 0.5
+    kc_mid: 0.9
+    kc_end: 0.85
+    stages: [20, 30, 40, 20]
+    root_m: [0.3, 1.25]
+    p: 0.55
+    ky: 0.9
+    wp: 33
+    hi: 0.85
+    calib: 0.7
+    t_base: 10
+    t_heat: 40
+    t_kill: 0
+    season_days: 110
+    n_fix_kg_ha: 0
+    residue: medium
+    erosion_cover: 0.7
+    typical_yield_t_ha: 10
+    price_usd_t: 140
+    cost_usd_ha: 500
+    pests: [sugarcane aphid, Striga (host), prussic acid risk to livestock after frost]
+    breaks: ['root-knot nematodes (some cultivars, biofumigant dhurrin)', broadleaf diseases, soil compaction (dense deep roots)]
+    sources:
+    - Allen R.G. et al. 1998, FAO-56 Crop evapotranspiration, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 'Sudan grass hay (annual), averaged cutting effects' 0.50/0.90/0.85; Table 22 Zr 1.0–1.5,
+      p 0.55
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf — Ky sorghum 0.9 (FAO-33)
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+    - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
+    - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
+      extension budgets) — not a forecast, edit locally Yield is hay dry matter.
+default_planting:
+  oats: "03-25"
+  winter_rye: "09-25"
+  durum_wheat: "03-20"
+  spring_wheat: "04-01"
+  winter_barley: "09-25"
+  spelt: "10-05"
+  rice: "05-01"
+  sugar_beet: "04-01"
+  winter_rapeseed: "08-25"
+  mustard_cover: "08-20"
+  flax: "04-10"
+  cotton: "04-25"
+  field_pea: "03-25"
+  lentil: "04-01"
+  chickpea: "03-20"
+  faba_bean: "03-10"
+  groundnut: "05-15"
+  pigeon_pea: "06-15"
+  mung_bean: "06-15"
+  cassava: "04-15"
+  sugarcane: "03-01"
+  onion: "03-25"
+  carrot: "04-15"
+  cabbage: "04-15"
+  pepper: "05-10"
+  watermelon: "05-10"
+  squash: "05-20"
+  sweet_corn: "05-15"
+  buckwheat: "06-15"
+  quinoa: "04-15"
+  hemp: "05-01"
+  clover_grass_ley: "04-01"
+  phacelia_cover: "08-15"
+  sorghum_sudan: "06-01"

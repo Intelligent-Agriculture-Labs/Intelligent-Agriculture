@@ -1,0 +1,1482 @@
+# FieldShift rotation knowledge base — version 1.0.0
+# Biological basis for rotation planning (see docs/ROTATION_SCIENCE.md).
+#   pathogens .... soil-/residue-borne organisms (and parasitic weeds/insects) that rotation controls.
+#                  hosts = crop ids in crops.yaml ∪ crops_extra.yaml; survival_years = persistence without a host;
+#                  break_years = recommended host-free years. Optional: trap_crops (stimulate suicidal germination),
+#                  favoured_by (crops that build the population without being damaged).
+#   crops ........ one entry per crop id. min_return_years = minimum years before the same crop (lower bound of the
+#                  literature range; range in `note`). n_effect_kg_ha = residual N credit (+) / immobilisation (−) for
+#                  the NEXT crop. residue_c_t_ha = above-ground residue returned, t DM/ha (typical).
+#                  good_/poor_predecessors = crops that are good/poor to grow BEFORE this crop.
+#   rules ........ general rules for the checker. yield_effect_pct is a typical effect on the affected crop.
+#                  Optional structured fields: applies_to (crop ids), after (predecessor crop ids), window_years
+#                  (default 1 = directly preceding), host_group (pathogen id), low_confidence (effect size is an
+#                  expert estimate from a qualitative source).
+# Ranges in sources are reduced to midpoints and flagged in the note. All references are real and checkable.
+
+version: "1.0.0"
+pathogens:
+  take_all:
+    name: Gaeumannomyces tritici (take-all)
+    kind: fungus
+    hosts: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, winter_rye, clover_grass_ley, cover_rye_vetch]
+    survival_years: 1
+    break_years: 1
+    severity: high
+    note: Root-rot fungus that lives on cereal and grass roots/stubble; one non-grass year starves it (two years is safer). Oats are immune; rye is tolerant. Continuous wheat can show 'take-all decline'
+      after the 3rd–5th crop.
+    sources:
+    - Cook R.J. 2003, Take-all of wheat, https://doi.org/10.1016/S0885-5765(03)00042-0
+    - AHDB. Non-chemical control of take-all in cereals. https://ahdb.org.uk/knowledge-library/non-chemical-control-of-take-all-in-cereals
+    - AHDB. Rotation, cultivation and drilling options for cereal disease management. https://ahdb.org.uk/knowledge-library/rotation-cultivation-and-drilling-options-for-cereal-disease-management
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  fusarium_head_blight:
+    name: Fusarium graminearum / F. culmorum (head blight, stalk & ear rot; DON mycotoxin)
+    kind: fungus
+    hosts: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, winter_rye, oats, maize, maize_silage, sweet_corn, sorghum, rice]
+    survival_years: 2
+    break_years: 1
+    severity: high
+    note: Survives on maize and cereal residue on the soil surface for about 2 years; wheat right after maize (especially no-till) has the highest head-blight and DON risk.
+    sources:
+    - 'McMullen M. et al. 2012, A unified effort to fight an enemy of wheat and barley: Fusarium head blight, https://doi.org/10.1094/PDIS-03-12-0291-FE'
+    - Dill-Macky R. et al. 2000, The effect of previous crop residues and tillage on Fusarium head blight of wheat, https://doi.org/10.1094/PDIS.2000.84.1.71
+  eyespot:
+    name: Oculimacula yallundae / O. acuformis (eyespot)
+    kind: fungus
+    hosts: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, winter_rye]
+    survival_years: 2
+    break_years: 2
+    severity: medium
+    note: Stem-base fungus carried on cereal stubble; a 1–2-year non-cereal break lowers but does not remove risk (air-borne spores). Wheat as previous crop is riskiest; early sowing raises risk.
+    sources:
+    - Fitt B.D.L. et al. 1988, Eyespot (Pseudocercosporella herpotrichoides) epidemiology in relation to prediction of disease severity and yield loss in winter wheat — a review, https://doi.org/10.1111/j.1365-3059.1988.tb02081.x
+    - AHDB. Eyespot in cereals and risk assessment in wheat. https://ahdb.org.uk/knowledge-library/eyespot-in-cereals-and-risk-assessment-in-wheat
+  cereal_cyst_nematode:
+    name: Heterodera avenae / H. filipjevi (cereal cyst nematode)
+    kind: nematode
+    hosts: [oats, winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, winter_rye, clover_grass_ley]
+    survival_years: 3
+    break_years: 2
+    severity: medium
+    note: Cysts persist a few years; populations fall quickly under broadleaf crops. Oats are the most damaged host; resistant cereal cultivars also reduce numbers.
+    sources:
+    - 'Smiley R.W. et al. 2017, Cereal cyst nematodes: a complex and destructive group of Heterodera species, https://doi.org/10.1094/PDIS-03-17-0355-FE'
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  root_lesion_nematode:
+    name: Pratylenchus thornei / P. neglectus (root-lesion nematodes)
+    kind: nematode
+    hosts: [winter_wheat, spring_wheat, durum_wheat, barley, chickpea, faba_bean, mung_bean, soybean, winter_rapeseed]
+    survival_years: 3
+    break_years: 2
+    severity: medium
+    note: Survive dry soil for years; wheat, chickpea and mung bean multiply P. thornei, canola multiplies P. neglectus. Sorghum, sunflower, cotton and most cover grasses are poor hosts.
+    sources:
+    - Thompson J.P. et al. 2008, Root-lesion nematodes (Pratylenchus thornei and P, https://doi.org/10.1071/AP08021
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  sclerotinia:
+    name: Sclerotinia sclerotiorum (white mould / stem rot)
+    kind: fungus
+    hosts: [soybean, dry_bean, sunflower, safflower, winter_rapeseed, mustard_cover, field_pea, lentil, chickpea, faba_bean, potato, tomato, carrot, cabbage, pepper, squash, watermelon, groundnut, hemp]
+    survival_years: 5
+    break_years: 3
+    severity: high
+    note: Over 400 broadleaf hosts; hard sclerotia survive in soil for about 5 years (up to 8). Never stack two Sclerotinia hosts in consecutive years; grasses and cereals are non-hosts.
+    sources:
+    - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+    - Kirkegaard J. et al. 2008, Break crop benefits in temperate wheat production, https://doi.org/10.1016/j.fcr.2008.02.010
+  clubroot:
+    name: Plasmodiophora brassicae (clubroot)
+    kind: fungus
+    hosts: [winter_rapeseed, mustard_cover, cabbage]
+    survival_years: 17
+    break_years: 2
+    severity: high
+    note: Resting spores survive 15–20 years (midpoint used) but most lose viability within two host-free years; keep at least two years between brassicas and control cruciferous weeds/volunteers.
+    sources:
+    - Dixon G.R. 2009, The occurrence and economic impact of Plasmodiophora brassicae and clubroot disease, https://doi.org/10.1007/s00344-009-9090-y
+    - Wallenhammar A.-C. 1996, Prevalence of Plasmodiophora brassicae in a spring oilseed rape growing area in central Sweden and factors influencing soil infestation levels, https://doi.org/10.1046/j.1365-3059.1996.d01-173.x
+    - Canola Council of Canada. Canola Encyclopedia — Clubroot (spores survive up to 15–20 years; at least a two-year break). https://www.canolacouncil.org/canola-encyclopedia/diseases/clubroot/
+  blackleg:
+    name: Leptosphaeria maculans (blackleg / phoma stem canker)
+    kind: fungus
+    hosts: [winter_rapeseed, mustard_cover, cabbage]
+    survival_years: 3
+    break_years: 3
+    severity: high
+    note: Survives on canola stubble until it decomposes (≈3–4 years); airborne spores from old stubble infect new crops, so rotate and keep new canola away from last year's stubble.
+    sources:
+    - West J.S. et al. 2001, Epidemiology and management of Leptosphaeria maculans (phoma stem canker) on oilseed rape in Australia, Canada and Europe, https://doi.org/10.1046/j.1365-3059.2001.00546.x
+    - Canola Council of Canada. Canola Encyclopedia — Blackleg. https://www.canolacouncil.org/canola-encyclopedia/diseases/blackleg/
+    - Harker K.N. et al. 2015, Canola rotation frequency impacts canola yield and associated pest species, https://doi.org/10.4141/cjps-2014-289
+  verticillium_wilt:
+    name: Verticillium dahliae / V. longisporum (Verticillium wilt)
+    kind: fungus
+    hosts: [potato, tomato, pepper, sunflower, safflower, cotton, watermelon, squash, winter_rapeseed, cabbage, mustard_cover, alfalfa, hemp]
+    survival_years: 14
+    break_years: 4
+    severity: high
+    note: Microsclerotia survive up to ~14 years, so rotation only slowly reduces inoculum; cereals, maize and grasses are non-hosts and the best break.
+    sources:
+    - Fradin E.F. et al. 2006, Physiology and molecular aspects of Verticillium wilt diseases caused by V, https://doi.org/10.1111/j.1364-3703.2006.00323.x
+    - 'Bennett A.J. et al. 2012, Meeting the demand for crop production: the challenge of yield decline in crops grown in short rotations, https://doi.org/10.1111/j.1469-185X.2011.00184.x'
+  aphanomyces_root_rot:
+    name: Aphanomyces euteiches (pea & lentil root rot)
+    kind: oomycete
+    hosts: [field_pea, lentil, faba_bean, alfalfa, dry_bean, clover_grass_ley]
+    survival_years: 10
+    break_years: 6
+    severity: high
+    note: Oospores persist 10+ years; once a field is infested, peas and lentils fail for many years. Keep ≥5–6 years between peas and test soil before sowing.
+    sources:
+    - Gaulin E. et al. 2007, Root rot disease of legumes caused by Aphanomyces euteiches, https://doi.org/10.1111/j.1364-3703.2007.00413.x
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  ascochyta_blight:
+    name: Ascochyta / Didymella spp. (ascochyta blights of pulses)
+    kind: fungus
+    hosts: [field_pea, lentil, chickpea, faba_bean]
+    survival_years: 3
+    break_years: 3
+    severity: medium
+    note: Host-specific species survive on pulse stubble and seed for ~2–4 years (midpoint used); sow clean seed far from last year's stubble and keep ≥3 years between the same pulse.
+    sources:
+    - Tivoli B. et al. 2007, Comparison of the epidemiology of ascochyta blights on grain legumes, https://doi.org/10.1007/s10658-007-9117-9
+  phytophthora_capsici:
+    name: Phytophthora capsici (Phytophthora blight of vegetables)
+    kind: oomycete
+    hosts: [pepper, squash, watermelon, tomato, dry_bean]
+    survival_years: 5
+    break_years: 3
+    severity: high
+    note: Oospores survive several years in wet soils; rotate away from peppers, cucurbits and tomato for ≥3 years and avoid waterlogged fields.
+    sources:
+    - 'Hausbeck M.K. et al. 2004, Phytophthora capsici on vegetable crops: research progress and management challenges, https://doi.org/10.1094/PDIS.2004.88.12.1292'
+  phytophthora_sojae:
+    name: Phytophthora sojae (Phytophthora root and stem rot of soybean)
+    kind: oomycete
+    hosts: [soybean]
+    survival_years: 10
+    break_years: 2
+    severity: medium
+    note: Oospores persist many years; rotation helps only partly — resistant varieties and drainage matter more.
+    sources:
+    - Dorrance A.E. et al. 2007, Phytophthora root and stem rot of soybean, https://doi.org/10.1094/PHI-I-2007-0830-07
+  rhizoctonia:
+    name: Rhizoctonia solani (root & crown rot, black scurf, sheath blight)
+    kind: fungus
+    hosts: [sugar_beet, potato, soybean, dry_bean, rice, maize, maize_silage, carrot, cabbage, cotton, field_pea, groundnut]
+    survival_years: 5
+    break_years: 2
+    severity: medium
+    note: Very wide host range and long saprophytic survival; maize before sugar beet raises crown-rot risk (AG 2-2). Cereals and grasses reduce but do not eliminate it.
+    sources:
+    - 'Ajayi-Oyetunde O.O. et al. 2018, Rhizoctonia solani: taxonomy, population biology and management of rhizoctonia seedling disease of soybean, https://doi.org/10.1111/ppa.12733'
+    - Larkin R.P. et al. 2011, Effects of different potato cropping system approaches and water management on soilborne diseases and soil microbial communities, https://doi.org/10.1094/PHYTO-04-10-0100
+  pythium:
+    name: Pythium spp. (damping-off, root rot, cavity spot)
+    kind: oomycete
+    hosts: [maize, soybean, field_pea, dry_bean, chickpea, winter_wheat, sugar_beet, cotton, carrot, watermelon, squash]
+    survival_years: 10
+    break_years: 0
+    severity: medium
+    note: Generalist soil oomycete with long-lived oospores; rotation has little effect — use drainage, seed treatment and avoid cold wet sowing.
+    sources:
+    - van West P. et al. 2003, Advances in research on oomycete root pathogens, https://doi.org/10.1016/S0885-5765(03)00044-4
+  soybean_cyst_nematode:
+    name: Heterodera glycines (soybean cyst nematode, SCN)
+    kind: nematode
+    hosts: [soybean, dry_bean]
+    survival_years: 10
+    break_years: 2
+    severity: high
+    note: Eggs in cysts survive about 10 years; each non-host year lowers numbers. Rotate soybean with maize/cereals and switch resistance sources.
+    sources:
+    - Niblack T.L. 2005, Soybean cyst nematode management reconsidered, https://doi.org/10.1094/PD-89-1020
+  beet_cyst_nematode:
+    name: Heterodera schachtii (beet cyst nematode, BCN)
+    kind: nematode
+    hosts: [sugar_beet, winter_rapeseed, mustard_cover, cabbage, quinoa]
+    survival_years: 6
+    break_years: 4
+    severity: high
+    note: Cysts persist several years; brassicas (oilseed rape, cabbage, non-resistant mustard) and chenopods also multiply it, so count them as 'beet years'. Resistant mustard / oil-radish catch crops
+      reduce it.
+    sources:
+    - UC IPM. Sugarbeet — Sugarbeet cyst nematode (Heterodera schachtii). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/sugarbeet/sugarbeet-cyst-nematode/
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - 'Matthiessen J.N. et al. 2006, Biofumigation and enhanced biodegradation: opportunity and challenge in soilborne pest and disease management, https://doi.org/10.1080/07352680600611543'
+  potato_cyst_nematode:
+    name: Globodera rostochiensis / G. pallida (potato cyst nematode)
+    kind: nematode
+    hosts: [potato, tomato]
+    survival_years: 20
+    break_years: 6
+    severity: high
+    note: Cysts survive 20+ years; eggs decline only ~20–33 % per year without potatoes, so ≥6-year breaks are needed in infested fields (plus resistant varieties).
+    sources:
+    - Whitehead A.G. 1995, Decline of potato cyst nematodes, Globodera rostochiensis and G, https://doi.org/10.1111/j.1365-3059.1995.tb02728.x
+    - 'Bennett A.J. et al. 2012, Meeting the demand for crop production: the challenge of yield decline in crops grown in short rotations, https://doi.org/10.1111/j.1469-185X.2011.00184.x'
+  root_knot_nematode:
+    name: Meloidogyne spp. (root-knot nematodes)
+    kind: nematode
+    hosts: [tomato, pepper, carrot, potato, sweet_potato, cotton, groundnut, soybean, dry_bean, cowpea, watermelon, squash, cabbage, onion, cassava, sugar_beet, maize, sugarcane, rice, chickpea, mung_bean,
+      pigeon_pea, sunflower, quinoa]
+    survival_years: 2
+    break_years: 2
+    severity: high
+    note: Thousands of hosts (most vegetables and tropical crops); eggs survive ~1–2 years but weeds keep populations alive. Use poor hosts (resistant sorghum-sudangrass, some cereals, groundnut against
+      M. incognita) and biofumigant covers.
+    sources:
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - 'Matthiessen J.N. et al. 2006, Biofumigation and enhanced biodegradation: opportunity and challenge in soilborne pest and disease management, https://doi.org/10.1080/07352680600611543'
+  corn_rootworm:
+    name: Diabrotica virgifera / D. barberi (corn rootworm)
+    kind: insect
+    hosts: [maize, maize_silage, sweet_corn]
+    survival_years: 1
+    break_years: 1
+    severity: high
+    note: Eggs laid in maize hatch next year and larvae can only feed on maize roots, so one year without maize breaks the cycle — except where rotation-resistant or extended-diapause variants occur.
+    sources:
+    - 'Gray M.E. et al. 2009, Adaptation and invasiveness of western corn rootworm: intensifying research on a worsening pest, https://doi.org/10.1146/annurev.ento.54.110807.090434'
+  wireworms:
+    name: Agriotes spp. (wireworms, click-beetle larvae)
+    kind: insect
+    hosts: [potato, sweet_potato, maize, maize_silage, sweet_corn, sugar_beet, carrot, onion]
+    survival_years: 5
+    break_years: 3
+    severity: medium
+    favoured_by: [clover_grass_ley]
+    note: Larvae live 4–5 years and build up under grass and leys; for 2–4 years after ploughing grassland, potatoes, maize, beet and root vegetables are at risk.
+    sources:
+    - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+  striga:
+    name: Striga hermonthica / S. asiatica (witchweed)
+    kind: weed
+    hosts: [maize, sorghum, pearl_millet, rice, sugarcane, sorghum_sudan]
+    survival_years: 15
+    break_years: 3
+    severity: high
+    trap_crops: [cowpea, groundnut, soybean, cotton, pigeon_pea, mung_bean]
+    note: Parasitic weed of cereals in Africa; seeds stay viable 10–20 years (midpoint used). Legume 'trap crops' trigger suicidal germination and add N that suppresses Striga.
+    sources:
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+    - Parker C. 2009, Observations on the current status of Orobanche and Striga problems worldwide, https://doi.org/10.1002/ps.1713
+  broomrape:
+    name: Orobanche / Phelipanche spp. (broomrape)
+    kind: weed
+    hosts: [faba_bean, field_pea, lentil, chickpea, sunflower, tomato, potato, carrot, hemp, winter_rapeseed]
+    survival_years: 10
+    break_years: 5
+    severity: high
+    trap_crops: [flax, winter_wheat, barley]
+    note: Root-parasitic weed of pulses, sunflower and vegetables; seeds survive >10 years. Long breaks plus trap/catch crops (e.g. flax, cereals) are needed.
+    sources:
+    - Parker C. 2009, Observations on the current status of Orobanche and Striga problems worldwide, https://doi.org/10.1002/ps.1713
+  cereal_stem_borers:
+    name: Busseola fusca / Chilo partellus / Sesamia (cereal stem borers)
+    kind: insect
+    hosts: [maize, sorghum, pearl_millet, sugarcane, rice, sorghum_sudan, sweet_corn]
+    survival_years: 1
+    break_years: 1
+    severity: high
+    note: Larvae survive the dry season inside cereal stalks; destroying stubble and rotating with legumes or cassava breaks the cycle.
+    sources:
+    - Kfir R. et al. 2002, Biology and management of economically important lepidopteran cereal stem borers in Africa, https://doi.org/10.1146/annurev.ento.47.091201.145254
+  fall_armyworm:
+    name: Spodoptera frugiperda (fall armyworm)
+    kind: insect
+    hosts: [maize, sweet_corn, sorghum, rice, pearl_millet, sugarcane, cotton]
+    survival_years: 0
+    break_years: 0
+    severity: high
+    note: Migratory moth with no soil-resting stage — crop rotation does NOT control it; scout, use intercropping/push-pull and natural enemies.
+    sources:
+    - 'Day R. et al. 2017, Fall armyworm: impacts and implications for Africa, https://doi.org/10.1564/v28_oct_02'
+    - 'Prasanna B.M. et al. 2018, Fall Armyworm in Africa: A Guide for Integrated Pest Management, https://repository.cimmyt.org/handle/10883/19204'
+  gray_leaf_spot:
+    name: Cercospora zeae-maydis (gray leaf spot of maize)
+    kind: fungus
+    hosts: [maize, maize_silage, sweet_corn]
+    survival_years: 1
+    break_years: 1
+    severity: medium
+    note: Survives on maize residue left on the surface; one year without maize (or burying residue) sharply reduces early infection.
+    sources:
+    - 'Ward J.M.J. et al. 1999, Gray leaf spot: a disease of global importance in maize production, https://doi.org/10.1094/PDIS.1999.83.10.884'
+  rhizomania:
+    name: Beet necrotic yellow vein virus vectored by Polymyxa betae (rhizomania)
+    kind: virus-vector
+    hosts: [sugar_beet]
+    survival_years: 15
+    break_years: 3
+    severity: medium
+    note: The soil vector's resting spores carry the virus for 15+ years; rotation cannot clean a field — grow resistant varieties and avoid short beet rotations that intensify it.
+    sources:
+    - McGrann G.R.D. et al. 2009, Progress towards the understanding and control of sugar beet rhizomania disease, https://doi.org/10.1111/j.1364-3703.2008.00514.x
+  white_rot:
+    name: Sclerotium cepivorum (white rot of onion & garlic)
+    kind: fungus
+    hosts: [onion]
+    survival_years: 20
+    break_years: 15
+    severity: high
+    note: Sclerotia survive 20+ years; rotation alone will not clean a field — avoid moving infested soil and do not plant alliums there for many years.
+    sources:
+    - UC IPM. Onion and garlic — White rot (Sclerotium cepivorum). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/onion-and-garlic/white-rot/
+  common_scab:
+    name: Streptomyces scabies (common scab)
+    kind: bacterium
+    hosts: [potato, carrot, sugar_beet, groundnut]
+    survival_years: 10
+    break_years: 3
+    severity: medium
+    note: Soil saprophyte that persists indefinitely; diverse rotations with disease-suppressive crops (mustard, sudangrass, rye) reduced scab 15–45 % vs continuous potato.
+    sources:
+    - Dees M.W. et al. 2012, In search of better management of potato common scab, https://doi.org/10.1007/s11540-012-9206-9
+    - Larkin R.P. et al. 2011, Effects of different potato cropping system approaches and water management on soilborne diseases and soil microbial communities, https://doi.org/10.1094/PHYTO-04-10-0100
+  blackgrass:
+    name: Alopecurus myosuroides (black-grass, herbicide-resistant grass weed)
+    kind: weed
+    hosts: [winter_wheat, winter_barley, winter_rapeseed, winter_rye, spelt, triticale_forage]
+    survival_years: 3
+    break_years: 2
+    severity: medium
+    note: Autumn-germinating grass weed favoured by winter crops; spring sowing cut plant densities by 88 % and ploughing by 69 % in UK trials; a 2-year spring-crop break depletes the short-lived seedbank.
+    sources:
+    - Lutman P.J.W. et al. 2013, A review of the effects of crop agronomy on the management of Alopecurus myosuroides, https://doi.org/10.1111/wre.12024
+crops:
+  alfalfa:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: 120
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 1.5
+    allelopathy: 'Autotoxic: medicarpin and other compounds from old stands inhibit new alfalfa seedlings — wait ≥1 year (or 2–3 weeks for very young stands) before reseeding.'
+    good_predecessors: [winter_wheat, barley, oats, maize_silage, spring_wheat, triticale_forage]
+    poor_predecessors: [alfalfa, clover_grass_ley, field_pea, dry_bean]
+    note: 'Deep-rooted perennial legume: leaves a large N credit and better soil structure, but cannot follow itself (autotoxicity) or other legumes (root rots).'
+    sources:
+    - Jennings J.A. et al. 1998, Influence of soil texture on alfalfa autotoxicity, https://doi.org/10.2134/agronj1998.00021962009000010010x
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  maize:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -30
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 7.0
+    allelopathy: null
+    good_predecessors: [soybean, field_pea, faba_bean, dry_bean, lentil, chickpea, alfalfa, clover_grass_ley, potato, cowpea, groundnut]
+    poor_predecessors: [maize, maize_silage, sweet_corn, sorghum, sorghum_sudan]
+    note: Tolerates itself better than most crops, but continuous maize yielded 13–15 % less than maize after soybean; one year without maize breaks rootworm. Heavy residue ties up N and carries Fusarium
+      into a following wheat.
+    sources:
+    - Gentry L.F. et al. 2013, Identifying factors controlling the continuous corn yield penalty, https://doi.org/10.2134/agronj2012.0246
+    - Pedersen P. et al. 2003, Corn and soybean response to rotation sequence, row spacing, and tillage system, https://doi.org/10.2134/agronj2003.9650
+    - 'Gray M.E. et al. 2009, Adaptation and invasiveness of western corn rootworm: intensifying research on a worsening pest, https://doi.org/10.1146/annurev.ento.54.110807.090434'
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  maize_silage:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: degrades
+    residue_c_t_ha: 1.0
+    allelopathy: null
+    good_predecessors: [soybean, field_pea, faba_bean, dry_bean, lentil, chickpea, alfalfa, clover_grass_ley, potato]
+    poor_predecessors: [maize, maize_silage, sweet_corn]
+    note: Whole plant is removed, so little residue returns and late-autumn harvest traffic compacts soil — follow with a cover or winter cereal.
+    sources:
+    - Gentry L.F. et al. 2013, Identifying factors controlling the continuous corn yield penalty, https://doi.org/10.2134/agronj2012.0246
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  winter_wheat:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -20
+    preceding_crop_value: low
+    soil_structure_effect: neutral
+    residue_c_t_ha: 5.0
+    allelopathy: null
+    good_predecessors: [winter_rapeseed, field_pea, faba_bean, soybean, potato, sugar_beet, alfalfa, clover_grass_ley, lentil, chickpea, mustard_cover, oats, flax, sunflower]
+    poor_predecessors: [winter_wheat, spring_wheat, durum_wheat, spelt, triticale_forage, barley, winter_barley, maize, maize_silage, winter_rye]
+    note: Yields 0.5–1.2 t/ha more after a break crop than after wheat (largest after pulses); after maize, head-blight/DON risk rises.
+    sources:
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - Kirkegaard J. et al. 2008, Break crop benefits in temperate wheat production, https://doi.org/10.1016/j.fcr.2008.02.010
+    - Cook R.J. 2003, Take-all of wheat, https://doi.org/10.1016/S0885-5765(03)00042-0
+    - Dill-Macky R. et al. 2000, The effect of previous crop residues and tillage on Fusarium head blight of wheat, https://doi.org/10.1094/PDIS.2000.84.1.71
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  barley:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: medium
+    n_effect_kg_ha: -15
+    preceding_crop_value: low
+    soil_structure_effect: neutral
+    residue_c_t_ha: 3.5
+    allelopathy: null
+    good_predecessors: [sugar_beet, potato, maize, field_pea, soybean, winter_rapeseed]
+    poor_predecessors: [barley, winter_barley, oats]
+    note: Undemanding cereal; tolerates a cereal predecessor better than wheat, but cereal cyst nematode and net blotch build up in short barley sequences.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Sächsisches Landesamt für Umwelt, Landwirtschaft und Geologie (LfULG). Vorfruchteignung der Kulturarten im Ökologischen Landbau (Fruchtfolgegrundsätze, Tabelle; predecessor classes = 80–90/90–100/100–110/110–120
+      % relative yield). https://www.landwirtschaft.sachsen.de/download/Fruchtfolgegrundsaetze_Tabelle.pdf
+    - 'Smiley R.W. et al. 2017, Cereal cyst nematodes: a complex and destructive group of Heterodera species, https://doi.org/10.1094/PDIS-03-17-0355-FE'
+  triticale_forage:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: improves
+    residue_c_t_ha: 1.0
+    allelopathy: null
+    good_predecessors: [maize_silage, potato, field_pea, winter_rapeseed, alfalfa]
+    poor_predecessors: [triticale_forage, winter_wheat, winter_barley, winter_rye]
+    note: Winter forage cereal that protects the soil over winter; removed as forage so little residue returns. Shares take-all and eyespot with wheat.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - AHDB. Rotation, cultivation and drilling options for cereal disease management. https://ahdb.org.uk/knowledge-library/rotation-cultivation-and-drilling-options-for-cereal-disease-management
+  sorghum:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -20
+    preceding_crop_value: low
+    soil_structure_effect: neutral
+    residue_c_t_ha: 6.0
+    allelopathy: Sorghum roots/residues exude sorgoleone and phenolics that suppress weeds and can reduce stands/growth of small-seeded following crops (wheat, vegetables) for weeks.
+    good_predecessors: [soybean, cowpea, groundnut, dry_bean, cotton, pigeon_pea]
+    poor_predecessors: [sorghum, maize, pearl_millet, sorghum_sudan]
+    note: Drought-hardy cereal; residues are allelopathic and dry the profile, so the next crop may start short of water. Shares Striga and stem borers with maize and millet.
+    sources:
+    - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
+    - Weston L.A. et al. 2003, Weed and crop allelopathy, https://doi.org/10.1080/713610861
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+    - Kfir R. et al. 2002, Biology and management of economically important lepidopteran cereal stem borers in Africa, https://doi.org/10.1146/annurev.ento.47.091201.145254
+  teff:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: shallow
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 1.0
+    allelopathy: null
+    good_predecessors: [alfalfa, soybean, potato, field_pea]
+    poor_predecessors: [teff, sorghum_sudan]
+    note: Short summer grass forage with few pests of its own; a gentle way to break an alfalfa stand.
+    sources:
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf
+  soybean:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 20
+    preceding_crop_value: high
+    soil_structure_effect: neutral
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [maize, winter_wheat, sorghum, barley, oats, spring_wheat]
+    poor_predecessors: [soybean, dry_bean, sunflower, winter_rapeseed]
+    note: Rotated soybean yielded ~8 % more than soybean after soybean; SCN, Phytophthora and white mould build up in short rotations. Maize after soybean yields ~15 % more than continuous maize.
+    sources:
+    - Pedersen P. et al. 2003, Corn and soybean response to rotation sequence, row spacing, and tillage system, https://doi.org/10.2134/agronj2003.9650
+    - Niblack T.L. 2005, Soybean cyst nematode management reconsidered, https://doi.org/10.1094/PD-89-1020
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  dry_bean:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 20
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 1.5
+    allelopathy: null
+    good_predecessors: [maize, winter_wheat, barley, sorghum, oats]
+    poor_predecessors: [dry_bean, soybean, sunflower, winter_rapeseed, potato]
+    note: Sensitive to white mould, root rots and bean rust — keep 3+ years between beans and away from other Sclerotinia hosts.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  potato:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tuber
+    root_depth_class: shallow
+    n_effect_kg_ha: 20
+    preceding_crop_value: high
+    soil_structure_effect: degrades
+    residue_c_t_ha: 1.5
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, winter_rye, oats, faba_bean, field_pea, mustard_cover]
+    poor_predecessors: [potato, tomato, pepper, clover_grass_ley, sugar_beet, carrot]
+    note: Needs 3–4 years between potatoes (≥6 where cyst nematodes are present). Avoid planting right after grass/ley (wireworm). Leaves a loose, weed-free seedbed but intensive tillage and harvest degrade
+      structure.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Whitehead A.G. 1995, Decline of potato cyst nematodes, Globodera rostochiensis and G, https://doi.org/10.1111/j.1365-3059.1995.tb02728.x
+    - Larkin R.P. et al. 2011, Effects of different potato cropping system approaches and water management on soilborne diseases and soil microbial communities, https://doi.org/10.1094/PHYTO-04-10-0100
+    - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+    - Sächsisches Landesamt für Umwelt, Landwirtschaft und Geologie (LfULG). Vorfruchteignung der Kulturarten im Ökologischen Landbau (Fruchtfolgegrundsätze, Tabelle; predecessor classes = 80–90/90–100/100–110/110–120
+      % relative yield). https://www.landwirtschaft.sachsen.de/download/Fruchtfolgegrundsaetze_Tabelle.pdf
+  tomato:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [maize, winter_wheat, sorghum, barley, mustard_cover]
+    poor_predecessors: [tomato, potato, pepper, watermelon, squash]
+    note: Shares Verticillium, root-knot nematodes, potato cyst nematode and Phytophthora with other Solanaceae and cucurbits — rotate with grass crops.
+    sources:
+    - Fradin E.F. et al. 2006, Physiology and molecular aspects of Verticillium wilt diseases caused by V, https://doi.org/10.1111/j.1364-3703.2006.00323.x
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - 'Hausbeck M.K. et al. 2004, Phytophthora capsici on vegetable crops: research progress and management challenges, https://doi.org/10.1094/PDIS.2004.88.12.1292'
+  safflower:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, durum_wheat]
+    poor_predecessors: [safflower, sunflower, winter_rapeseed, soybean, dry_bean]
+    note: Deep taproot dries the subsoil (low water for the next crop) but leaves biopores; shares Sclerotinia and Verticillium with sunflower.
+    sources:
+    - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+    - Fradin E.F. et al. 2006, Physiology and molecular aspects of Verticillium wilt diseases caused by V, https://doi.org/10.1111/j.1364-3703.2006.00323.x
+  sunflower:
+    min_return_years: 5
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 4.0
+    allelopathy: Sunflower residues contain phenolics/sesquiterpene lactones that can suppress small-seeded following crops and weeds.
+    good_predecessors: [winter_wheat, barley, maize, durum_wheat]
+    poor_predecessors: [sunflower, safflower, soybean, dry_bean, winter_rapeseed, field_pea]
+    note: Keep 5–6 years between sunflowers (NRW recommends 6) because of Sclerotinia, Verticillium, Phomopsis and broomrape; deep roots leave a dry subsoil.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+    - Parker C. 2009, Observations on the current status of Orobanche and Striga problems worldwide, https://doi.org/10.1002/ps.1713
+    - Weston L.A. et al. 2003, Weed and crop allelopathy, https://doi.org/10.1080/713610861
+  pearl_millet:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 4.0
+    allelopathy: null
+    good_predecessors: [cowpea, groundnut, pigeon_pea, mung_bean]
+    poor_predecessors: [pearl_millet, sorghum, maize]
+    note: Hardy cereal of the Sahel; after cowpea or groundnut it benefits from N and less Striga. Downy mildew and stem borers build up in continuous millet.
+    sources:
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+    - Kfir R. et al. 2002, Biology and management of economically important lepidopteran cereal stem borers in Africa, https://doi.org/10.1146/annurev.ento.47.091201.145254
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  cowpea:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 40
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 1.5
+    allelopathy: null
+    good_predecessors: [maize, sorghum, pearl_millet, cassava, rice]
+    poor_predecessors: [cowpea, groundnut, mung_bean, soybean]
+    note: Fixes N and acts as a Striga trap crop for the next cereal; shares root-knot nematodes, pod borers and viruses with other grain legumes.
+    sources:
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+  sweet_potato:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 2
+    root_system: tuber
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [maize, sorghum, pearl_millet, rice]
+    poor_predecessors: [sweet_potato, cassava, clover_grass_ley]
+    note: Weevils and root-knot nematodes carry over on volunteer roots — rotate with cereals and remove crop debris.
+    sources:
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+  cover_rye_vetch:
+    min_return_years: 1
+    self_tolerance: high
+    family_return_years: null
+    root_system: mixed
+    root_depth_class: deep
+    n_effect_kg_ha: 60
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 4.0
+    allelopathy: Cereal rye residues release benzoxazinoids (DIBOA/BOA) that can suppress small-seeded crops and weeds for 2–4 weeks.
+    good_predecessors: [maize, soybean, winter_wheat, sunflower, potato]
+    poor_predecessors: []
+    note: 'Winter cover: rye scavenges leftover nitrate and protects soil, vetch fixes N. Terminate 2–3 weeks before planting small-seeded crops.'
+    sources:
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+    - 'Tonitto C. et al. 2006, Replacing bare fallows with cover crops in fertilizer-intensive cropping systems: a meta-analysis of crop yield and N dynamics, https://doi.org/10.1016/j.agee.2005.07.003'
+    - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
+  oats:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: medium
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.5
+    allelopathy: null
+    good_predecessors: [sugar_beet, potato, field_pea, clover_grass_ley, maize, faba_bean]
+    poor_predecessors: [oats, barley]
+    note: 'A ''health crop'' among cereals: not a host of wheat take-all, but the main host of cereal cyst nematode — keep 3–5 years between oats.'
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - 'Smiley R.W. et al. 2017, Cereal cyst nematodes: a complex and destructive group of Heterodera species, https://doi.org/10.1094/PDIS-03-17-0355-FE'
+  winter_rye:
+    min_return_years: 1
+    self_tolerance: high
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -15
+    preceding_crop_value: medium
+    soil_structure_effect: improves
+    residue_c_t_ha: 5.0
+    allelopathy: Cereal rye residues release benzoxazinoids (DIBOA/BOA) that can suppress small-seeded crops and weeds for 2–4 weeks.
+    good_predecessors: [potato, field_pea, clover_grass_ley, faba_bean]
+    poor_predecessors: [maize, maize_silage]
+    note: The most self-tolerant cereal (1–2 year break) and very winter-hardy; good on poor sandy soils. Avoid after maize (Fusarium).
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
+    - Dill-Macky R. et al. 2000, The effect of previous crop residues and tillage on Fusarium head blight of wheat, https://doi.org/10.1094/PDIS.2000.84.1.71
+  durum_wheat:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -20
+    preceding_crop_value: low
+    soil_structure_effect: neutral
+    residue_c_t_ha: 4.0
+    allelopathy: null
+    good_predecessors: [chickpea, lentil, field_pea, faba_bean, winter_rapeseed, sunflower, safflower]
+    poor_predecessors: [maize, maize_silage, sorghum, durum_wheat, winter_wheat, spring_wheat, barley]
+    note: Most Fusarium/DON-sensitive wheat — never after maize; benefits strongly from a pulse predecessor (N and crown-rot break).
+    sources:
+    - Dill-Macky R. et al. 2000, The effect of previous crop residues and tillage on Fusarium head blight of wheat, https://doi.org/10.1094/PDIS.2000.84.1.71
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  spring_wheat:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -20
+    preceding_crop_value: low
+    soil_structure_effect: neutral
+    residue_c_t_ha: 4.0
+    allelopathy: null
+    good_predecessors: [field_pea, lentil, soybean, winter_rapeseed, flax, potato, sugar_beet, oats]
+    poor_predecessors: [spring_wheat, winter_wheat, durum_wheat, barley, maize]
+    note: 'Same disease logic as winter wheat: follow a broadleaf break crop; avoid after maize or another wheat.'
+    sources:
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - Kirkegaard J. et al. 2008, Break crop benefits in temperate wheat production, https://doi.org/10.1016/j.fcr.2008.02.010
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  winter_barley:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: medium
+    n_effect_kg_ha: -15
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 4.5
+    allelopathy: null
+    good_predecessors: [field_pea, potato, oats, faba_bean, winter_rapeseed]
+    poor_predecessors: [winter_barley, barley, triticale_forage, winter_wheat]
+    note: Early harvest leaves a window for oilseed rape or a cover crop; needs 2–3 years between barleys (foot rots, cyst nematode, mildew).
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - AHDB. Rotation, cultivation and drilling options for cereal disease management. https://ahdb.org.uk/knowledge-library/rotation-cultivation-and-drilling-options-for-cereal-disease-management
+  spelt:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -20
+    preceding_crop_value: low
+    soil_structure_effect: neutral
+    residue_c_t_ha: 5.0
+    allelopathy: null
+    good_predecessors: [clover_grass_ley, faba_bean, field_pea, potato, winter_rapeseed]
+    poor_predecessors: [spelt, winter_wheat, maize, triticale_forage]
+    note: Hulled wheat for low-input systems; same take-all/eyespot logic as wheat with a 2–3 year break.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Cook R.J. 2003, Take-all of wheat, https://doi.org/10.1016/S0885-5765(03)00042-0
+  rice:
+    min_return_years: 1
+    self_tolerance: high
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: shallow
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: degrades
+    residue_c_t_ha: 5.0
+    allelopathy: null
+    good_predecessors: [mung_bean, winter_wheat, chickpea, lentil, cowpea]
+    poor_predecessors: []
+    note: Flooded paddy rice tolerates itself well (anaerobic soil suppresses many soil-borne pests), but puddling destroys soil structure for the following upland crop and delays its sowing.
+    sources:
+    - 'Timsina J. et al. 2001, Productivity and management of rice–wheat cropping systems: issues and challenges, https://doi.org/10.1016/S0378-4290(00)00143-X'
+  sugar_beet:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: 30
+    preceding_crop_value: medium
+    soil_structure_effect: degrades
+    residue_c_t_ha: 5.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, winter_barley, oats, spring_wheat]
+    poor_predecessors: [sugar_beet, winter_rapeseed, cabbage, mustard_cover, maize, quinoa, potato]
+    note: At least 4 years between beets because of beet cyst nematode, rhizomania and Rhizoctonia — and count oilseed rape/brassicas as host years. Leaf residue returns N, but wet autumn harvest compacts
+      soil.
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - UC IPM. Sugarbeet — Sugarbeet cyst nematode (Heterodera schachtii). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/sugarbeet/sugarbeet-cyst-nematode/
+    - McGrann G.R.D. et al. 2009, Progress towards the understanding and control of sugar beet rhizomania disease, https://doi.org/10.1111/j.1364-3703.2008.00514.x
+    - 'Ajayi-Oyetunde O.O. et al. 2018, Rhizoctonia solani: taxonomy, population biology and management of rhizoctonia seedling disease of soybean, https://doi.org/10.1111/ppa.12733'
+  winter_rapeseed:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: 30
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 5.0
+    allelopathy: null
+    good_predecessors: [winter_barley, winter_wheat, field_pea, oats, spelt]
+    poor_predecessors: [winter_rapeseed, mustard_cover, cabbage, sugar_beet, sunflower, soybean]
+    note: 'Excellent wheat break (+~0.8 t/ha), but needs ≥2 clear years between brassicas: each extra crop between canola crops added 0.20–0.36 t/ha canola yield (blackleg, clubroot, Sclerotinia).'
+    sources:
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - Harker K.N. et al. 2015, Canola rotation frequency impacts canola yield and associated pest species, https://doi.org/10.4141/cjps-2014-289
+    - Canola Council of Canada. Canola Encyclopedia — Blackleg. https://www.canolacouncil.org/canola-encyclopedia/diseases/blackleg/
+    - Canola Council of Canada. Canola Encyclopedia — Clubroot (spores survive up to 15–20 years; at least a two-year break). https://www.canolacouncil.org/canola-encyclopedia/diseases/clubroot/
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  mustard_cover:
+    min_return_years: 2
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 15
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.0
+    allelopathy: Glucosinolates break down to isothiocyanates (biofumigation) that can suppress some soil-borne fungi, nematodes and small-seeded weeds.
+    good_predecessors: [winter_wheat, barley, winter_barley, spring_wheat]
+    poor_predecessors: [winter_rapeseed, cabbage, mustard_cover]
+    note: 'Fast catch crop that holds leftover N and can biofumigate, but it is a brassica: counts as a clubroot/blackleg/BCN host year unless a resistant variety is used.'
+    sources:
+    - 'Matthiessen J.N. et al. 2006, Biofumigation and enhanced biodegradation: opportunity and challenge in soilborne pest and disease management, https://doi.org/10.1080/07352680600611543'
+    - Kirkegaard J.A. et al. 1998, Biofumigation potential of brassicas I, https://doi.org/10.1023/A:1004364713152
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+  flax:
+    min_return_years: 6
+    self_tolerance: low
+    family_return_years: null
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, potato, maize, spring_wheat]
+    poor_predecessors: [flax, winter_rapeseed, mustard_cover, sugar_beet, sunflower]
+    note: 'Needs about 6 years between flax crops (''flax sickness'', Fusarium wilt). Strongly mycorrhiza-dependent: grows poorly after non-mycorrhizal brassicas, beet or long bare fallow.'
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Thompson J.P. 1987, Decline of vesicular-arbuscular mycorrhizae in long fallow disorder of field crops and its expression in phosphorus deficiency of sunflower, https://doi.org/10.1071/AR9870847
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  field_pea:
+    min_return_years: 5
+    self_tolerance: low
+    family_return_years: 4
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 40
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, oats, maize, spring_wheat]
+    poor_predecessors: [field_pea, lentil, faba_bean, alfalfa, clover_grass_ley, dry_bean, chickpea]
+    note: Best wheat predecessor (+~1.2 t/ha), but peas themselves need 4–8 years between crops (5 used) because Aphanomyces and Ascochyta persist in soil.
+    sources:
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Gaulin E. et al. 2007, Root rot disease of legumes caused by Aphanomyces euteiches, https://doi.org/10.1111/j.1364-3703.2007.00413.x
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  lentil:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 4
+    root_system: tap
+    root_depth_class: shallow
+    n_effect_kg_ha: 25
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 1.5
+    allelopathy: null
+    good_predecessors: [winter_wheat, durum_wheat, barley, spring_wheat, oats]
+    poor_predecessors: [lentil, field_pea, faba_bean, chickpea, alfalfa]
+    note: 'Keep 4–5 years between lentils and other pulses (NRW: 5) — Ascochyta, anthracnose and Aphanomyces.'
+    sources:
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Tivoli B. et al. 2007, Comparison of the epidemiology of ascochyta blights on grain legumes, https://doi.org/10.1007/s10658-007-9117-9
+    - Gaulin E. et al. 2007, Root rot disease of legumes caused by Aphanomyces euteiches, https://doi.org/10.1111/j.1364-3703.2007.00413.x
+  chickpea:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: 30
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [durum_wheat, winter_wheat, barley, sorghum]
+    poor_predecessors: [chickpea, lentil, field_pea, faba_bean, sunflower, mung_bean]
+    note: Fixes N and breaks cereal crown rot, but multiplies root-lesion nematode (P. thornei) and Ascochyta; 1 in 4 years.
+    sources:
+    - Thompson J.P. et al. 2008, Root-lesion nematodes (Pratylenchus thornei and P, https://doi.org/10.1071/AP08021
+    - Tivoli B. et al. 2007, Comparison of the epidemiology of ascochyta blights on grain legumes, https://doi.org/10.1007/s10658-007-9117-9
+    - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  faba_bean:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 45
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.5
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, oats, maize, spring_wheat]
+    poor_predecessors: [faba_bean, field_pea, lentil, clover_grass_ley]
+    note: High N fixer (residual N benefit to the next cereal); keep 3–5 years between faba beans (NRW) because of foot rots, stem nematode and broomrape.
+    sources:
+    - Jensen E.S. et al. 2010, Faba bean in cropping systems, https://doi.org/10.1016/j.fcr.2009.10.008
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Parker C. 2009, Observations on the current status of Orobanche and Striga problems worldwide, https://doi.org/10.1002/ps.1713
+  groundnut:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 30
+    preceding_crop_value: high
+    soil_structure_effect: degrades
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [maize, sorghum, pearl_millet, cotton]
+    poor_predecessors: [groundnut, soybean, cowpea, sweet_potato]
+    note: Rotate with grass crops for at least 2 years between groundnuts (leaf spots, white mould, root-knot nematode). Digging leaves bare soil; acts as a Striga trap crop for the next cereal.
+    sources:
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  pigeon_pea:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: 40
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [maize, sorghum, pearl_millet]
+    poor_predecessors: [pigeon_pea, cowpea]
+    note: Deep taproot reaches subsoil water and mobilises iron-bound phosphorus; leaf fall feeds the next cereal. Fusarium wilt builds up if grown repeatedly.
+    sources:
+    - Ae N. et al. 1990, Phosphorus uptake by pigeon pea and its role in cropping systems of the Indian subcontinent, https://doi.org/10.1126/science.248.4954.477
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+  mung_bean:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: 2
+    root_system: tap
+    root_depth_class: shallow
+    n_effect_kg_ha: 25
+    preceding_crop_value: high
+    soil_structure_effect: neutral
+    residue_c_t_ha: 1.5
+    allelopathy: null
+    good_predecessors: [rice, winter_wheat, maize, sorghum]
+    poor_predecessors: [mung_bean, cowpea, soybean, chickpea]
+    note: Short legume for the gap between rice and wheat; shares yellow mosaic virus/whitefly and root-lesion nematodes with other legumes.
+    sources:
+    - 'Timsina J. et al. 2001, Productivity and management of rice–wheat cropping systems: issues and challenges, https://doi.org/10.1016/S0378-4290(00)00143-X'
+    - Thompson J.P. et al. 2008, Root-lesion nematodes (Pratylenchus thornei and P, https://doi.org/10.1071/AP08021
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  cassava:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: null
+    root_system: tuber
+    root_depth_class: medium
+    n_effect_kg_ha: -20
+    preceding_crop_value: low
+    soil_structure_effect: degrades
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [cowpea, groundnut, pigeon_pea, mung_bean, soybean]
+    poor_predecessors: [cassava, sweet_potato]
+    note: Removes large amounts of potassium and leaves soil exposed early; rotate or intercrop with legumes and return stems/leaves.
+    sources:
+    - 'FAO 2013, Save and Grow: Cassava — a guide to sustainable production intensification, https://www.fao.org/3/i3278e/i3278e.pdf'
+  sugarcane:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: degrades
+    residue_c_t_ha: 10.0
+    allelopathy: null
+    good_predecessors: [soybean, groundnut, cowpea, sunflower]
+    poor_predecessors: [sugarcane, maize, sorghum]
+    note: 'Multi-year crop: after the last ratoon, a legume break (soybean, groundnut) of ≥6–12 months counters ''yield decline'' caused by soil-borne pests and compaction.'
+    sources:
+    - 'Bennett A.J. et al. 2012, Meeting the demand for crop production: the challenge of yield decline in crops grown in short rotations, https://doi.org/10.1111/j.1469-185X.2011.00184.x'
+    - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  cotton:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: null
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [maize, sorghum, winter_wheat, groundnut]
+    poor_predecessors: [cotton, sunflower, safflower, tomato]
+    note: Rotate with grass crops to reduce root-knot/reniform nematodes and Verticillium; cotton is also a Striga trap crop.
+    sources:
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - Fradin E.F. et al. 2006, Physiology and molecular aspects of Verticillium wilt diseases caused by V, https://doi.org/10.1111/j.1364-3703.2006.00323.x
+    - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+  onion:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: null
+    root_system: fibrous
+    root_depth_class: shallow
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 0.5
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, oats, maize]
+    poor_predecessors: [onion, clover_grass_ley]
+    note: Keep 4+ years between alliums; in fields with white rot, onions should not return for decades. Poor weed competitor — follow a clean cereal.
+    sources:
+    - UC IPM. Onion and garlic — White rot (Sclerotium cepivorum). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/onion-and-garlic/white-rot/
+    - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+  carrot:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 1.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, oats, maize]
+    poor_predecessors: [carrot, potato, soybean, dry_bean, sunflower, clover_grass_ley]
+    note: Avoid after Sclerotinia hosts, after potato (scab, root-knot) and after grass (wireworm); 3–4 years between carrots.
+    sources:
+    - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+  cabbage:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: mixed
+    root_depth_class: shallow
+    n_effect_kg_ha: 20
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, field_pea, potato, onion]
+    poor_predecessors: [cabbage, winter_rapeseed, mustard_cover, sugar_beet]
+    note: Clubroot can make a field unusable for brassicas for 15+ years — keep ≥4 years between any brassicas (including rapeseed and mustard covers).
+    sources:
+    - Dixon G.R. 2009, The occurrence and economic impact of Plasmodiophora brassicae and clubroot disease, https://doi.org/10.1007/s00344-009-9090-y
+    - Canola Council of Canada. Canola Encyclopedia — Clubroot (spores survive up to 15–20 years; at least a two-year break). https://www.canolacouncil.org/canola-encyclopedia/diseases/clubroot/
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  pepper:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [maize, winter_wheat, sorghum_sudan, onion]
+    poor_predecessors: [pepper, tomato, potato, squash, watermelon]
+    note: Phytophthora blight, Verticillium and root-knot nematodes are shared with tomato and cucurbits — ≥3 years away from them.
+    sources:
+    - 'Hausbeck M.K. et al. 2004, Phytophthora capsici on vegetable crops: research progress and management challenges, https://doi.org/10.1094/PDIS.2004.88.12.1292'
+    - Fradin E.F. et al. 2006, Physiology and molecular aspects of Verticillium wilt diseases caused by V, https://doi.org/10.1111/j.1364-3703.2006.00323.x
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+  watermelon:
+    min_return_years: 4
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [maize, sorghum, winter_wheat, sorghum_sudan]
+    poor_predecessors: [watermelon, squash, pepper, tomato]
+    note: Fusarium wilt and Phytophthora persist for years; rotate ≥4 years out of cucurbits and follow a grass crop.
+    sources:
+    - 'Hausbeck M.K. et al. 2004, Phytophthora capsici on vegetable crops: research progress and management challenges, https://doi.org/10.1094/PDIS.2004.88.12.1292'
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+  squash:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [maize, winter_wheat, cover_rye_vetch, sorghum_sudan]
+    poor_predecessors: [squash, watermelon, pepper]
+    note: Rotate ≥3 years out of cucurbits (Phytophthora, powdery mildew, cucumber beetles).
+    sources:
+    - 'Hausbeck M.K. et al. 2004, Phytophthora capsici on vegetable crops: research progress and management challenges, https://doi.org/10.1094/PDIS.2004.88.12.1292'
+  sweet_corn:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -10
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 4.0
+    allelopathy: null
+    good_predecessors: [soybean, dry_bean, field_pea, alfalfa, clover_grass_ley, potato]
+    poor_predecessors: [maize, maize_silage, sweet_corn]
+    note: 'Same rotation logic as grain maize: one year without maize breaks rootworm and residue diseases.'
+    sources:
+    - 'Gray M.E. et al. 2009, Adaptation and invasiveness of western corn rootworm: intensifying research on a worsening pest, https://doi.org/10.1146/annurev.ento.54.110807.090434'
+    - 'Ward J.M.J. et al. 1999, Gray leaf spot: a disease of global importance in maize production, https://doi.org/10.1094/PDIS.1999.83.10.884'
+  buckwheat:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: null
+    root_system: tap
+    root_depth_class: shallow
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: Fast canopy and root exudates suppress weeds (smother crop); allelopathic effect is weak.
+    good_predecessors: [winter_wheat, barley, potato, field_pea]
+    poor_predecessors: [buckwheat]
+    note: Short, pest-light crop that smothers weeds and mobilises soil phosphorus; frost-sensitive.
+    sources:
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+  quinoa:
+    min_return_years: 3
+    self_tolerance: low
+    family_return_years: 3
+    root_system: tap
+    root_depth_class: medium
+    n_effect_kg_ha: 0
+    preceding_crop_value: medium
+    soil_structure_effect: neutral
+    residue_c_t_ha: 2.0
+    allelopathy: null
+    good_predecessors: [potato, field_pea, faba_bean, winter_wheat]
+    poor_predecessors: [quinoa, sugar_beet]
+    note: Traditionally follows potato (better nutrient supply). Shares beet cyst nematode and downy mildew with beet/chenopods — 3 years apart.
+    sources:
+    - Steduto P. et al. 2012, FAO-66 Crop yield response to water (Table 1 reproduces FAO-33 seasonal Ky), https://www.fao.org/3/i2800e/i2800e.pdf
+    - Jacobsen S.-E. 2003, The worldwide potential for quinoa (Chenopodium quinoa Willd.), https://doi.org/10.1081/FRI-120018883
+    - UC IPM. Sugarbeet — Sugarbeet cyst nematode (Heterodera schachtii). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/sugarbeet/sugarbeet-cyst-nematode/
+  hemp:
+    min_return_years: 2
+    self_tolerance: medium
+    family_return_years: null
+    root_system: tap
+    root_depth_class: deep
+    n_effect_kg_ha: 0
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [clover_grass_ley, field_pea, faba_bean, potato, winter_wheat]
+    poor_predecessors: [hemp, sunflower, soybean, winter_rapeseed]
+    note: Dense, fast canopy suppresses weeds and a deep taproot loosens subsoil — a good predecessor for cereals; susceptible to Sclerotinia.
+    sources:
+    - Amaducci S. et al. 2015, Key cultivation techniques for hemp in Europe and China, https://doi.org/10.1016/j.indcrop.2014.06.041
+    - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+  clover_grass_ley:
+    min_return_years: 3
+    self_tolerance: medium
+    family_return_years: 2
+    root_system: mixed
+    root_depth_class: deep
+    n_effect_kg_ha: 100
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 3.0
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, oats, winter_rye, spring_wheat, winter_barley]
+    poor_predecessors: [clover_grass_ley, alfalfa, field_pea, faba_bean]
+    note: Builds soil organic matter, structure and N (grass–clover mixtures fix more N than clover alone), and cleans out annual weeds. Wireworms build up — avoid potatoes/maize/root crops for 2–3 years
+      after ploughing it out.
+    sources:
+    - Nyfeler D. et al. 2011, Grass–legume mixtures can yield more nitrogen than legume pure stands due to mutual stimulation of nitrogen uptake from symbiotic and non-symbiotic sources, https://doi.org/10.1016/j.agee.2010.11.022
+    - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+    - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+    - AHDB. Non-chemical control of take-all in cereals. https://ahdb.org.uk/knowledge-library/non-chemical-control-of-take-all-in-cereals
+  phacelia_cover:
+    min_return_years: 1
+    self_tolerance: high
+    family_return_years: null
+    root_system: fibrous
+    root_depth_class: medium
+    n_effect_kg_ha: 10
+    preceding_crop_value: high
+    soil_structure_effect: improves
+    residue_c_t_ha: 2.5
+    allelopathy: null
+    good_predecessors: [winter_wheat, barley, winter_barley, spring_wheat, field_pea]
+    poor_predecessors: []
+    note: Not related to any major crop, so it fits almost any rotation without spreading diseases; fine roots improve topsoil crumb and it catches leftover N.
+    sources:
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+  sorghum_sudan:
+    min_return_years: 1
+    self_tolerance: medium
+    family_return_years: 1
+    root_system: fibrous
+    root_depth_class: deep
+    n_effect_kg_ha: -20
+    preceding_crop_value: medium
+    soil_structure_effect: improves
+    residue_c_t_ha: 2.0
+    allelopathy: Sorghum roots/residues exude sorgoleone and phenolics that suppress weeds and can reduce stands/growth of small-seeded following crops (wheat, vegetables) for weeks.
+    good_predecessors: [winter_wheat, soybean, field_pea, potato]
+    poor_predecessors: [sorghum, sorghum_sudan, maize]
+    note: Huge root system breaks compaction; some cultivars suppress root-knot nematodes (dhurrin/HCN). Allelopathic — wait before sowing small-seeded crops.
+    sources:
+    - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+    - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
+    - Moens M. et al. 2009, Meloidogyne species — a diverse group of novel and important plant parasites, https://doi.org/10.1079/9781845934927.0001
+    - Larkin R.P. et al. 2011, Effects of different potato cropping system approaches and water management on soilborne diseases and soil microbial communities, https://doi.org/10.1094/PHYTO-04-10-0100
+rules:
+- id: cereal_after_cereal
+  text: 'Wheat after wheat (or another take-all/eyespot host cereal) yields less than after a break crop: Angus et al. found +0.5 t/ha (after oats) to +1.2 t/ha (after pulses) for the break. Typical loss
+    5–15 % (midpoint −10 %).'
+  yield_effect_pct: -10
+  applies_to: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage]
+  after: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, winter_rye]
+  sources:
+  - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  - Kirkegaard J. et al. 2008, Break crop benefits in temperate wheat production, https://doi.org/10.1016/j.fcr.2008.02.010
+  - Cook R.J. 2003, Take-all of wheat, https://doi.org/10.1016/S0885-5765(03)00042-0
+- id: legume_before_cereal
+  text: A grain legume before a cereal adds residual N and breaks cereal diseases; wheat yielded on average 1.2 t/ha more after pulses than after wheat (≈+20 % at 5–6 t/ha). Reduce N fertiliser by the crop's
+    n_effect_kg_ha.
+  yield_effect_pct: 20
+  applies_to: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, winter_rye, oats, maize, maize_silage, sweet_corn, sorghum, pearl_millet, rice]
+  after: [field_pea, lentil, chickpea, faba_bean, soybean, dry_bean, cowpea, groundnut, pigeon_pea, mung_bean, alfalfa, clover_grass_ley]
+  sources:
+  - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+  - Herridge D.F. et al. 2008, Global inputs of biological nitrogen fixation in agricultural systems, https://doi.org/10.1007/s11104-008-9668-3
+- id: oilseed_before_cereal
+  text: 'Canola, mustard or flax before wheat breaks take-all and other cereal root diseases: about +0.8 t/ha (≈+15 %); the benefit carries ~20 % into a second wheat.'
+  yield_effect_pct: 15
+  applies_to: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley]
+  after: [winter_rapeseed, mustard_cover, flax]
+  sources:
+  - Angus J.F. et al. 2015, Break crops and rotations for wheat, https://doi.org/10.1071/CP14252
+  - Kirkegaard J. et al. 2008, Break crop benefits in temperate wheat production, https://doi.org/10.1016/j.fcr.2008.02.010
+- id: continuous_maize
+  text: 'Maize after maize: continuous corn yielded 1.36 t/ha (−13 %) less than corn after soybean in Illinois and ~15 % less in Wisconsin; the penalty grows with years of continuous maize (N tie-up, residue,
+    rootworm).'
+  yield_effect_pct: -13
+  applies_to: &id001 [maize, maize_silage, sweet_corn]
+  after: *id001
+  sources:
+  - Gentry L.F. et al. 2013, Identifying factors controlling the continuous corn yield penalty, https://doi.org/10.2134/agronj2012.0246
+  - Pedersen P. et al. 2003, Corn and soybean response to rotation sequence, row spacing, and tillage system, https://doi.org/10.2134/agronj2003.9650
+  - 'Gray M.E. et al. 2009, Adaptation and invasiveness of western corn rootworm: intensifying research on a worsening pest, https://doi.org/10.1146/annurev.ento.54.110807.090434'
+- id: maize_before_wheat_fusarium
+  text: Wheat, durum or barley directly after maize has the highest Fusarium head blight and DON risk, especially with surface residue (no-till). Plough/chop residue or choose a different predecessor.
+  yield_effect_pct: -5
+  applies_to: [winter_wheat, spring_wheat, durum_wheat, spelt, barley, winter_barley, triticale_forage, oats]
+  after: [maize, maize_silage, sweet_corn, sorghum]
+  low_confidence: true
+  sources:
+  - Dill-Macky R. et al. 2000, The effect of previous crop residues and tillage on Fusarium head blight of wheat, https://doi.org/10.1094/PDIS.2000.84.1.71
+  - 'McMullen M. et al. 2012, A unified effort to fight an enemy of wheat and barley: Fusarium head blight, https://doi.org/10.1094/PDIS-03-12-0291-FE'
+- id: soybean_after_soybean
+  text: 'Soybean after soybean: first-year soybean yielded ~8 % more than soybean in longer soybean sequences; SCN, Phytophthora and white mould increase.'
+  yield_effect_pct: -8
+  applies_to: [soybean]
+  after: [soybean]
+  sources:
+  - Pedersen P. et al. 2003, Corn and soybean response to rotation sequence, row spacing, and tillage system, https://doi.org/10.2134/agronj2003.9650
+  - Niblack T.L. 2005, Soybean cyst nematode management reconsidered, https://doi.org/10.1094/PD-89-1020
+- id: alfalfa_autotoxicity
+  text: 'Do not reseed alfalfa into (or right after) an old alfalfa stand: autotoxic compounds reduce seedling growth and the new stand''s yield. Wait ≥1 year with another crop.'
+  yield_effect_pct: -20
+  applies_to: [alfalfa]
+  after: [alfalfa]
+  low_confidence: true
+  sources:
+  - Jennings J.A. et al. 1998, Influence of soil texture on alfalfa autotoxicity, https://doi.org/10.2134/agronj1998.00021962009000010010x
+- id: brassica_return
+  text: 'Brassicas (oilseed rape, mustard, cabbage) need ≥2 clear years between them: each additional crop between canola crops added 0.20–0.36 t/ha (midpoint 0.28 t/ha ≈ −11 % per missing break year) via
+    less blackleg and root maggot.'
+  yield_effect_pct: -11
+  applies_to: &id002 [winter_rapeseed, mustard_cover, cabbage]
+  after: *id002
+  window_years: 2
+  sources:
+  - Harker K.N. et al. 2015, Canola rotation frequency impacts canola yield and associated pest species, https://doi.org/10.4141/cjps-2014-289
+  - Canola Council of Canada. Canola Encyclopedia — Clubroot (spores survive up to 15–20 years; at least a two-year break). https://www.canolacouncil.org/canola-encyclopedia/diseases/clubroot/
+  - Canola Council of Canada. Canola Encyclopedia — Blackleg. https://www.canolacouncil.org/canola-encyclopedia/diseases/blackleg/
+- id: pulse_return
+  text: Peas and lentils within 4–5 years of another pea/lentil/faba/alfalfa crop risk Aphanomyces root rot and Ascochyta; once established, yield losses in infested fields can be severe.
+  yield_effect_pct: -15
+  applies_to: [field_pea, lentil]
+  after: [field_pea, lentil, chickpea, faba_bean, alfalfa, clover_grass_ley]
+  window_years: 4
+  low_confidence: true
+  sources:
+  - Gaulin E. et al. 2007, Root rot disease of legumes caused by Aphanomyces euteiches, https://doi.org/10.1111/j.1364-3703.2007.00413.x
+  - Tivoli B. et al. 2007, Comparison of the epidemiology of ascochyta blights on grain legumes, https://doi.org/10.1007/s10658-007-9117-9
+  - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+- id: solanaceae_short_rotation
+  text: 'Potato/tomato/pepper less than 3 years after another Solanaceae: PCN, Verticillium, Rhizoctonia and scab build up; rotations reduced stem canker 10–50 %, black scurf 18–58 % and scab 15–45 % vs
+    continuous potato.'
+  yield_effect_pct: -10
+  applies_to: &id003 [potato, tomato, pepper]
+  after: *id003
+  window_years: 3
+  low_confidence: true
+  sources:
+  - Larkin R.P. et al. 2011, Effects of different potato cropping system approaches and water management on soilborne diseases and soil microbial communities, https://doi.org/10.1094/PHYTO-04-10-0100
+  - Whitehead A.G. 1995, Decline of potato cyst nematodes, Globodera rostochiensis and G, https://doi.org/10.1111/j.1365-3059.1995.tb02728.x
+  - Fradin E.F. et al. 2006, Physiology and molecular aspects of Verticillium wilt diseases caused by V, https://doi.org/10.1111/j.1364-3703.2006.00323.x
+- id: beet_short_rotation
+  text: 'Sugar beet less than 4 years after beet or another BCN host (oilseed rape, cabbage, non-resistant mustard, quinoa): cyst nematode, rhizomania and Rhizoctonia increase.'
+  yield_effect_pct: -10
+  applies_to: [sugar_beet]
+  after: [sugar_beet, winter_rapeseed, cabbage, mustard_cover, quinoa]
+  window_years: 4
+  low_confidence: true
+  sources:
+  - UC IPM. Sugarbeet — Sugarbeet cyst nematode (Heterodera schachtii). University of California Agriculture and Natural Resources. https://ipm.ucanr.edu/agriculture/sugarbeet/sugarbeet-cyst-nematode/
+  - McGrann G.R.D. et al. 2009, Progress towards the understanding and control of sugar beet rhizomania disease, https://doi.org/10.1111/j.1364-3703.2008.00514.x
+  - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+- id: sclerotinia_host_sequence
+  text: Two Sclerotinia hosts within 3 years (sunflower, canola, soybean, beans, pulses, carrot, potato …) let sclerotia (surviving ~5 years) build up; put a cereal or maize between them.
+  yield_effect_pct: -10
+  host_group: sclerotinia
+  window_years: 3
+  low_confidence: true
+  sources:
+  - 'Bolton M.D. et al. 2006, Sclerotinia sclerotiorum (Lib.) de Bary: biology and molecular traits of a cosmopolitan pathogen, https://doi.org/10.1111/j.1364-3703.2005.00316.x'
+  - Kirkegaard J. et al. 2008, Break crop benefits in temperate wheat production, https://doi.org/10.1016/j.fcr.2008.02.010
+- id: wireworm_after_grass
+  text: Potatoes, maize, beet and root vegetables in the first 2–4 years after grassland or a ley face wireworm damage (larvae live 4–5 years); a cereal first lowers the risk.
+  yield_effect_pct: -10
+  applies_to: [potato, sweet_potato, maize, maize_silage, sweet_corn, sugar_beet, carrot, onion]
+  after: [clover_grass_ley]
+  window_years: 3
+  low_confidence: true
+  sources:
+  - Parker W.E. et al. 2001, The biology and management of wireworms (Agriotes spp.) on potato with particular reference to the U.K, https://doi.org/10.1046/j.1461-9563.2001.00094.x
+- id: striga_trap_crop
+  text: Where Striga occurs, cereal after cereal multiplies the seedbank; a legume or cotton 'trap crop' year triggers suicidal germination, adds N and lowers Striga in the next cereal.
+  yield_effect_pct: 15
+  applies_to: [maize, sorghum, pearl_millet, rice]
+  after: [cowpea, groundnut, soybean, cotton, pigeon_pea, mung_bean]
+  low_confidence: true
+  sources:
+  - Oswald A. 2005, Striga control — technologies and their dissemination, https://doi.org/10.1016/j.cropro.2004.09.003
+  - Parker C. 2009, Observations on the current status of Orobanche and Striga problems worldwide, https://doi.org/10.1002/ps.1713
+- id: rotation_diversity
+  text: More diverse rotations (≥3 crops incl. a legume or perennial) raised maize yields 28.1 % on average across 11 long-term North American experiments (22.6 % in favourable years) and cut drought losses
+    by 14–90 %.
+  yield_effect_pct: 28
+  applies_to: [maize]
+  condition: rotation has >= 3 distinct crops including a legume, ley or small grain
+  sources:
+  - Bowles T.M. et al. 2020, Long-term evidence shows that crop-rotation diversification increases agricultural resilience to adverse growing conditions in North America, https://doi.org/10.1016/j.oneear.2020.02.007
+- id: predecessor_value_scale
+  text: 'German predecessor-suitability classes: very favourable predecessor = 110–120 % relative yield, favourable 100–110 %, unfavourable 90–100 %, very unfavourable 80–90 %. Used to translate preceding_crop_value
+    high/medium/low into +15/+5/−5 % (class midpoints).'
+  yield_effect_pct: 0
+  scale:
+    high: 15
+    medium: 5
+    low: -5
+    very_low: -15
+  sources:
+  - Sächsisches Landesamt für Umwelt, Landwirtschaft und Geologie (LfULG). Vorfruchteignung der Kulturarten im Ökologischen Landbau (Fruchtfolgegrundsätze, Tabelle; predecessor classes = 80–90/90–100/100–110/110–120
+    % relative yield). https://www.landwirtschaft.sachsen.de/download/Fruchtfolgegrundsaetze_Tabelle.pdf
+- id: cover_crop_fallow
+  text: Replacing bare winter fallow with a cover crop cuts nitrate leaching and erosion; non-legume covers had no significant yield penalty and legume covers can replace part of the N fertiliser.
+  yield_effect_pct: 0
+  sources:
+  - 'Tonitto C. et al. 2006, Replacing bare fallows with cover crops in fertilizer-intensive cropping systems: a meta-analysis of crop yield and N dynamics, https://doi.org/10.1016/j.agee.2005.07.003'
+  - Clark A. (ed.) 2007, Managing Cover Crops Profitably, 3rd ed, https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/
+- id: mycorrhiza_long_fallow
+  text: Strongly mycorrhizal crops (sunflower, flax, maize, chickpea, pigeon pea, cotton, cassava, faba bean) grow poorly and show P deficiency after long bare fallow or non-mycorrhizal crops (brassicas,
+    beet, quinoa); inoculation with cropped soil more than doubled sunflower growth.
+  yield_effect_pct: -10
+  applies_to: [sunflower, flax, maize, chickpea, pigeon_pea, cotton, cassava, faba_bean]
+  after: [winter_rapeseed, mustard_cover, cabbage, sugar_beet, quinoa]
+  low_confidence: true
+  sources:
+  - Thompson J.P. 1987, Decline of vesicular-arbuscular mycorrhizae in long fallow disorder of field crops and its expression in phosphorus deficiency of sunflower, https://doi.org/10.1071/AR9870847
+- id: allelopathic_residue
+  text: Small-seeded crops sown soon after sorghum, sorghum-sudangrass, sunflower or cereal-rye residues can suffer reduced emergence (sorgoleone, phenolics, benzoxazinoids); leave 2–4 weeks or incorporate
+    residues.
+  yield_effect_pct: -5
+  applies_to: [carrot, onion, cabbage, lentil, flax, teff, quinoa, winter_wheat, durum_wheat]
+  after: [sorghum, sorghum_sudan, sunflower, cover_rye_vetch, winter_rye]
+  low_confidence: true
+  sources:
+  - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
+  - Weston L.A. et al. 2003, Weed and crop allelopathy, https://doi.org/10.1080/713610861
+- id: spring_crop_grass_weeds
+  text: 'Alternating winter and spring crops controls autumn-germinating grass weeds: spring-sown wheat had 88 % fewer black-grass plants than autumn-sown wheat; ploughing −69 %, delayed drilling −50 %.'
+  yield_effect_pct: 0
+  host_group: blackgrass
+  sources:
+  - Lutman P.J.W. et al. 2013, A review of the effects of crop agronomy on the management of Alopecurus myosuroides, https://doi.org/10.1111/wre.12024
+- id: legume_share
+  text: Aim for ≥25 % (better 33 %) legumes in the rotation, but respect pulse/clover self-intolerance (pea and vetch especially) and at least one soil-building year (ley, legume) per 5–6 years.
+  yield_effect_pct: 0
+  sources:
+  - Hof-Kautz C. 2024, Fruchtfolgen im Ökolandbau (Anbaupausen table, after Kolbe et al.), https://www.oekolandbau.nrw.de/sites/default/files/2024-06/2024_2_DLG_Poster_Fruchtfolgen_im_Ökolandbau.pdf
+  - Peoples M.B. et al. 2009, The contributions of nitrogen-fixing crop legumes to the productivity of agricultural systems, https://doi.org/10.1007/BF03179980
+- id: rice_wheat_puddling
+  text: Upland crops after puddled paddy rice face poor soil structure and late sowing; zero-till sowing or a short legume (mung bean) between rice and wheat reduces the penalty.
+  yield_effect_pct: -5
+  applies_to: [winter_wheat, spring_wheat, chickpea, lentil, maize]
+  after: [rice]
+  low_confidence: true
+  sources:
+  - 'Timsina J. et al. 2001, Productivity and management of rice–wheat cropping systems: issues and challenges, https://doi.org/10.1016/S0378-4290(00)00143-X'
