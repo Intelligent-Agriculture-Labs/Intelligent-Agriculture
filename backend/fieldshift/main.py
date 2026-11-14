@@ -282,6 +282,39 @@ def farm_push(farm_id: str, req: FarmPush) -> dict[str, Any]:
     return _farm_call(farms.push, farm_id, req.name, req.fields, req.settings)
 
 
+class SatelliteRequest(BaseModel):
+    lat: float = Field(ge=-60, le=75)
+    lon: float = Field(ge=-180, le=180)
+    polygon: list[list[float]] | None = None
+    crop: str | None = None
+    start: str | None = None
+    end: str | None = None
+
+
+@app.post("/api/satellite")
+def satellite_ep(req: SatelliteRequest) -> dict[str, Any]:
+    """Field satellite analysis on Sentinel-2 (async: poll until status == 'done')."""
+    from .engine import satellite_service
+
+    if req.polygon and len(req.polygon) > 400:
+        raise HTTPException(422, "polygon too complex (max 400 vertices)")
+    return satellite_service.satellite_api(req.model_dump())
+
+
+@app.get("/api/satellite/png/{key}/{name}.png", include_in_schema=False)
+def satellite_png(key: str, name: str) -> Response:
+    from .engine import satellite_service
+
+    if name not in ("zones", "ndvi", "truecolor") or not key.isalnum():
+        raise HTTPException(404)
+    p = satellite_service.png_path(key, name)
+    if p is None:
+        raise HTTPException(404)
+    return Response(
+        p.read_bytes(), media_type="image/png", headers={"Cache-Control": "public, max-age=86400"}
+    )
+
+
 class PlannerRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)
