@@ -291,3 +291,83 @@ export interface PresetLocation {
   /** a past date with an active season, to replay real advice for demos (sent as FieldInput.as_of) */
   replay_date?: string | null;
 }
+
+/* ---------- Terrain maps (POST /api/terrain) ---------- */
+export interface TerrainRequest {
+  lat: number;
+  lon: number;
+  crop: string;
+  polygon?: [number, number][] | null; // [lon, lat] ring
+}
+export interface TerrainLegendItem {
+  color: string;
+  label: string;
+  share_pct?: number; // share of the field area in this class
+}
+export interface TerrainLayer {
+  id: "elevation" | "slope" | "erosion" | "wetness" | "frost" | "zones" | "hillshade";
+  label: string;
+  unit: string;
+  png: string; // relative URL, e.g. /api/terrain/png/<key>/slope.png — web-mercator aligned with `bounds`
+  legend: TerrainLegendItem[];
+  stats: { mean?: number; p10?: number; p90?: number; max?: number }; // over the field (polygon or 150 m radius)
+  why: string;
+}
+export interface TerrainZone {
+  id: "erosion" | "wet" | "frost" | "core";
+  color: string;
+  label: string;
+  share_pct: number;
+  advice: string;
+}
+export interface TerrainResponse {
+  key: string;
+  bounds: { south: number; west: number; north: number; east: number };
+  cell_m: number;
+  field: { area_ha: number; polygon: boolean; texture: string; annual_precip_mm: number };
+  layers: TerrainLayer[];
+  zones: TerrainZone[];
+  zone_advice: TerrainZone[]; // zones covering >= 5 % of the field (planning advice)
+  sources: SourceRef[];
+  caveats: string[];
+}
+
+/* ---------- Season planner (POST /api/planner) ---------- */
+export interface PlannerRequest {
+  lat: number;
+  lon: number;
+  crop: string;
+  planting_date: string;
+  irrigation: IrrigationMethod;
+  water_allocation_mm?: number | null;
+  as_of?: string | null;
+}
+export interface PlannerResponse {
+  crop: string;
+  season_start: string;
+  years: [number, number];
+  sowing_scan: {
+    date: string;
+    yield_median: number;
+    yield_p10: number;
+    irrigation_median_mm: number;
+    frost_risk_pct: number;
+    heat_days_median: number;
+    score: number;
+  }[]; // empty for perennials
+  window: { start: string; end: string; best: string } | null;
+  stages: { label: string; date: string; spread_days: number }[]; // perennials: cutting dates
+  operations: { date: string; label: string; kind: "sow" | "stage" | "harvest" | "scout" | "water" }[];
+  water_budget: { month: number; et0: number; etc: number; eta: number; rain: number; irr: number }[]; // mm, median season
+  water: {
+    season_irrigation_median_mm: number;
+    full_need_median_mm: number;
+    allocation_mm: number | null;
+    coverage_pct: number | null;
+    efficiency: number;
+    note: string | null;
+  };
+  risk_calendar: { month: number; frost_pct: number; heat_pct: number }[];
+  why: string;
+  sources: string[];
+}

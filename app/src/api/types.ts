@@ -6,7 +6,8 @@
 
 export type Risk = "low" | "moderate" | "high" | "severe";
 export type Lang = "en" | "es" | "fr" | "sw" | "hi" | "de";
-export type IrrigationMethod = "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
+export type IrrigationMethod =
+  "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
 
 export interface FieldInput {
   lat: number;
@@ -89,7 +90,12 @@ export interface DroughtStatus {
 }
 
 export interface AdviceResponse {
-  field: FieldInput & { elevation_m: number | null; slope_pct: number | null; soil: SoilInfo | null; area_ha: number | null };
+  field: FieldInput & {
+    elevation_m: number | null;
+    slope_pct: number | null;
+    soil: SoilInfo | null;
+    area_ha: number | null;
+  };
   generated_at: string;
   as_of: string;
   cards: ActionCard[]; // ALL cards ranked; UI shows top 3 on the home screen
@@ -130,7 +136,8 @@ export interface SimulateRequest {
   lon: number;
   crop: string;
   planting_date: string; // month-day used across years, ISO date with any year
-  irrigation_strategy: "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
+  irrigation_strategy:
+    "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
   water_allocation_mm?: number | null;
   delta_t_c?: number; // climate scenario: + °C
   rain_factor?: number; // e.g. 0.8 = 20% less rain
@@ -191,7 +198,15 @@ export interface RotationSlot {
   end_month: number;
 }
 export interface RotationMetric {
-  id: "water" | "soil" | "income" | "pests" | "risk" | "erosion" | "nitrogen" | "bare_days";
+  id:
+    | "water"
+    | "soil"
+    | "income"
+    | "pests"
+    | "risk"
+    | "erosion"
+    | "nitrogen"
+    | "bare_days";
   label: string;
   value: number; // in unit
   unit: string;
@@ -203,7 +218,12 @@ export interface RotationStrategy {
   name: string; // "Alfalfa → teff → winter wheat + cover"
   is_current: boolean;
   slots: RotationSlot[];
-  calendar: { month: number; year: number; crop: string | null; cover: number }[]; // 0..1 ground cover per month
+  calendar: {
+    month: number;
+    year: number;
+    crop: string | null;
+    cover: number;
+  }[]; // 0..1 ground cover per month
   metrics: RotationMetric[];
   total_score: number; // weighted by priorities, 0..100
   why_suggested: string;
@@ -234,7 +254,13 @@ export interface ClimateResponse {
     baseline_mean: number; // first 15 years
     recent_mean: number; // last 10 years
   }[];
-  monthly_normals: { month: number; tmax: number; tmin: number; precip: number; et0: number }[];
+  monthly_normals: {
+    month: number;
+    tmax: number;
+    tmin: number;
+    precip: number;
+    et0: number;
+  }[];
   insights: string[];
   source: SourceRef;
 }
@@ -264,4 +290,84 @@ export interface PresetLocation {
   cached: boolean;
   /** a past date with an active season, to replay real advice for demos (sent as FieldInput.as_of) */
   replay_date?: string | null;
+}
+
+/* ---------- Terrain maps (POST /api/terrain) ---------- */
+export interface TerrainRequest {
+  lat: number;
+  lon: number;
+  crop: string;
+  polygon?: [number, number][] | null; // [lon, lat] ring
+}
+export interface TerrainLegendItem {
+  color: string;
+  label: string;
+  share_pct?: number; // share of the field area in this class
+}
+export interface TerrainLayer {
+  id: "elevation" | "slope" | "erosion" | "wetness" | "frost" | "zones" | "hillshade";
+  label: string;
+  unit: string;
+  png: string; // relative URL, e.g. /api/terrain/png/<key>/slope.png — web-mercator aligned with `bounds`
+  legend: TerrainLegendItem[];
+  stats: { mean?: number; p10?: number; p90?: number; max?: number }; // over the field (polygon or 150 m radius)
+  why: string;
+}
+export interface TerrainZone {
+  id: "erosion" | "wet" | "frost" | "core";
+  color: string;
+  label: string;
+  share_pct: number;
+  advice: string;
+}
+export interface TerrainResponse {
+  key: string;
+  bounds: { south: number; west: number; north: number; east: number };
+  cell_m: number;
+  field: { area_ha: number; polygon: boolean; texture: string; annual_precip_mm: number };
+  layers: TerrainLayer[];
+  zones: TerrainZone[];
+  zone_advice: TerrainZone[]; // zones covering >= 5 % of the field (planning advice)
+  sources: SourceRef[];
+  caveats: string[];
+}
+
+/* ---------- Season planner (POST /api/planner) ---------- */
+export interface PlannerRequest {
+  lat: number;
+  lon: number;
+  crop: string;
+  planting_date: string;
+  irrigation: IrrigationMethod;
+  water_allocation_mm?: number | null;
+  as_of?: string | null;
+}
+export interface PlannerResponse {
+  crop: string;
+  season_start: string;
+  years: [number, number];
+  sowing_scan: {
+    date: string;
+    yield_median: number;
+    yield_p10: number;
+    irrigation_median_mm: number;
+    frost_risk_pct: number;
+    heat_days_median: number;
+    score: number;
+  }[]; // empty for perennials
+  window: { start: string; end: string; best: string } | null;
+  stages: { label: string; date: string; spread_days: number }[]; // perennials: cutting dates
+  operations: { date: string; label: string; kind: "sow" | "stage" | "harvest" | "scout" | "water" }[];
+  water_budget: { month: number; et0: number; etc: number; eta: number; rain: number; irr: number }[]; // mm, median season
+  water: {
+    season_irrigation_median_mm: number;
+    full_need_median_mm: number;
+    allocation_mm: number | null;
+    coverage_pct: number | null;
+    efficiency: number;
+    note: string | null;
+  };
+  risk_calendar: { month: number; frost_pct: number; heat_pct: number }[];
+  why: string;
+  sources: string[];
 }
