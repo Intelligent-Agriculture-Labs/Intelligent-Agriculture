@@ -95,6 +95,20 @@ def main() -> None:
         )
         print("   simulate", s["summary"], flush=True)
         sources.soil(p["lat"], p["lon"])
+        from fieldshift.engine import maps, planner
+
+        t = maps.terrain_api({"lat": p["lat"], "lon": p["lon"], "crop": p["crop"]})
+        print("   terrain", [(z["label"], z["share_pct"]) for z in t["zones"]], flush=True)
+        pl = planner.planner_api(
+            {
+                "lat": p["lat"],
+                "lon": p["lon"],
+                "crop": p["crop"],
+                "planting_date": p["planting_date"],
+                "irrigation": p["irrigation"],
+            }
+        )
+        print("   planner", pl["window"], len(pl["operations"]), "ops", flush=True)
         print(f"   done in {time.time() - t0:.0f}s", flush=True)
 
     # copy cache -> demo_cache (only gz payloads + index); keep demo_cache small: skip files > 8 MB
@@ -107,6 +121,8 @@ def main() -> None:
             shutil.copy2(src, http.DEMO_DIR / src.name)
             kept[key] = meta
     (http.DEMO_DIR / "index.json").write_text(json.dumps(kept, default=str))
+    if (http.CACHE_DIR / "dem").exists():  # elevation tiles for the terrain maps (offline)
+        shutil.copytree(http.CACHE_DIR / "dem", http.DEMO_DIR / "dem", dirs_exist_ok=True)
     total = sum(f.stat().st_size for f in http.DEMO_DIR.glob("*.gz"))
     print(f"demo_cache: {len(kept)} files, {total / 1e6:.1f} MB", flush=True)
 
