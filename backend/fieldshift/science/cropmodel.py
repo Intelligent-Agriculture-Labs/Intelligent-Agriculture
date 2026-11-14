@@ -177,6 +177,8 @@ def simulate(
     record_daily: bool = False,
     irrigate_until: tuple[int, int] | None = None,
     irrigate_until_date: dt.date | None = None,
+    kc_scale: float = 1.0,
+    kc_scale_from: dt.date | None = None,
 ) -> SeasonResult:
     """Run one season from `planting`. `until` stops early (used for 'today' state).
 
@@ -282,6 +284,10 @@ def simulate(
                 matured = True
 
         zr = zr_min + (zr_max - zr_min) * min(1.0, root_frac)
+        if kc_scale != 1.0 and kc_scale_from is not None and d >= kc_scale_from:
+            kc = (
+                kc * kc_scale
+            )  # satellite data fusion: observed canopy (Sentinel-2 Kcb) rescales crop water use
         etc = kc * et0
         p_adj = float(np.clip(c["p"] + 0.04 * (5 - etc), 0.1, 0.8))
         taw = taw_per_m * zr

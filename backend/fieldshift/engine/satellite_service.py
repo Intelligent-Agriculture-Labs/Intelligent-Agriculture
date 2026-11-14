@@ -328,3 +328,12 @@ def _analyse(key: str, req: dict[str, Any], start: dt.date, end: dt.date) -> Non
     }
     (_dir() / f"{key}.json").write_text(json.dumps(result))
     _set(key, status="done", progress=1.0)
+
+
+def latest_for(
+    lat: float, lon: float, polygon: list[list[float]] | None, crop_id: str | None, today: dt.date
+) -> dict[str, Any] | None:
+    """Cached satellite result for this field (default analysis window), if any — never starts a job."""
+    end = today - dt.timedelta(days=today.weekday())
+    req = {"lat": lat, "lon": lon, "polygon": polygon, "crop": crop_id}
+    return _cached(_key(req, end - dt.timedelta(days=365), end))

@@ -198,6 +198,22 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     if inp.get("last_irrigation_date") and inp.get("last_irrigation_mm"):
         known = {dt.date.fromisoformat(inp["last_irrigation_date"]): float(inp["last_irrigation_mm"])}
     horizon = today + dt.timedelta(days=rules()["irrigation"]["lookahead_days"])
+    # ---- satellite data fusion: observed canopy (Sentinel-2) rescales modelled crop water use
+    fusion = None
+    try:
+        from .satellite_service import latest_for
+
+        sat_res = latest_for(lat, lon, inp.get("polygon"), cid, today)
+    except Exception:  # never let fusion break advice
+        sat_res = None
+    if sat_res and sat_res.get("kcb_now") and sat_res.get("timeseries"):
+        sat_date = dt.date.fromisoformat(sat_res["timeseries"][-1]["date"])
+        if 0 <= (today - sat_date).days <= 15 and planting <= sat_date:
+            fusion = {
+                "kcb_sat": float(sat_res["kcb_now"]),
+                "date": sat_date,
+                "ndvi": sat_res["timeseries"][-1]["value"],
+            }
     if planting <= today:
         res = simulate(
             cid,
@@ -213,6 +229,29 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             irrigate_until_date=(min(known) - dt.timedelta(days=1)) if known else today,
             allocation_mm=inp.get("water_allocation_mm"),
         )
+        if fusion is not None and res.daily:
+            ddates0 = [dt.date.fromisoformat(x) for x in res.daily["date"]]
+            if fusion["date"] in ddates0:
+                kc_model = res.daily["kc"][ddates0.index(fusion["date"])]
+                if kc_model > 0.2:
+                    scale = float(np.clip((fusion["kcb_sat"] + 0.05) / kc_model, 0.4, 1.4))
+                    fusion["kc_model"], fusion["scale"] = kc_model, scale
+                    res = simulate(
+                        cid,
+                        w,
+                        planting,
+                        taw_per_m=ctx.taw_per_m,
+                        strategy="full" if irrigated else "rainfed",
+                        method=method,
+                        gdd_req=gdd_req,
+                        until=min(horizon, w.dates[-1]),
+                        known_irrigations=known,
+                        record_daily=True,
+                        irrigate_until_date=(min(known) - dt.timedelta(days=1)) if known else today,
+                        allocation_mm=inp.get("water_allocation_mm"),
+                        kc_scale=scale,
+                        kc_scale_from=fusion["date"],
+                    )
         daily = res.daily
         ddates = [dt.date.fromisoformat(x) for x in daily["date"]]
         k_today = ddates.index(today) if today in ddates else len(ddates) - 1
@@ -281,11 +320,16 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             f"Estimated water used from the root zone today: {dr_t:.0f} mm ({pct_left}% of available water left).",
         ]
         caveats = [caveat_grid]
+        if fusion and "scale" in fusion:
+            steps.append(
+                f"Sentinel-2 ({fusion['date'].isoformat()}, 10 m) shows field NDVI {fusion['ndvi']:.2f} → satellite crop coefficient {fusion['kcb_sat']:.2f} "
+                f"vs. {fusion['kc_model']:.2f} in the crop model; crop water use from that day is scaled by {fusion['scale']:.2f} (data fusion)."
+            )
         if irrigated and not known:
             caveats.append(
                 "We assume you irrigated whenever the model said so. Enter your last irrigation for a sharper estimate."
             )
-        conf = 0.7 if known else 0.55
+        conf = (0.7 if known else 0.55) + (0.1 if fusion and "scale" in fusion else 0.0)
         ndays = rules()["irrigation"]["lookahead_days"]
         if irrigated:
             if stress_day and stress_day <= horizon:

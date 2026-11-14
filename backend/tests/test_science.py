@@ -153,3 +153,10 @@ def test_winter_hardy_wheat_survives_cold_winter():
     w.tmin[150:] = 10
     r = simulate("winter_wheat", w, dt.date(2020, 1, 2), strategy="full", gdd_req=2000)
     assert r.frost_events == 0
+
+
+def test_satellite_kc_fusion_scales_water_use():
+    w = make_weather(rain=0.0)
+    base = simulate("maize", w, dt.date(2020, 5, 1), strategy="full", gdd_req=1500)
+    thin = simulate("maize", w, dt.date(2020, 5, 1), strategy="full", gdd_req=1500, kc_scale=0.5, kc_scale_from=dt.date(2020, 6, 15))
+    assert thin.etm_mm < base.etm_mm and thin.irrigation_mm < base.irrigation_mm
