@@ -20,6 +20,21 @@
 - **Rotation scores** use transparent but simplified indices (soil-health index, RUSLE-inspired erosion index, pest-cycle score). They have not been calibrated against field trials.
 - **Confidence values** are documented heuristics, not calibrated probabilities.
 
+## Field mapping, satellite and AI components
+- **Tap-to-detect** merges or splits fields in some cases:
+  - It can leak through gaps (farmsteads) into identical neighbouring crops.
+  - It finds only one strip of terraced or intercropped smallholder plots.
+  The outline must be checked and is always editable.
+- **Imagery.** The default high-resolution basemap (Esri World Imagery) is used with attribution for this non-commercial demo; production needs a licence. USDA NAIP (U.S., public domain) and Sentinel-2 (10 m) are alternatives.
+- **Sentinel-2 analysis:**
+  - The first analysis of a new field takes ~30 s on a fast link and several minutes on a slow one.
+  - Cloudy regions and seasons yield fewer clear scenes.
+  - NDVI saturates over very dense canopies.
+- **AI management zones** are statistical. Their causes (soil, water, pests, management) need ground truth; zones on small (< 1 ha) fields are noisy.
+- **AI drought classifier.** Trained and validated only for the contiguous U.S. (USDM labels). Elsewhere the rule-based status is used.
+- **SMAP and ECOSTRESS series** exist only for the pre-extracted demo fields (asynchronous AppEEARS batch with Earthdata Login). New fields get MODIS/POWER-based indicators.
+- **Farm sync** has no accounts. Anyone with the farm code can see and edit that farm's fields, so keep it private. There is no end-to-end encryption.
+
 ## Product
 - The step-by-step "Why?" reasoning and pest event labels are English; card titles and details and the whole UI are translated into 6 languages.
 - No user accounts or sync. Field data stays on the device.
