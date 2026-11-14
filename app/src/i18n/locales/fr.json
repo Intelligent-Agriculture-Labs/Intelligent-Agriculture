@@ -222,5 +222,13 @@
     "chart": "Graphique de {{label}} du {{start}} au {{end}}, dernière valeur {{last}}",
     "map": "Carte. Touchez pour placer votre parcelle.",
     "slider": "{{label}} : {{value}}"
+  },
+  "irrigationLog": {
+    "hint": "Indiquez votre dernière irrigation pour une estimation plus précise.",
+    "open": "J'ai irrigué",
+    "clear": "Effacer",
+    "date": "Date d'irrigation",
+    "amount": "Quantité apportée ({{unit}})",
+    "logged": "Dernière irrigation : {{amount}} le {{date}}"
   }
 }

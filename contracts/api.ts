@@ -6,7 +6,8 @@
 
 export type Risk = "low" | "moderate" | "high" | "severe";
 export type Lang = "en" | "es" | "fr" | "sw" | "hi" | "de";
-export type IrrigationMethod = "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
+export type IrrigationMethod =
+  "none" | "drip" | "sprinkler" | "pivot" | "furrow" | "flood";
 
 export interface FieldInput {
   lat: number;
@@ -19,6 +20,9 @@ export interface FieldInput {
   /** optional: water available for the season in mm (deficit scheduling) */
   water_allocation_mm?: number | null;
   lang?: Lang;
+  /** farmer-reported last irrigation (gross amount at the field, mm) — sharpens the water balance */
+  last_irrigation_date?: string | null;
+  last_irrigation_mm?: number | null;
   /** "today" override for demo / back-testing, ISO date */
   as_of?: string | null;
 }
@@ -86,7 +90,12 @@ export interface DroughtStatus {
 }
 
 export interface AdviceResponse {
-  field: FieldInput & { elevation_m: number | null; slope_pct: number | null; soil: SoilInfo | null; area_ha: number | null };
+  field: FieldInput & {
+    elevation_m: number | null;
+    slope_pct: number | null;
+    soil: SoilInfo | null;
+    area_ha: number | null;
+  };
   generated_at: string;
   as_of: string;
   cards: ActionCard[]; // ALL cards ranked; UI shows top 3 on the home screen
@@ -127,7 +136,8 @@ export interface SimulateRequest {
   lon: number;
   crop: string;
   planting_date: string; // month-day used across years, ISO date with any year
-  irrigation_strategy: "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
+  irrigation_strategy:
+    "rainfed" | "full" | "deficit_75" | "deficit_50" | "allocation";
   water_allocation_mm?: number | null;
   delta_t_c?: number; // climate scenario: + °C
   rain_factor?: number; // e.g. 0.8 = 20% less rain
@@ -188,7 +198,15 @@ export interface RotationSlot {
   end_month: number;
 }
 export interface RotationMetric {
-  id: "water" | "soil" | "income" | "pests" | "risk" | "erosion" | "nitrogen" | "bare_days";
+  id:
+    | "water"
+    | "soil"
+    | "income"
+    | "pests"
+    | "risk"
+    | "erosion"
+    | "nitrogen"
+    | "bare_days";
   label: string;
   value: number; // in unit
   unit: string;
@@ -200,7 +218,12 @@ export interface RotationStrategy {
   name: string; // "Alfalfa → teff → winter wheat + cover"
   is_current: boolean;
   slots: RotationSlot[];
-  calendar: { month: number; year: number; crop: string | null; cover: number }[]; // 0..1 ground cover per month
+  calendar: {
+    month: number;
+    year: number;
+    crop: string | null;
+    cover: number;
+  }[]; // 0..1 ground cover per month
   metrics: RotationMetric[];
   total_score: number; // weighted by priorities, 0..100
   why_suggested: string;
@@ -231,7 +254,13 @@ export interface ClimateResponse {
     baseline_mean: number; // first 15 years
     recent_mean: number; // last 10 years
   }[];
-  monthly_normals: { month: number; tmax: number; tmin: number; precip: number; et0: number }[];
+  monthly_normals: {
+    month: number;
+    tmax: number;
+    tmin: number;
+    precip: number;
+    et0: number;
+  }[];
   insights: string[];
   source: SourceRef;
 }

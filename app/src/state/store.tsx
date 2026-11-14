@@ -24,6 +24,9 @@ export interface Field {
   /** replay date for demo farms (null = today) */
   as_of?: string | null;
   replay_date?: string | null;
+  /** farmer-reported last irrigation (sharpens the water balance) */
+  last_irrigation_date?: string | null;
+  last_irrigation_mm?: number | null;
 }
 
 interface AdviceState {
@@ -58,6 +61,8 @@ export function toFieldInput(f: Field, lang: Lang): FieldInput {
     polygon: f.polygon && f.polygon.length >= 3 ? f.polygon : undefined,
     lang,
     as_of: f.as_of ?? null,
+    last_irrigation_date: f.last_irrigation_date ?? null,
+    last_irrigation_mm: f.last_irrigation_mm ?? null,
   };
 }
 

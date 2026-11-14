@@ -209,7 +209,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             until=min(horizon, w.dates[-1]),
             known_irrigations=known,
             record_daily=True,
-            irrigate_until_date=today,
+            irrigate_until_date=(min(known) - dt.timedelta(days=1)) if known else today,
             allocation_mm=inp.get("water_allocation_mm"),
         )
         daily = res.daily

@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ActionCard, cropName, useCrops } from "@/components/domain";
+import { IrrigationLog } from "@/components/IrrigationLog";
 import { Card, ErrorView, KV, Loading, OriginBanner, RiskBadge, Section, Txt, styles as ui } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/units";
@@ -189,6 +190,15 @@ export default function Home() {
                     <KV k={tr("home.rain7d")} v={fmt(a.water.forecast_rain_7d_mm, "mm", sys)} />
                     <KV k={tr("home.et7d")} v={fmt(a.water.forecast_et0_7d_mm, "mm", sys)} />
                   </View>
+                  {field.irrigation !== "none" && !field.as_of ? (
+                    <IrrigationLog
+                      date={field.last_irrigation_date}
+                      mm={field.last_irrigation_mm}
+                      today={a.as_of}
+                      system={sys}
+                      onSave={(d, mm) => setField({ ...field, last_irrigation_date: d, last_irrigation_mm: mm })}
+                    />
+                  ) : null}
                 </Card>
                 <Card alt>
                   <Txt v="label">{tr("home.seasonSoFar")}</Txt>

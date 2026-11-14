@@ -147,3 +147,21 @@ def test_static_web_serving(tmp_path, monkeypatch):
     assert c.get("/api/health").json()["status"] == "ok"
     monkeypatch.delenv("FIELDSHIFT_WEB_DIR")
     importlib.reload(m)
+
+
+def test_reported_last_irrigation_changes_state_and_confidence():
+    base = {
+        **FIELD,
+        "crop": "maize",
+        "planting_date": (dt.date.today() - dt.timedelta(days=70)).isoformat(),
+        "irrigation": "drip",
+    }
+    a = client.post("/api/advice", json=base).json()
+    last = (dt.date.today() - dt.timedelta(days=12)).isoformat()
+    b = client.post(
+        "/api/advice", json={**base, "last_irrigation_date": last, "last_irrigation_mm": 30}
+    ).json()
+    assert b["water"]["root_zone_depletion_mm"] != a["water"]["root_zone_depletion_mm"]
+    wa = next(c for c in a["cards"] if c["category"] == "water")["why"]["confidence"]
+    wb = next(c for c in b["cards"] if c["category"] == "water")["why"]["confidence"]
+    assert wb > wa

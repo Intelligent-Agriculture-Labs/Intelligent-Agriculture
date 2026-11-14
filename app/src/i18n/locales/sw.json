@@ -222,5 +222,13 @@
     "chart": "Chati ya {{label}} kuanzia {{start}} hadi {{end}}, thamani ya mwisho {{last}}",
     "map": "Ramani. Gusa kuweka mahali pa shamba lako.",
     "slider": "{{label}}: {{value}}"
+  },
+  "irrigationLog": {
+    "hint": "Tuambie umwagiliaji wako wa mwisho kwa makadirio sahihi zaidi.",
+    "open": "Nimemwagilia",
+    "clear": "Futa",
+    "date": "Tarehe ya kumwagilia",
+    "amount": "Kiasi kilichotumika ({{unit}})",
+    "logged": "Umwagiliaji wa mwisho: {{amount}} tarehe {{date}}"
   }
 }

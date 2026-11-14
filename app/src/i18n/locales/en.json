@@ -222,5 +222,13 @@
     "chart": "Chart of {{label}} from {{start}} to {{end}}, latest value {{last}}",
     "map": "Map. Tap to set your field location.",
     "slider": "{{label}}: {{value}}"
+  },
+  "irrigationLog": {
+    "hint": "Tell us your last irrigation for a sharper estimate.",
+    "open": "I irrigated",
+    "clear": "Clear",
+    "date": "Irrigation date",
+    "amount": "Amount applied ({{unit}})",
+    "logged": "Last irrigation: {{amount}} on {{date}}"
   }
 }

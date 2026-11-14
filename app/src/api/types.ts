@@ -19,6 +19,9 @@ export interface FieldInput {
   /** optional: water available for the season in mm (deficit scheduling) */
   water_allocation_mm?: number | null;
   lang?: Lang;
+  /** farmer-reported last irrigation (gross amount at the field, mm) — sharpens the water balance */
+  last_irrigation_date?: string | null;
+  last_irrigation_mm?: number | null;
   /** "today" override for demo / back-testing, ISO date */
   as_of?: string | null;
 }

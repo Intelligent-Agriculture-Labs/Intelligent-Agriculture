@@ -222,5 +222,13 @@
     "chart": "Diagramm {{label}} von {{start}} bis {{end}}, letzter Wert {{last}}",
     "map": "Karte. Tippen, um den Feldstandort zu setzen.",
     "slider": "{{label}}: {{value}}"
+  },
+  "irrigationLog": {
+    "hint": "Geben Sie Ihre letzte Bewässerung an – das macht die Schätzung genauer.",
+    "open": "Ich habe bewässert",
+    "clear": "Löschen",
+    "date": "Bewässerungsdatum",
+    "amount": "Ausgebrachte Menge ({{unit}})",
+    "logged": "Letzte Bewässerung: {{amount}} am {{date}}"
   }
 }
