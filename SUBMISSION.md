@@ -87,7 +87,7 @@ The team set the goals, chose the direction and reviewed the outputs. The app it
 ## Links
 - Repository: ☐ `<public GitHub URL>` (source of truth: private Gitea, see above)
 - Demo video (30 s): ☐ `<YouTube/Drive URL>`, from file `media/fieldshift-demo-30s.mp4`
-- Slides (alternative demo format, 7 slides): outline below (☐ optional export)
+- Slides (alternative demo format, 7 slides): `media/fieldshift-deck.pdf` (built by `scripts/build_site.py` from `site/deck.html`)
 - Live app: ☐ `<URL if hosted>`; otherwise `docker compose up --build`
 
 ---
@@ -95,15 +95,18 @@ The team set the goals, chose the direction and reviewed the outputs. The app it
 ## Demo video: script and storyboard (≤ 30 s, English captions, no voice)
 The rules allow a ≤ 30 s video, with English subtitles if any speech is not in English. Ours uses on-screen captions only. Any narration recorded later must be English or subtitled.
 
+Follows the official Space Apps template (0:00 team · 0:02 challenge · 0:05 title + tagline · 0:10 how it works + NASA data · 0:20 future vision). Built by `scripts/make_demo_video.py` from real screen captures.
+
 | t (s) | Shot (real screen capture) | Caption |
 |---|---|---|
-| 0–3 | Title card: FieldShift logo over a NASA GIBS MODIS image of the Lahontan Valley | "Nevada alfalfa farm. Hotter summers. Less water." |
-| 3–7 | Climate tab: "Days ≥ 35 °C" trend chart 1984→2025 | "NASA POWER: hot days doubled since 1984 (26 → 50 a year)." |
-| 7–12 | Home on mobile (Replay 15 Jul 2025): irrigation card + drought card | "This week: exactly when and how much to irrigate." |
-| 12–16 | Tap "Why?" → soil-water chart with stress line, sources, confidence | "Every number is one tap from its NASA evidence." |
-| 16–22 | Rotations tab: priority sliders → strategies compared, calendar strip | "Field Shift: compare rotations on 15 seasons of NASA data." |
-| 22–26 | What if? +2 °C, −20 % rain → yield and water change | "Test the future before you plant it." |
-| 26–30 | Tap inside a field → boundary detected → Satellite tab with AI zones; phone + PC synced; end card | "Tap your field. AI maps it. Every device. FieldShift." |
+| 0–2 | Title card | "Team FieldShift · NASA Space Apps Challenge 2026" |
+| 2–5 | Insights → climate trends, Fallon, Nevada | "Challenge: Field Shift. In Fallon, Nevada, days above 35 °C doubled since 1984" |
+| 5–10 | Welcome screen + This week | "FieldShift: 40 years of NASA data, turned into this week's farm decisions" |
+| 10–13.5 | Tap-to-detect field, Sentinel-2 AI zones, terrain zones | "Tap your field: AI finds it. Sentinel-2 zones, SRTM erosion and frost maps" |
+| 13.5–17 | This week + "Why?" | "3 actions a week, each one tap from its NASA POWER, SMAP and MODIS evidence" |
+| 17–20 | Plan → Next years: impact card, year check | "Rotation plan per field: disease, nitrogen, soil, water, and its impact" |
+| 20–25 | Share as text, iPhone, Android | "Web, iOS, Android, offline, SMS, 6 languages: for any farm on Earth" |
+| 25–30 | End card | "Next: co-design with farmers · extension services · GPM IMERG · GRACE-FO · on-farm trials" |
 
 ## Slide deck outline (alternative format, 7 slides max)
 1. **Title.** FieldShift: 40 years of NASA data, turned into this week's farm decisions (team, challenge name).

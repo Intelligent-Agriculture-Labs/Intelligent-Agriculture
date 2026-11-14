@@ -33,16 +33,17 @@ FONT = next(
 W, H = 1920, 1080
 BG = "0x1d3b24"  # brand dark green
 
-# (images shown side by side, caption, seconds)
+# (images shown side by side, caption, seconds). Follows the official Space Apps 30 s template:
+# 0:00 team · 0:02 challenge / inspiration · 0:05 title + tagline · 0:10 how it works + NASA data · 0:20 future vision
 SHOTS: list[tuple[list[str], str, float]] = [
-    ([], "FieldShift — NASA data for farm decisions|A Nevada alfalfa farm. Hotter summers. Less water.", 3.0),
-    (["ios-climate.png", "web-climate-desktop.png"], "NASA POWER: days above 35 °C doubled since 1984 (26 → 50 a year)", 3.5),
-    (["web-detect-mobile.png", "ios-field-editor.png"], "Tap your field — AI finds its boundary on satellite imagery", 4.0),
-    (["ios-home-replay.png", "android-home-replay.png"], "This week: when and how much to irrigate, drought status", 4.0),
-    (["ios-why.png", "android-why.png"], "Every number is one tap from its NASA evidence", 3.0),
-    (["ios-satellite.png", "web-satellite-desktop.png"], "Sentinel-2 + AI: management zones and cuttings seen from space", 4.0),
-    (["ios-plan.png", "ios-rotations.png", "android-map.png"], "Plan the season, compare rotations, map erosion & frost", 4.5),
-    ([], "FieldShift|Web · iOS · Android · syncs phone ↔ PC · 6 languages · offline", 3.5),
+    ([], "Team FieldShift|NASA Space Apps Challenge 2026", 2.0),
+    (["web-climate-mobile.png"], "Challenge: Field Shift. In Fallon, Nevada, days above 35 °C doubled since 1984", 3.0),
+    (["web-welcome-mobile.png", "web-home.png"], "FieldShift: 40 years of NASA data, turned into this week's farm decisions", 5.0),
+    (["web-detect-mobile.png", "web-satellite-mobile.png", "web-map-mobile.png"], "Tap your field: AI finds it. Sentinel-2 zones, SRTM erosion and frost maps", 3.5),
+    (["web-home.png", "web-replay-why-mobile.png"], "3 actions a week, each one tap from its NASA POWER, SMAP and MODIS evidence", 3.5),
+    (["web-plan-years-mobile.png", "web-plan-years-check-mobile.png"], "Rotation plan per field: disease, nitrogen, soil, water, and its impact", 3.0),
+    (["web-share-text-mobile.png", "ios-home-replay.png", "android-home-replay.png"], "Web, iOS, Android, offline, SMS, 6 languages: for any farm on Earth", 5.0),
+    ([], "Next: co-design with farmers|Extension services · GPM IMERG rain · GRACE-FO groundwater · on-farm trials", 5.0),
 ]
 
 
@@ -59,7 +60,7 @@ def render_shot(images: list[Path], caption: str, secs: float, out: Path) -> Non
     for i, img in enumerate(images):
         inputs += ["-loop", "1", "-t", str(secs), "-i", str(img)]
         slot_w = W // max(1, n)
-        filters.append(f"[{i}:v]scale=w={slot_w - 80}:h={box_h}:force_original_aspect_ratio=decrease[s{i}]")
+        filters.append(f"[{i}:v]crop=iw:'min(ih,iw*2.2)':0:0,scale=w={slot_w - 80}:h={box_h}:force_original_aspect_ratio=decrease[s{i}]")
         x = f"{i * slot_w}+({slot_w}-w)/2"
         filters.append(f"[{last}][s{i}]overlay=x={x}:y=60[o{i}]")
         last = f"o{i}"
