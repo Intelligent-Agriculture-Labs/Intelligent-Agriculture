@@ -52,7 +52,7 @@ export default function TerrainMap({ lat, lon, polygon, base, overlay, opacity, 
       <WebView
         ref={ref}
         originWhitelist={["*"]}
-        source={{ html, baseUrl: "https://fieldshift.local/" }}
+        source={{ html, baseUrl: "http://localhost/" }}
         onMessage={onMessage}
         javaScriptEnabled
         nestedScrollEnabled
