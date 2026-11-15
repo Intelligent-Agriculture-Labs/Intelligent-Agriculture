@@ -100,11 +100,11 @@ frost_title:
   de: "Frostgefahr am {day}: {t} °C"
 frost_detail:
   en: "Forecast minimum is near the damage threshold of {crop} ({kill} °C). Protect seedlings or delay sowing."
-  es: "La mínima prevista está cerca del umbral de daño de {crop} ({kill} °C)."
-  fr: "La minimale prévue est proche du seuil de dégâts de {crop} ({kill} °C)."
-  sw: "Joto la chini linalotarajiwa liko karibu na kiwango cha madhara kwa {crop} ({kill} °C)."
-  hi: "अनुमानित न्यूनतम तापमान {crop} की क्षति सीमा ({kill} °C) के पास है।"
-  de: "Die vorhergesagte Tiefsttemperatur liegt nahe der Schadschwelle von {crop} ({kill} °C)."
+  es: "La mínima prevista está cerca del umbral de daño de {crop} ({kill} °C). Proteja las plántulas o retrase la siembra."
+  fr: "La minimale prévue est proche du seuil de dégâts de {crop} ({kill} °C). Protégez les jeunes plants ou retardez le semis."
+  sw: "Joto la chini linalotarajiwa liko karibu na kiwango cha madhara kwa {crop} ({kill} °C). Linda miche au chelewesha kupanda."
+  hi: "अनुमानित न्यूनतम तापमान {crop} की क्षति सीमा ({kill} °C) के पास है। पौध को बचाएँ या बुवाई टालें।"
+  de: "Die vorhergesagte Tiefsttemperatur liegt nahe der Schadschwelle von {crop} ({kill} °C). Jungpflanzen schützen oder die Saat verschieben."
 heat_title:
   en: "Heat stress {day}: {t} °C"
   es: "Estrés por calor el {day}: {t} °C"
@@ -116,8 +116,8 @@ heat_detail:
   en: "Above {crop}'s heat threshold ({thr} °C). Irrigate before the hot days; avoid spraying in the heat."
   es: "Supera el umbral de calor de {crop} ({thr} °C). Riegue antes; evite aplicar productos con calor."
   fr: "Au-dessus du seuil de chaleur de {crop} ({thr} °C). Irriguez avant ; évitez de traiter par forte chaleur."
-  sw: "Juu ya kiwango cha joto cha {crop} ({thr} °C). Mwagilia kabla ya siku za joto."
-  hi: "{crop} की ताप सीमा ({thr} °C) से ऊपर। गर्म दिनों से पहले सिंचाई करें।"
+  sw: "Juu ya kiwango cha joto cha {crop} ({thr} °C). Mwagilia kabla ya siku za joto; usinyunyize dawa wakati wa joto kali."
+  hi: "{crop} की ताप सीमा ({thr} °C) से ऊपर। गर्म दिनों से पहले सिंचाई करें; तेज़ गर्मी में छिड़काव न करें।"
   de: "Über der Hitzeschwelle von {crop} ({thr} °C). Vorher bewässern; nicht bei Hitze spritzen."
 ndvi_title:
   en: "Scout your field: vegetation {pct}% below normal"

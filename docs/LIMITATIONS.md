@@ -47,7 +47,7 @@
   - **Desert locust:** only rain at the field's own grid cell is used, while breeding happens in nearby deserts. The card is awareness only and points to FAO Locust Watch and national locust units.
   - **Coffee and banana are not FieldShift crops yet,** so their models produce no cards.
   - **Northern leaf blight** was dropped because its published criteria could not be verified.
-- **Pest degree-day thresholds** are literature values, mostly from North American extension services. Geographic ranges are coarse (continent level). Titles are translated; the per-stage action text is English-only.
+- **Pest degree-day thresholds** are literature values, mostly from North American extension services. Geographic ranges are coarse (continent level). Titles and the per-stage action text are translated into all six app languages.
 - **Rotation scores** use transparent but simplified indices (soil-health index, RUSLE-inspired erosion index, pest-cycle score). They have not been calibrated against field trials.
 - **Confidence values** are documented heuristics, not calibrated probabilities.
 

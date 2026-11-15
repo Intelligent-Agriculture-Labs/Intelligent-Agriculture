@@ -54,7 +54,9 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 
 ## ADR-010 Translations
 - Server-generated card titles and details are translated in `config/messages.yaml` (en/es/fr/sw/hi/de). UI strings live in the client's i18n files.
-- The step-by-step "Why?" reasoning is English-only in v1 (numbers are language-neutral). Listed in LIMITATIONS.md.
+- The step-by-step "Why?" reasoning was English-only in v1; since v1.2 every farmer-facing backend text comes from the
+  message catalogs in `backend/fieldshift/config/messages/*.yaml` in all six languages (scientific citations stay as
+  published). `scripts/check_i18n.py` and `backend/tests/test_i18n.py` fail on any missing key or hard-coded English.
 
 ## ADR-011 "SI" terminology
 - The 2026 Space Apps rules use "Super Intelligence (SI)" in place of "AI". Submission texts use "SI", with "AI" in parentheses on first use for clarity.

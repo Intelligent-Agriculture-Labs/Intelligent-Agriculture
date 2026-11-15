@@ -204,6 +204,7 @@ def check_backend_catalogs() -> list[str]:
                 errs.extend(check_node(w, n))
         if p.name in YAML_TEXT_FIELDS:
             errs.extend(_text_field_errors(rel, data, YAML_TEXT_FIELDS[p.name]))
+    errs.extend(_knowledge_errors())
     names = {}
     for f in ("crops.yaml", "crops_extra.yaml"):
         names.update({k: v["name"] for k, v in (_load(CONFIG / f).get("crops") or {}).items()})
@@ -214,6 +215,33 @@ def check_backend_catalogs() -> list[str]:
             errs.append(f"backend crops: no translated name crop_{cid}")
         elif node.get("en") != name:
             errs.append(f"backend crops: crop_{cid}.en {node.get('en')!r} != crops.yaml name {name!r}")
+    return errs
+
+
+def _knowledge_errors() -> list[str]:
+    """Every farmer-facing text of rotation_knowledge.yaml has a rk_* translation with the same English."""
+    kb = _load(CONFIG / "rotation_knowledge.yaml") or {}
+    cat_path = CONFIG / "messages" / "rotation_knowledge.yaml"
+    cat = _load(cat_path) if cat_path.exists() else {}
+    want: dict[str, str] = {}
+    for pid, p in (kb.get("pathogens") or {}).items():
+        for f in ("name", "note"):
+            if p.get(f):
+                want[f"rk_path_{pid}_{f}"] = str(p[f])
+    for cid, c in (kb.get("crops") or {}).items():
+        for f in ("note", "allelopathy"):
+            if c.get(f):
+                want[f"rk_crop_{cid}_{f}"] = str(c[f])
+    for r in kb.get("rules") or []:
+        if r.get("text"):
+            want[f"rk_rule_{r['id']}_text"] = str(r["text"])
+    errs = []
+    for key, en in want.items():
+        node = cat.get(key)
+        if not node:
+            errs.append(f"backend rotation_knowledge: no translation {key}")
+        elif str(node.get("en", "")).strip() != en.strip():
+            errs.append(f"backend rotation_knowledge: {key}.en differs from rotation_knowledge.yaml")
     return errs
 
 
