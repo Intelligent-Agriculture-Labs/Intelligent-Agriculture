@@ -21,10 +21,22 @@
 - **Confidence values** are documented heuristics, not calibrated probabilities.
 
 ## Field mapping, satellite and AI components
-- **Tap-to-detect** merges or splits fields in some cases:
-  - It can leak through gaps (farmsteads) into identical neighbouring crops.
-  - It finds only one strip of terraced or intercropped smallholder plots.
-  The outline must be checked and is always editable.
+- **Tap-to-detect** is measured worldwide (VALIDATION V9, 467 Fields of The World fields in 25 countries) but is not
+  perfect. The outline must be checked and is always editable.
+  - Smallholder plots (< 0.5 ha, typical of Kenya, Rwanda, India, Vietnam, Cambodia) remain the hardest case.
+    Plot edges there are often thinner than one 2.7 m working pixel, and neighbouring plots look alike.
+  - Very large fields (> 100 ha, e.g. Brazil: held-out IoU only 0.27) do not fit the zoom-16 window (~1.3 km)
+    and come back partial. Large uniform fields with drainage lines or tramlines can also be cut into a smaller piece.
+  - The learned edge model was trained on open orthophotos of four European countries only (France, Spain,
+    Netherlands, Austria). It works on Esri imagery elsewhere (held-out countries in V9), but there is no
+    training data from Africa, Asia or the Americas.
+  - The benchmark compares with registered parcel polygons (LPIS and similar), whose year (2016–2023) differs from
+    the unknown Esri image date. A parcel can also span or split visible fields. Scores are therefore a lower bound
+    on agreement with what a farmer sees, and per-country numbers (12–32 fields each) carry wide error bars.
+  - Confidence is the selector's predicted IoU. It ranks results usefully, but it is not a calibrated probability.
+  - Some FTW source licences are non-commercial (Latvia, Portugal: CC-BY-NC-4.0; Lithuania: non-commercial use only;
+    South Africa: CC-BY-NC-SA-4.0) or GPL (Kenya). These countries are used only for evaluation; their polygons are not
+    redistributed and were not used for training.
 - **Imagery.** The default high-resolution basemap (Esri World Imagery) is used with attribution for this non-commercial demo; production needs a licence. USDA NAIP (U.S., public domain) and Sentinel-2 (10 m) are alternatives.
 - **Sentinel-2 analysis:**
   - The first analysis of a new field takes ~30 s on a fast link and several minutes on a slow one.

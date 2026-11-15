@@ -97,5 +97,54 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
 - **Not adopted:** a stricter border statistic (65th percentile). It still leaked in Iowa and broke the synthetic test.
 - **Roadmap:** a promptable segmentation foundation model (e.g. SAM) on the GPU box, as an optional service.
 
+## EXP-12 Field boundary detection worldwide: v2 vs. learned edge map + candidate selection (v3)
+- **Hypothesis:** the v2 detector, tuned by eye on four demo fields, does not transfer worldwide. A small edge model trained on open field-boundary labels, plus a learned choice among scale-adaptive candidate regions, raises IoU in countries never used for development.
+- **Benchmark (VALIDATION V9):**
+  - 467 Fields of The World (FTW) fields in 25 countries, stratified by size. Simulated taps; production code path on Esri World Imagery.
+  - DEV countries (AT, FR, IN, NL, ES) were fixed before any tuning. The other 20 countries (314 fields) were scored once at the end.
+- **Steps (mean IoU on DEV fields, Esri imagery):**
+
+  | Variant | DEV IoU |
+  |---|---|
+  | v2 Felzenszwalb + region growing (baseline) | 0.25 |
+  | Classical cost map (Lab gradient, 2 scales) + threshold-sweep flood fill + hand-made score | 0.30 |
+  | … tuned (median 3, compactness weight 0) | 0.33 |
+  | Oracle: best candidate of that sweep | 0.58 |
+  | Learned edge map (U-Net, z17 orthophoto windows) + same sweep + hand-made score | 0.51–0.53 |
+  | Oracle: best candidate of the learned sweep | 0.70 |
+  | + learned selector (GBM on 14 candidate features) | 0.57 |
+  | + zoom-16 training windows, cross-fitted selector, final model | 0.58 |
+  | + rim-contrast × solidity² prior (w = 0.3), closing r = 2 (**adopted**) | **0.58** |
+
+  - Diagnosis of v2: it leaked through weak borders into neighbouring fields and villages. The median detected area was 6× the true area, and 65× for plots under 0.5 ha.
+  - The oracle rows show that, after the sweep, *choosing* the right candidate was the bottleneck. That motivated the learned selector.
+- **Selector cross-country check (orthophotos):**
+  - Trained on FR+ES, tested on NL+AT: selected IoU 0.64 (oracle 0.74).
+  - Trained on NL+AT, tested on FR+ES: 0.59 (oracle 0.70).
+  - Most important features: area relative to the median candidate (0.56), solidity (0.14), log area (0.13).
+- **Demo-field regression (Ames).**
+  - The selector alone cut the 48 ha Ames quarter section into a 21 ha piece: it had seen few > 40 ha fields.
+  - Adding 0.3 × rim contrast × solidity² to the predicted IoU fixed Ames (IoU 0.88 → 0.91 vs. the stored rectangle) and was neutral to positive on DEV (0.578 → 0.582).
+  - A closing of radius 2 px removed slits along Fallon's irrigation checks.
+- **Result on the 20 held-out countries (314 fields):**
+  - Mean IoU **0.24 → 0.52** (Δ +0.28, 95 % bootstrap CI +0.25 … +0.32). Every country improved: Brazil least (+0.05, fields up to 150 ha exceed the zoom-16 window), Vietnam most (0.03 → 0.49).
+  - IoU ≥ 0.5 rose from 18 % to 53 % of fields; boundary F (5 m) from 0.16 to 0.44.
+  - By size: S 0.13 → 0.41, M 0.18 → 0.54, L 0.30 → 0.64, XL 0.37 → 0.49.
+  - Africa 0.20 → 0.49, Asia 0.06 → 0.40.
+- **Demo fields:**
+  - Ames improved and Machakos was unchanged (one terrace strip).
+  - Fallon and Córdoba are lower against their stored presets (0.93, 0.79). Those presets *are* v2 outputs, so that comparison is circular.
+  - Checked by eye, Fallon is the same field (5.52 vs. 5.53 ha) and v3 fixes v2's cut through the Córdoba field (VALIDATION V9 figure).
+- **Speed (CPU):**
+  - On the data box, one process with cached tiles: median 0.2 s per tap, 95th percentile 1.0 s (v2: 0.4 s and 1.7 s).
+  - On a laptop (Apple silicon, numpy): median 0.5 s per window, max ≈ 2 s. A tap needs two windows only when the field touches the zoom-17 window edge.
+  - Model files: 1.0 MB (U-Net) + 58 KB (trees). No new dependency: inference is plain numpy.
+- **Not adopted:**
+  - Selector alone without the prior (Ames regression).
+  - Prior weight 0.5 (hurt 0.5–2 ha fields).
+  - Larger closing radius 3 (no gain).
+  - Training on Esri imagery. Open orthophotos were used instead, so no question over Esri's terms of use for ML training arises.
+- **Decision:** adopted (ADR-020). v2 remains as the automatic fallback when the model files are missing.
+
 ## EXP-08 AquaCrop-style biomass vs. FAO-33 yield response (diagnostic)
 - The season model reports both: the FAO-33 Ky yield (used in the product) and an AquaCrop-style WP*·Σ(Tr/ET₀) biomass. They are kept side by side for transparency. The FAO-33 approach is used because its parameters exist for every crop in the table, including forage and cover crops, and because it responds directly to the water-stress question farmers ask.

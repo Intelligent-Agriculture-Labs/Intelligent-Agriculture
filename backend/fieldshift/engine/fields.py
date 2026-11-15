@@ -29,6 +29,14 @@ IMAGERY = {
 }
 
 
+METHODS = {
+    "learned": "Learned field-edge map (tiny U-Net trained on Fields of The World) + scale-adaptive candidate regions "
+    "ranked by a learned IoU predictor + Douglas–Peucker (tap-to-delineate)",
+    "classical": "Field-scale graph segmentation (Felzenszwalb) + edge-aware region growing + Douglas–Peucker "
+    "(tap-to-delineate)",
+}
+
+
 def _tile(src: str, z: int, x: int, y: int) -> np.ndarray:
     name = f"{src}_{z}_{x}_{y}.jpg"
     for d in (CACHE_DIR / "imagery", DEMO_DIR / "imagery"):
@@ -109,9 +117,9 @@ def detect_field(lat: float, lon: float, source: str | None = None) -> dict[str,
         "area_ha": round(area_ha, 2),
         "confidence": last["confidence"],
         "touches_border": last["touches_border"],
-        "method": "Field-scale graph segmentation (Felzenszwalb) + edge-aware region growing + Douglas–Peucker (tap-to-delineate)",
+        "method": METHODS[last["params"].get("method", "classical")],
         "imagery": IMAGERY[last["_src"]][1],
         "pixel_m": round(m_per_px, 2),
         "params": last["params"],
-        "note": "Check the outline and drag the corners to fix it — fences, tree lines and roads are detected best; similar-looking neighbouring fields may merge.",
+        "note": "Check the outline and drag the corners to fix it — fences, tree lines and roads are detected best; similar-looking neighbouring fields may merge, and small plots are the hardest case.",
     }

@@ -100,3 +100,28 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - **Impact quantification in the rotation planner:** current vs. improved plan in water, fertiliser N, CO₂e (IPCC 2019 direct N₂O emission factor EF1 = 0.01 kg N₂O-N per kg N × 44/28 × GWP100 273 from AR6 = 4.29 kg CO₂e per kg N avoided; manufacturing emissions conservatively not counted), soil loss and margin.
 - **Low-bandwidth plain-text advice** (SMS/WhatsApp) in six languages for farmers without smartphones or data.
 - **7-slide PDF deck** as an alternative demo format.
+
+## ADR-020 Learned field-edge model + candidate selector for tap-to-detect (2026-11-15)
+- **Context:**
+  - Tap-to-detect (ADR-015, EXP-10) had been tuned on four demo fields.
+  - A global benchmark (467 FTW fields, 25 countries; VALIDATION V9) measured a mean IoU of only 0.24. The method leaked into neighbouring fields everywhere, and smallholder Africa and Asia were near zero.
+- **Decision:**
+  - Replace the default with v3. A tiny U-Net edge map (1 MB) feeds scale-adaptive flood-fill candidates, ranked by a 58 KB gradient-boosted IoU predictor plus a rim-contrast prior.
+  - Both models are evaluated in numpy on CPU (no deep-learning runtime).
+  - Adoption rule, fixed in advance: mean IoU must improve on held-out countries, without regression on the demo fields. Result: 0.24 → 0.52 on 20 held-out countries, every country better. Demo fields are equal or better on visual check (EXP-12).
+- **Data and licences:**
+  - Training labels: FTW polygons of four countries, AT (CC-BY-4.0), FR (Licence Ouverte), NL (CC0) and ES (CC-BY-4.0).
+  - Training imagery: open national orthophotos of the same four countries (IGN, PNOA, PDOK, basemap.at; Licence Ouverte / CC-BY 4.0).
+  - No Esri imagery is used for training. Countries with non-commercial or GPL labels are used for evaluation only, and no FTW polygons are redistributed.
+- **Unchanged:** the API response shape (`polygon`, `area_ha`, `confidence`, `touches_border`, `method`, `imagery`, `pixel_m`, `params`, `note`) and the offline behaviour (tiles from cache or demo cache, else `DataUnavailable`).
+  - `confidence` is now the predicted IoU, which fits the app's existing 0.4 / 0.7 risk bands.
+  - `method` names the pipeline that ran.
+- **Fallback:** if the model files are absent, the v2 classical pipeline runs automatically.
+- **Alternatives:**
+  - SAM-class promptable segmenters: hundreds of MB and GPU-bound (stays on the roadmap as an optional service).
+  - ONNX Runtime or PyTorch on the server: new heavy dependency for a 0.5 M-parameter net.
+  - Tuning the classical method only: DEV 0.25 → 0.33, far below the learned variant.
+- **Consequences:**
+  - Retraining is scripted (`scripts/fieldedge/`, about 1 h, mostly orthophoto download).
+  - The models are versioned in `backend/fieldshift/models/`.
+  - Smallholder plots and > 100 ha fields remain the weakest cases (LIMITATIONS).
