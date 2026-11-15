@@ -1,0 +1,6890 @@
+{
+ "0": {
+  "texture": "loam (default)",
+  "elev": 402.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 276,
+  "harvest_doy": 186,
+  "fs_crop": "winter_wheat"
+ },
+ "1": {
+  "texture": "loam (default)",
+  "elev": 669.24,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -1.7,
+  "plant_doy": 274,
+  "harvest_doy": 222,
+  "fs_crop": "winter_wheat"
+ },
+ "2": {
+  "texture": "loam (default)",
+  "elev": 377.95,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 128,
+  "harvest_doy": 236,
+  "fs_crop": "spring_wheat"
+ },
+ "3": {
+  "texture": "loam (default)",
+  "elev": 706.87,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 257,
+  "fs_crop": "spring_wheat"
+ },
+ "4": {
+  "texture": "loam (default)",
+  "elev": 868.56,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 257,
+  "fs_crop": "spring_wheat"
+ },
+ "5": {
+  "texture": "loam (default)",
+  "elev": 242.75,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 257,
+  "fs_crop": "spring_wheat"
+ },
+ "6": {
+  "texture": "loam (default)",
+  "elev": 106.94,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 136,
+  "fs_crop": "spring_wheat"
+ },
+ "7": {
+  "texture": "loam (default)",
+  "elev": 293.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 136,
+  "fs_crop": "spring_wheat"
+ },
+ "8": {
+  "texture": "loam (default)",
+  "elev": 42.36,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 136,
+  "fs_crop": "spring_wheat"
+ },
+ "9": {
+  "texture": "loam (default)",
+  "elev": 453.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 117,
+  "harvest_doy": 288,
+  "fs_crop": "spring_wheat"
+ },
+ "10": {
+  "texture": "loam (default)",
+  "elev": 233.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 150,
+  "harvest_doy": 317,
+  "fs_crop": "spring_wheat"
+ },
+ "11": {
+  "texture": "loam (default)",
+  "elev": 430.2,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 117,
+  "harvest_doy": 288,
+  "fs_crop": "spring_wheat"
+ },
+ "12": {
+  "texture": "loam (default)",
+  "elev": 153.74,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 180,
+  "harvest_doy": 346,
+  "fs_crop": "spring_wheat"
+ },
+ "13": {
+  "texture": "loam (default)",
+  "elev": 94.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 180,
+  "harvest_doy": 346,
+  "fs_crop": "spring_wheat"
+ },
+ "14": {
+  "texture": "loam (default)",
+  "elev": 238.51,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 180,
+  "harvest_doy": 346,
+  "fs_crop": "spring_wheat"
+ },
+ "15": {
+  "texture": "loam (default)",
+  "elev": 239.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 289,
+  "fs_crop": "spring_wheat"
+ },
+ "16": {
+  "texture": "loam (default)",
+  "elev": 541.76,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 289,
+  "fs_crop": "spring_wheat"
+ },
+ "17": {
+  "texture": "loam (default)",
+  "elev": 128.74,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 212,
+  "fs_crop": "winter_wheat"
+ },
+ "18": {
+  "texture": "loam (default)",
+  "elev": 103.39,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 212,
+  "fs_crop": "winter_wheat"
+ },
+ "19": {
+  "texture": "loam (default)",
+  "elev": 242.97,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 212,
+  "fs_crop": "winter_wheat"
+ },
+ "20": {
+  "texture": "loam (default)",
+  "elev": 79.35,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 290,
+  "harvest_doy": 228,
+  "fs_crop": "winter_wheat"
+ },
+ "21": {
+  "texture": "loam (default)",
+  "elev": 451.54,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 290,
+  "harvest_doy": 228,
+  "fs_crop": "winter_wheat"
+ },
+ "22": {
+  "texture": "loam (default)",
+  "elev": 16.59,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 290,
+  "harvest_doy": 228,
+  "fs_crop": "winter_wheat"
+ },
+ "23": {
+  "texture": "loam (default)",
+  "elev": 497.13,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 332,
+  "harvest_doy": 177,
+  "fs_crop": "winter_wheat"
+ },
+ "24": {
+  "texture": "loam (default)",
+  "elev": 763.82,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 332,
+  "harvest_doy": 177,
+  "fs_crop": "winter_wheat"
+ },
+ "25": {
+  "texture": "loam (default)",
+  "elev": 454.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 332,
+  "harvest_doy": 134,
+  "fs_crop": "spring_wheat"
+ },
+ "26": {
+  "texture": "loam (default)",
+  "elev": 466.05,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 5.8,
+  "plant_doy": 308,
+  "harvest_doy": 182,
+  "fs_crop": "winter_wheat"
+ },
+ "27": {
+  "texture": "loam (default)",
+  "elev": 3.68,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 4.8,
+  "plant_doy": 308,
+  "harvest_doy": 182,
+  "fs_crop": "winter_wheat"
+ },
+ "28": {
+  "texture": "loam (default)",
+  "elev": 705.88,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 2.2,
+  "plant_doy": 308,
+  "harvest_doy": 182,
+  "fs_crop": "winter_wheat"
+ },
+ "29": {
+  "texture": "loam (default)",
+  "elev": 170.75,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 276,
+  "harvest_doy": 210,
+  "fs_crop": "winter_wheat"
+ },
+ "30": {
+  "texture": "loam (default)",
+  "elev": 49.81,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 276,
+  "harvest_doy": 210,
+  "fs_crop": "winter_wheat"
+ },
+ "31": {
+  "texture": "loam (default)",
+  "elev": 215.84,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 276,
+  "harvest_doy": 210,
+  "fs_crop": "winter_wheat"
+ },
+ "32": {
+  "texture": "loam (default)",
+  "elev": 30.68,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 208,
+  "fs_crop": "winter_wheat"
+ },
+ "33": {
+  "texture": "loam (default)",
+  "elev": 144.05,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 208,
+  "fs_crop": "winter_wheat"
+ },
+ "34": {
+  "texture": "loam (default)",
+  "elev": 82.56,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 208,
+  "fs_crop": "winter_wheat"
+ },
+ "35": {
+  "texture": "loam (default)",
+  "elev": 45.34,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 1.1,
+  "plant_doy": 248,
+  "harvest_doy": 200,
+  "fs_crop": "winter_wheat"
+ },
+ "36": {
+  "texture": "loam (default)",
+  "elev": 338.51,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -4.4,
+  "plant_doy": 242,
+  "harvest_doy": 210,
+  "fs_crop": "winter_wheat"
+ },
+ "37": {
+  "texture": "loam (default)",
+  "elev": 151.54,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -7.7,
+  "plant_doy": 232,
+  "harvest_doy": 200,
+  "fs_crop": "winter_wheat"
+ },
+ "38": {
+  "texture": "loam (default)",
+  "elev": 120.74,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 247,
+  "fs_crop": "spring_wheat"
+ },
+ "39": {
+  "texture": "loam (default)",
+  "elev": 107.2,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 146,
+  "harvest_doy": 244,
+  "fs_crop": "spring_wheat"
+ },
+ "40": {
+  "texture": "loam (default)",
+  "elev": 35.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -0.8,
+  "plant_doy": 242,
+  "harvest_doy": 190,
+  "fs_crop": "winter_wheat"
+ },
+ "41": {
+  "texture": "loam (default)",
+  "elev": 322.7,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 247,
+  "fs_crop": "spring_wheat"
+ },
+ "42": {
+  "texture": "loam (default)",
+  "elev": 257.1,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 247,
+  "fs_crop": "spring_wheat"
+ },
+ "43": {
+  "texture": "loam (default)",
+  "elev": 103.62,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 247,
+  "fs_crop": "spring_wheat"
+ },
+ "44": {
+  "texture": "loam (default)",
+  "elev": 294.55,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 1.2,
+  "plant_doy": 272,
+  "harvest_doy": 190,
+  "fs_crop": "winter_wheat"
+ },
+ "45": {
+  "texture": "loam (default)",
+  "elev": 592.41,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 256,
+  "harvest_doy": 190,
+  "fs_crop": "winter_wheat"
+ },
+ "46": {
+  "texture": "loam (default)",
+  "elev": 61.51,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 272,
+  "harvest_doy": 190,
+  "fs_crop": "winter_wheat"
+ },
+ "47": {
+  "texture": "loam (default)",
+  "elev": 958.57,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -0.1,
+  "plant_doy": 294,
+  "harvest_doy": 197,
+  "fs_crop": "winter_wheat"
+ },
+ "48": {
+  "texture": "loam (default)",
+  "elev": 654.2,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 4.8,
+  "plant_doy": 294,
+  "harvest_doy": 197,
+  "fs_crop": "winter_wheat"
+ },
+ "49": {
+  "texture": "loam (default)",
+  "elev": 118.81,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 3.4,
+  "plant_doy": 294,
+  "harvest_doy": 197,
+  "fs_crop": "winter_wheat"
+ },
+ "50": {
+  "texture": "loam (default)",
+  "elev": 162.74,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 152,
+  "fs_crop": "spring_wheat"
+ },
+ "51": {
+  "texture": "loam (default)",
+  "elev": 539.44,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 152,
+  "fs_crop": "spring_wheat"
+ },
+ "52": {
+  "texture": "loam (default)",
+  "elev": 262.09,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 152,
+  "fs_crop": "spring_wheat"
+ },
+ "53": {
+  "texture": "loam (default)",
+  "elev": 4.24,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 141,
+  "fs_crop": "spring_wheat"
+ },
+ "54": {
+  "texture": "loam (default)",
+  "elev": 102.78,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 141,
+  "fs_crop": "spring_wheat"
+ },
+ "55": {
+  "texture": "loam (default)",
+  "elev": 203.71,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 141,
+  "fs_crop": "spring_wheat"
+ },
+ "56": {
+  "texture": "loam (default)",
+  "elev": 1944.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 279,
+  "harvest_doy": 176,
+  "fs_crop": "winter_wheat"
+ },
+ "57": {
+  "texture": "loam (default)",
+  "elev": 255.25,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 279,
+  "harvest_doy": 176,
+  "fs_crop": "winter_wheat"
+ },
+ "58": {
+  "texture": "loam (default)",
+  "elev": 279.54,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 279,
+  "harvest_doy": 176,
+  "fs_crop": "winter_wheat"
+ },
+ "59": {
+  "texture": "loam (default)",
+  "elev": 127.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 312,
+  "harvest_doy": 128,
+  "fs_crop": "spring_wheat"
+ },
+ "60": {
+  "texture": "loam (default)",
+  "elev": 298.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 312,
+  "harvest_doy": 128,
+  "fs_crop": "spring_wheat"
+ },
+ "61": {
+  "texture": "loam (default)",
+  "elev": 45.47,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 312,
+  "harvest_doy": 128,
+  "fs_crop": "spring_wheat"
+ },
+ "62": {
+  "texture": "loam (default)",
+  "elev": 213.49,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 13.8,
+  "plant_doy": 344,
+  "harvest_doy": 126,
+  "fs_crop": "spring_wheat"
+ },
+ "63": {
+  "texture": "loam (default)",
+  "elev": 190.87,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 319,
+  "harvest_doy": 53,
+  "fs_crop": "spring_wheat"
+ },
+ "64": {
+  "texture": "loam (default)",
+  "elev": 95.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 16.1,
+  "plant_doy": 348,
+  "harvest_doy": 102,
+  "fs_crop": "spring_wheat"
+ },
+ "65": {
+  "texture": "loam (default)",
+  "elev": 28.12,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 346,
+  "harvest_doy": 100,
+  "fs_crop": "spring_wheat"
+ },
+ "66": {
+  "texture": "loam (default)",
+  "elev": 6.26,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 346,
+  "harvest_doy": 100,
+  "fs_crop": "spring_wheat"
+ },
+ "67": {
+  "texture": "loam (default)",
+  "elev": 42.9,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 272,
+  "harvest_doy": 157,
+  "fs_crop": "winter_wheat"
+ },
+ "68": {
+  "texture": "loam (default)",
+  "elev": 52.74,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 272,
+  "harvest_doy": 157,
+  "fs_crop": "winter_wheat"
+ },
+ "69": {
+  "texture": "loam (default)",
+  "elev": 592.71,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 1.3,
+  "plant_doy": 272,
+  "harvest_doy": 157,
+  "fs_crop": "winter_wheat"
+ },
+ "70": {
+  "texture": "loam (default)",
+  "elev": 290.96,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 350,
+  "fs_crop": "spring_wheat"
+ },
+ "71": {
+  "texture": "loam (default)",
+  "elev": 199.55,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 354,
+  "fs_crop": "winter_wheat"
+ },
+ "72": {
+  "texture": "loam (default)",
+  "elev": 308.6,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 350,
+  "fs_crop": "spring_wheat"
+ },
+ "73": {
+  "texture": "loam (default)",
+  "elev": 252.43,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 11.7,
+  "plant_doy": 152,
+  "harvest_doy": 311,
+  "fs_crop": "spring_wheat"
+ },
+ "74": {
+  "texture": "loam (default)",
+  "elev": 1259.6,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 311,
+  "fs_crop": "spring_wheat"
+ },
+ "75": {
+  "texture": "loam (default)",
+  "elev": 947.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 311,
+  "fs_crop": "spring_wheat"
+ },
+ "76": {
+  "texture": "loam (default)",
+  "elev": 1941.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 335,
+  "fs_crop": "spring_wheat"
+ },
+ "77": {
+  "texture": "loam (default)",
+  "elev": 1383.92,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 335,
+  "fs_crop": "spring_wheat"
+ },
+ "78": {
+  "texture": "loam (default)",
+  "elev": 2041.14,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 335,
+  "fs_crop": "spring_wheat"
+ },
+ "79": {
+  "texture": "loam (default)",
+  "elev": 1305.38,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 156,
+  "harvest_doy": 304,
+  "fs_crop": "spring_wheat"
+ },
+ "80": {
+  "texture": "loam (default)",
+  "elev": 607.59,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 27.3,
+  "plant_doy": 320,
+  "harvest_doy": 75,
+  "fs_crop": "spring_wheat"
+ },
+ "81": {
+  "texture": "loam (default)",
+  "elev": 717.66,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 156,
+  "harvest_doy": 304,
+  "fs_crop": "spring_wheat"
+ },
+ "82": {
+  "texture": "loam (default)",
+  "elev": 491.1,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 132,
+  "harvest_doy": 300,
+  "fs_crop": "maize"
+ },
+ "83": {
+  "texture": "loam (default)",
+  "elev": 212.45,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 295,
+  "fs_crop": "maize"
+ },
+ "84": {
+  "texture": "loam (default)",
+  "elev": 361.41,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 133,
+  "harvest_doy": 290,
+  "fs_crop": "maize"
+ },
+ "85": {
+  "texture": "loam (default)",
+  "elev": 41.13,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 298,
+  "fs_crop": "maize"
+ },
+ "86": {
+  "texture": "loam (default)",
+  "elev": 357.98,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 298,
+  "fs_crop": "maize"
+ },
+ "87": {
+  "texture": "loam (default)",
+  "elev": 243.24,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 140,
+  "harvest_doy": 292,
+  "fs_crop": "maize"
+ },
+ "88": {
+  "texture": "loam (default)",
+  "elev": 2445.91,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 149,
+  "harvest_doy": 318,
+  "fs_crop": "maize"
+ },
+ "89": {
+  "texture": "loam (default)",
+  "elev": 1467.31,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 149,
+  "harvest_doy": 318,
+  "fs_crop": "maize"
+ },
+ "90": {
+  "texture": "loam (default)",
+  "elev": 1735.73,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 149,
+  "harvest_doy": 318,
+  "fs_crop": "maize"
+ },
+ "91": {
+  "texture": "loam (default)",
+  "elev": 627.56,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 328,
+  "harvest_doy": 100,
+  "fs_crop": "maize"
+ },
+ "92": {
+  "texture": "loam (default)",
+  "elev": 466.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 328,
+  "harvest_doy": 100,
+  "fs_crop": "maize"
+ },
+ "93": {
+  "texture": "loam (default)",
+  "elev": 386.04,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 328,
+  "harvest_doy": 100,
+  "fs_crop": "maize"
+ },
+ "94": {
+  "texture": "loam (default)",
+  "elev": 109.14,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 296,
+  "harvest_doy": 105,
+  "fs_crop": "maize"
+ },
+ "95": {
+  "texture": "loam (default)",
+  "elev": 903.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 296,
+  "harvest_doy": 105,
+  "fs_crop": "maize"
+ },
+ "96": {
+  "texture": "loam (default)",
+  "elev": 533.01,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 296,
+  "harvest_doy": 105,
+  "fs_crop": "maize"
+ },
+ "97": {
+  "texture": "loam (default)",
+  "elev": 274.35,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 228,
+  "harvest_doy": 46,
+  "fs_crop": "maize"
+ },
+ "98": {
+  "texture": "loam (default)",
+  "elev": 541.76,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 228,
+  "harvest_doy": 46,
+  "fs_crop": "maize"
+ },
+ "99": {
+  "texture": "loam (default)",
+  "elev": 71.52,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 228,
+  "harvest_doy": 46,
+  "fs_crop": "maize"
+ },
+ "100": {
+  "texture": "loam (default)",
+  "elev": 120.99,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "101": {
+  "texture": "loam (default)",
+  "elev": 367.56,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "102": {
+  "texture": "loam (default)",
+  "elev": 97.45,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "103": {
+  "texture": "loam (default)",
+  "elev": 267.86,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "104": {
+  "texture": "loam (default)",
+  "elev": 451.54,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 110,
+  "harvest_doy": 272,
+  "fs_crop": "maize"
+ },
+ "105": {
+  "texture": "loam (default)",
+  "elev": 37.79,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "106": {
+  "texture": "loam (default)",
+  "elev": 524.36,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 88,
+  "harvest_doy": 285,
+  "fs_crop": "maize"
+ },
+ "107": {
+  "texture": "loam (default)",
+  "elev": 915.64,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 88,
+  "harvest_doy": 285,
+  "fs_crop": "maize"
+ },
+ "108": {
+  "texture": "loam (default)",
+  "elev": 296.62,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 88,
+  "harvest_doy": 285,
+  "fs_crop": "maize"
+ },
+ "109": {
+  "texture": "loam (default)",
+  "elev": 208.9,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 110,
+  "harvest_doy": 272,
+  "fs_crop": "maize"
+ },
+ "110": {
+  "texture": "loam (default)",
+  "elev": 423.5,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 110,
+  "harvest_doy": 272,
+  "fs_crop": "maize"
+ },
+ "111": {
+  "texture": "loam (default)",
+  "elev": 295.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "112": {
+  "texture": "loam (default)",
+  "elev": 87.73,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "113": {
+  "texture": "loam (default)",
+  "elev": 251.62,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 131,
+  "harvest_doy": 285,
+  "fs_crop": "maize"
+ },
+ "114": {
+  "texture": "loam (default)",
+  "elev": 191.96,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 131,
+  "harvest_doy": 285,
+  "fs_crop": "maize"
+ },
+ "115": {
+  "texture": "loam (default)",
+  "elev": 281.04,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "116": {
+  "texture": "loam (default)",
+  "elev": 118.56,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 280,
+  "fs_crop": "maize"
+ },
+ "117": {
+  "texture": "loam (default)",
+  "elev": 182.89,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 252,
+  "fs_crop": "maize"
+ },
+ "118": {
+  "texture": "loam (default)",
+  "elev": 108.35,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 270,
+  "fs_crop": "maize"
+ },
+ "119": {
+  "texture": "loam (default)",
+  "elev": 51.22,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 115,
+  "harvest_doy": 252,
+  "fs_crop": "maize"
+ },
+ "120": {
+  "texture": "loam (default)",
+  "elev": 261.88,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 243,
+  "fs_crop": "maize"
+ },
+ "121": {
+  "texture": "loam (default)",
+  "elev": 628.01,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 243,
+  "fs_crop": "maize"
+ },
+ "122": {
+  "texture": "loam (default)",
+  "elev": 401.21,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 243,
+  "fs_crop": "maize"
+ },
+ "123": {
+  "texture": "loam (default)",
+  "elev": 654.2,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 268,
+  "fs_crop": "maize"
+ },
+ "124": {
+  "texture": "loam (default)",
+  "elev": 347.4,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 268,
+  "fs_crop": "maize"
+ },
+ "125": {
+  "texture": "loam (default)",
+  "elev": 141.23,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 268,
+  "fs_crop": "maize"
+ },
+ "126": {
+  "texture": "loam (default)",
+  "elev": 442.1,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 187,
+  "fs_crop": "maize"
+ },
+ "127": {
+  "texture": "loam (default)",
+  "elev": 262.09,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 187,
+  "fs_crop": "maize"
+ },
+ "128": {
+  "texture": "loam (default)",
+  "elev": 31.5,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 127,
+  "harvest_doy": 303,
+  "fs_crop": "maize"
+ },
+ "129": {
+  "texture": "loam (default)",
+  "elev": 114.52,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 127,
+  "harvest_doy": 303,
+  "fs_crop": "maize"
+ },
+ "130": {
+  "texture": "loam (default)",
+  "elev": 355.23,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 228,
+  "fs_crop": "maize"
+ },
+ "131": {
+  "texture": "loam (default)",
+  "elev": 279.54,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 228,
+  "fs_crop": "maize"
+ },
+ "132": {
+  "texture": "loam (default)",
+  "elev": 181.13,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 228,
+  "fs_crop": "maize"
+ },
+ "133": {
+  "texture": "loam (default)",
+  "elev": 662.49,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 293,
+  "fs_crop": "maize"
+ },
+ "134": {
+  "texture": "loam (default)",
+  "elev": 465.43,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 293,
+  "fs_crop": "maize"
+ },
+ "135": {
+  "texture": "loam (default)",
+  "elev": 3624.5,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 293,
+  "fs_crop": "maize"
+ },
+ "136": {
+  "texture": "loam (default)",
+  "elev": 278.9,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 179,
+  "harvest_doy": 288,
+  "fs_crop": "maize"
+ },
+ "137": {
+  "texture": "loam (default)",
+  "elev": 56.32,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 246,
+  "fs_crop": "maize"
+ },
+ "138": {
+  "texture": "loam (default)",
+  "elev": 1224.27,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 293,
+  "fs_crop": "maize"
+ },
+ "139": {
+  "texture": "loam (default)",
+  "elev": 79.21,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 246,
+  "fs_crop": "maize"
+ },
+ "140": {
+  "texture": "loam (default)",
+  "elev": 432.05,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 246,
+  "fs_crop": "maize"
+ },
+ "141": {
+  "texture": "loam (default)",
+  "elev": 154.72,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 254,
+  "fs_crop": "maize"
+ },
+ "142": {
+  "texture": "loam (default)",
+  "elev": 592.71,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 72,
+  "harvest_doy": 211,
+  "fs_crop": "maize"
+ },
+ "143": {
+  "texture": "loam (default)",
+  "elev": 46.9,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 254,
+  "fs_crop": "maize"
+ },
+ "144": {
+  "texture": "loam (default)",
+  "elev": 18.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 92,
+  "fs_crop": "maize"
+ },
+ "145": {
+  "texture": "loam (default)",
+  "elev": 179.8,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 204,
+  "harvest_doy": 318,
+  "fs_crop": "maize"
+ },
+ "146": {
+  "texture": "loam (default)",
+  "elev": 118.14,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 92,
+  "fs_crop": "maize"
+ },
+ "147": {
+  "texture": "loam (default)",
+  "elev": 143.18,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 224,
+  "fs_crop": "maize"
+ },
+ "148": {
+  "texture": "loam (default)",
+  "elev": 125.27,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "149": {
+  "texture": "loam (default)",
+  "elev": 760.94,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 72,
+  "harvest_doy": 211,
+  "fs_crop": "maize"
+ },
+ "150": {
+  "texture": "loam (default)",
+  "elev": 69.55,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 224,
+  "fs_crop": "maize"
+ },
+ "151": {
+  "texture": "loam (default)",
+  "elev": 356.34,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 224,
+  "fs_crop": "maize"
+ },
+ "152": {
+  "texture": "loam (default)",
+  "elev": 724.65,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 224,
+  "fs_crop": "maize"
+ },
+ "153": {
+  "texture": "loam (default)",
+  "elev": 741.88,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 225,
+  "fs_crop": "maize"
+ },
+ "154": {
+  "texture": "loam (default)",
+  "elev": 133.8,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 225,
+  "fs_crop": "maize"
+ },
+ "155": {
+  "texture": "loam (default)",
+  "elev": 98.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 225,
+  "fs_crop": "maize"
+ },
+ "156": {
+  "texture": "loam (default)",
+  "elev": 1297.23,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 154,
+  "fs_crop": "maize"
+ },
+ "157": {
+  "texture": "loam (default)",
+  "elev": 1519.9,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 154,
+  "fs_crop": "maize"
+ },
+ "158": {
+  "texture": "loam (default)",
+  "elev": 196.94,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 0,
+  "harvest_doy": 166,
+  "fs_crop": "maize"
+ },
+ "159": {
+  "texture": "loam (default)",
+  "elev": 188.89,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 198,
+  "fs_crop": "maize"
+ },
+ "160": {
+  "texture": "loam (default)",
+  "elev": 212.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 243,
+  "fs_crop": "maize"
+ },
+ "161": {
+  "texture": "loam (default)",
+  "elev": 151.33,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 198,
+  "fs_crop": "maize"
+ },
+ "162": {
+  "texture": "loam (default)",
+  "elev": 2480.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 102,
+  "harvest_doy": 310,
+  "fs_crop": "maize"
+ },
+ "163": {
+  "texture": "loam (default)",
+  "elev": 2065.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 102,
+  "harvest_doy": 310,
+  "fs_crop": "maize"
+ },
+ "164": {
+  "texture": "loam (default)",
+  "elev": 1775.47,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 102,
+  "harvest_doy": 310,
+  "fs_crop": "maize"
+ },
+ "165": {
+  "texture": "loam (default)",
+  "elev": 1305.38,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 304,
+  "fs_crop": "maize"
+ },
+ "166": {
+  "texture": "loam (default)",
+  "elev": 607.59,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 304,
+  "fs_crop": "maize"
+ },
+ "167": {
+  "texture": "loam (default)",
+  "elev": 717.66,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 304,
+  "fs_crop": "maize"
+ },
+ "168": {
+  "texture": "loam (default)",
+  "elev": 1643.96,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 167,
+  "fs_crop": "maize"
+ },
+ "169": {
+  "texture": "loam (default)",
+  "elev": 1188.98,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 40,
+  "harvest_doy": 182,
+  "fs_crop": "maize"
+ },
+ "170": {
+  "texture": "loam (default)",
+  "elev": 931.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 40,
+  "harvest_doy": 182,
+  "fs_crop": "maize"
+ },
+ "171": {
+  "texture": "loam (default)",
+  "elev": 364.0,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "172": {
+  "texture": "loam (default)",
+  "elev": 349.16,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "173": {
+  "texture": "loam (default)",
+  "elev": 387.89,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "maize"
+ },
+ "174": {
+  "texture": "loam (default)",
+  "elev": 407.24,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "175": {
+  "texture": "loam (default)",
+  "elev": 263.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "176": {
+  "texture": "loam (default)",
+  "elev": 305.08,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "maize"
+ },
+ "177": {
+  "texture": "loam (default)",
+  "elev": 863.57,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "maize"
+ },
+ "178": {
+  "texture": "loam (default)",
+  "elev": 1094.53,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "maize"
+ },
+ "179": {
+  "texture": "loam (default)",
+  "elev": 1140.94,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "maize"
+ },
+ "180": {
+  "texture": "loam (default)",
+  "elev": 557.48,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 136,
+  "fs_crop": "maize"
+ },
+ "181": {
+  "texture": "loam (default)",
+  "elev": 1001.14,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 136,
+  "fs_crop": "maize"
+ },
+ "182": {
+  "texture": "loam (default)",
+  "elev": 1114.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 136,
+  "fs_crop": "maize"
+ },
+ "183": {
+  "texture": "loam (default)",
+  "elev": 188.06,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 243,
+  "fs_crop": "maize"
+ },
+ "184": {
+  "texture": "loam (default)",
+  "elev": 244.69,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 258,
+  "fs_crop": "maize"
+ },
+ "185": {
+  "texture": "loam (default)",
+  "elev": 48.97,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 90,
+  "harvest_doy": 243,
+  "fs_crop": "maize"
+ },
+ "186": {
+  "texture": "loam (default)",
+  "elev": 1308.47,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 151,
+  "fs_crop": "maize"
+ },
+ "187": {
+  "texture": "loam (default)",
+  "elev": 652.41,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 151,
+  "fs_crop": "maize"
+ },
+ "188": {
+  "texture": "loam (default)",
+  "elev": 728.92,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 151,
+  "fs_crop": "maize"
+ },
+ "189": {
+  "texture": "loam (default)",
+  "elev": 109.78,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 282,
+  "fs_crop": "rice"
+ },
+ "190": {
+  "texture": "loam (default)",
+  "elev": 69.93,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 125,
+  "harvest_doy": 268,
+  "fs_crop": "rice"
+ },
+ "191": {
+  "texture": "loam (default)",
+  "elev": 19.8,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 116,
+  "harvest_doy": 242,
+  "fs_crop": "rice"
+ },
+ "192": {
+  "texture": "loam (default)",
+  "elev": 69.55,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 326,
+  "harvest_doy": 88,
+  "fs_crop": "rice"
+ },
+ "193": {
+  "texture": "loam (default)",
+  "elev": 992.26,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 326,
+  "harvest_doy": 88,
+  "fs_crop": "rice"
+ },
+ "194": {
+  "texture": "loam (default)",
+  "elev": 304.7,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 326,
+  "harvest_doy": 88,
+  "fs_crop": "rice"
+ },
+ "195": {
+  "texture": "loam (default)",
+  "elev": 67.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 296,
+  "harvest_doy": 117,
+  "fs_crop": "rice"
+ },
+ "196": {
+  "texture": "loam (default)",
+  "elev": 47.42,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 296,
+  "harvest_doy": 117,
+  "fs_crop": "rice"
+ },
+ "197": {
+  "texture": "loam (default)",
+  "elev": 67.27,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 296,
+  "harvest_doy": 117,
+  "fs_crop": "rice"
+ },
+ "198": {
+  "texture": "loam (default)",
+  "elev": 915.64,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 56,
+  "harvest_doy": 271,
+  "fs_crop": "rice"
+ },
+ "199": {
+  "texture": "loam (default)",
+  "elev": 625.1,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 56,
+  "harvest_doy": 271,
+  "fs_crop": "rice"
+ },
+ "200": {
+  "texture": "loam (default)",
+  "elev": 373.35,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 56,
+  "harvest_doy": 271,
+  "fs_crop": "rice"
+ },
+ "201": {
+  "texture": "loam (default)",
+  "elev": 232.25,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 290,
+  "fs_crop": "rice"
+ },
+ "202": {
+  "texture": "loam (default)",
+  "elev": 386.84,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 290,
+  "fs_crop": "rice"
+ },
+ "203": {
+  "texture": "loam (default)",
+  "elev": 127.84,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 290,
+  "fs_crop": "rice"
+ },
+ "204": {
+  "texture": "loam (default)",
+  "elev": 1.26,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "rice"
+ },
+ "205": {
+  "texture": "loam (default)",
+  "elev": 355.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 278,
+  "fs_crop": "rice"
+ },
+ "206": {
+  "texture": "loam (default)",
+  "elev": 70.43,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 227,
+  "fs_crop": "rice"
+ },
+ "207": {
+  "texture": "loam (default)",
+  "elev": 118.81,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "rice"
+ },
+ "208": {
+  "texture": "loam (default)",
+  "elev": 654.2,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "rice"
+ },
+ "209": {
+  "texture": "loam (default)",
+  "elev": 333.62,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 274,
+  "fs_crop": "rice"
+ },
+ "210": {
+  "texture": "loam (default)",
+  "elev": 0.82,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 303,
+  "fs_crop": "rice"
+ },
+ "211": {
+  "texture": "loam (default)",
+  "elev": 343.22,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 303,
+  "fs_crop": "rice"
+ },
+ "212": {
+  "texture": "loam (default)",
+  "elev": -11.86,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 227,
+  "fs_crop": "rice"
+ },
+ "213": {
+  "texture": "loam (default)",
+  "elev": 57.57,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 227,
+  "fs_crop": "rice"
+ },
+ "214": {
+  "texture": "loam (default)",
+  "elev": 1944.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 227,
+  "fs_crop": "rice"
+ },
+ "215": {
+  "texture": "loam (default)",
+  "elev": 465.43,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 308,
+  "fs_crop": "rice"
+ },
+ "216": {
+  "texture": "loam (default)",
+  "elev": 149.3,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 308,
+  "fs_crop": "rice"
+ },
+ "217": {
+  "texture": "loam (default)",
+  "elev": 45.47,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 308,
+  "fs_crop": "rice"
+ },
+ "218": {
+  "texture": "loam (default)",
+  "elev": 62.6,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 308,
+  "fs_crop": "rice"
+ },
+ "219": {
+  "texture": "loam (default)",
+  "elev": 180.36,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 193,
+  "harvest_doy": 319,
+  "fs_crop": "rice"
+ },
+ "220": {
+  "texture": "loam (default)",
+  "elev": 63.12,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 305,
+  "fs_crop": "rice"
+ },
+ "221": {
+  "texture": "loam (default)",
+  "elev": 58.09,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 332,
+  "fs_crop": "rice"
+ },
+ "222": {
+  "texture": "loam (default)",
+  "elev": 5.34,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 332,
+  "fs_crop": "rice"
+ },
+ "223": {
+  "texture": "loam (default)",
+  "elev": 4.65,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 88,
+  "harvest_doy": 180,
+  "fs_crop": "rice"
+ },
+ "224": {
+  "texture": "loam (default)",
+  "elev": 0.51,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 246,
+  "fs_crop": "rice"
+ },
+ "225": {
+  "texture": "loam (default)",
+  "elev": 23.7,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 246,
+  "fs_crop": "rice"
+ },
+ "226": {
+  "texture": "loam (default)",
+  "elev": 3.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 90,
+  "fs_crop": "rice"
+ },
+ "227": {
+  "texture": "loam (default)",
+  "elev": 18.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 90,
+  "fs_crop": "rice"
+ },
+ "228": {
+  "texture": "loam (default)",
+  "elev": 174.76,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 90,
+  "fs_crop": "rice"
+ },
+ "229": {
+  "texture": "loam (default)",
+  "elev": 4.79,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 227,
+  "harvest_doy": 365,
+  "fs_crop": "rice"
+ },
+ "230": {
+  "texture": "loam (default)",
+  "elev": 7.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 190,
+  "harvest_doy": 294,
+  "fs_crop": "rice"
+ },
+ "231": {
+  "texture": "loam (default)",
+  "elev": 53.39,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 227,
+  "harvest_doy": 365,
+  "fs_crop": "rice"
+ },
+ "232": {
+  "texture": "loam (default)",
+  "elev": 51.2,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 339,
+  "fs_crop": "rice"
+ },
+ "233": {
+  "texture": "loam (default)",
+  "elev": 148.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 339,
+  "fs_crop": "rice"
+ },
+ "234": {
+  "texture": "loam (default)",
+  "elev": 165.44,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 339,
+  "fs_crop": "rice"
+ },
+ "235": {
+  "texture": "loam (default)",
+  "elev": 237.0,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 302,
+  "fs_crop": "rice"
+ },
+ "236": {
+  "texture": "loam (default)",
+  "elev": 117.37,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 302,
+  "fs_crop": "rice"
+ },
+ "237": {
+  "texture": "loam (default)",
+  "elev": 334.93,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 302,
+  "fs_crop": "rice"
+ },
+ "238": {
+  "texture": "loam (default)",
+  "elev": 255.94,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 258,
+  "fs_crop": "rice"
+ },
+ "239": {
+  "texture": "loam (default)",
+  "elev": 374.52,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 335,
+  "fs_crop": "rice"
+ },
+ "240": {
+  "texture": "loam (default)",
+  "elev": 212.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 335,
+  "fs_crop": "rice"
+ },
+ "241": {
+  "texture": "loam (default)",
+  "elev": 1842.67,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 44,
+  "harvest_doy": 212,
+  "fs_crop": "rice"
+ },
+ "242": {
+  "texture": "loam (default)",
+  "elev": 1045.63,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 340,
+  "harvest_doy": 156,
+  "fs_crop": "rice"
+ },
+ "243": {
+  "texture": "loam (default)",
+  "elev": 376.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 340,
+  "harvest_doy": 156,
+  "fs_crop": "rice"
+ },
+ "244": {
+  "texture": "loam (default)",
+  "elev": 264.61,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 358,
+  "fs_crop": "rice"
+ },
+ "245": {
+  "texture": "loam (default)",
+  "elev": 287.62,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 358,
+  "fs_crop": "rice"
+ },
+ "246": {
+  "texture": "loam (default)",
+  "elev": 349.16,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 358,
+  "fs_crop": "rice"
+ },
+ "247": {
+  "texture": "loam (default)",
+  "elev": 407.24,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 350,
+  "harvest_doy": 90,
+  "fs_crop": "rice"
+ },
+ "248": {
+  "texture": "loam (default)",
+  "elev": 263.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 350,
+  "harvest_doy": 90,
+  "fs_crop": "rice"
+ },
+ "249": {
+  "texture": "loam (default)",
+  "elev": 273.43,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 350,
+  "harvest_doy": 90,
+  "fs_crop": "rice"
+ },
+ "250": {
+  "texture": "loam (default)",
+  "elev": 139.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 274,
+  "fs_crop": "rice"
+ },
+ "251": {
+  "texture": "loam (default)",
+  "elev": 244.69,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "rice"
+ },
+ "252": {
+  "texture": "loam (default)",
+  "elev": 97.3,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 274,
+  "fs_crop": "rice"
+ },
+ "253": {
+  "texture": "loam (default)",
+  "elev": 1661.28,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 114,
+  "harvest_doy": 240,
+  "fs_crop": "barley"
+ },
+ "254": {
+  "texture": "loam (default)",
+  "elev": 377.95,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 128,
+  "harvest_doy": 230,
+  "fs_crop": "barley"
+ },
+ "255": {
+  "texture": "loam (default)",
+  "elev": 669.24,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 100,
+  "harvest_doy": 227,
+  "fs_crop": "barley"
+ },
+ "256": {
+  "texture": "loam (default)",
+  "elev": 975.83,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 256,
+  "fs_crop": "barley"
+ },
+ "257": {
+  "texture": "loam (default)",
+  "elev": 549.11,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 256,
+  "fs_crop": "barley"
+ },
+ "258": {
+  "texture": "loam (default)",
+  "elev": 650.57,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 256,
+  "fs_crop": "barley"
+ },
+ "259": {
+  "texture": "loam (default)",
+  "elev": 2338.01,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 11.9,
+  "plant_doy": 294,
+  "harvest_doy": 161,
+  "fs_crop": "winter_barley"
+ },
+ "260": {
+  "texture": "loam (default)",
+  "elev": 103.23,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 20.2,
+  "plant_doy": 356,
+  "harvest_doy": 158,
+  "fs_crop": "barley"
+ },
+ "261": {
+  "texture": "loam (default)",
+  "elev": 356.86,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 14.9,
+  "plant_doy": 356,
+  "harvest_doy": 158,
+  "fs_crop": "barley"
+ },
+ "262": {
+  "texture": "loam (default)",
+  "elev": 626.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "barley"
+ },
+ "263": {
+  "texture": "loam (default)",
+  "elev": 926.26,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "barley"
+ },
+ "264": {
+  "texture": "loam (default)",
+  "elev": 257.02,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "barley"
+ },
+ "265": {
+  "texture": "loam (default)",
+  "elev": 110.4,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 213,
+  "harvest_doy": 349,
+  "fs_crop": "barley"
+ },
+ "266": {
+  "texture": "loam (default)",
+  "elev": 91.45,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 213,
+  "harvest_doy": 349,
+  "fs_crop": "barley"
+ },
+ "267": {
+  "texture": "loam (default)",
+  "elev": 33.19,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 213,
+  "harvest_doy": 349,
+  "fs_crop": "barley"
+ },
+ "268": {
+  "texture": "loam (default)",
+  "elev": 148.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 275,
+  "harvest_doy": 178,
+  "fs_crop": "winter_barley"
+ },
+ "269": {
+  "texture": "loam (default)",
+  "elev": 141.3,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 275,
+  "harvest_doy": 178,
+  "fs_crop": "winter_barley"
+ },
+ "270": {
+  "texture": "loam (default)",
+  "elev": 127.97,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 275,
+  "harvest_doy": 178,
+  "fs_crop": "winter_barley"
+ },
+ "271": {
+  "texture": "loam (default)",
+  "elev": 100.97,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 1.3,
+  "plant_doy": 274,
+  "harvest_doy": 181,
+  "fs_crop": "winter_barley"
+ },
+ "272": {
+  "texture": "loam (default)",
+  "elev": 451.54,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -1.7,
+  "plant_doy": 274,
+  "harvest_doy": 181,
+  "fs_crop": "winter_barley"
+ },
+ "273": {
+  "texture": "loam (default)",
+  "elev": 123.05,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -0.2,
+  "plant_doy": 274,
+  "harvest_doy": 181,
+  "fs_crop": "winter_barley"
+ },
+ "274": {
+  "texture": "loam (default)",
+  "elev": 763.82,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 342,
+  "harvest_doy": 178,
+  "fs_crop": "winter_barley"
+ },
+ "275": {
+  "texture": "loam (default)",
+  "elev": 753.75,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 342,
+  "harvest_doy": 178,
+  "fs_crop": "winter_barley"
+ },
+ "276": {
+  "texture": "loam (default)",
+  "elev": 524.36,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 342,
+  "harvest_doy": 178,
+  "fs_crop": "winter_barley"
+ },
+ "277": {
+  "texture": "loam (default)",
+  "elev": 423.5,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 3,
+  "harvest_doy": 168,
+  "fs_crop": "barley"
+ },
+ "278": {
+  "texture": "loam (default)",
+  "elev": 208.9,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 3,
+  "harvest_doy": 168,
+  "fs_crop": "barley"
+ },
+ "279": {
+  "texture": "loam (default)",
+  "elev": 506.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 3,
+  "harvest_doy": 168,
+  "fs_crop": "barley"
+ },
+ "280": {
+  "texture": "loam (default)",
+  "elev": 85.79,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -2.7,
+  "plant_doy": 274,
+  "harvest_doy": 181,
+  "fs_crop": "winter_barley"
+ },
+ "281": {
+  "texture": "loam (default)",
+  "elev": 295.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -2.2,
+  "plant_doy": 274,
+  "harvest_doy": 181,
+  "fs_crop": "winter_barley"
+ },
+ "282": {
+  "texture": "loam (default)",
+  "elev": 114.77,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -4.5,
+  "plant_doy": 278,
+  "harvest_doy": 184,
+  "fs_crop": "winter_barley"
+ },
+ "283": {
+  "texture": "loam (default)",
+  "elev": 214.32,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 2.5,
+  "plant_doy": 284,
+  "harvest_doy": 180,
+  "fs_crop": "winter_barley"
+ },
+ "284": {
+  "texture": "loam (default)",
+  "elev": 30.68,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 4.0,
+  "plant_doy": 284,
+  "harvest_doy": 180,
+  "fs_crop": "winter_barley"
+ },
+ "285": {
+  "texture": "loam (default)",
+  "elev": 82.56,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 4.6,
+  "plant_doy": 284,
+  "harvest_doy": 180,
+  "fs_crop": "winter_barley"
+ },
+ "286": {
+  "texture": "loam (default)",
+  "elev": 77.88,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 94,
+  "harvest_doy": 210,
+  "fs_crop": "barley"
+ },
+ "287": {
+  "texture": "loam (default)",
+  "elev": 139.64,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 94,
+  "harvest_doy": 210,
+  "fs_crop": "barley"
+ },
+ "288": {
+  "texture": "loam (default)",
+  "elev": 114.73,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 100,
+  "harvest_doy": 210,
+  "fs_crop": "barley"
+ },
+ "289": {
+  "texture": "loam (default)",
+  "elev": 232.62,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -15.2,
+  "plant_doy": 146,
+  "harvest_doy": 248,
+  "fs_crop": "barley"
+ },
+ "290": {
+  "texture": "loam (default)",
+  "elev": 117.6,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -18.4,
+  "plant_doy": 146,
+  "harvest_doy": 248,
+  "fs_crop": "barley"
+ },
+ "291": {
+  "texture": "loam (default)",
+  "elev": 163.33,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 278,
+  "harvest_doy": 184,
+  "fs_crop": "winter_barley"
+ },
+ "292": {
+  "texture": "loam (default)",
+  "elev": 324.78,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -14.9,
+  "plant_doy": 121,
+  "harvest_doy": 247,
+  "fs_crop": "barley"
+ },
+ "293": {
+  "texture": "loam (default)",
+  "elev": 213.51,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 247,
+  "fs_crop": "barley"
+ },
+ "294": {
+  "texture": "loam (default)",
+  "elev": 78.02,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -13.1,
+  "plant_doy": 121,
+  "harvest_doy": 247,
+  "fs_crop": "barley"
+ },
+ "295": {
+  "texture": "loam (default)",
+  "elev": 1023.93,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 167,
+  "fs_crop": "winter_barley"
+ },
+ "296": {
+  "texture": "loam (default)",
+  "elev": 738.09,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 167,
+  "fs_crop": "winter_barley"
+ },
+ "297": {
+  "texture": "loam (default)",
+  "elev": 700.33,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 167,
+  "fs_crop": "winter_barley"
+ },
+ "298": {
+  "texture": "loam (default)",
+  "elev": 539.44,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 167,
+  "fs_crop": "barley"
+ },
+ "299": {
+  "texture": "loam (default)",
+  "elev": 756.19,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 335,
+  "harvest_doy": 167,
+  "fs_crop": "barley"
+ },
+ "300": {
+  "texture": "loam (default)",
+  "elev": 2076.87,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 75,
+  "fs_crop": "barley"
+ },
+ "301": {
+  "texture": "loam (default)",
+  "elev": 255.25,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 75,
+  "fs_crop": "barley"
+ },
+ "302": {
+  "texture": "loam (default)",
+  "elev": 1661.7,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 75,
+  "fs_crop": "barley"
+ },
+ "303": {
+  "texture": "loam (default)",
+  "elev": 562.44,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 16.8,
+  "plant_doy": 304,
+  "harvest_doy": 95,
+  "fs_crop": "barley"
+ },
+ "304": {
+  "texture": "loam (default)",
+  "elev": 190.87,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 15.1,
+  "plant_doy": 304,
+  "harvest_doy": 95,
+  "fs_crop": "barley"
+ },
+ "305": {
+  "texture": "loam (default)",
+  "elev": 244.57,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 17.3,
+  "plant_doy": 304,
+  "harvest_doy": 95,
+  "fs_crop": "barley"
+ },
+ "306": {
+  "texture": "loam (default)",
+  "elev": 159.19,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -19.0,
+  "plant_doy": 46,
+  "harvest_doy": 182,
+  "fs_crop": "barley"
+ },
+ "307": {
+  "texture": "loam (default)",
+  "elev": 4.65,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": 4.4,
+  "plant_doy": 320,
+  "harvest_doy": 182,
+  "fs_crop": "winter_barley"
+ },
+ "308": {
+  "texture": "loam (default)",
+  "elev": 35.91,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "coldest_month_c": -1.3,
+  "plant_doy": 289,
+  "harvest_doy": 182,
+  "fs_crop": "winter_barley"
+ },
+ "309": {
+  "texture": "loam (default)",
+  "elev": 42.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 350,
+  "fs_crop": "barley"
+ },
+ "310": {
+  "texture": "loam (default)",
+  "elev": 309.03,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 335,
+  "fs_crop": "barley"
+ },
+ "311": {
+  "texture": "loam (default)",
+  "elev": 97.97,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 0,
+  "fs_crop": "barley"
+ },
+ "312": {
+  "texture": "loam (default)",
+  "elev": 1701.0,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 335,
+  "fs_crop": "barley"
+ },
+ "313": {
+  "texture": "loam (default)",
+  "elev": 2480.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 335,
+  "fs_crop": "barley"
+ },
+ "314": {
+  "texture": "loam (default)",
+  "elev": 1644.26,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 335,
+  "fs_crop": "barley"
+ },
+ "315": {
+  "texture": "loam (default)",
+  "elev": 1280.77,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 252,
+  "fs_crop": "pearl_millet"
+ },
+ "316": {
+  "texture": "loam (default)",
+  "elev": 563.9,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 252,
+  "fs_crop": "pearl_millet"
+ },
+ "317": {
+  "texture": "loam (default)",
+  "elev": 1476.98,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 252,
+  "fs_crop": "pearl_millet"
+ },
+ "318": {
+  "texture": "loam (default)",
+  "elev": 60.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 243,
+  "fs_crop": "pearl_millet"
+ },
+ "319": {
+  "texture": "loam (default)",
+  "elev": 74.7,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 243,
+  "fs_crop": "pearl_millet"
+ },
+ "320": {
+  "texture": "loam (default)",
+  "elev": 118.56,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 135,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "321": {
+  "texture": "loam (default)",
+  "elev": 70.99,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 232,
+  "fs_crop": "pearl_millet"
+ },
+ "322": {
+  "texture": "loam (default)",
+  "elev": 197.69,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 232,
+  "fs_crop": "pearl_millet"
+ },
+ "323": {
+  "texture": "loam (default)",
+  "elev": -17.5,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 232,
+  "fs_crop": "pearl_millet"
+ },
+ "324": {
+  "texture": "loam (default)",
+  "elev": 138.69,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 282,
+  "fs_crop": "pearl_millet"
+ },
+ "325": {
+  "texture": "loam (default)",
+  "elev": 155.04,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 282,
+  "fs_crop": "pearl_millet"
+ },
+ "326": {
+  "texture": "loam (default)",
+  "elev": 465.43,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 282,
+  "fs_crop": "pearl_millet"
+ },
+ "327": {
+  "texture": "loam (default)",
+  "elev": 177.46,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "328": {
+  "texture": "loam (default)",
+  "elev": 266.31,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "329": {
+  "texture": "loam (default)",
+  "elev": 841.72,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "330": {
+  "texture": "loam (default)",
+  "elev": 2.45,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 278,
+  "fs_crop": "pearl_millet"
+ },
+ "331": {
+  "texture": "loam (default)",
+  "elev": 1370.1,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 278,
+  "fs_crop": "pearl_millet"
+ },
+ "332": {
+  "texture": "loam (default)",
+  "elev": 1004.83,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 278,
+  "fs_crop": "pearl_millet"
+ },
+ "333": {
+  "texture": "loam (default)",
+  "elev": 376.92,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "334": {
+  "texture": "loam (default)",
+  "elev": 262.85,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "335": {
+  "texture": "loam (default)",
+  "elev": 293.13,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "336": {
+  "texture": "loam (default)",
+  "elev": 2065.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 345,
+  "fs_crop": "pearl_millet"
+ },
+ "337": {
+  "texture": "loam (default)",
+  "elev": 1701.0,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 345,
+  "fs_crop": "pearl_millet"
+ },
+ "338": {
+  "texture": "loam (default)",
+  "elev": 1644.26,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 345,
+  "fs_crop": "pearl_millet"
+ },
+ "339": {
+  "texture": "loam (default)",
+  "elev": 1305.38,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 85,
+  "harvest_doy": 228,
+  "fs_crop": "pearl_millet"
+ },
+ "340": {
+  "texture": "loam (default)",
+  "elev": 607.59,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 85,
+  "harvest_doy": 228,
+  "fs_crop": "pearl_millet"
+ },
+ "341": {
+  "texture": "loam (default)",
+  "elev": 111.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 85,
+  "harvest_doy": 228,
+  "fs_crop": "pearl_millet"
+ },
+ "342": {
+  "texture": "loam (default)",
+  "elev": 1080.59,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 61,
+  "harvest_doy": 212,
+  "fs_crop": "pearl_millet"
+ },
+ "343": {
+  "texture": "loam (default)",
+  "elev": 1188.98,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 61,
+  "harvest_doy": 212,
+  "fs_crop": "pearl_millet"
+ },
+ "344": {
+  "texture": "loam (default)",
+  "elev": 1213.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 61,
+  "harvest_doy": 212,
+  "fs_crop": "pearl_millet"
+ },
+ "345": {
+  "texture": "loam (default)",
+  "elev": 238.2,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 185,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "346": {
+  "texture": "loam (default)",
+  "elev": 407.27,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 185,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "347": {
+  "texture": "loam (default)",
+  "elev": 420.1,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 185,
+  "harvest_doy": 274,
+  "fs_crop": "pearl_millet"
+ },
+ "348": {
+  "texture": "loam (default)",
+  "elev": 273.07,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "pearl_millet"
+ },
+ "349": {
+  "texture": "loam (default)",
+  "elev": 286.93,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "pearl_millet"
+ },
+ "350": {
+  "texture": "loam (default)",
+  "elev": 387.89,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "pearl_millet"
+ },
+ "351": {
+  "texture": "loam (default)",
+  "elev": 291.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "pearl_millet"
+ },
+ "352": {
+  "texture": "loam (default)",
+  "elev": 291.35,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "pearl_millet"
+ },
+ "353": {
+  "texture": "loam (default)",
+  "elev": 346.0,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "pearl_millet"
+ },
+ "354": {
+  "texture": "loam (default)",
+  "elev": 244.69,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "pearl_millet"
+ },
+ "355": {
+  "texture": "loam (default)",
+  "elev": 139.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "pearl_millet"
+ },
+ "356": {
+  "texture": "loam (default)",
+  "elev": 1128.1,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 136,
+  "fs_crop": "pearl_millet"
+ },
+ "357": {
+  "texture": "loam (default)",
+  "elev": 728.92,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 136,
+  "fs_crop": "pearl_millet"
+ },
+ "358": {
+  "texture": "loam (default)",
+  "elev": 652.41,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 136,
+  "fs_crop": "pearl_millet"
+ },
+ "359": {
+  "texture": "loam (default)",
+  "elev": 21.29,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 124,
+  "harvest_doy": 258,
+  "fs_crop": "sorghum"
+ },
+ "360": {
+  "texture": "loam (default)",
+  "elev": 429.81,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 158,
+  "harvest_doy": 296,
+  "fs_crop": "sorghum"
+ },
+ "361": {
+  "texture": "loam (default)",
+  "elev": 933.98,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 158,
+  "harvest_doy": 296,
+  "fs_crop": "sorghum"
+ },
+ "362": {
+  "texture": "loam (default)",
+  "elev": 40.62,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 58,
+  "harvest_doy": 156,
+  "fs_crop": "sorghum"
+ },
+ "363": {
+  "texture": "loam (default)",
+  "elev": 1856.91,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 130,
+  "harvest_doy": 334,
+  "fs_crop": "sorghum"
+ },
+ "364": {
+  "texture": "loam (default)",
+  "elev": 293.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 58,
+  "harvest_doy": 156,
+  "fs_crop": "sorghum"
+ },
+ "365": {
+  "texture": "loam (default)",
+  "elev": 537.54,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 365,
+  "harvest_doy": 168,
+  "fs_crop": "sorghum"
+ },
+ "366": {
+  "texture": "loam (default)",
+  "elev": 705.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 365,
+  "harvest_doy": 168,
+  "fs_crop": "sorghum"
+ },
+ "367": {
+  "texture": "loam (default)",
+  "elev": 348.59,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 365,
+  "harvest_doy": 168,
+  "fs_crop": "sorghum"
+ },
+ "368": {
+  "texture": "loam (default)",
+  "elev": 307.47,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 322,
+  "harvest_doy": 150,
+  "fs_crop": "sorghum"
+ },
+ "369": {
+  "texture": "loam (default)",
+  "elev": 101.99,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 322,
+  "harvest_doy": 150,
+  "fs_crop": "sorghum"
+ },
+ "370": {
+  "texture": "loam (default)",
+  "elev": 34.54,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 322,
+  "harvest_doy": 150,
+  "fs_crop": "sorghum"
+ },
+ "371": {
+  "texture": "loam (default)",
+  "elev": 214.33,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 86,
+  "harvest_doy": 212,
+  "fs_crop": "sorghum"
+ },
+ "372": {
+  "texture": "loam (default)",
+  "elev": 2.65,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 274,
+  "harvest_doy": 30,
+  "fs_crop": "sorghum"
+ },
+ "373": {
+  "texture": "loam (default)",
+  "elev": 127.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 187,
+  "harvest_doy": 274,
+  "fs_crop": "sorghum"
+ },
+ "374": {
+  "texture": "loam (default)",
+  "elev": 298.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 187,
+  "harvest_doy": 274,
+  "fs_crop": "sorghum"
+ },
+ "375": {
+  "texture": "loam (default)",
+  "elev": 16.89,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 187,
+  "harvest_doy": 274,
+  "fs_crop": "sorghum"
+ },
+ "376": {
+  "texture": "loam (default)",
+  "elev": 548.64,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 298,
+  "fs_crop": "sorghum"
+ },
+ "377": {
+  "texture": "loam (default)",
+  "elev": 471.99,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 162,
+  "harvest_doy": 291,
+  "fs_crop": "sorghum"
+ },
+ "378": {
+  "texture": "loam (default)",
+  "elev": 546.24,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 158,
+  "harvest_doy": 280,
+  "fs_crop": "sorghum"
+ },
+ "379": {
+  "texture": "loam (default)",
+  "elev": 159.19,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 274,
+  "fs_crop": "sorghum"
+ },
+ "380": {
+  "texture": "loam (default)",
+  "elev": 56.12,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 274,
+  "fs_crop": "sorghum"
+ },
+ "381": {
+  "texture": "loam (default)",
+  "elev": 172.88,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 300,
+  "fs_crop": "sorghum"
+ },
+ "382": {
+  "texture": "loam (default)",
+  "elev": 351.83,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 120,
+  "fs_crop": "sorghum"
+ },
+ "383": {
+  "texture": "loam (default)",
+  "elev": 297.79,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 120,
+  "fs_crop": "sorghum"
+ },
+ "384": {
+  "texture": "loam (default)",
+  "elev": 400.09,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 120,
+  "fs_crop": "sorghum"
+ },
+ "385": {
+  "texture": "loam (default)",
+  "elev": 374.52,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "sorghum"
+ },
+ "386": {
+  "texture": "loam (default)",
+  "elev": 290.52,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "sorghum"
+ },
+ "387": {
+  "texture": "loam (default)",
+  "elev": 396.78,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "sorghum"
+ },
+ "388": {
+  "texture": "loam (default)",
+  "elev": 2063.41,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 101,
+  "harvest_doy": 310,
+  "fs_crop": "sorghum"
+ },
+ "389": {
+  "texture": "loam (default)",
+  "elev": 2065.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 101,
+  "harvest_doy": 310,
+  "fs_crop": "sorghum"
+ },
+ "390": {
+  "texture": "loam (default)",
+  "elev": 2480.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 101,
+  "harvest_doy": 310,
+  "fs_crop": "sorghum"
+ },
+ "391": {
+  "texture": "loam (default)",
+  "elev": 1305.38,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 243,
+  "fs_crop": "sorghum"
+ },
+ "392": {
+  "texture": "loam (default)",
+  "elev": 607.59,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 243,
+  "fs_crop": "sorghum"
+ },
+ "393": {
+  "texture": "loam (default)",
+  "elev": 468.17,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 243,
+  "fs_crop": "sorghum"
+ },
+ "394": {
+  "texture": "loam (default)",
+  "elev": 1191.32,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 30,
+  "harvest_doy": 159,
+  "fs_crop": "sorghum"
+ },
+ "395": {
+  "texture": "loam (default)",
+  "elev": 1080.59,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 30,
+  "harvest_doy": 159,
+  "fs_crop": "sorghum"
+ },
+ "396": {
+  "texture": "loam (default)",
+  "elev": 1213.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 30,
+  "harvest_doy": 159,
+  "fs_crop": "sorghum"
+ },
+ "397": {
+  "texture": "loam (default)",
+  "elev": 419.63,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 288,
+  "fs_crop": "sorghum"
+ },
+ "398": {
+  "texture": "loam (default)",
+  "elev": 237.94,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 288,
+  "fs_crop": "sorghum"
+ },
+ "399": {
+  "texture": "loam (default)",
+  "elev": 265.25,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 288,
+  "fs_crop": "sorghum"
+ },
+ "400": {
+  "texture": "loam (default)",
+  "elev": 354.6,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "sorghum"
+ },
+ "401": {
+  "texture": "loam (default)",
+  "elev": 359.36,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "sorghum"
+ },
+ "402": {
+  "texture": "loam (default)",
+  "elev": 293.21,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 289,
+  "fs_crop": "sorghum"
+ },
+ "403": {
+  "texture": "loam (default)",
+  "elev": 292.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "sorghum"
+ },
+ "404": {
+  "texture": "loam (default)",
+  "elev": 260.5,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "sorghum"
+ },
+ "405": {
+  "texture": "loam (default)",
+  "elev": 244.69,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "sorghum"
+ },
+ "406": {
+  "texture": "loam (default)",
+  "elev": 139.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 304,
+  "fs_crop": "sorghum"
+ },
+ "407": {
+  "texture": "loam (default)",
+  "elev": 728.92,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 0,
+  "harvest_doy": 166,
+  "fs_crop": "sorghum"
+ },
+ "408": {
+  "texture": "loam (default)",
+  "elev": 904.95,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 0,
+  "harvest_doy": 166,
+  "fs_crop": "sorghum"
+ },
+ "409": {
+  "texture": "loam (default)",
+  "elev": 841.58,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 0,
+  "harvest_doy": 166,
+  "fs_crop": "sorghum"
+ },
+ "410": {
+  "texture": "loam (default)",
+  "elev": 107.82,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 158,
+  "harvest_doy": 298,
+  "fs_crop": "soybean"
+ },
+ "411": {
+  "texture": "loam (default)",
+  "elev": 44.84,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 141,
+  "harvest_doy": 282,
+  "fs_crop": "soybean"
+ },
+ "412": {
+  "texture": "loam (default)",
+  "elev": 198.81,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 146,
+  "harvest_doy": 286,
+  "fs_crop": "soybean"
+ },
+ "413": {
+  "texture": "loam (default)",
+  "elev": 207.54,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 290,
+  "fs_crop": "soybean"
+ },
+ "414": {
+  "texture": "loam (default)",
+  "elev": 41.13,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 290,
+  "fs_crop": "soybean"
+ },
+ "415": {
+  "texture": "loam (default)",
+  "elev": 261.42,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 290,
+  "fs_crop": "soybean"
+ },
+ "416": {
+  "texture": "loam (default)",
+  "elev": 106.94,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 304,
+  "fs_crop": "soybean"
+ },
+ "417": {
+  "texture": "loam (default)",
+  "elev": 42.36,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 304,
+  "fs_crop": "soybean"
+ },
+ "418": {
+  "texture": "loam (default)",
+  "elev": 293.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 152,
+  "harvest_doy": 304,
+  "fs_crop": "soybean"
+ },
+ "419": {
+  "texture": "loam (default)",
+  "elev": 370.59,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 328,
+  "harvest_doy": 106,
+  "fs_crop": "soybean"
+ },
+ "420": {
+  "texture": "loam (default)",
+  "elev": 531.27,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 328,
+  "harvest_doy": 106,
+  "fs_crop": "soybean"
+ },
+ "421": {
+  "texture": "loam (default)",
+  "elev": 500.31,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 328,
+  "harvest_doy": 106,
+  "fs_crop": "soybean"
+ },
+ "422": {
+  "texture": "loam (default)",
+  "elev": 76.14,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 120,
+  "fs_crop": "soybean"
+ },
+ "423": {
+  "texture": "loam (default)",
+  "elev": 662.17,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 120,
+  "fs_crop": "soybean"
+ },
+ "424": {
+  "texture": "loam (default)",
+  "elev": 934.38,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 334,
+  "harvest_doy": 120,
+  "fs_crop": "soybean"
+ },
+ "425": {
+  "texture": "loam (default)",
+  "elev": 256.7,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 322,
+  "harvest_doy": 121,
+  "fs_crop": "soybean"
+ },
+ "426": {
+  "texture": "loam (default)",
+  "elev": 541.76,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 322,
+  "harvest_doy": 121,
+  "fs_crop": "soybean"
+ },
+ "427": {
+  "texture": "loam (default)",
+  "elev": 372.49,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 304,
+  "fs_crop": "soybean"
+ },
+ "428": {
+  "texture": "loam (default)",
+  "elev": 232.25,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 304,
+  "fs_crop": "soybean"
+ },
+ "429": {
+  "texture": "loam (default)",
+  "elev": 191.96,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 228,
+  "fs_crop": "soybean"
+ },
+ "430": {
+  "texture": "loam (default)",
+  "elev": 60.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 228,
+  "fs_crop": "soybean"
+ },
+ "431": {
+  "texture": "loam (default)",
+  "elev": 118.56,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 228,
+  "fs_crop": "soybean"
+ },
+ "432": {
+  "texture": "loam (default)",
+  "elev": 98.16,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 273,
+  "fs_crop": "soybean"
+ },
+ "433": {
+  "texture": "loam (default)",
+  "elev": 413.13,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 273,
+  "fs_crop": "soybean"
+ },
+ "434": {
+  "texture": "loam (default)",
+  "elev": 215.51,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 273,
+  "fs_crop": "soybean"
+ },
+ "435": {
+  "texture": "loam (default)",
+  "elev": 479.8,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 308,
+  "fs_crop": "soybean"
+ },
+ "436": {
+  "texture": "loam (default)",
+  "elev": 371.16,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 179,
+  "harvest_doy": 308,
+  "fs_crop": "soybean"
+ },
+ "437": {
+  "texture": "loam (default)",
+  "elev": 463.02,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 308,
+  "fs_crop": "soybean"
+ },
+ "438": {
+  "texture": "loam (default)",
+  "elev": 0.44,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 273,
+  "fs_crop": "soybean"
+ },
+ "439": {
+  "texture": "loam (default)",
+  "elev": 35.09,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 273,
+  "fs_crop": "soybean"
+ },
+ "440": {
+  "texture": "loam (default)",
+  "elev": 244.67,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 273,
+  "fs_crop": "soybean"
+ },
+ "441": {
+  "texture": "loam (default)",
+  "elev": 18.05,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "442": {
+  "texture": "loam (default)",
+  "elev": 174.76,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "443": {
+  "texture": "loam (default)",
+  "elev": 294.15,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "444": {
+  "texture": "loam (default)",
+  "elev": 114.92,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 179,
+  "harvest_doy": 308,
+  "fs_crop": "soybean"
+ },
+ "445": {
+  "texture": "loam (default)",
+  "elev": 421.83,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 179,
+  "harvest_doy": 308,
+  "fs_crop": "soybean"
+ },
+ "446": {
+  "texture": "loam (default)",
+  "elev": 2.46,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 179,
+  "harvest_doy": 308,
+  "fs_crop": "soybean"
+ },
+ "447": {
+  "texture": "loam (default)",
+  "elev": 252.43,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "soybean"
+ },
+ "448": {
+  "texture": "loam (default)",
+  "elev": 1487.2,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "soybean"
+ },
+ "449": {
+  "texture": "loam (default)",
+  "elev": 573.83,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "soybean"
+ },
+ "450": {
+  "texture": "loam (default)",
+  "elev": 255.94,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "soybean"
+ },
+ "451": {
+  "texture": "loam (default)",
+  "elev": 372.11,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 160,
+  "harvest_doy": 289,
+  "fs_crop": "soybean"
+ },
+ "452": {
+  "texture": "loam (default)",
+  "elev": 623.54,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 160,
+  "harvest_doy": 289,
+  "fs_crop": "soybean"
+ },
+ "453": {
+  "texture": "loam (default)",
+  "elev": 1111.87,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "454": {
+  "texture": "loam (default)",
+  "elev": 863.57,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "455": {
+  "texture": "loam (default)",
+  "elev": 1273.49,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 318,
+  "harvest_doy": 136,
+  "fs_crop": "soybean"
+ },
+ "456": {
+  "texture": "loam (default)",
+  "elev": 1138.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "457": {
+  "texture": "loam (default)",
+  "elev": 1789.51,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 16,
+  "harvest_doy": 182,
+  "fs_crop": "soybean"
+ },
+ "458": {
+  "texture": "loam (default)",
+  "elev": 97.3,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "soybean"
+ },
+ "459": {
+  "texture": "loam (default)",
+  "elev": 277.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 160,
+  "harvest_doy": 289,
+  "fs_crop": "soybean"
+ },
+ "460": {
+  "texture": "loam (default)",
+  "elev": 291.18,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 160,
+  "harvest_doy": 289,
+  "fs_crop": "soybean"
+ },
+ "461": {
+  "texture": "loam (default)",
+  "elev": 1661.28,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 132,
+  "harvest_doy": 272,
+  "fs_crop": "potato"
+ },
+ "462": {
+  "texture": "loam (default)",
+  "elev": 2785.94,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 268,
+  "fs_crop": "potato"
+ },
+ "463": {
+  "texture": "loam (default)",
+  "elev": 413.81,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 264,
+  "fs_crop": "potato"
+ },
+ "464": {
+  "texture": "loam (default)",
+  "elev": 228.69,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 146,
+  "harvest_doy": 271,
+  "fs_crop": "potato"
+ },
+ "465": {
+  "texture": "loam (default)",
+  "elev": 269.7,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 125,
+  "harvest_doy": 252,
+  "fs_crop": "potato"
+ },
+ "466": {
+  "texture": "loam (default)",
+  "elev": 51.72,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 135,
+  "harvest_doy": 254,
+  "fs_crop": "potato"
+ },
+ "467": {
+  "texture": "loam (default)",
+  "elev": 672.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 243,
+  "harvest_doy": 76,
+  "fs_crop": "potato"
+ },
+ "468": {
+  "texture": "loam (default)",
+  "elev": 821.92,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 243,
+  "harvest_doy": 76,
+  "fs_crop": "potato"
+ },
+ "469": {
+  "texture": "loam (default)",
+  "elev": 866.52,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 227,
+  "harvest_doy": 364,
+  "fs_crop": "potato"
+ },
+ "470": {
+  "texture": "loam (default)",
+  "elev": 11.83,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "471": {
+  "texture": "loam (default)",
+  "elev": 143.61,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "472": {
+  "texture": "loam (default)",
+  "elev": 88.89,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "473": {
+  "texture": "loam (default)",
+  "elev": 11.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "474": {
+  "texture": "loam (default)",
+  "elev": 463.45,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "475": {
+  "texture": "loam (default)",
+  "elev": 43.93,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "476": {
+  "texture": "loam (default)",
+  "elev": 304.23,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "477": {
+  "texture": "loam (default)",
+  "elev": 127.89,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "478": {
+  "texture": "loam (default)",
+  "elev": 126.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "479": {
+  "texture": "loam (default)",
+  "elev": 30.68,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "480": {
+  "texture": "loam (default)",
+  "elev": 214.32,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "481": {
+  "texture": "loam (default)",
+  "elev": 81.47,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "482": {
+  "texture": "loam (default)",
+  "elev": 138.14,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 228,
+  "fs_crop": "potato"
+ },
+ "483": {
+  "texture": "loam (default)",
+  "elev": 275.06,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 76,
+  "harvest_doy": 197,
+  "fs_crop": "potato"
+ },
+ "484": {
+  "texture": "loam (default)",
+  "elev": 172.71,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 228,
+  "fs_crop": "potato"
+ },
+ "485": {
+  "texture": "loam (default)",
+  "elev": 344.11,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 243,
+  "fs_crop": "potato"
+ },
+ "486": {
+  "texture": "loam (default)",
+  "elev": 152.17,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 243,
+  "fs_crop": "potato"
+ },
+ "487": {
+  "texture": "loam (default)",
+  "elev": 116.47,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 243,
+  "fs_crop": "potato"
+ },
+ "488": {
+  "texture": "loam (default)",
+  "elev": 101.31,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 95,
+  "harvest_doy": 252,
+  "fs_crop": "potato"
+ },
+ "489": {
+  "texture": "loam (default)",
+  "elev": 261.88,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 95,
+  "harvest_doy": 252,
+  "fs_crop": "potato"
+ },
+ "490": {
+  "texture": "loam (default)",
+  "elev": 628.01,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 95,
+  "harvest_doy": 252,
+  "fs_crop": "potato"
+ },
+ "491": {
+  "texture": "loam (default)",
+  "elev": 1352.61,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 228,
+  "fs_crop": "potato"
+ },
+ "492": {
+  "texture": "loam (default)",
+  "elev": 537.67,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 228,
+  "fs_crop": "potato"
+ },
+ "493": {
+  "texture": "loam (default)",
+  "elev": 1197.39,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 228,
+  "fs_crop": "potato"
+ },
+ "494": {
+  "texture": "loam (default)",
+  "elev": 2.65,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 243,
+  "harvest_doy": 76,
+  "fs_crop": "potato"
+ },
+ "495": {
+  "texture": "loam (default)",
+  "elev": 102.78,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 60,
+  "harvest_doy": 166,
+  "fs_crop": "potato"
+ },
+ "496": {
+  "texture": "loam (default)",
+  "elev": 38.53,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 30,
+  "harvest_doy": 167,
+  "fs_crop": "potato"
+ },
+ "497": {
+  "texture": "loam (default)",
+  "elev": 1496.42,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 258,
+  "fs_crop": "potato"
+ },
+ "498": {
+  "texture": "loam (default)",
+  "elev": 560.62,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 258,
+  "fs_crop": "potato"
+ },
+ "499": {
+  "texture": "loam (default)",
+  "elev": 181.13,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 138,
+  "harvest_doy": 258,
+  "fs_crop": "potato"
+ },
+ "500": {
+  "texture": "loam (default)",
+  "elev": 465.43,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 40,
+  "harvest_doy": 132,
+  "fs_crop": "potato"
+ },
+ "501": {
+  "texture": "loam (default)",
+  "elev": 127.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 40,
+  "harvest_doy": 132,
+  "fs_crop": "potato"
+ },
+ "502": {
+  "texture": "loam (default)",
+  "elev": 414.31,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 40,
+  "harvest_doy": 132,
+  "fs_crop": "potato"
+ },
+ "503": {
+  "texture": "loam (default)",
+  "elev": 24.8,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 110,
+  "fs_crop": "potato"
+ },
+ "504": {
+  "texture": "loam (default)",
+  "elev": 60.99,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 86,
+  "harvest_doy": 208,
+  "fs_crop": "potato"
+ },
+ "505": {
+  "texture": "loam (default)",
+  "elev": 1212.3,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 110,
+  "fs_crop": "potato"
+ },
+ "506": {
+  "texture": "loam (default)",
+  "elev": 28.42,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 110,
+  "fs_crop": "potato"
+ },
+ "507": {
+  "texture": "loam (default)",
+  "elev": 5.34,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 110,
+  "fs_crop": "potato"
+ },
+ "508": {
+  "texture": "loam (default)",
+  "elev": 72.07,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 110,
+  "fs_crop": "potato"
+ },
+ "509": {
+  "texture": "loam (default)",
+  "elev": 525.13,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 144,
+  "harvest_doy": 281,
+  "fs_crop": "potato"
+ },
+ "510": {
+  "texture": "loam (default)",
+  "elev": 35.09,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 144,
+  "harvest_doy": 281,
+  "fs_crop": "potato"
+ },
+ "511": {
+  "texture": "loam (default)",
+  "elev": 1613.92,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 144,
+  "harvest_doy": 281,
+  "fs_crop": "potato"
+ },
+ "512": {
+  "texture": "loam (default)",
+  "elev": 846.92,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "513": {
+  "texture": "loam (default)",
+  "elev": 1070.04,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "514": {
+  "texture": "loam (default)",
+  "elev": 220.37,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "515": {
+  "texture": "loam (default)",
+  "elev": 1980.95,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "516": {
+  "texture": "loam (default)",
+  "elev": 1134.33,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "517": {
+  "texture": "loam (default)",
+  "elev": 458.29,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 198,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "518": {
+  "texture": "loam (default)",
+  "elev": 1305.38,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "519": {
+  "texture": "loam (default)",
+  "elev": 926.22,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "520": {
+  "texture": "loam (default)",
+  "elev": 111.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 304,
+  "fs_crop": "potato"
+ },
+ "521": {
+  "texture": "loam (default)",
+  "elev": 1414.28,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 198,
+  "fs_crop": "potato"
+ },
+ "522": {
+  "texture": "loam (default)",
+  "elev": 1346.39,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 198,
+  "fs_crop": "potato"
+ },
+ "523": {
+  "texture": "loam (default)",
+  "elev": 1222.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 198,
+  "fs_crop": "potato"
+ },
+ "524": {
+  "texture": "loam (default)",
+  "elev": 1087.85,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 90,
+  "fs_crop": "potato"
+ },
+ "525": {
+  "texture": "loam (default)",
+  "elev": 1490.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 243,
+  "harvest_doy": 76,
+  "fs_crop": "potato"
+ },
+ "526": {
+  "texture": "loam (default)",
+  "elev": 557.48,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 90,
+  "fs_crop": "potato"
+ },
+ "527": {
+  "texture": "loam (default)",
+  "elev": 24.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "528": {
+  "texture": "loam (default)",
+  "elev": 245.31,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 91,
+  "fs_crop": "cassava"
+ },
+ "529": {
+  "texture": "loam (default)",
+  "elev": 333.24,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "530": {
+  "texture": "loam (default)",
+  "elev": 256.7,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 91,
+  "fs_crop": "cassava"
+ },
+ "531": {
+  "texture": "loam (default)",
+  "elev": 168.66,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "532": {
+  "texture": "loam (default)",
+  "elev": 88.93,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "533": {
+  "texture": "loam (default)",
+  "elev": 56.23,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "534": {
+  "texture": "loam (default)",
+  "elev": 162.98,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 74,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "535": {
+  "texture": "loam (default)",
+  "elev": 1325.79,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "536": {
+  "texture": "loam (default)",
+  "elev": 417.91,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "537": {
+  "texture": "loam (default)",
+  "elev": 266.73,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "538": {
+  "texture": "loam (default)",
+  "elev": 222.2,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "539": {
+  "texture": "loam (default)",
+  "elev": 42.75,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "540": {
+  "texture": "loam (default)",
+  "elev": 529.93,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "541": {
+  "texture": "loam (default)",
+  "elev": 299.85,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "542": {
+  "texture": "loam (default)",
+  "elev": 53.39,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "543": {
+  "texture": "loam (default)",
+  "elev": 125.27,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "544": {
+  "texture": "loam (default)",
+  "elev": 173.8,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "545": {
+  "texture": "loam (default)",
+  "elev": 64.03,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "546": {
+  "texture": "loam (default)",
+  "elev": 257.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "547": {
+  "texture": "loam (default)",
+  "elev": 741.88,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "548": {
+  "texture": "loam (default)",
+  "elev": 17.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 74,
+  "harvest_doy": 288,
+  "fs_crop": "cassava"
+ },
+ "549": {
+  "texture": "loam (default)",
+  "elev": 44.55,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "550": {
+  "texture": "loam (default)",
+  "elev": 49.45,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 0,
+  "fs_crop": "cassava"
+ },
+ "551": {
+  "texture": "loam (default)",
+  "elev": 358.36,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 0,
+  "fs_crop": "cassava"
+ },
+ "552": {
+  "texture": "loam (default)",
+  "elev": 188.0,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 151,
+  "harvest_doy": 0,
+  "fs_crop": "cassava"
+ },
+ "553": {
+  "texture": "loam (default)",
+  "elev": 414.31,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "554": {
+  "texture": "loam (default)",
+  "elev": 1191.32,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "555": {
+  "texture": "loam (default)",
+  "elev": 574.15,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "556": {
+  "texture": "loam (default)",
+  "elev": 1313.37,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "557": {
+  "texture": "loam (default)",
+  "elev": 1288.4,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "558": {
+  "texture": "loam (default)",
+  "elev": 655.26,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "559": {
+  "texture": "loam (default)",
+  "elev": 1490.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "560": {
+  "texture": "loam (default)",
+  "elev": 492.2,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "561": {
+  "texture": "loam (default)",
+  "elev": 557.48,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 166,
+  "fs_crop": "cassava"
+ },
+ "562": {
+  "texture": "loam (default)",
+  "elev": 188.06,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 91,
+  "fs_crop": "cassava"
+ },
+ "563": {
+  "texture": "loam (default)",
+  "elev": 48.97,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 106,
+  "harvest_doy": 91,
+  "fs_crop": "cassava"
+ },
+ "564": {
+  "texture": "loam (default)",
+  "elev": 7.64,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "565": {
+  "texture": "loam (default)",
+  "elev": 6.16,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "566": {
+  "texture": "loam (default)",
+  "elev": 1172.55,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "567": {
+  "texture": "loam (default)",
+  "elev": 1467.31,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "568": {
+  "texture": "loam (default)",
+  "elev": 486.15,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "569": {
+  "texture": "loam (default)",
+  "elev": 578.61,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "570": {
+  "texture": "loam (default)",
+  "elev": 262.08,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 135,
+  "harvest_doy": 15,
+  "fs_crop": "sugarcane"
+ },
+ "571": {
+  "texture": "loam (default)",
+  "elev": 69.5,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 319,
+  "harvest_doy": 196,
+  "fs_crop": "sugarcane"
+ },
+ "572": {
+  "texture": "loam (default)",
+  "elev": 388.56,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 15,
+  "harvest_doy": 258,
+  "fs_crop": "sugarcane"
+ },
+ "573": {
+  "texture": "loam (default)",
+  "elev": 2330.37,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 15,
+  "harvest_doy": 258,
+  "fs_crop": "sugarcane"
+ },
+ "574": {
+  "texture": "loam (default)",
+  "elev": 4.96,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 288,
+  "fs_crop": "sugarcane"
+ },
+ "575": {
+  "texture": "loam (default)",
+  "elev": 102.78,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 288,
+  "fs_crop": "sugarcane"
+ },
+ "576": {
+  "texture": "loam (default)",
+  "elev": 203.71,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 288,
+  "fs_crop": "sugarcane"
+ },
+ "577": {
+  "texture": "loam (default)",
+  "elev": 127.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 288,
+  "fs_crop": "sugarcane"
+ },
+ "578": {
+  "texture": "loam (default)",
+  "elev": 298.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "579": {
+  "texture": "loam (default)",
+  "elev": 16.89,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 46,
+  "harvest_doy": 288,
+  "fs_crop": "sugarcane"
+ },
+ "580": {
+  "texture": "loam (default)",
+  "elev": 246.28,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "581": {
+  "texture": "loam (default)",
+  "elev": 146.81,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "582": {
+  "texture": "loam (default)",
+  "elev": 188.92,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "583": {
+  "texture": "loam (default)",
+  "elev": 28.12,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "584": {
+  "texture": "loam (default)",
+  "elev": 255.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "585": {
+  "texture": "loam (default)",
+  "elev": 6.26,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "586": {
+  "texture": "loam (default)",
+  "elev": 23.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "587": {
+  "texture": "loam (default)",
+  "elev": 213.86,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "588": {
+  "texture": "loam (default)",
+  "elev": 326.21,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 135,
+  "harvest_doy": 15,
+  "fs_crop": "sugarcane"
+ },
+ "589": {
+  "texture": "loam (default)",
+  "elev": 3.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "590": {
+  "texture": "loam (default)",
+  "elev": 435.26,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "591": {
+  "texture": "loam (default)",
+  "elev": 137.6,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "592": {
+  "texture": "loam (default)",
+  "elev": 1.91,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "593": {
+  "texture": "loam (default)",
+  "elev": 143.18,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "594": {
+  "texture": "loam (default)",
+  "elev": 45.63,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 258,
+  "harvest_doy": 135,
+  "fs_crop": "sugarcane"
+ },
+ "595": {
+  "texture": "loam (default)",
+  "elev": 34.86,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 227,
+  "harvest_doy": 105,
+  "fs_crop": "sugarcane"
+ },
+ "596": {
+  "texture": "loam (default)",
+  "elev": 148.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 196,
+  "harvest_doy": 74,
+  "fs_crop": "sugarcane"
+ },
+ "597": {
+  "texture": "loam (default)",
+  "elev": 65.46,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 166,
+  "fs_crop": "sugarcane"
+ },
+ "598": {
+  "texture": "loam (default)",
+  "elev": 104.72,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "599": {
+  "texture": "loam (default)",
+  "elev": 162.3,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 288,
+  "harvest_doy": 166,
+  "fs_crop": "sugarcane"
+ },
+ "600": {
+  "texture": "loam (default)",
+  "elev": 889.49,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 46,
+  "fs_crop": "sugarcane"
+ },
+ "601": {
+  "texture": "loam (default)",
+  "elev": 23.09,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "602": {
+  "texture": "loam (default)",
+  "elev": 376.16,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 227,
+  "harvest_doy": 105,
+  "fs_crop": "sugarcane"
+ },
+ "603": {
+  "texture": "loam (default)",
+  "elev": 297.79,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "604": {
+  "texture": "loam (default)",
+  "elev": 463.37,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "605": {
+  "texture": "loam (default)",
+  "elev": 245.73,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 349,
+  "harvest_doy": 227,
+  "fs_crop": "sugarcane"
+ },
+ "606": {
+  "texture": "loam (default)",
+  "elev": 90.21,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 133,
+  "harvest_doy": 276,
+  "fs_crop": "groundnut"
+ },
+ "607": {
+  "texture": "loam (default)",
+  "elev": 1021.29,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 163,
+  "harvest_doy": 302,
+  "fs_crop": "groundnut"
+ },
+ "608": {
+  "texture": "loam (default)",
+  "elev": 45.31,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 292,
+  "fs_crop": "groundnut"
+ },
+ "609": {
+  "texture": "loam (default)",
+  "elev": 569.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "610": {
+  "texture": "loam (default)",
+  "elev": 558.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "611": {
+  "texture": "loam (default)",
+  "elev": 223.45,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 182,
+  "harvest_doy": 364,
+  "fs_crop": "groundnut"
+ },
+ "612": {
+  "texture": "loam (default)",
+  "elev": 256.07,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 316,
+  "harvest_doy": 118,
+  "fs_crop": "groundnut"
+ },
+ "613": {
+  "texture": "loam (default)",
+  "elev": 194.14,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 316,
+  "harvest_doy": 118,
+  "fs_crop": "groundnut"
+ },
+ "614": {
+  "texture": "loam (default)",
+  "elev": 127.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 274,
+  "fs_crop": "groundnut"
+ },
+ "615": {
+  "texture": "loam (default)",
+  "elev": 298.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 274,
+  "fs_crop": "groundnut"
+ },
+ "616": {
+  "texture": "loam (default)",
+  "elev": 2115.61,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 186,
+  "harvest_doy": 274,
+  "fs_crop": "groundnut"
+ },
+ "617": {
+  "texture": "loam (default)",
+  "elev": 407.81,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 204,
+  "harvest_doy": 308,
+  "fs_crop": "groundnut"
+ },
+ "618": {
+  "texture": "loam (default)",
+  "elev": 28.47,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 176,
+  "harvest_doy": 288,
+  "fs_crop": "groundnut"
+ },
+ "619": {
+  "texture": "loam (default)",
+  "elev": 162.2,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 274,
+  "fs_crop": "groundnut"
+ },
+ "620": {
+  "texture": "loam (default)",
+  "elev": 57.1,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 278,
+  "fs_crop": "groundnut"
+ },
+ "621": {
+  "texture": "loam (default)",
+  "elev": 18.98,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 278,
+  "fs_crop": "groundnut"
+ },
+ "622": {
+  "texture": "loam (default)",
+  "elev": 134.46,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 134,
+  "harvest_doy": 278,
+  "fs_crop": "groundnut"
+ },
+ "623": {
+  "texture": "loam (default)",
+  "elev": 3.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "624": {
+  "texture": "loam (default)",
+  "elev": 94.33,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "625": {
+  "texture": "loam (default)",
+  "elev": 504.6,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "626": {
+  "texture": "loam (default)",
+  "elev": 115.24,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 140,
+  "harvest_doy": 246,
+  "fs_crop": "groundnut"
+ },
+ "627": {
+  "texture": "loam (default)",
+  "elev": 143.18,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 140,
+  "harvest_doy": 246,
+  "fs_crop": "groundnut"
+ },
+ "628": {
+  "texture": "loam (default)",
+  "elev": 155.61,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 274,
+  "fs_crop": "groundnut"
+ },
+ "629": {
+  "texture": "loam (default)",
+  "elev": 374.52,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "630": {
+  "texture": "loam (default)",
+  "elev": 212.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "631": {
+  "texture": "loam (default)",
+  "elev": 247.31,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "632": {
+  "texture": "loam (default)",
+  "elev": 1222.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "633": {
+  "texture": "loam (default)",
+  "elev": 899.6,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "634": {
+  "texture": "loam (default)",
+  "elev": 1643.96,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 121,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "635": {
+  "texture": "loam (default)",
+  "elev": 419.63,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 178,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "636": {
+  "texture": "loam (default)",
+  "elev": 237.94,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 178,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "637": {
+  "texture": "loam (default)",
+  "elev": 310.85,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 178,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "638": {
+  "texture": "loam (default)",
+  "elev": 289.13,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "639": {
+  "texture": "loam (default)",
+  "elev": 364.0,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "640": {
+  "texture": "loam (default)",
+  "elev": 320.09,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "641": {
+  "texture": "loam (default)",
+  "elev": 263.77,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "642": {
+  "texture": "loam (default)",
+  "elev": 407.24,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "643": {
+  "texture": "loam (default)",
+  "elev": 300.6,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 178,
+  "harvest_doy": 304,
+  "fs_crop": "groundnut"
+ },
+ "644": {
+  "texture": "loam (default)",
+  "elev": 863.57,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "645": {
+  "texture": "loam (default)",
+  "elev": 1094.53,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 175,
+  "harvest_doy": 320,
+  "fs_crop": "groundnut"
+ },
+ "646": {
+  "texture": "loam (default)",
+  "elev": 1313.37,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "647": {
+  "texture": "loam (default)",
+  "elev": 1088.13,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 316,
+  "harvest_doy": 118,
+  "fs_crop": "groundnut"
+ },
+ "648": {
+  "texture": "loam (default)",
+  "elev": 557.48,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "649": {
+  "texture": "loam (default)",
+  "elev": 1001.14,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 214,
+  "harvest_doy": 322,
+  "fs_crop": "groundnut"
+ },
+ "650": {
+  "texture": "loam (default)",
+  "elev": 244.69,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "651": {
+  "texture": "loam (default)",
+  "elev": 139.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 172,
+  "harvest_doy": 309,
+  "fs_crop": "groundnut"
+ },
+ "652": {
+  "texture": "loam (default)",
+  "elev": 904.95,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 175,
+  "harvest_doy": 320,
+  "fs_crop": "groundnut"
+ },
+ "653": {
+  "texture": "loam (default)",
+  "elev": 1173.54,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 175,
+  "harvest_doy": 320,
+  "fs_crop": "groundnut"
+ },
+ "654": {
+  "texture": "loam (default)",
+  "elev": 728.92,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 175,
+  "harvest_doy": 320,
+  "fs_crop": "groundnut"
+ },
+ "655": {
+  "texture": "loam (default)",
+  "elev": 184.34,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 164,
+  "harvest_doy": 273,
+  "fs_crop": "dry_bean"
+ },
+ "656": {
+  "texture": "loam (default)",
+  "elev": 669.24,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 150,
+  "harvest_doy": 268,
+  "fs_crop": "dry_bean"
+ },
+ "657": {
+  "texture": "loam (default)",
+  "elev": 320.14,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 147,
+  "harvest_doy": 266,
+  "fs_crop": "dry_bean"
+ },
+ "658": {
+  "texture": "loam (default)",
+  "elev": 564.78,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 260,
+  "fs_crop": "dry_bean"
+ },
+ "659": {
+  "texture": "loam (default)",
+  "elev": 591.23,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 260,
+  "fs_crop": "dry_bean"
+ },
+ "660": {
+  "texture": "loam (default)",
+  "elev": 243.24,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 147,
+  "harvest_doy": 266,
+  "fs_crop": "dry_bean"
+ },
+ "661": {
+  "texture": "loam (default)",
+  "elev": 1831.01,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 150,
+  "harvest_doy": 258,
+  "fs_crop": "dry_bean"
+ },
+ "662": {
+  "texture": "loam (default)",
+  "elev": 121.17,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 228,
+  "fs_crop": "dry_bean"
+ },
+ "663": {
+  "texture": "loam (default)",
+  "elev": 486.15,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 228,
+  "fs_crop": "dry_bean"
+ },
+ "664": {
+  "texture": "loam (default)",
+  "elev": 758.62,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 274,
+  "harvest_doy": 0,
+  "fs_crop": "dry_bean"
+ },
+ "665": {
+  "texture": "loam (default)",
+  "elev": 681.15,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 212,
+  "harvest_doy": 320,
+  "fs_crop": "dry_bean"
+ },
+ "666": {
+  "texture": "loam (default)",
+  "elev": 279.96,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 212,
+  "harvest_doy": 320,
+  "fs_crop": "dry_bean"
+ },
+ "667": {
+  "texture": "loam (default)",
+  "elev": 1103.06,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 212,
+  "fs_crop": "dry_bean"
+ },
+ "668": {
+  "texture": "loam (default)",
+  "elev": 30.15,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 212,
+  "fs_crop": "dry_bean"
+ },
+ "669": {
+  "texture": "loam (default)",
+  "elev": 330.23,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 212,
+  "fs_crop": "dry_bean"
+ },
+ "670": {
+  "texture": "loam (default)",
+  "elev": 399.22,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "671": {
+  "texture": "loam (default)",
+  "elev": 91.79,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "672": {
+  "texture": "loam (default)",
+  "elev": 103.63,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "673": {
+  "texture": "loam (default)",
+  "elev": 700.33,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "674": {
+  "texture": "loam (default)",
+  "elev": 1145.12,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "675": {
+  "texture": "loam (default)",
+  "elev": 1043.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "676": {
+  "texture": "loam (default)",
+  "elev": 155.04,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "677": {
+  "texture": "loam (default)",
+  "elev": 138.69,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "678": {
+  "texture": "loam (default)",
+  "elev": 298.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "679": {
+  "texture": "loam (default)",
+  "elev": 123.21,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "680": {
+  "texture": "loam (default)",
+  "elev": 431.78,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "681": {
+  "texture": "loam (default)",
+  "elev": 377.84,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "682": {
+  "texture": "loam (default)",
+  "elev": 159.19,
+  "zone": "continental",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "683": {
+  "texture": "loam (default)",
+  "elev": 4.65,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "684": {
+  "texture": "loam (default)",
+  "elev": 2.45,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "685": {
+  "texture": "loam (default)",
+  "elev": 3.47,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 221,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "686": {
+  "texture": "loam (default)",
+  "elev": 94.33,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 221,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "687": {
+  "texture": "loam (default)",
+  "elev": 504.6,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 221,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "688": {
+  "texture": "loam (default)",
+  "elev": 125.27,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "689": {
+  "texture": "loam (default)",
+  "elev": 299.85,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "690": {
+  "texture": "loam (default)",
+  "elev": 364.22,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 221,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "691": {
+  "texture": "loam (default)",
+  "elev": 165.44,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "692": {
+  "texture": "loam (default)",
+  "elev": 130.11,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "693": {
+  "texture": "loam (default)",
+  "elev": 55.16,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 232,
+  "harvest_doy": 305,
+  "fs_crop": "dry_bean"
+ },
+ "694": {
+  "texture": "loam (default)",
+  "elev": 1953.44,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "695": {
+  "texture": "loam (default)",
+  "elev": 1383.92,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 98,
+  "harvest_doy": 274,
+  "fs_crop": "dry_bean"
+ },
+ "696": {
+  "texture": "loam (default)",
+  "elev": 2065.58,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 142,
+  "harvest_doy": 220,
+  "fs_crop": "dry_bean"
+ },
+ "697": {
+  "texture": "loam (default)",
+  "elev": 1305.38,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 98,
+  "harvest_doy": 274,
+  "fs_crop": "dry_bean"
+ },
+ "698": {
+  "texture": "loam (default)",
+  "elev": 607.59,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 98,
+  "harvest_doy": 274,
+  "fs_crop": "dry_bean"
+ },
+ "699": {
+  "texture": "loam (default)",
+  "elev": 717.66,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 98,
+  "harvest_doy": 274,
+  "fs_crop": "dry_bean"
+ },
+ "700": {
+  "texture": "loam (default)",
+  "elev": 1148.03,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 61,
+  "harvest_doy": 182,
+  "fs_crop": "dry_bean"
+ },
+ "701": {
+  "texture": "loam (default)",
+  "elev": 1222.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 274,
+  "harvest_doy": 0,
+  "fs_crop": "dry_bean"
+ },
+ "702": {
+  "texture": "loam (default)",
+  "elev": 931.35,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 98,
+  "harvest_doy": 274,
+  "fs_crop": "dry_bean"
+ },
+ "703": {
+  "texture": "loam (default)",
+  "elev": 276.07,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 188,
+  "harvest_doy": 284,
+  "fs_crop": "dry_bean"
+ },
+ "704": {
+  "texture": "loam (default)",
+  "elev": 286.93,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 188,
+  "harvest_doy": 284,
+  "fs_crop": "dry_bean"
+ },
+ "705": {
+  "texture": "loam (default)",
+  "elev": 354.6,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 188,
+  "harvest_doy": 284,
+  "fs_crop": "dry_bean"
+ },
+ "706": {
+  "texture": "loam (default)",
+  "elev": 1087.85,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 274,
+  "harvest_doy": 0,
+  "fs_crop": "dry_bean"
+ },
+ "707": {
+  "texture": "loam (default)",
+  "elev": 1490.63,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 274,
+  "harvest_doy": 0,
+  "fs_crop": "dry_bean"
+ },
+ "708": {
+  "texture": "loam (default)",
+  "elev": 663.97,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 274,
+  "harvest_doy": 0,
+  "fs_crop": "dry_bean"
+ },
+ "709": {
+  "texture": "loam (default)",
+  "elev": 244.69,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 188,
+  "harvest_doy": 284,
+  "fs_crop": "dry_bean"
+ },
+ "710": {
+  "texture": "loam (default)",
+  "elev": 139.81,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 188,
+  "harvest_doy": 284,
+  "fs_crop": "dry_bean"
+ },
+ "711": {
+  "texture": "loam (default)",
+  "elev": 977.33,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 125,
+  "harvest_doy": 292,
+  "fs_crop": "cotton"
+ },
+ "712": {
+  "texture": "loam (default)",
+  "elev": 93.92,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 136,
+  "harvest_doy": 296,
+  "fs_crop": "cotton"
+ },
+ "713": {
+  "texture": "loam (default)",
+  "elev": 141.07,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 113,
+  "harvest_doy": 296,
+  "fs_crop": "cotton"
+ },
+ "714": {
+  "texture": "loam (default)",
+  "elev": 8.98,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 125,
+  "harvest_doy": 292,
+  "fs_crop": "cotton"
+ },
+ "715": {
+  "texture": "loam (default)",
+  "elev": 103.23,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "716": {
+  "texture": "loam (default)",
+  "elev": 1279.63,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 120,
+  "harvest_doy": 318,
+  "fs_crop": "cotton"
+ },
+ "717": {
+  "texture": "loam (default)",
+  "elev": 580.24,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 285,
+  "harvest_doy": 88,
+  "fs_crop": "cotton"
+ },
+ "718": {
+  "texture": "loam (default)",
+  "elev": 615.01,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 285,
+  "harvest_doy": 88,
+  "fs_crop": "cotton"
+ },
+ "719": {
+  "texture": "loam (default)",
+  "elev": 748.15,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 119,
+  "harvest_doy": 302,
+  "fs_crop": "cotton"
+ },
+ "720": {
+  "texture": "loam (default)",
+  "elev": 89.8,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 290,
+  "harvest_doy": 113,
+  "fs_crop": "cotton"
+ },
+ "721": {
+  "texture": "loam (default)",
+  "elev": 155.68,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 290,
+  "harvest_doy": 113,
+  "fs_crop": "cotton"
+ },
+ "722": {
+  "texture": "loam (default)",
+  "elev": 388.56,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 290,
+  "harvest_doy": 113,
+  "fs_crop": "cotton"
+ },
+ "723": {
+  "texture": "loam (default)",
+  "elev": 261.88,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 292,
+  "fs_crop": "cotton"
+ },
+ "724": {
+  "texture": "loam (default)",
+  "elev": 628.01,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 292,
+  "fs_crop": "cotton"
+ },
+ "725": {
+  "texture": "loam (default)",
+  "elev": 592.41,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 294,
+  "fs_crop": "cotton"
+ },
+ "726": {
+  "texture": "loam (default)",
+  "elev": 765.31,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 294,
+  "fs_crop": "cotton"
+ },
+ "727": {
+  "texture": "loam (default)",
+  "elev": 97.05,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 126,
+  "harvest_doy": 294,
+  "fs_crop": "cotton"
+ },
+ "728": {
+  "texture": "loam (default)",
+  "elev": 537.67,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 104,
+  "harvest_doy": 304,
+  "fs_crop": "cotton"
+ },
+ "729": {
+  "texture": "loam (default)",
+  "elev": 1215.57,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 104,
+  "harvest_doy": 304,
+  "fs_crop": "cotton"
+ },
+ "730": {
+  "texture": "loam (default)",
+  "elev": 849.39,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 104,
+  "harvest_doy": 304,
+  "fs_crop": "cotton"
+ },
+ "731": {
+  "texture": "loam (default)",
+  "elev": 2.65,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 359,
+  "harvest_doy": 206,
+  "fs_crop": "cotton"
+ },
+ "732": {
+  "texture": "loam (default)",
+  "elev": 114.52,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 122,
+  "harvest_doy": 281,
+  "fs_crop": "cotton"
+ },
+ "733": {
+  "texture": "loam (default)",
+  "elev": 71.21,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 80,
+  "harvest_doy": 303,
+  "fs_crop": "cotton"
+ },
+ "734": {
+  "texture": "loam (default)",
+  "elev": 57.57,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 118,
+  "harvest_doy": 294,
+  "fs_crop": "cotton"
+ },
+ "735": {
+  "texture": "loam (default)",
+  "elev": -11.86,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 118,
+  "harvest_doy": 294,
+  "fs_crop": "cotton"
+ },
+ "736": {
+  "texture": "loam (default)",
+  "elev": 1577.94,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 118,
+  "harvest_doy": 294,
+  "fs_crop": "cotton"
+ },
+ "737": {
+  "texture": "loam (default)",
+  "elev": 127.34,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 180,
+  "harvest_doy": 307,
+  "fs_crop": "cotton"
+ },
+ "738": {
+  "texture": "loam (default)",
+  "elev": 298.72,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 180,
+  "harvest_doy": 307,
+  "fs_crop": "cotton"
+ },
+ "739": {
+  "texture": "loam (default)",
+  "elev": 45.47,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 180,
+  "harvest_doy": 307,
+  "fs_crop": "cotton"
+ },
+ "740": {
+  "texture": "loam (default)",
+  "elev": 31.95,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 168,
+  "harvest_doy": 358,
+  "fs_crop": "cotton"
+ },
+ "741": {
+  "texture": "loam (default)",
+  "elev": 244.57,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 158,
+  "harvest_doy": 319,
+  "fs_crop": "cotton"
+ },
+ "742": {
+  "texture": "loam (default)",
+  "elev": 627.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 176,
+  "harvest_doy": 336,
+  "fs_crop": "cotton"
+ },
+ "743": {
+  "texture": "loam (default)",
+  "elev": 59.26,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 112,
+  "harvest_doy": 272,
+  "fs_crop": "cotton"
+ },
+ "744": {
+  "texture": "loam (default)",
+  "elev": 1210.65,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 112,
+  "harvest_doy": 272,
+  "fs_crop": "cotton"
+ },
+ "745": {
+  "texture": "loam (default)",
+  "elev": 30.77,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 112,
+  "harvest_doy": 243,
+  "fs_crop": "cotton"
+ },
+ "746": {
+  "texture": "loam (default)",
+  "elev": 95.4,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 106,
+  "fs_crop": "cotton"
+ },
+ "747": {
+  "texture": "loam (default)",
+  "elev": 23.09,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 120,
+  "fs_crop": "cotton"
+ },
+ "748": {
+  "texture": "loam (default)",
+  "elev": 2.95,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 320,
+  "harvest_doy": 120,
+  "fs_crop": "cotton"
+ },
+ "749": {
+  "texture": "loam (default)",
+  "elev": 474.54,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "750": {
+  "texture": "loam (default)",
+  "elev": 372.11,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "751": {
+  "texture": "loam (default)",
+  "elev": 247.31,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "752": {
+  "texture": "loam (default)",
+  "elev": 1842.67,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 63,
+  "harvest_doy": 258,
+  "fs_crop": "cotton"
+ },
+ "753": {
+  "texture": "loam (default)",
+  "elev": 1222.7,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 359,
+  "harvest_doy": 206,
+  "fs_crop": "cotton"
+ },
+ "754": {
+  "texture": "loam (default)",
+  "elev": 1045.63,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 359,
+  "harvest_doy": 206,
+  "fs_crop": "cotton"
+ },
+ "755": {
+  "texture": "loam (default)",
+  "elev": 349.16,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "756": {
+  "texture": "loam (default)",
+  "elev": 364.0,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "757": {
+  "texture": "loam (default)",
+  "elev": 286.46,
+  "zone": "tropical",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "758": {
+  "texture": "loam (default)",
+  "elev": 251.87,
+  "zone": "arid",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 166,
+  "harvest_doy": 320,
+  "fs_crop": "cotton"
+ },
+ "759": {
+  "texture": "loam (default)",
+  "elev": 1166.97,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 121,
+  "fs_crop": "cotton"
+ },
+ "760": {
+  "texture": "loam (default)",
+  "elev": 965.49,
+  "zone": "temperate",
+  "taw_mm_per_m": 140.0,
+  "plant_doy": 304,
+  "harvest_doy": 121,
+  "fs_crop": "cotton"
+ }
+}

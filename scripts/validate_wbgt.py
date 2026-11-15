@@ -1,4 +1,4 @@
-"""WBGT validation (docs/VALIDATION.md V9). Writes docs/validation/wbgt.json.
+"""WBGT validation (docs/VALIDATION.md V12). Writes docs/validation/wbgt.json.
 
 1. Cross-check against an independent Liljegren implementation (ECMWF thermofeel ≥ 2.3,
    `pip install thermofeel`; skipped if not installed) on a 1,800-case grid.

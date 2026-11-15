@@ -14,7 +14,8 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | GET | `/api/climate?lat=&lon=` | 1984→ yearly indicators, trends, normals, insights |
 | POST | `/api/terrain` | Computed terrain maps around the field (PNG overlays + legends + field stats + management zones) |
 | GET | `/api/terrain/png/{key}/{layer}.png` | Map overlay image (web-mercator aligned with `bounds`) |
-| POST | `/api/planner` | Season planner: sowing scan, stage dates, operations timeline, water budget, risk calendar |
+| POST | `/api/planner` | Season planner: sowing scan, stage dates, operations timeline, water budget, risk calendar; rain-fed tropical fields: `rain_season` limits and `onset_ok` per scanned date |
+| GET | `/api/rain-season?lat=&lon=&crop=&as_of=&lang=` | Rainy-season onset/cessation climatology since 1984, false-start odds, trends, this season's status, sowing windows per crop, and the `rain_onset` card (`RainSeasonResponse`) |
 | POST | `/api/fields/detect` | Tap-to-detect: editable field polygon around a point (sub-metre imagery) |
 | POST | `/api/satellite` | Sentinel-2 field analysis (async; poll until `status: done`): NDVI series, phenology, AI zones, Kcb, latest images |
 | GET | `/api/satellite/png/{key}/{zones,ndvi,truecolor}.png` | Satellite overlays aligned with `bounds` |

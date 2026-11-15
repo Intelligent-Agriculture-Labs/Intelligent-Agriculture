@@ -29,6 +29,12 @@ ET₀ = [0.408 Δ (Rₙ − G) + γ (900 / (T + 273)) u₂ (eₛ − eₐ)] / [�
 - RAW = p·TAW, with p adjusted by p + 0.04(5 − ETc) (Table 22 note).
 - Kₛ = (TAW − Dᵣ)/((1 − p) TAW) when Dᵣ > RAW (eq. 84). ETc,adj = Kₛ·Kc·ET₀. Overflow becomes deep percolation.
 - Mass closure is unit-tested.
+- **Antecedent soil water (EXP-12).** By default (`antecedent_days=180`, annual crops), a fallow bucket over the full root zone runs from 180 days before sowing:
+  - it starts at 60 % depletion (left by the previous crop);
+  - evaporation is 0.3·ET₀·(1 − D/TAW_max) (stage-2 drying, FAO-56 Ch. 7);
+  - rain refills it, and the excess drains.
+  
+  Its relative depletion sets the initial root-zone depletion. Soil reached by growing roots enters at that depletion instead of at field capacity, so a dry winter carries over into the season. With `antecedent_days=0`, or when the record is too short, the FAO-56 default applies: 30 % initial depletion, deeper soil at field capacity.
 
 **Irrigation strategies.**
 - *Full:* refill to field capacity when Dᵣ ≥ RAW.
@@ -43,6 +49,14 @@ ET₀ = [0.408 Δ (Rₙ − G) + γ (900 / (T + 273)) u₂ (eₛ − eₐ)] / [�
 - Heat: −3 % per day with Tmax ≥ T_heat in mid-season (cap −50 %).
 - Frost before 80 % progress: −5 % (initial), −15 % (development), −35 % (mid-season). Frost after 80 % ends the season.
 - Diagnostic biomass in the AquaCrop style: B = WP*·Σ(Tr/ET₀) (Steduto et al., 2009), reported for comparison (EXPERIMENTS.md).
+- **Global calibration** (`science/yieldcal.py`, ADR-022, VALIDATION V10): Yₐ is multiplied by f_crop × f_region^s_crop from `config/yield_calibration.yaml`.
+  - The factors are fitted to FAOSTAT national yields (263 country × crop pairs, 41 countries) and validated leave-one-country-out.
+  - f_crop corrects the potential level per crop. It is fitted in Northern America, Western and Southern Europe, where f_region = 1.
+  - f_region is the regional yield gap: sub-Saharan Africa 0.39, Southeast Asia 0.50, South Asia 0.62, Latin America 0.78, Eastern Europe & Central Asia 0.79, East Asia 0.86, MENA 0.88, Oceania 0.88.
+  - s_crop scales the gap per crop: maize 1.68 and sorghum 1.96 (large gaps), cassava 0.60 and sugarcane 0.20 (small).
+  - The region comes from a 0.5° country grid (MIRCA2000 units → UN M49). A location outside the grid, or a `Weather` without a region, is uncalibrated.
+  - Annual crops without FAOSTAT series get f_region only; perennials, forages and cover crops get no factor.
+  - Water use, irrigation and the year-to-year pattern are not calibrated, only the level.
 
 **Assimilation hook.** `simulate(..., assimilate={date: Dᵣ_obs}, assimilation_weight=α)` nudges the state with Dᵣ ← (1 − α) Dᵣ + α Dᵣ_obs. It is used in the experiments with ERA5-Land; it is not on by default (EXPERIMENTS.md explains why).
 
@@ -61,6 +75,7 @@ Hourly T and RH come from the forecast (validation uses POWER hourly). RH ≥ 90
 - **Powdery mildew:** ≥ 6 consecutive hours at 21–30 °C (Gubler et al., 1999, simplified).
 - **White mould, alfalfa leaf diseases, millet downy mildew:** wet hours within a temperature window.
 - Score → risk: ≥ 0.85 severe, ≥ 0.55 high, ≥ 0.25 moderate.
+- Hutton is applied only outside the tropics (|lat| ≥ 23.44°). Between the tropics the Wallin-based tropical model (§5b) replaces it.
 
 ## <a id="pests"></a>5. Insect phenology (`pests.py`)
 Degree-days = max(0, (min(Tmax, T_up) + Tmin)/2 − T_low), accumulated from a biofix of 1 January (northern hemisphere) or 1 July (southern).
@@ -73,7 +88,69 @@ Degree-days = max(0, (min(Tmax, T_up) + Tmin)/2 − T_low), accumulated from a b
 | Corn earworm | 12.6 / 33.3 | 420 larvae | UC IPM |
 | Colorado potato beetle | 10 / 30 | 105 adults, 300 larvae | Ferro et al., 1985 |
 | Cereal aphids | 5 / 30 | 250 build-up | CSU Ext. (indicative) |
-| Fall armyworm | 10.9 / 35 | 350 per generation | Hogg et al., 1982 |
+| Fall armyworm | 12.6 / 35 | 391 per generation (recurring) | Du Plessis et al., 2020 (see §5b) |
+
+## <a id="global-pest-disease"></a>5b. Global pest and disease risk (`science/leafwet.py`, `science/globalrisk.py`, `engine/risk_cards.py`)
+These models extend the advice to the world's major crops and farming regions. Every model gives a daily score from 0 to 1: the share of the published infection or development criteria that the weather met. Score bands: ≥ 0.85 severe, ≥ 0.55 high, ≥ 0.25 moderate. A card needs all four of:
+- a host crop;
+- a field inside the model's geographic range;
+- a crop in its at-risk stage window;
+- a score at or above the model's threshold within the next 7 days.
+
+Texts are in `config/pest_disease.yaml` in six languages. Actions are scouting and cultural control; treatment decisions are referred to local thresholds and extension services, and no product is ever named. Validation is in [VALIDATION.md V11](VALIDATION.md).
+
+**Leaf wetness (shared).**
+- **Default:** an hour is wet when RH ≥ 90 %, or when rain ≥ 0.1 mm falls in that hour. RH ≥ 90 % performed best overall against sensors in Brazil, Canada, Italy and the U.S. (fraction correct 0.87–0.92; Sentelhas et al. 2008).
+- **Alternative:** dew-point depression with hysteresis: wet from T − Td ≤ 1.8 °C until T − Td ≥ 2.2 °C (Rao et al. 1998, as tested by Sentelhas et al. 2008).
+- **Missing dew point:** derived from T and RH with the Magnus formula (Alduchov & Eskridge 1996).
+- **Wet periods:** runs of wet hours. Dry gaps up to a pathogen-specific length (Magarey's D50 classes) do not end a period. A period counts on every calendar day it covers.
+
+**Generic infection equation** (Magarey, Sutton & Thayer 2005, eqs. 1–2), used for the fungal leaf diseases:
+
+  f(T) = ((Tmax − T)/(Tmax − Topt)) · ((T − Tmin)/(Topt − Tmin))^((Topt − Tmin)/(Tmax − Topt)), with T the mean temperature of the wet period
+  W(T) = Wmin / f(T), with no infection if W(T) > Wmax
+  score = min(1, wet hours / W(T)), taking the best wet period that starts on each day
+
+| Model | Hosts in FieldShift | Range | Criteria / parameters | Source |
+|---|---|---|---|---|
+| Rice blast (*Magnaporthe oryzae*) | rice | everywhere rice grows | **BLASTAM:** wet period mean 15–25 °C; wet hours ≥ 17/15/14/13/12/11/11/10 h at 15/16/17/18/19/20/21/22–25 °C; mean of the 5 daily means up to that day 20–25 °C → favourable (1.0). ≥ 10 h with one temperature condition missed → quasi-favourable (0.5). Temperatures fine but too short → 0.5·h/required. Symptoms follow 7–10 d later. | BLASTAM sheets of the Ibaraki and Hiroshima prefectural plant protection offices (table after Yokouchi, Higuchi & Munakata) |
+| Wheat leaf rust (*Puccinia triticina*) | winter/spring/durum wheat, triticale, spelt | worldwide | Magarey: Tmin 2.6, Topt 25, Tmax 30 °C; Wmin 5 h, Wmax 16 h; dry gaps > 1 h end a period (D50 "sensitive") | Magarey et al. 2005, Table 2 (*P. recondita*); Roelfs et al. 1992 |
+| Wheat stem rust (*P. graminis* f. sp. *tritici*) | wheats, triticale, spelt, barley | worldwide | Magarey: Tmin 2, Topt 18, Tmax 30 °C (germination 2/15–24/30 °C; maximum infection at 18 °C); Wmin 6 h (6–8 h dew needed); Wmax = 3.8 + 3.0·Wmin = 21.8 h (Magarey's regression). The light requirement after dew is not modelled. | Roelfs, Singh & Saari 1992 (CIMMYT), Table 2 and text |
+| Late blight, tropical (*Phytophthora infestans*) | potato, tomato | \|lat\| < 23.44° (Hutton is used outside the tropics) | **Wallin severity value** per day, from the longest RH ≥ 90 % period and its mean T. 7.2–11.6 °C: 16/19/22/25 h → SV 1/2/3/4. 11.7–15.0 °C: 13/16/19/22 h. 15.1–26.6 °C: 10/13/16/19 h. Outside 7.2–26.6 °C → 0. Score = SV/4. The 7-day SV sum is shown as evidence. | Wallin 1962; BLITECAST (Krause et al. 1975); Grünwald et al. 2000 for Toluca |
+| Maize gray leaf spot (*Cercospora zeae-maydis*) | maize, silage maize, sweet corn | worldwide; 30–120 days after planting | Index of the two best weather predictors over V4–V12: hours at 22–30 °C (observed 85.5–230.5 h) and night hours (20–08 h) with RH ≥ 90 % (122–330 h). Trailing 14-day totals are scaled to the upper end of each range, pro-rated from 30 days: score = ½ (warm/107.6 h + humid nights/154 h), each capped at 1. This is a risk *index*, not the authors' fitted regression. | Paul & Munkvold 2005 |
+| Coffee leaf rust (*Hemileia vastatrix*) | coffee *(not yet a FieldShift crop)* | tropics | Magarey: Tmin 12.5, Topt 23, Tmax 32.5 °C (cardinal temperatures of the Kushalappa & Eskes curve; optimum within the 21–25 °C germination optimum); Wmin 6 h (wetness curve zero point); Wmax 21.8 h; dry gap ≤ 2 h. Score ×0.5 on days with Tmax outside 22–28 °C, the band linked to the 2008–2013 epidemics. | Kushalappa & Eskes 1989; Avelino et al. 2015 |
+| Black Sigatoka (*Pseudocercospora fijiensis*) | banana *(not yet a FieldShift crop)* | tropics | Magarey: Tmin 20, Topt 26.5, Tmax 35 °C (germination); Wmin 12 h (**assumption** within the 0–18 h range reported); Wmax 48 h; dry gap ≤ 2 h. | Jacome, Schuh & Stevenson 1991; Jacome & Schuh 1992 |
+| Whitefly / cassava mosaic vector (*Bemisia tabaci*) | cassava | Africa, Asia (where CMD occurs); 0–120 days after planting | Trailing 30 days. Product of band memberships: mean T 28–30 °C (taper 4 °C), rain 30–150 mm (taper 100 mm), RH 55–70 % (taper 15 %). Card at ≥ 0.55. | Katono et al. 2021 (Uganda) |
+| Desert locust breeding (*Schistocerca gregaria*) | all crops | FAO recession area boxes (Sahara–Sahel, Horn of Africa and Red Sea, Arabia, SE Iran–Pakistan–Rajasthan) and 10-year mean rain ≤ 400 mm | score = min(1, 30-day rain / 25 mm) × warm factor (1 at a 30-day mean ≥ 20 °C, 0 at ≤ 15 °C — the warm factor is our assumption); 0 below 10 mm. Card at ≥ 0.55. Awareness only: it links to FAO Locust Watch and the national locust unit. | Symmons & Cressman 2001 (FAO Desert Locust Guidelines); FAO Locust Watch |
+| Fall armyworm (*Spodoptera frugiperda*), refined in `pests.py` | maize, sorghum, pearl millet, teff | Americas, Africa, Asia, Oceania | Degree-days above 12.6 °C (upper cut-off 35 °C); 391 °C·d per egg-to-adult generation; recurring generations in the tropics | Du Plessis, Schlemmer & Van den Berg 2020 |
+
+**Considered and not implemented.**
+- *Northern corn leaf blight:* the dew and temperature requirements (Levy & Cohen 1983) could not be verified from the paper.
+- *EPIRICE:* a full SEIR epidemic model needing crop-age and inoculum state. BLASTAM's day-level criteria fit a 7-day advice card better.
+- *Kushalappa & Eskes' coffee rust wetness and temperature equations:* the constants available were OCR'd from a scan and could not be checked.
+- *SimCast blight units* (Fry et al. 1983): the table could not be verified within the build.
+
+**Temperature in mountains.**
+- Live advice uses the Open-Meteo hourly forecast, which is downscaled to the terrain.
+- Validation uses NASA POWER hourly, shifted by the standard lapse rate (−6.5 °C/km) from the POWER cell's mean elevation to the site (dew point shifted equally, RH unchanged). Without this, a ~50 km cell in the Andes can be 5 °C too cold (Chinchiná: cell 2138 m, town 1360 m).
+
+**References (section 5b).**
+- Alduchov, O.A., Eskridge, R.E. (1996) *J. Appl. Meteorol.* 35: 601–609.
+- Avelino, J. et al. (2015) The coffee rust crises in Colombia and Central America (2008–2013). *Food Security* 7: 303–321. doi:10.1007/s12571-015-0446-9
+- Du Plessis, H., Schlemmer, M.-L., Van den Berg, J. (2020) The effect of temperature on the development of *Spodoptera frugiperda*. *Insects* 11: 228. doi:10.3390/insects11040228
+- Grünwald, N.J., Rubio-Covarrubias, O.A., Fry, W.E. (2000) Potato late-blight management in the Toluca Valley: forecasts and resistant cultivars. *Plant Disease* 84: 410–416. doi:10.1094/PDIS.2000.84.4.410
+- Jacome, L.H., Schuh, W., Stevenson, R.E. (1991) *Phytopathology* 81: 1480. doi:10.1094/Phyto-81-1480
+- Jacome, L.H., Schuh, W. (1992) *Phytopathology* 82: 515. doi:10.1094/Phyto-82-515
+- Katono, K. et al. (2021) *Insects* 12: 604. doi:10.3390/insects12070604
+- Krause, R.A., Massie, L.B., Hyre, R.A. (1975) BLITECAST. *Plant Disease Reporter* 59: 95–98.
+- Kushalappa, A.C., Eskes, A.B. (1989) Advances in coffee rust research. *Annu. Rev. Phytopathol.* 27: 503–531.
+- Magarey, R.D., Sutton, T.B., Thayer, C.L. (2005) A simple generic infection model for foliar fungal plant pathogens. *Phytopathology* 95: 92–100. doi:10.1094/PHYTO-95-0092
+- Paul, P.A., Munkvold, G.P. (2005) Regression and artificial neural network modeling for the prediction of gray leaf spot of maize. *Phytopathology* 95: 388–396. doi:10.1094/PHYTO-95-0388
+- Rao, P.S., Gillespie, T.J., Schaafsma, A.W. (1998) Estimating wetness duration on maize ears from meteorological observations. *Can. J. Soil Sci.* 78: 149–154.
+- Roelfs, A.P., Singh, R.P., Saari, E.E. (1992) *Rust Diseases of Wheat: Concepts and Methods of Disease Management.* CIMMYT, Mexico. hdl:10883/1153
+- Sentelhas, P.C. et al. (2008) Suitability of relative humidity as an estimator of leaf wetness duration. *Agric. For. Meteorol.* 148: 392–400. doi:10.1016/j.agrformet.2007.09.011
+- Symmons, P.M., Cressman, K. (2001) *Desert Locust Guidelines 1: Biology and behaviour.* FAO, Rome. FAO Locust Watch: https://www.fao.org/locust-watch/
+- Wallin, J.R. (1962) Summary of recent progress in predicting late blight epidemics in United States and Canada. *Am. Potato J.* 39: 306–312.
 
 ## <a id="planting"></a>6. Planting-window optimisation
 The season model runs for candidate dates (intended date ±35 days, weekly) over 15 past seasons. Score = median − 0.5 × (median − p10), which penalises bad-year downside. The recommended window is every date within 3 % of the best score.
@@ -278,7 +355,41 @@ Each module emits zero or more cards, each with risk, due date and a Why block (
 - disease 0.5; pests 0.55; NDVI 0.45; frost/heat 0.6;
 - heat stress (people/livestock) 0.6, or 0.45 on the climatology fallback; solar pump 0.5; nearby fires 0.7 (0.5 on demo data); residue burning 0.55.
 
-## <a id="heat-stress"></a>18. Heat stress for people and livestock (`science/heatstress.py`, `engine/heat_cards.py`)
+## <a id="rain-onset"></a>18. Rain-season onset, false starts and sowing windows (`science/onset.py`, `engine/rain_season.py`)
+For rain-fed farmers in the tropics and monsoon regions, *when* to sow matters more than almost anything else. Sowing at the first shower risks losing seed and seedlings to a dry spell (a **false start**); sowing late shortens the season. Parameters live in `config/onset.yaml`; ADR-021 records the choices.
+
+**Climatological seasons (both hemispheres, one or two per year).**
+- The daily rain climatology (complete years since 1984, 31-day circular smoothing) is scanned for runs above the annual mean. This is where the anomalous accumulation rises, i.e. the climatological onset and cessation of Liebmann et al. (2012).
+- Two rainy seasons are kept when the 2nd harmonic of the climatology is stronger than the 1st (Dunning, Black & Allan 2016), e.g. Machakos (ratio 1.5: MAM "long rains" and OND "short rains"). Otherwise the largest run is the one season.
+- Seasons that cross New Year (southern hemisphere, e.g. Darwin NDJFMA) need no special case: each season instance is anchored at its climatological onset date in a given year.
+
+**Per-year onset (Sivakumar 1988; Stern, Dennett & Garbutt 1981).** The first day of a 3-day period with ≥ 20 mm, starting with a wet day (≥ 1 mm), with no dry spell longer than 7 days in the following 30 days. The search runs from 45 days before to 60 days after the climatological onset (shorter when the season is short or the gap to the previous season is small). No valid onset in that window = a **failed season**.
+
+**False start.** An *apparent* onset (the rain part of the criterion) followed by a dry spell > 7 days within 30 days. The site's false-start probability is the share of seasons whose first apparent onset was false.
+
+**Cessation (Stern et al. 1981; Frère & Popov 1979, FAO).** A 100 mm soil store filled by rain and emptied by FAO-56 ET₀ (from NASA POWER). The season ends on the first day the store is empty, but not earlier than onset + 20 days or 3 weeks before the climatological end of the rains. This mirrors the fixed "earliest end date" of the Instat implementations. The 3-week offset was set on Machakos before any reference data were collected: an earliest end at mid-season piled the cessations onto that bound and gave median seasons of only 42–54 days. It was not fitted to the validation references. A store that runs dry is only taken as the end if no onset-sized rain (20 mm in 3 days) refills it within 21 days. Mid-season dry spells, common in semi-arid bimodal climates such as Machakos, otherwise ended the season too early; without this rule, the median Machakos OND end was 19 Dec instead of 3 Jan. The Sahel season-length check moved from MAE 12.7 to 12.5 days with the rule.
+
+**Climatology product (`GET /api/rain-season`).** Per season:
+- onset and cessation dates (p10–p90) and season length;
+- false-start and failed-season percentages, and every year's onset, cessation and false starts;
+- trends since 1984: Theil–Sen slope with Mann–Kendall p for onset, cessation and length, and false-start shares before vs. since 2005. These feed the "Field Shift" climate story, e.g. at Machakos the MAM season shortened by 6 days per decade (p = 0.07), and false starts rose from 15 % of years before 2005 to 40 % since.
+
+**Live status ("this season" card, id `rain_onset`).** Observations, the Open-Meteo bridge and the 16-day forecast are scanned from the search window onwards. The phase is one of `before`, `not_started` (or late after the p80 onset), `forecast` (the rain criterion is met only in forecast days), `started`, `false_start`, `established` (30 days without a damaging spell), `ended` or `failed`.
+- For `started`, the false-start risk is **conditional**: among all historical apparent onsets within ±20 days of this date's place in the season, the share followed by a damaging dry spell, given that none occurred in the days already checked (observed + forecast).
+- The risk then sets the advice: below 20 %, sow now; 20–40 %, sow with care (moist to a hand's depth, keep seed to re-sow); 40 % or more, wait.
+
+**Sowing windows per crop.** A crop must reach the end of its mid-season (grain fill; FAO-56 stage lengths) before the water-balance end of the season. The late (ripening) stage can run on stored water.
+- `fit_pct`: share of past seasons in which sowing on the start date (onset, or expected median onset) would have achieved that.
+- `sow_until`: last date that still works in 8 of 10 seasons.
+- `max_variety_days`: the longest total cycle that fits in 8 of 10 seasons. When the field's crop does not fit, the card names an early variety (≤ N days) or a shorter crop.
+
+**Where it is offered.** Rain-fed fields with |latitude| ≤ 35°, at least one rainy season and a real dry season: ≥ 60 days with climatological rain < ½ ET₀, the FAO agro-ecological-zones growing-period rule. Fallon, Córdoba and Ames therefore get no card; the API still returns the climatology with `applicable: false` and the reason.
+
+**Planner.** For such fields, the planner's sowing-date scan is extended to cover the onset-based window. Every candidate gets `onset_ok`: on or after the median onset (rains have started in ≥ half of years) and no later than the latest sowing date. The recommended window is chosen only among `onset_ok` dates.
+
+**Validation.** See [VALIDATION.md, V9](VALIDATION.md#v9).
+
+## <a id="heat-stress"></a>19. Heat stress for people and livestock (`science/heatstress.py`, `engine/heat_cards.py`)
 Card `heat_stress` (category `weather`). Applies to every field, whatever the crop or season, because people and animals work there every day.
 
 **Hourly inputs** (`data/heatwx.py`): air temperature, relative humidity, 2 m wind and global horizontal irradiance (GHI). The chain degrades gracefully:
@@ -295,7 +406,7 @@ Card `heat_stress` (category `weather`). Applies to every field, whatever the cr
   - Direct-beam fraction: f_dir = exp(3 − 1.34 S* − 1.65/S*), where S* = GHI/TOA ≤ 0.85. When the forecast gives direct radiation, f_dir is taken from it instead.
   - Surface pressure: from elevation (FAO-56 eq. 7).
 - Solar position: Spencer (1971) declination and equation of time. The hour-mean irradiance is evaluated at mid-hour.
-- Wind floor: 0.5 m/s at 2 m. This follows KNMI/ECMWF operational practice (0.62 m/s at 10 m), because grid winds cannot resolve calm hours and the globe balance is ill-conditioned near calm (see VALIDATION V9).
+- Wind floor: 0.5 m/s at 2 m. This follows KNMI/ECMWF operational practice (0.62 m/s at 10 m), because grid winds cannot resolve calm hours and the globe balance is ill-conditioned near calm (see VALIDATION V12).
 
 **Work–rest limits:** NIOSH (2016) recommended limits, which equal the ISO 7243 Annex A reference values.
 - Acclimatized: REL = 56.7 − 11.5·log₁₀M.
@@ -317,7 +428,7 @@ Card `heat_stress` (category `weather`). Applies to every field, whatever the cr
 - **Sheep and goats:** THI = T − (0.31 − 0.31·RH)(T − 14.4) (Marai et al. 2007). Below 22.2 is no stress; 22.2–23.3 moderate; 23.3–25.6 severe; 25.6 and above extreme.
 - **Card rule:** livestock alone raises a card only at *danger* or above (Marai's extreme class only). Mild alert is shown in the reasoning, not as a card. Card risk is danger → moderate, emergency → high.
 
-## <a id="solar-pump"></a>19. Solar irrigation pump advisor (`science/solarpump.py`, `engine/solar_service.py`, `POST /api/solar-pump`)
+## <a id="solar-pump"></a>20. Solar irrigation pump advisor (`science/solarpump.py`, `engine/solar_service.py`, `POST /api/solar-pump`)
 - **Water need.** The FAO-56 Kc curve is piecewise linear over the crop's stages (ini, dev, mid, late). For perennials, the per-cutting curve is averaged over `season_days`. The curve is laid on a typical year from the planting date.
   - ETc = Kc × ET₀ uses the monthly mean FAO-56 PM ET₀ from NASA POWER for the last 20 complete years (observed days only).
   - Effective rain uses the USDA-SCS method from FAO CROPWAT (Smith 1992): P_eff = P(125 − 0.2P)/125 for P ≤ 250 mm/month, else 125 + 0.1P.
@@ -337,7 +448,7 @@ Card `heat_stress` (category `weather`). Applies to every field, whatever the cr
 - **Card** `solar_pump`: category `planning`, risk `low`. It is shown only for irrigated fields.
 - References: FAO & GIZ (2018); GIZ/FAO SPIS Toolbox; Kelley et al. (2010); IRENA (2016); Smith (1992).
 
-## <a id="fires"></a>20. Active fires and residue burning (`data/firms.py`, `engine/fire_cards.py`)
+## <a id="fires"></a>21. Active fires and residue burning (`data/firms.py`, `engine/fire_cards.py`)
 **`fire_nearby`.** Uses NASA FIRMS active-fire detections within 50 km over the last 48 h (VIIRS 375 m, Schroeder et al. 2014; MODIS 1 km, Giglio et al. 2016). Low-confidence detections are dropped.
 - Distance (haversine) and bearing (8-point compass) are given to the nearest fire.
 - Risk: high if the nearest fire is ≤ 2 km; moderate if any fire is ≤ 10 km or there are ≥ 20 fires within 50 km (smoke); otherwise low.
@@ -372,6 +483,13 @@ Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is n
 - McMaster, G.S., Wilhelm, W.W. (1997) Growing degree-days: one equation, two interpretations. *Agric. For. Meteorol.* 87: 291–300.
 - Sen, P.K. (1968) Estimates of the regression coefficient based on Kendall's tau. *JASA* 63: 1379–1389.
 - Fry, W.E. et al. (2013) The 2009 late blight pandemic in the eastern United States. *Plant Disease* 97: 296–306.
+- Sivakumar, M.V.K. (1988) Predicting rainy season potential from the onset of rains in Southern Sahelian and Sudanian climatic zones of West Africa. *Agric. For. Meteorol.* 42: 295–305.
+- Stern, R.D., Dennett, M.D., Garbutt, D.J. (1981) The start of the rains in West Africa. *J. Climatology* 1: 59–68.
+- Frère, M., Popov, G.F. (1979) *Agrometeorological crop monitoring and forecasting*. FAO Plant Production and Protection Paper 17.
+- Liebmann, B. et al. (2012) Seasonality of African precipitation from 1996 to 2009. *J. Climate* 25: 4304–4322.
+- Dunning, C.M., Black, E.C.L., Allan, R.P. (2016) The onset and cessation of seasonal rainfall over Africa. *J. Geophys. Res. Atmos.* 121: 11405–11424.
+- FAO (1978) Report on the Agro-ecological Zones Project, Vol. 1: Methodology and results for Africa. World Soil Resources Report 48.
+
 - Liljegren, J.C., Carhart, R.A., Lawday, P., Tschopp, S., Sharp, R. (2008) Modeling the wet bulb globe temperature using standard meteorological measurements. *J. Occup. Environ. Hyg.* 5: 645–655. doi:10.1080/15459620802310770.
 - ISO 7243:2017 Ergonomics of the thermal environment — Assessment of heat stress using the WBGT index. ISO 8996:2021 Determination of metabolic rate.
 - NIOSH (2016) Criteria for a recommended standard: occupational exposure to heat and hot environments. DHHS (NIOSH) Pub. 2016-106.

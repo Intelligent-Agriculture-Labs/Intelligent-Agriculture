@@ -10,13 +10,32 @@
 
 ## Models
 - **Single-Kc water balance.** Evaporation and transpiration are not separated (FAO-56 dual Kc would be better for sparse canopies and drip). Salinity and capillary rise from shallow groundwater are not modelled. The latter matters in parts of the Lahontan Valley.
-- **Yield.** FAO-33 Ky response with heat and frost penalties, scaled to typical irrigated yields. No nutrient, pest, weed or variety effects. Absolute yields are indicative; scenario differences are more meaningful (EXP-05).
+- **Yield.** FAO-33 Ky response with heat and frost penalties. No nutrient, pest, weed or variety effects.
+  - **Level.** The level is calibrated to FAOSTAT national yields by crop and region (ADR-022, V10). On countries the calibration never saw, the simulated 2000–2024 mean is within ±30 % for 54 % of country × crop pairs; the held-out RMSLE is 0.50, about ±65 % typical error.
+  - **Calibrated yields describe the typical farm in the region.** A well-managed field can yield much more, especially in sub-Saharan Africa (regional factor 0.39) and South/Southeast Asia.
+  - **Where the level is still weak:**
+    - Middle East & North Africa: irrigated Egypt and rain-fed Morocco/Türkiye share one factor; the held-out error was not reduced.
+    - East Asia and Oceania: one benchmark country each; the held-out level is 20–40 % high.
+    - Rice, sugarcane, cassava and potato: the regional gap explains little.
+    - Crops without FAOSTAT series (vegetables, teff, cowpea, …) get only the regional factor. Alfalfa and forages are uncalibrated.
+  - **Year-to-year.** The model reproduces droughts in water-limited rain-fed systems: U.S. 2012, Russia 2010, Kazakhstan 2012, southern Africa 2016, Pampas 2018/2023, Morocco 2007, Iberia 2005. Overall skill against national yields is low (median detrended r = 0.14), and near zero for irrigated and humid-tropical crops.
+  - **Misses:** Argentina 2009, Ukraine 2020, Spain 2023, Germany 2018.
+  - **Benchmark scope.** Benchmark sites are 1–3 POWER cells per country × crop with a loam default soil; national averages mix many more fields.
+  - Scenario differences remain more meaningful than absolute yields (EXP-05).
 - **Validation:**
   - Soil-water dynamics are weaker in East Africa (EXP-02).
   - Drought status at Fallon only moderately matches the USDM, because Nevada's farm drought is a water-supply (snowpack) drought (EXP-03).
   - The late-blight model ranked the 2009 epidemic year 3rd of 11 (EXP-07).
 - **Disease models** use RH ≥ 90 % as a leaf-wetness proxy, from gridded data. They indicate *favourable weather*, not disease presence.
-- **Pest degree-day thresholds** are literature values, mostly from North American extension services. Geographic ranges are coarse (continent level). Event labels are English-only.
+- **Global pest and disease models** (MODELS §5b, VALIDATION V11):
+  - Leaf wetness is estimated from gridded RH ≥ 90 % (plus rain hours). In the humid tropics this is met almost every night, so the coffee-rust, Sigatoka and gray-leaf-spot scores saturate and cannot separate bad years from normal ones (V11 #4–6).
+  - NASA POWER hourly replays lack terrain downscaling in the live replay path: mountain fields can be several °C off. The validation corrects this with a lapse rate; the replay mode does not.
+  - BLASTAM's wetness came from AMeDAS rain, wind and sunshine; FieldShift uses humidity. The stem-rust light requirement after dew is not modelled.
+  - Some parameters are assumptions, not published constants, and are marked so in MODELS §5b: the Sigatoka Wmin of 12 h, the desert-locust warm factor and the 400 mm habitat limit, and the gray-leaf-spot 14-day pro-rating.
+  - **Desert locust:** only rain at the field's own grid cell is used, while breeding happens in nearby deserts. The card is awareness only and points to FAO Locust Watch and national locust units.
+  - **Coffee and banana are not FieldShift crops yet,** so their models produce no cards.
+  - **Northern leaf blight** was dropped because its published criteria could not be verified.
+- **Pest degree-day thresholds** are literature values, mostly from North American extension services. Geographic ranges are coarse (continent level). Titles are translated; the per-stage action text is English-only.
 - **Rotation scores** use transparent but simplified indices (soil-health index, RUSLE-inspired erosion index, pest-cycle score). They have not been calibrated against field trials.
 - **Confidence values** are documented heuristics, not calibrated probabilities.
 

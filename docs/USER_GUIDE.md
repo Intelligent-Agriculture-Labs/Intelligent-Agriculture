@@ -98,6 +98,19 @@ Prices are indicative national values. Always check your local market.
 ## 5. What if?
 Change the crop, sowing date, irrigation strategy (full, 75 % / 50 % deficit, seasonal allocation), temperature (+°C) or rain (%). You see the yield in a typical, bad (1-in-10) and good year, the irrigation water, the stress days and the chance of a failed season, compared with your baseline. Use it to compare options, not to predict an exact harvest.
 
+## 5b. When will the rains start? (rain-fed fields in the tropics)
+If your field is rain-fed (irrigation "none") and lies in the tropics or a monsoon region with a real dry season, the **This week** list gets a rain card. It tells you where this season stands:
+- **Before the season:** when the rains usually start at your field, e.g. "OND rains usually start around 01 Nov", and how often they had a **false start** (a good first rain followed by more than a week of dry weather).
+- **Not started / late:** wait. Sow only after at least 20 mm have fallen within 3 days.
+- **Forecast to start:** get seed and labour ready.
+- **Likely started on a date, with a false-start risk in %:** from 40 years of NASA rain records at your field, how often a damaging dry spell still followed such a start. Below 20 %: sow now. 20–40 %: sow if the soil is moist a hand deep and keep seed to re-sow. 40 % or more: wait for the next good rain.
+- **False start:** the rains stopped. Wait for the next good rain and re-sow gaps.
+- **Season under way:** until when you can still sow your crop. If the season is often too short for it, the card suggests an **early (short-cycle) variety** of at most N days, or a shorter crop.
+
+Tap **Why?** to see the onset dates of past years, the season length, and how both have changed since 1984. Experts can get the full climatology from `GET /api/rain-season`. The **Plan** tab never recommends rain-fed sowing dates before the rains usually start.
+
+The card uses rain on a ~50 km grid: a storm on your farm may not show, and the reverse. Your own rain gauge is the best check. The card shows the *agronomic* start of the rains (enough water to sow), not the monsoon onset that weather services announce. These can differ by weeks, for example in Kerala.
+
 ## 6. Climate
 See how your local season has changed since 1984 in NASA POWER data: heat days, frost-free season, rain, crop water demand and dry spells. Each trend shows its rate per decade, and FieldShift only calls a trend "clear" when it is statistically significant.
 
