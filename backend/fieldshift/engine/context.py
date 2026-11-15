@@ -25,6 +25,7 @@ from ..science.yieldcal import region_of
 
 log = logging.getLogger("fieldshift.context")
 HIST_START = dt.date(1984, 1, 1)
+NRT_DAYS = 150  # IMERG Late/Early window requested to bridge IMERG Final's latency
 
 
 @dataclass
@@ -95,6 +96,12 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
     f_soil = _io_pool.submit(sources.soil, lat, lon)
     f_fc = None if is_historic else _io_pool.submit(sources.forecast, lat, lon, 14, 16)
     f_imerg = _io_pool.submit(sources.imerg_daily, lat, lon, HIST_START, power_end)
+    # IMERG Final (POWER) lags ~2–3 months: GES DISC's Late/Early runs fill the recent days (Earthdata Login)
+    f_nrt = (
+        _io_pool.submit(sources.imerg_nrt, lat, lon, power_end - dt.timedelta(days=NRT_DAYS), power_end)
+        if (dt.date.today() - power_end).days < NRT_DAYS
+        else None
+    )
     power = sources.power_daily(lat, lon, HIST_START, power_end)
     elev, slope, st = f_elev.result()
     statuses["srtm"] = st
@@ -118,7 +125,7 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
     dates = list(power.dates)
     tmax = power["T2M_MAX"].copy()
     tmin = power["T2M_MIN"].copy()
-    rain, rain_meta = _blend_rain(lat, power.dates, power["PRECTOTCORR"], f_imerg, statuses)
+    rain, rain_meta = _blend_rain(lat, power.dates, power["PRECTOTCORR"], f_imerg, statuses, f_nrt)
     rh = power["RH2M"].copy()
     prov = np.zeros(len(dates), dtype=np.int8)
     hourly: dict[str, Any] = {}
@@ -202,18 +209,65 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
 
 
 def _blend_rain(
-    lat: float, dates: list[dt.date], power_rain: np.ndarray, f_imerg: Any, statuses: dict[str, str]
+    lat: float,
+    dates: list[dt.date],
+    power_rain: np.ndarray,
+    f_imerg: Any,
+    statuses: dict[str, str],
+    f_nrt: Any = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
-    """POWER rain blended with GPM IMERG where validation showed it helps (V13); POWER alone otherwise."""
+    """POWER rain blended with GPM IMERG where validation showed it helps (V13); POWER alone otherwise.
+    IMERG Final (POWER) is extended with IMERG Late/Early (GES DISC) for the days Final has not reached yet."""
     try:
         got = f_imerg.result(timeout=150)
     except Exception as e:  # IMERG is an enrichment: never let it break the weather record
         log.warning("IMERG unavailable: %s", e)
         got = None
     statuses["gpm_imerg"] = got[1] if got else "unavailable"
-    imerg = got[0][: len(dates)] if got else None
+    imerg = got[0][: len(dates)].copy() if got else None
+    nrt_info: dict[str, Any] | None = None
+    if imerg is not None and f_nrt is not None:
+        try:
+            nrt = f_nrt.result(timeout=60)
+        except Exception as e:  # near-real-time IMERG is optional too
+            log.info("IMERG Late/Early unavailable: %s", e)
+            nrt = None
+        statuses["gpm_imerg_nrt"] = nrt[1] if nrt else "unavailable"
+        if nrt is not None:
+            nrt_info = _fill_nrt(dates, imerg, nrt)
     rain, meta = rainblend.blend_for_location(lat, dates, power_rain.copy(), imerg)
+    if meta.get("imerg_used") and nrt_info:
+        meta.update(nrt_info)
     return rain, meta
+
+
+def _fill_nrt(
+    dates: list[dt.date], imerg: np.ndarray, nrt: tuple[np.ndarray, str, dict[str, Any]]
+) -> dict[str, Any] | None:
+    """Write IMERG Late/Early into `imerg` (in place) on the days after the last IMERG Final day."""
+    series, _, info = nrt
+    fin = np.where(np.isfinite(imerg))[0]
+    if not len(fin) or not dates:
+        return None
+    final_last = dates[int(fin[-1])]
+    n = len(series)
+    nrt_start = info.get("start") or (dates[-1] - dt.timedelta(days=n - 1))
+    filled: list[int] = []
+    for k in range(n):
+        d = nrt_start + dt.timedelta(days=k)
+        i = (d - dates[0]).days
+        if d > final_last and 0 <= i < len(imerg) and np.isfinite(series[k]):
+            imerg[i] = series[k]
+            filled.append(i)
+    if not filled:
+        return None
+    return {
+        "imerg_final_last": final_last.isoformat(),
+        "imerg_nrt_first": dates[filled[0]].isoformat(),
+        "imerg_nrt_last": dates[filled[-1]].isoformat(),
+        "imerg_nrt_days": len(filled),
+        "imerg_nrt_runs": [r for r in ("late", "early") if info.get(f"{r}_last")],
+    }
 
 
 def enrichment(lat: float, lon: float, today: dt.date) -> dict[str, list[tuple[dt.date, float]]]:

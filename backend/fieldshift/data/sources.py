@@ -96,16 +96,16 @@ SOURCES: dict[str, dict[str, Any]] = {
         is_nasa=True,
     ),
     "smap_l4": dict(
-        name="SMAP L4 surface & root-zone soil moisture SPL4SMGP (via AppEEARS)",
-        provider="NASA GMAO / NSIDC DAAC, AppEEARS",
+        name="SMAP L4 surface & root-zone soil moisture SPL4SMGP.008 (NSIDC cloud OPeNDAP)",
+        provider="NASA GMAO / NSIDC DAAC (Earthdata Login)",
         url="https://nsidc.org/data/spl4smgp",
         resolution="9 km, 3-hourly (daily mean)",
         latency="~3 days",
         is_nasa=True,
     ),
     "ecostress": dict(
-        name="ECOSTRESS L3T JET daily evapotranspiration (via AppEEARS)",
-        provider="NASA JPL / LP DAAC",
+        name="ECOSTRESS L3T JET daily evapotranspiration (ECO_L3T_JET.002, LP DAAC cloud)",
+        provider="NASA JPL / LP DAAC (Earthdata Login)",
         url="https://ecostress.jpl.nasa.gov/data",
         resolution="70 m, irregular overpasses (ISS)",
         latency="~days",
@@ -117,6 +117,22 @@ SOURCES: dict[str, dict[str, Any]] = {
         url="https://gpm.nasa.gov/data/imerg",
         resolution="0.1° (~10 km), daily (UTC)",
         latency="~2–3 months (Final run)",
+        is_nasa=True,
+    ),
+    "gpm_imerg_nrt": dict(
+        name="GPM IMERG Late/Early daily precipitation (near real time, via Giovanni)",
+        provider="NASA GES DISC / GPM (Earthdata Login)",
+        url="https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+        resolution="0.1° (~10 km), daily (UTC)",
+        latency="~1 day (Late), ~4 h (Early)",
+        is_nasa=True,
+    ),
+    "grace_da": dict(
+        name="GRACE-FO data-assimilation drought indicators (groundwater, root-zone, surface percentiles)",
+        provider="NASA GSFC / GES DISC (GRACEDADM_CLSM025GL_7D v3.0, Earthdata Login)",
+        url="https://disc.gsfc.nasa.gov/datasets/GRACEDADM_CLSM025GL_7D_3.0/summary",
+        resolution="0.25° (~25 km), weekly",
+        latency="~2–3 months",
         is_nasa=True,
     ),
     "grace_fo": dict(
@@ -234,6 +250,35 @@ def imerg_daily(lat: float, lon: float, start: dt.date, end: dt.date) -> tuple[n
         if 0 <= i < n and v is not None and v > -998:
             out[i] = float(v)
     return (out, f.status) if np.isfinite(out).any() else None
+
+
+def imerg_nrt(
+    lat: float, lon: float, start: dt.date, end: dt.date
+) -> tuple[np.ndarray, str, dict[str, Any]] | None:
+    """GPM IMERG near-real-time daily rain (mm/day) on start..end from NASA GES DISC (Giovanni, Earthdata Login):
+    the Late run (~14 h latency, climatologically calibrated) and the Early run (~4 h) for the days Late has not
+    reached yet. Fills the ~2–3 months between IMERG Final (served by POWER) and today. Returns (series aligned on
+    start..end, fetch status, {"late_last", "early_last"}) or None when unavailable (callers keep IMERG Final only)."""
+    from . import earthdata
+
+    n = (end - start).days + 1
+    if n <= 0:
+        return None
+    out = np.full(n, np.nan)
+    info: dict[str, Any] = {"late_last": None, "early_last": None, "start": start}
+    status = "unavailable"
+    for run, data_id in (("late", earthdata.IMERG_LATE), ("early", earthdata.IMERG_EARLY)):
+        try:
+            rows, st, _ = earthdata.giovanni_series(data_id, lat, lon, start, end, ttl_s=6 * 3600)
+        except DataUnavailable:
+            continue
+        status = st if status == "unavailable" else status
+        for d, v in rows:
+            i = (d - start).days
+            if 0 <= i < n and not np.isfinite(out[i]) and 0 <= v < 2000:
+                out[i] = v
+                info[f"{run}_last"] = d.isoformat()
+    return (out, status, info) if np.isfinite(out).any() else None
 
 
 # --------------------------------------------------------------------------- Open-Meteo forecast

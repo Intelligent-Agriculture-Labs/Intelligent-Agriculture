@@ -27,7 +27,13 @@ _run: 2026-11-14T18:26:35+00:00_
 | Machakos, KE | maize | 9 | 0.49 | 0.30 |
 
 ### V3 · Rain-fed root-zone water vs. NASA SMAP L4 root-zone soil moisture (0–100 cm)
-_Pending at v1.0.0: the NASA AppEEARS point-extraction requests for this check (submitted 14 Nov 2026) were still queued or processing at NASA when the release was cut. `scripts/appeears_smap.py` and `scripts/validate.py` reproduce it once they finish. No result is claimed until then._
+_run: 2026-11-15T15:21:28+00:00_
+
+| Site | crop | seasons | median r per season | pooled standardized r |
+|---|---|---|---|---|
+| Ames, IA | maize | 9 | 0.92 | 0.77 |
+| Córdoba, ES | winter_wheat | 9 | 0.66 | 0.65 |
+| Machakos, KE | maize | 9 | 0.64 | 0.64 |
 
 ### V4 · Drought status vs. U.S. Drought Monitor (weekly 2005–2024, county DSCI)
 _run: 2026-11-14T18:28:15+00:00_
@@ -48,9 +54,16 @@ _run: 2026-11-15T00:33:32+00:00_
 | Machakos, KE maize (short rains) | 34 | 2005 | **3** |
 
 ### V6 · Irrigated alfalfa ET at the Fallon field: model vs NASA ECOSTRESS (70 m) and MODIS MOD16 (500 m)
-_run: 2026-11-14T15:44:56+00:00_
+_run: 2026-11-15T15:21:33+00:00_
 
-_Pending at v1.0.0: the NASA AppEEARS point-extraction requests for this check (submitted 14 Nov 2026) were still queued or processing at NASA when the release was cut. `scripts/appeears_smap.py` and `scripts/validate.py` reproduce it once they finish. No result is claimed until then._
+ECOSTRESS daily ET on 110 clear overpass days (May–Sep 2018–2024): r = -0.01, bias = 3.91 mm/day (model mean 6.25 vs ECOSTRESS 2.34 mm/day), RMSE 4.71 mm/day.
+
+| Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FieldShift (mm/yr) | 1102 | 1198 | 1145 | 1133 | 1077 | 1151 | 1212 | 1170 | 1068 | 1218 |
+| MOD16 (mm/yr) | 242 | 262 | 401 | 379 | 467 | 369 | 286 | 280 | 349 | 337 |
+
+ECOSTRESS (70 m) observes the field itself on clear ISS overpasses; MOD16 (500 m) mixes irrigated fields with desert and has no irrigation input, so it is expected to be far below an irrigated field's ET.
 
 ### V7 · Late-blight weather risk (Hutton criteria, NASA POWER hourly), Ithaca NY, Jun–Aug
 _run: 2026-11-14T18:28:15+00:00_
@@ -200,6 +213,12 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
 **Adopted: False** (served: Current model (U.S.-trained, v1 features)). Model used in: US; elsewhere the rule-based blend.
 
 <!-- RESULTS:END -->
+
+### V3 and V6 · data route and how to read them
+- **Route.** The NASA AppEEARS point requests (submitted 14 Nov) were still `processing`/`pending` after more than 24 hours, so both checks now read the archives directly (`scripts/earthdata_points.py`, ADR-027): SMAP L4 `SPL4SMGP.008` root-zone moisture at the site's 9 km EASE-Grid 2.0 cell through NSIDC cloud OPeNDAP (one 10:30 UTC analysis every 2nd day, 2015-04 → 2026-11, 2,126 days per site); ECOSTRESS `ECO_L3T_JET.002` `ETdaily` at the field pixel (Cloud-Optimized GeoTIFFs at LP DAAC, 304 clear overpasses at Fallon 2018-07 → 2026-11); MODIS `MOD16A2GF.061` through LP DAAC cloud OPeNDAP (ORNL's subset service answered HTTP 503 on 15 Nov).
+- **V3 (SMAP) reading.** SMAP L4 root-zone moisture is an assimilation product (SMAP brightness temperatures into the GMAO Catchment model with its own precipitation forcing), so it is independent of the NASA POWER rain that drives FieldShift but not a direct measurement. The model's root-zone water moves with it closely in Iowa (median per-season r 0.92) and well in Córdoba and Machakos (0.66, 0.64). At Machakos SMAP agrees with the model much better than ERA5-Land did in V2 (pooled r 0.64 vs 0.30), which points at the reanalysis rather than the model as the main source of the weak V2 number there. Iowa 2015 (r 0.17) is the one poor season.
+- **V6 (ECOSTRESS) reading: a large, unresolved disagreement.** On 110 clear May–Sep overpasses ECOSTRESS averaged 2.3 mm/day at the flood-irrigated alfalfa field, the model 6.2 mm/day, with no day-to-day correlation (r −0.01). Checks: the pixel is inside the field polygon, and the 7 × 7 pixel neighbourhood on 1 Jul 2025 reads 0.7–4.4 mm/day, so it is not a single bad pixel; restricting to midday overpasses (11–14 h local solar time, n = 50) gives 2.6 mm/day, so it is not the overpass time; Sentinel-2 shows the field green (NDVI 0.72 in July 2021 and 2025) with cutting cycles down to 0.13–0.33, which the model does not simulate (constant mid-season Kc, ~1,150 mm/yr). For western-Nevada irrigated alfalfa ~1 m/yr is commonly reported, which is closer to the model; but nothing in this check tells which estimate is closer on this field, and a flux tower or the OpenET ensemble (needs an API key) would be required. **Consequence:** ECOSTRESS is shown next to the model (`water.satellite.et`, Why chart) as evidence, but it never triggers advice; a planned "crop uses less water than expected" card was dropped because at this field it would fire on almost every overpass.
+- **V6 (MOD16) reading.** MOD16 at 500 m (no irrigation input, mixed with desert) gives 240–470 mm/yr against the model's 1,070–1,220 mm/yr, as expected (see below).
 
 <a id="v9"></a>
 ### V9 · Rainy-season onset, false starts and season length vs. published onset climatologies (31 sites, 3 continents)
@@ -540,6 +559,40 @@ _run: 2026-11-15 · `scripts/validate_imerg.py` → `docs/validation/imerg.json`
 
 **Caveat.** IMERG Final is calibrated to GPCC monthly gauge analyses and MERRA-2's corrected rain to CPC gauges; GHCN stations feed both, so this is not a fully independent test, and the monthly scores flatter both products more than the daily ones. Tropical GHCN records are patchy (38–156 usable months at 10 of the 12 tropical stations).
 
+### V13b · Near-real-time IMERG (Late run) to fill IMERG Final's latency, same 18 gauges (2019–2024)
+_run: 2026-11-15 · `scripts/validate_imerg_late.py` → `docs/validation/imerg_late.json`_
+
+**Question.** IMERG Final reaches the app through NASA POWER with a ~2–3 month delay (on 15 Nov 2026 it ended on 14 Sep). For those recent days the app used to serve POWER × (0.5 + 0.5 · climatological IMERG/POWER ratio) ("CR50", V13's bridge). Since the GES DISC EULA is approved, the IMERG **Late** run (~14 h latency, climatologically but not gauge calibrated) is available through Giovanni. Does a 50/50 blend with Late ("B50L") beat that bridge?
+
+**Design.** Same stations, GHCN reference, lag rule and monthly matching as V13; 2019–2024 so Late, Final and the gauges overlap. Adoption rule fixed before the run: B50L must beat CR50 on daily r and on monthly KGE at a majority of the gauges with ≥ 12 matched months.
+
+| Gauge | zone | months | Late vs Final daily r | Late vs Final bias | daily r: bridge before (CR50) | **Late blend (B50L)** | Final blend (B50) | monthly KGE: CR50 | **B50L** | B50 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Fallon Exp. Stn, Nevada (demo field) | extratropics | 68 | 0.86 | +5 % | 0.69 | 0.68 | 0.72 | 0.66 | 0.69 | 0.71 |
+| Ames 8 WSW, Iowa (demo field) | extratropics | 72 | 0.94 | -4 % | 0.58 | 0.69 | 0.71 | 0.78 | 0.79 | 0.77 |
+| Córdoba airport, Spain (demo field) | extratropics | 72 | 0.87 | +8 % | 0.78 | 0.75 | 0.77 | 0.84 | 0.91 | 0.84 |
+| Jaén, Spain | extratropics | 72 | 0.90 | +16 % | 0.79 | 0.74 | 0.77 | 0.83 | 0.86 | 0.83 |
+| Nairobi JKIA, Kenya (Machakos demo) | tropics | 4 | 0.91 | +10 % | 0.23 | 0.46 | 0.47 | – | – | – |
+| Niamey, Niger | tropics | 10 | 0.95 | +2 % | 0.30 | 0.49 | 0.51 | 0.85 | 0.92 | 0.87 |
+| Ouagadougou, Burkina Faso | tropics | 16 | 0.93 | +2 % | 0.23 | 0.39 | 0.41 | 0.85 | 0.83 | 0.91 |
+| Bamako-Sénou, Mali | tropics | 9 | 0.95 | +1 % | 0.17 | 0.32 | 0.32 | – | – | – |
+| Dakar-Yoff, Senegal | tropics | 5 | 0.92 | -22 % | 0.25 | 0.40 | 0.40 | – | – | – |
+| New Delhi Safdarjung, India | extratropics | 6 | 0.92 | +2 % | 0.41 | 0.50 | 0.50 | – | – | – |
+| Pune, India | tropics | 21 | 0.94 | +10 % | 0.53 | 0.70 | 0.66 | -0.72 | -0.85 | -0.80 |
+| Hyderabad Begumpet, India | tropics | 16 | 0.94 | -5 % | 0.66 | 0.71 | 0.71 | 0.81 | 0.71 | 0.82 |
+| Nagpur Sonegaon, India | tropics | 3 | 0.92 | -2 % | 0.56 | 0.66 | 0.69 | – | – | – |
+| Bangkok Don Muang, Thailand | tropics | 34 | 0.93 | +8 % | 0.45 | 0.52 | 0.53 | 0.55 | 0.61 | 0.57 |
+| Darwin airport, Australia | tropics | 72 | 0.96 | +14 % | 0.50 | 0.73 | 0.73 | 0.82 | 0.90 | 0.81 |
+| Wagga Wagga, Australia | extratropics | 64 | 0.94 | -2 % | 0.70 | 0.84 | 0.85 | 0.90 | 0.91 | 0.93 |
+| San Juan, Puerto Rico | tropics | 72 | 0.92 | +9 % | 0.53 | 0.61 | 0.62 | 0.55 | 0.62 | 0.62 |
+| Bogotá El Dorado, Colombia | tropics | 27 | 0.87 | +17 % | 0.28 | 0.25 | 0.24 | -0.06 | 0.04 | 0.05 |
+
+Gauges with < 12 matched months are listed but not counted (KGE needs a year of months).
+
+**Summary.** Over the 12 gauges with ≥ 12 matched months, the Late blend beat the old bridge on daily r at **8/12** and on monthly KGE at **9/12** (mean over all 18 gauges: daily r 0.559 → 0.633, monthly KGE 0.567 → 0.586). Late tracks Final closely (median daily r 0.93) but is wetter (median +8 %; mean monthly bias 22 % vs 16 % for Final against the gauges). Final's blend stays slightly better (daily r 0.642; better than B50L at 10/12), so Late is used **only** for the days Final has not reached, and Final replaces it as soon as POWER serves it.
+
+**Decision (ADR-027).** Adopted for the latency gap, in the same ±45° band as V13. The biggest gains are in the tropics (Darwin 0.50 → 0.73, Niamey 0.30 → 0.49, Ouagadougou 0.23 → 0.39), where the climatological bridge carries no information about which days it rained. In dry Mediterranean Spain (Córdoba, Jaén) and at Fallon daily r is slightly lower than the bridge while monthly KGE is higher or equal; Bogotá stays poor with every product (V13).
+
 ### V14 · Regional water storage (GRACE/GRACE-FO) vs. USGS groundwater wells and published GRACE trends
 _run: 2026-11-15 · `scripts/validate_grace.py` → `docs/validation/grace.json`_
 
@@ -722,7 +775,7 @@ Time per tap (imagery cached, one process): median 0.4 s → 0.2 s, 95th percent
   - Adding a 12-month SPEI helped (EXP-03).
   - The proper fix is snowpack and reservoir data plus GRACE-FO storage (ROADMAP #1–2). GRACE storage is now shown as regional context (V14), but it does not set the drought level.
 - **East Africa soil water (V2/V3).**
-  - Correlations in Machakos are lower. The causes: bimodal short rains, 50 km rain grids missing convective storms, and known reanalysis biases.
+  - Correlations in Machakos are lower against ERA5-Land (V2, pooled r 0.30) than against SMAP L4 (V3, 0.64). The causes: bimodal short rains, 50 km rain grids missing convective storms, and known reanalysis biases.
   - Advice there carries lower confidence. Local rain-gauge input would help most.
 - **Field boundaries (V15).**
   - Smallholder plots under 0.5 ha (IoU 0.41) and Brazilian fields over 100 ha (0.27) remain weak.
@@ -742,6 +795,8 @@ Time per tap (imagery cached, one process): median 0.4 s → 0.2 s, 95th percent
 - **MOD16 (V6).**
   - MOD16 has no irrigation input and is known to underestimate ET over irrigated fields in arid regions.
   - A large gap to the model is *expected* there. It is shown for transparency, not as a calibration target.
+- **ECOSTRESS field ET (V6).**
+  - At the Fallon alfalfa field ECOSTRESS reads ~40 % of the model's ET with no daily correlation. The model ignores cutting cycles and assumes a well-watered stand; ECOSTRESS scales one instantaneous retrieval to a day. The disagreement is not resolved, so ECOSTRESS is shown but does not drive advice.
 
 - **AI drought classifier outside the U.S. (V8, EXP-11).**
   - A global model (EDO CDI + GDO soil-moisture labels, location-agnostic features) beats the current U.S. model on held-out U.S. counties and on most held-out weak-label regions. On held-out Europe it falls narrowly behind.

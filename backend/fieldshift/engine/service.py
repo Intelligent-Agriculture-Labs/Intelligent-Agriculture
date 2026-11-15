@@ -23,7 +23,7 @@ from ..science import drought_ml
 from ..science import pests as pst
 from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
-from . import risk_cards
+from . import live_layers, risk_cards, satellite_water
 from . import water_supply as wsup
 from .context import FieldContext, build, enrichment
 from .fire_cards import fire_cards
@@ -42,7 +42,7 @@ def norm_cdf(z: float) -> float:
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 RISKS = ["low", "moderate", "high", "severe"]
-_pool = ThreadPoolExecutor(max_workers=4)
+_pool = ThreadPoolExecutor(max_workers=6)
 
 
 @lru_cache
@@ -183,6 +183,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     lang = inp.get("lang") or "en"
     today = dt.date.fromisoformat(inp["as_of"]) if inp.get("as_of") else dt.date.today()
     enr_future = _pool.submit(enrichment, lat, lon, today)
+    live_future = _pool.submit(live_layers.fetch, lat, lon, today)  # SMAP L4, ECOSTRESS, GRACE-DA (Earthdata)
     fire_future = _pool.submit(firms.nearby_fires, lat, lon, today, 50.0)
     ctx = build(lat, lon, today)
     try:
@@ -192,6 +193,13 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         ctx.enrich = {}
     for sid in ("modis_ndvi", "mod16", "smap_l3e", "modis_lst"):
         ctx.statuses[sid] = "live" if ctx.enrich.get(sid) else "unavailable"
+    try:
+        live = live_future.result(timeout=float(inp.get("live_timeout_s", 15)))
+    except Exception:  # live Earthdata layers are optional
+        live = {}
+    ctx.enrich = {**ctx.enrich, **{k: v for k, v in live.items() if k != "_status" and v}}
+    for sid, st in (live.get("_status") or {}).items():
+        ctx.statuses[sid] = st
 
     cid = inp["crop"]
     c = crop(cid)
@@ -206,6 +214,8 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
 
     # ---------- water balance (current season)
     wstate: dict[str, Any] = {}
+    wmodel: dict[str, Any] | None = None  # model root-zone state + daily ETa, for the satellite checks
+    eco_obs: list[tuple[dt.date, float]] = []
     years = _clim_years(ctx)
     gdd_req = gdd_requirement(c, w, planting, years) if c["type"] != "perennial" else None
     known = None
@@ -294,6 +304,10 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "forecast_et0_7d_mm": round(et07, 1),
         }
         pct_left = round(100 * (1 - dr_t / taw_t)) if taw_t > 0 else 0
+        wmodel = {
+            "pct_left": pct_left,
+            "eta": {ddates[k]: float(daily["eta"][k]) for k in range(len(ddates))},
+        }
         sm_dates = ddates
         series.append(
             _series(
@@ -334,14 +348,16 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             f"Estimated water used from the root zone today: {dr_t:.0f} mm ({pct_left}% of available water left).",
         ]
         caveats = [caveat_grid]
+        # ECOSTRESS field ET: live overpasses (Earthdata) + the pre-extracted record of the demo fields
+        eco_map = dict(ctx.enrich.get("ecostress") or [])
         etp = sources.et_points(lat, lon)
         if etp:
-            eco = [
-                (dt.date.fromisoformat(d_), v)
-                for d_, v in zip(etp["dates"], etp["eco_et_daily"], strict=True)
-                if v is not None
-            ]
-            eco = [(d_, v) for d_, v in eco if planting <= d_ <= today]
+            for d_, v in zip(etp["dates"], etp["eco_et_daily"], strict=True):
+                if v is not None:
+                    eco_map.setdefault(dt.date.fromisoformat(d_), v)
+        if eco_map:
+            eco = sorted((d_, v) for d_, v in eco_map.items() if planting <= d_ <= today)
+            eco_obs = eco
             if eco:
                 series.append(
                     _series(
@@ -360,7 +376,8 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                         f"NASA ECOSTRESS measured {lv:.1f} mm/day of evapotranspiration on this field on {ld.isoformat()} (70 m); "
                         f"the model had {daily['eta'][ddates.index(ld)]:.1f} mm/day."
                     )
-                ctx.statuses["ecostress"] = "cache"
+                if ctx.statuses.get("ecostress") in (None, "unavailable"):
+                    ctx.statuses["ecostress"] = "cache"
         if fusion and "scale" in fusion:
             steps.append(
                 f"Sentinel-2 ({fusion['date'].isoformat()}, 10 m) shows field NDVI {fusion['ndvi']:.2f} → satellite crop coefficient {fusion['kcb_sat']:.2f} "
@@ -595,6 +612,34 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     series.append(_series("tmin", "Min temperature", "°C", wd, w.tmin[i0:i1], "nasa_power", "observed"))
     fc_start = next((wd[k].isoformat() for k in range(len(wd)) if kinds[k] == 2), None)
 
+    # ---------- satellite checks of the water balance (SMAP root zone, ECOSTRESS ET)
+    sm_block, sm_card = satellite_water.smap_check(
+        ctx, wmodel["pct_left"] if wmodel else None, irrigated, lang, today
+    )
+    et_block, et_card = (
+        satellite_water.et_check(
+            ctx, eco_obs, wmodel["eta"], irrigated, lang, today, in_season=planting <= today
+        )
+        if wmodel and eco_obs
+        else (None, None)
+    )
+    if et_block is not None and wmodel:
+        md = sorted(d_ for d_ in wmodel["eta"] if d_ <= today)
+        series.append(
+            _series(
+                "eta_model",
+                "Crop ET (model)",
+                "mm/day",
+                md,
+                [wmodel["eta"][d_] for d_ in md],
+                "nasa_power",
+                "modelled",
+            )
+        )
+    if sm_block or et_block:
+        wstate["satellite"] = {"smap": sm_block, "et": et_block}
+    cards.extend(cd for cd in (sm_card, et_card) if cd)
+
     # ---------- drought
     obs_end = i_today + 1
     pd_ = w.dates[:obs_end]
@@ -638,6 +683,18 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         "Levels follow the U.S. Drought Monitor scale (D0–D4); indicators are blended by a weighted 'convergence of evidence'.",
     ]
     gw_block, gw_card = wsup.groundwater(ctx, irrigated, lang, series, today)
+    gda_block, gda_card = satellite_water.grace_da(ctx, irrigated, lang, series, today)
+    if gda_block is not None:
+        dsteps.append(
+            f"Groundwater now (NASA GRACE-FO data assimilation, week of {gda_block['week']}, ~25 km): "
+            f"{gda_block['groundwater_pct']:.0f}th percentile"
+            + (
+                f"; root-zone soil moisture {gda_block['rootzone_pct']:.0f}th"
+                if gda_block["rootzone_pct"] is not None
+                else ""
+            )
+            + ". Context only; not part of the level."
+        )
     if (rs := wsup.rain_step(ctx)) is not None:
         dsteps.insert(1, rs)
     if gw_block is not None:
@@ -721,9 +778,11 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 "SMAP soil moisture is a 9 km footprint and only the top ~5 cm.",
             ],
             ["nasa_power", *wsup.rain_sources(ctx), "smap_l3e", "smap_l4", "modis_ndvi"]
-            + (["grace_fo"] if gw_block is not None else []),
+            + (["grace_fo"] if gw_block is not None else [])
+            + (["grace_da"] if gda_block is not None else []),
         ),
         "groundwater": gw_block,
+        "grace_da": gda_block,
         "rain_source": wsup.rain_source_block(ctx),
     }
     if level >= rules()["drought"]["card_min_level"]:
@@ -754,6 +813,8 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         cards.append(ndvi_card)
     if gw_card:
         cards.append(gw_card)
+    if gda_card:
+        cards.append(gda_card)
     wsup.annotate_rain(ctx, cards, series)
 
     # ---------- disease (hourly forecast)
@@ -807,11 +868,15 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "ecostress",
             "firms",
             "gpm_imerg",
+            "gpm_imerg_nrt",
             "grace_fo",
+            "grace_da",
         )
         if (sid not in ("ecostress", "firms") or ctx.statuses.get(sid))
         and (sid != "gpm_imerg" or ctx.rain_meta.get("imerg_used"))
+        and (sid != "gpm_imerg_nrt" or ctx.rain_meta.get("imerg_nrt_last"))
         and (sid != "grace_fo" or ctx.statuses.get("grace_fo"))
+        and (sid != "grace_da" or ctx.statuses.get("grace_da") not in (None, "unavailable"))
     ]
     offline = any(s["status"] == "demo" for s in srcs)
     area = _polygon_area_ha(inp.get("polygon"))
@@ -856,6 +921,11 @@ def _last(ctx: FieldContext, sid: str) -> str | None:
         return ctx.weather.dates[-1].isoformat()
     if sid == "gpm_imerg":
         return ctx.rain_meta.get("imerg_last")
+    if sid == "gpm_imerg_nrt":
+        return ctx.rain_meta.get("imerg_nrt_last")
+    if sid == "grace_da":
+        g = ctx.enrich.get("grace_da_gws")
+        return g[-1][0].isoformat() if g else None
     if sid == "grace_fo":
         return wsup.latest_month(ctx.lat, ctx.lon)
     s = ctx.enrich.get(sid)
@@ -947,50 +1017,78 @@ def _ndvi_block(
 
 
 def _smap_block(ctx: FieldContext, series: list[dict[str, Any]]) -> float | None:
-    """SMAP soil moisture: L4 root-zone percentile (preferred, already a climatological percentile) or L3E surface."""
+    """SMAP soil moisture for the drought status and the Why charts. Sources, merged by date: the pre-extracted record
+    of the demo sites (data/smap_points, SMAP L4 via NSIDC OPeNDAP), live SMAP L4 (Earthdata, last ~6 weeks) and ORNL's
+    L3E subsets. Returns the root-zone percentile (SMAP L4's own climatological percentile; where L4 has none, the rank
+    of today's root-zone value among the same ±30 days in the site record), or the L3E surface percentile."""
     today = ctx.today
+    rz: dict[dt.date, float] = {}
+    sf: dict[dt.date, float] = {}
+    pc: dict[dt.date, float] = {}
     pts = sources.smap_points(ctx.lat, ctx.lon)
+    hist_rz: list[tuple[dt.date, float]] = []
     if pts:
-        dates = [dt.date.fromisoformat(x) for x in pts["dates"]]
-        keep = [k for k, d in enumerate(dates) if (today - dt.timedelta(days=365)) <= d <= today]
-        if keep:
-            kd = [dates[k] for k in keep]
+        surf_key = "l4_surface" if any(v is not None for v in pts.get("l4_surface") or []) else "l3e_sm"
+        for k, ds in enumerate(pts["dates"]):
+            d = dt.date.fromisoformat(ds)
+            if d > today:
+                continue
+            if pts["l4_rootzone"][k] is not None:
+                hist_rz.append((d, float(pts["l4_rootzone"][k])))
+            if d < today - dt.timedelta(days=365):
+                continue
+            for dst, key in ((rz, "l4_rootzone"), (sf, surf_key), (pc, "l4_rootzone_pctl")):
+                v = (pts.get(key) or [None] * len(pts["dates"]))[k]
+                if v is not None:
+                    dst[d] = float(v)
+        if ctx.statuses.get("smap_l4") in (None, "unavailable"):
+            ctx.statuses["smap_l4"] = "cache"
+    for dst, sid in ((rz, "smap_l4"), (sf, "smap_l4_surface"), (pc, "smap_l4_pctl")):
+        for d, v in ctx.enrich.get(sid) or []:
+            if d <= today:
+                dst[d] = float(v)
+    if rz:
+        kd = sorted(rz)
+        if sf:
+            sd = sorted(sf)
             series.append(
                 _series(
                     "smap_sm",
-                    "Surface soil moisture (SMAP L3E, 9 km)",
+                    "Surface soil moisture (SMAP L4, 0–5 cm, 9 km)",
                     "m³/m³",
-                    kd,
-                    [np.nan if pts["l3e_sm"][k] is None else pts["l3e_sm"][k] for k in keep],
-                    "smap_l3e",
-                    "observed",
-                )
-            )
-            series.append(
-                _series(
-                    "smap_rootzone",
-                    "Root-zone soil moisture (SMAP L4, 0–100 cm, 9 km)",
-                    "m³/m³",
-                    kd,
-                    [np.nan if pts["l4_rootzone"][k] is None else pts["l4_rootzone"][k] for k in keep],
+                    sd,
+                    [sf[d] for d in sd],
                     "smap_l4",
                     "observed",
                 )
             )
-            ctx.statuses["smap_l3e"] = "cache"
-            ctx.statuses["smap_l4"] = "cache"
-            if not ctx.enrich.get("smap_l3e"):
-                ctx.enrich["smap_l3e"] = [
-                    (dates[k], pts["l3e_sm"][k]) for k in keep if pts["l3e_sm"][k] is not None
-                ]
-            ctx.enrich.setdefault(
+        series.append(
+            _series(
+                "smap_rootzone",
+                "Root-zone soil moisture (SMAP L4, 0–100 cm, 9 km)",
+                "m³/m³",
+                kd,
+                [rz[d] for d in kd],
                 "smap_l4",
-                [(dates[k], pts["l4_rootzone"][k]) for k in keep if pts["l4_rootzone"][k] is not None],
+                "observed",
             )
-            recent = [pts["l4_rootzone_pctl"][k] for k in keep[-3:] if pts["l4_rootzone_pctl"][k] is not None]
-            if recent and (today - kd[-1]).days <= 10:
-                p = float(np.mean(recent))
-                return round(p * 100 if p <= 1.0 else p, 1)
+        )
+        ctx.enrich.setdefault("smap_l4", [(d, rz[d]) for d in kd])
+        if (today - kd[-1]).days > 10:
+            return None
+        recent = [pc[d] for d in sorted(pc)[-3:] if (today - d).days <= 10]
+        if recent:
+            p = float(np.mean(recent))
+            return round(p * 100 if p <= 1.0 else p, 1)
+        # no L4 percentile here (fill value): rank today's root zone among the same season in the site record
+        same = [
+            v
+            for d, v in hist_rz
+            if abs((d.timetuple().tm_yday - today.timetuple().tm_yday + 182) % 365 - 182) <= 30
+        ]
+        if len(same) >= 60:
+            return drt.percentile_of(float(np.mean([rz[d] for d in kd[-3:]])), np.array(same))
+        return None
     sm = ctx.enrich.get("smap_l3e") or []
     if len(sm) < 5:
         return None

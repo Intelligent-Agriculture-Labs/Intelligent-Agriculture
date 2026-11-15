@@ -340,7 +340,117 @@
  },
  "blight_run_at": "2026-11-14T18:28:15+00:00",
  "mod16": {
-  "status": "unavailable: no live data and no cache for https://modis.ornl.gov/rst/api/v1/MOD16A2GF/dates"
+  "ecostress_daily": {
+   "n": 110,
+   "bias": 3.911,
+   "rmse": 4.715,
+   "mae": 4.029,
+   "r": -0.015,
+   "r2": 0.0,
+   "mean_model": 6.249,
+   "mean_ref": 2.338
+  },
+  "mod16_annual": {
+   "years": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+   ],
+   "model_mm": [
+    1102,
+    1198,
+    1145,
+    1133,
+    1077,
+    1151,
+    1212,
+    1170,
+    1068,
+    1218
+   ],
+   "mod16_mm": [
+    242,
+    262,
+    401,
+    379,
+    467,
+    369,
+    286,
+    280,
+    349,
+    337
+   ],
+   "n": 10,
+   "bias": 810.235,
+   "rmse": 816.351,
+   "mae": 810.235,
+   "r": -0.436,
+   "r2": 0.19,
+   "mean_model": 1147.505,
+   "mean_ref": 337.27
+  },
+  "note": "ECOSTRESS (70 m) observes the field itself on clear ISS overpasses; MOD16 (500 m) mixes irrigated fields with desert and has no irrigation input, so it is expected to be far below an irrigated field's ET."
  },
- "mod16_run_at": "2026-11-14T15:44:56+00:00"
+ "mod16_run_at": "2026-11-15T15:21:33+00:00",
+ "smap": {
+  "ames_ia": {
+   "crop": "maize",
+   "seasons": 9,
+   "median_r_per_season": 0.923,
+   "pooled_standardized_r": 0.773,
+   "per_season_r": [
+    0.17,
+    0.633,
+    0.923,
+    0.625,
+    0.963,
+    0.964,
+    0.893,
+    0.944,
+    0.924
+   ]
+  },
+  "cordoba_es": {
+   "crop": "winter_wheat",
+   "seasons": 9,
+   "median_r_per_season": 0.659,
+   "pooled_standardized_r": 0.65,
+   "per_season_r": [
+    0.523,
+    0.825,
+    0.53,
+    0.938,
+    0.413,
+    0.842,
+    0.409,
+    0.659,
+    0.72
+   ]
+  },
+  "machakos_ke": {
+   "crop": "maize",
+   "seasons": 9,
+   "median_r_per_season": 0.638,
+   "pooled_standardized_r": 0.638,
+   "per_season_r": [
+    0.616,
+    0.877,
+    0.638,
+    0.576,
+    0.543,
+    0.03,
+    0.761,
+    0.89,
+    0.832
+   ]
+  }
+ },
+ "smap_run_at": "2026-11-15T15:21:28+00:00"
 }

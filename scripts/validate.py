@@ -415,10 +415,13 @@ def exp_mod16() -> dict[str, Any]:
             plt.close(fig)
     # MOD16 annual sums vs model annual ET (season + off-season evaporation)
     annual: dict[int, float] = {}
+    count: dict[int, int] = {}
     for d_, v in zip(etp["dates"], etp["mod16_et_8day"], strict=True):
         if v is not None:
             annual[int(d_[:4])] = annual.get(int(d_[:4]), 0.0) + v
-    yrs = [y for y in sorted(annual) if 2015 <= y <= 2024]
+            count[int(d_[:4])] = count.get(int(d_[:4]), 0) + 1
+    # complete years only (46 eight-day composites; the last one of a year covers 5–6 days)
+    yrs = [y for y in sorted(annual) if 2015 <= y <= 2024 and count[y] >= 45]
     if yrs:
         model = []
         for y in yrs:
@@ -492,6 +495,7 @@ EXPERIMENTS = {
     "soil": exp_soil_water,
     "usdm": exp_usdm,
     "yield": exp_yield_signal,
+    "smap": exp_smap,
     "mod16": exp_mod16,
     "blight": exp_late_blight,
 }

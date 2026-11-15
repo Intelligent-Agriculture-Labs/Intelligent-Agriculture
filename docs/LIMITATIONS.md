@@ -79,7 +79,9 @@
     - It narrowly lost to the current model in Europe.
     - Outside the U.S., both ML models lost to the rule-based blend on within ±1. They over-predict drought where label systems differ from USDM.
   - For Australia, South America, Africa and Asia, the only open, gridded, multi-decade labels found were a single modelled soil-moisture anomaly, which is weak. National categorical drought monitors (e.g. NADM, South Africa) were not integrated.
-- **SMAP and ECOSTRESS series** exist only for the pre-extracted demo fields (asynchronous AppEEARS batch with Earthdata Login). New fields get MODIS/POWER-based indicators.
+- **SMAP L4, ECOSTRESS, GRACE-DA and IMERG Late/Early need an Earthdata Login on the server** (ADR-027). Without one, only the four demo fields show them (committed demo cache and pre-extracted series); other fields fall back to POWER/IMERG Final/MODIS indicators.
+- **ECOSTRESS vs. model ET disagree at the validation field** (V6: 2.3 vs 6.2 mm/day at Fallon); ECOSTRESS is shown as evidence only. SMAP L4's root zone is a 9 km model-assimilation product and does not see irrigation on one field.
+- **IMERG Late** (used only until IMERG Final arrives) runs ~8 % wetter than Final at the V13 gauges (V13b).
 - **Accounts** have no e-mail verification and no self-service password reset (no mail server in this self-hosted deployment).
 - **Farm sync by code** has no accounts. Anyone with the farm code can see and edit that farm's fields, so keep it private. There is no end-to-end encryption.
 
