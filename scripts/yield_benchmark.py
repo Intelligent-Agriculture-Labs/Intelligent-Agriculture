@@ -898,7 +898,7 @@ def fit_rank1(
             break
     region = dict(zip(regs, map(float, b), strict=True))
     if anchored:
-        region |= {g: 0.0 for g in REFERENCE_REGIONS}
+        region |= {g: 0.0 for g in sorted(REFERENCE_REGIONS)}
     return {
         "fs_crop": fixed | dict(zip(free, map(float, a), strict=True)),
         "sens": dict(zip(crops_, map(float, sens), strict=True)),
