@@ -1236,6 +1236,74 @@ crops:
     - Weston L.A. 1996, Utilization of allelopathy for weed management in agroecosystems, https://doi.org/10.2134/agronj1996.00021962003600060004x
     - Indicative prices/costs 2023–24 (USDA NASS https://www.nass.usda.gov/; World Bank Pink Sheet https://www.worldbank.org/en/research/commodity-markets; FAOSTAT https://www.fao.org/faostat/en/#data/PP;
       extension budgets) — not a forecast, edit locally Yield is hay dry matter.
+  coffee:
+    name: Coffee (arabica)
+    family: Rubiaceae
+    type: perennial
+    evergreen: true
+    icon: cafe
+    low_confidence: true
+    kc_ini: 0.9
+    kc_mid: 0.95
+    kc_end: 0.95
+    stages: [60, 90, 120, 95]
+    root_m: [0.9, 1.5]
+    p: 0.40
+    ky: 1.0
+    wp: 15
+    hi: 0.1
+    calib: 1.0
+    t_base: 10
+    t_heat: 30
+    t_kill: -2
+    season_days: 365
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.8
+    typical_yield_t_ha: 1.0
+    price_usd_t: 5000
+    cost_usd_ha: 2000
+    pests: [coffee leaf rust (Hemileia vastatrix), coffee berry borer (Hypothenemus hampei), coffee berry disease (Colletotrichum kahawae)]
+    breaks: []
+    sources:
+    - 'Allen R.G. et al. 1998, FAO-56, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 Coffee, bare ground cover: Kc 0.90 / 0.95 / 0.95; Table 22 rooting depth 0.9–1.5 m, p 0.40'
+    - 'DaMatta F.M., Ramalho J.D.C. 2006, Impacts of drought and temperature stress on coffee physiology and production, Braz. J. Plant Physiol. 18:55–81, doi:10.1590/S1677-04202006000100006 — arabica optimum 18–21 °C mean, stress above ~30 °C, frost damage near -2 °C'
+    - 'FAOSTAT QCL, green coffee yield, world mean ~0.9–1.0 t/ha (2018–2022); World Bank Pink Sheet arabica 2024 ~5 USD/kg — indicative, edit locally'
+    - 'Evergreen perennial: yield is the annual crop of an established stand (ky = 1.0 is an assumption; FAO-33 gives no coffee value)'
+  banana:
+    name: Banana / plantain
+    family: Musaceae
+    type: perennial
+    evergreen: true
+    icon: leaf
+    low_confidence: true
+    kc_ini: 1.0
+    kc_mid: 1.2
+    kc_end: 1.1
+    stages: [60, 90, 120, 95]
+    root_m: [0.5, 0.9]
+    p: 0.35
+    ky: 1.35
+    wp: 15
+    hi: 0.4
+    calib: 1.0
+    t_base: 14
+    t_heat: 38
+    t_kill: 0
+    season_days: 365
+    n_fix_kg_ha: 0
+    residue: high
+    erosion_cover: 0.85
+    typical_yield_t_ha: 20
+    price_usd_t: 400
+    cost_usd_ha: 2500
+    pests: [black Sigatoka (Pseudocercospora fijiensis), Fusarium wilt TR4, banana weevil (Cosmopolites sordidus), burrowing nematode (Radopholus similis)]
+    breaks: []
+    sources:
+    - 'Allen R.G. et al. 1998, FAO-56, https://www.fao.org/3/x0490e/x0490e00.htm — Table 12 Banana, 2nd year: Kc 1.00 / 1.20 / 1.10; Table 22 rooting depth 0.5–0.9 m, p 0.35'
+    - 'Doorenbos J., Kassam A.H. 1979, FAO-33 Yield response to water — banana ky 1.2–1.35'
+    - 'Robinson J.C., Galán Saúco V. 2010, Bananas and Plantains, 2nd ed., CABI — growth stops below ~14 °C, chilling damage below 13 °C, leaf death at 0 °C'
+    - 'FAOSTAT QCL, banana yield, world mean ~21 t/ha (2018–2022); farm-gate price indicative, edit locally'
 default_planting:
   oats: "03-25"
   winter_rye: "09-25"
@@ -1271,3 +1339,5 @@ default_planting:
   clover_grass_ley: "04-01"
   phacelia_cover: "08-15"
   sorghum_sudan: "06-01"
+  coffee: "03-01"
+  banana: "03-01"

@@ -11,7 +11,7 @@
 - an AI drought classifier, trained on USDM and validated on held-out counties;
 - six languages and offline mode;
 - accounts (phone ↔ PC), a minimalist 5-tab design with a first-run guide and a plain-language glossary;
-- a multi-year, science-based rotation plan per field (52 crops, 30 pathogens) with an optimiser and an impact card;
+- a multi-year, science-based rotation plan per field (54 crops, 30 pathogens) with an optimiser and an impact card;
 - weekly advice as SMS text (≤ 2 SMS in 6 languages).
 
 **Presentation:**

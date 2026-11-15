@@ -300,13 +300,19 @@ def simulate(
         if perennial:
             # dormant when cold: no growth, small soil evaporation-only Kc
             active = np.isfinite(tmax) and (tmax + tmin) / 2 > c["t_base"]
-            cycle_g += g
-            if cycle_g >= c["cut_gdd"]:
-                cuts += 1
-                cycle_g = 0.0
-                events.append({"date": d.isoformat(), "type": "cut"})
-            kc = kc_alfalfa(c, cycle_g / c["cut_gdd"]) if active else 0.3
-            stage = "regrowth" if cycle_g / c["cut_gdd"] < 0.5 else "pre-cut"
+            if c.get("evergreen"):
+                # evergreen tree/fruit crop (coffee, banana): no cutting cycles; FAO-56 Table 12 mid-season Kc
+                # all year while active, the end-season Kc when too cold to grow
+                kc = c["kc_mid"] if active else c["kc_end"]
+                stage = "evergreen" if active else "cold-rest"
+            else:
+                cycle_g += g
+                if cycle_g >= c["cut_gdd"]:
+                    cuts += 1
+                    cycle_g = 0.0
+                    events.append({"date": d.isoformat(), "type": "cut"})
+                kc = kc_alfalfa(c, cycle_g / c["cut_gdd"]) if active else 0.3
+                stage = "regrowth" if cycle_g / c["cut_gdd"] < 0.5 else "pre-cut"
             root_frac = 1.0
             # killing frost ends the season after the first two months
             if np.isfinite(tmin) and tmin <= c["t_kill"] and i - i0 > 60:
@@ -417,7 +423,10 @@ def simulate(
     # ---- yield
     ratio = et / etm if etm > 0 else 1.0
     water_factor = max(0.0, 1 - c["ky"] * (1 - ratio))
-    if perennial:
+    if perennial and c.get("evergreen"):
+        # annual yield of an established stand, pro rata for the part of the year simulated
+        ym = c["typical_yield_t_ha"] * min(1.0, (end_idx - i0 + 1) / 365.0)
+    elif perennial:
         partial = cycle_g / c["cut_gdd"]
         cuts_eff = cuts + (partial if partial >= 0.7 else 0.0)
         ym = (
@@ -429,7 +438,7 @@ def simulate(
         ym = c["typical_yield_t_ha"] * (completion**2)
     heat_factor = max(0.5, 1 - 0.03 * heat)
     frost_factor = max(0.2, 1 - frost_penalty)
-    # global calibration against FAOSTAT (ADR-021): potential-yield × regional management factor
+    # global calibration against FAOSTAT (ADR-022): potential-yield × regional management factor
     ya = ym * water_factor * heat_factor * frost_factor * w.yield_factor(crop_id, strategy != "rainfed")
     biomass = c["wp"] * tr_norm * c.get("calib", 1.0) / 100.0  # g/m2 -> t/ha
 
