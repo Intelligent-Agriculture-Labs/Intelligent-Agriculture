@@ -168,3 +168,11 @@ def test_satellite_kc_fusion_scales_water_use():
         kc_scale_from=dt.date(2020, 6, 15),
     )
     assert thin.etm_mm < base.etm_mm and thin.irrigation_mm < base.irrigation_mm
+
+
+def test_evergreen_perennial_uses_mid_kc_all_year_and_annual_yield():
+    w = make_weather(days=800, tmax=26.0, tmin=16.0, rain=6.0, et0=4.0)
+    r = simulate("coffee", w, dt.date(2020, 3, 1), strategy="rainfed")
+    c = crop("coffee")
+    assert c["evergreen"] and r.yield_t_ha == pytest.approx(c["typical_yield_t_ha"], rel=0.05)
+    assert r.et_mm == pytest.approx(365 * 4.0 * c["kc_mid"], rel=0.05)

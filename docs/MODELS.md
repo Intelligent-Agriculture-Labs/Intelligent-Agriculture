@@ -23,6 +23,7 @@ ET₀ = [0.408 Δ (Rₙ − G) + γ (900 / (T + 273)) u₂ (eₛ − eₐ)] / [�
 **Crop coefficient.** The FAO-56 four-stage single-Kc curve (Kc_ini, Kc_mid, Kc_end; stage fractions from Table 11), indexed by f.
 - Alfalfa uses repeating cutting cycles (Table 11, "individual cutting periods"), with a cut every 420 °C·d (base 5 °C; ≈ 750 °F·d base 41 °F, the extension rule of thumb).
 - The alfalfa season ends at the first killing frost after two months.
+- Evergreen tree and fruit crops (coffee, banana; `evergreen: true`) have no cutting cycles. They use the FAO-56 Table 12 mid-season Kc all year while warm enough to grow, and the end-season Kc otherwise. Yₘ is the annual yield of an established stand, pro rata for the part of the year simulated.
 
 **Root-zone water balance** (eq. 85), daily: Dᵣ,ᵢ = Dᵣ,ᵢ₋₁ − Pᵢ − Iᵢ + ETc,adj,ᵢ + DPᵢ.
 - TAW = θ-range × Zᵣ. θ-range by texture class (Table 19 mid-points); Zᵣ grows from Zmin to Zmax by the end of the development stage.
