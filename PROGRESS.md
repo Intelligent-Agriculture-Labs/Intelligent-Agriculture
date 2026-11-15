@@ -1,5 +1,17 @@
 # PROGRESS
 
+## v1.1.0: worldwide accuracy release (2026-11-15, ~03:40 CET)
+Six validated work streams, each adopted only if it beat the previous version on held-out data:
+- **Rain-season onset and false-start advisor** (V9): India IMD normals MAE 3.6 days; Sahel season length MAE 12.5 days.
+- **Global yield calibration** (V10): FAOSTAT, 41 countries, held-out RMSLE 0.84 → 0.50.
+- **Global pest and disease models** (V11): rice blast, rusts, tropical late blight, coffee rust, Sigatoka, desert locust, ...
+- **Heat stress (WBGT/THI), solar pump, NASA FIRMS fires** (V12).
+- **GPM IMERG rain blend** (V13; beats POWER at 16/18 gauges) and **GRACE/GRACE-FO water storage** (V14; 11/11 aquifers).
+- **Learned field-edge model** (V15): held-out IoU 0.24 → 0.52 on 20 countries.
+- **Not adopted:** a worldwide AI drought model (EXP-11 / ADR-020); rules stay outside the U.S.
+- **Also:** coffee and banana crops (54 in total); fewer false alarms (leaf diseases need emerged leaves; saturating tropical models capped at moderate).
+- **Human step:** approve the NASA GES DISC licence on the Earthdata account to unlock IMERG Late and the weekly GRACE groundwater percentiles.
+
 ## FINAL SUMMARY (v1.0.0, 2026-11-15 ~00:30 CET; deadline Sun 2026-11-15 23:59)
 **What was built:** FieldShift, an app on web, iOS and Android, with a FastAPI backend, that turns NASA Earth observations into:
 - weekly farm actions (irrigation amount and date, drought, disease, pests, frost/heat) with a "Why?" for every number;
