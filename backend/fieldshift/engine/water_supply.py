@@ -25,12 +25,22 @@ GRACE_CAVEATS = [
 
 
 def rain_sources(ctx: FieldContext) -> list[str]:
-    return ["gpm_imerg"] if ctx.rain_meta.get("imerg_used") else []
+    if not ctx.rain_meta.get("imerg_used"):
+        return []
+    return ["gpm_imerg", "gpm_imerg_nrt"] if ctx.rain_meta.get("imerg_nrt_last") else ["gpm_imerg"]
 
 
 def rain_step(ctx: FieldContext) -> str | None:
     """One sentence on where the rain numbers come from (for every rain-driven Why)."""
     m = ctx.rain_meta
+    if m.get("imerg_used") and m.get("imerg_nrt_last"):
+        return (
+            f"Rain: NASA POWER (MERRA-2) and NASA GPM IMERG satellite rain averaged day by day — IMERG Final "
+            f"(gauge-calibrated) to {m['imerg_final_last']}, then IMERG {'/'.join(r.capitalize() for r in m.get('imerg_nrt_runs', []))} "
+            f"near-real-time runs from NASA GES DISC to {m['imerg_nrt_last']} ({m['imerg_nrt_days']} days). Against 18 rain "
+            f"gauges on 6 continents the Final blend beat POWER alone at 16 (VALIDATION V13); the near-real-time runs are "
+            f"not gauge-calibrated and are checked against Final in VALIDATION V13b."
+        )
     if m.get("imerg_used"):
         return (
             f"Rain: NASA POWER (MERRA-2) and NASA GPM IMERG satellite rain averaged day by day (IMERG to {m['imerg_last']}; "
@@ -48,6 +58,9 @@ def rain_source_block(ctx: FieldContext) -> dict[str, Any]:
         "method": m.get("method", "power"),
         "imerg_used": bool(m.get("imerg_used")),
         "imerg_last": m.get("imerg_last"),
+        "imerg_final_last": m.get("imerg_final_last"),
+        "imerg_nrt_last": m.get("imerg_nrt_last"),
+        "imerg_nrt_days": m.get("imerg_nrt_days"),
         "annual_power_mm": m.get("annual_power_mm"),
         "annual_imerg_mm": m.get("annual_imerg_mm"),
     }

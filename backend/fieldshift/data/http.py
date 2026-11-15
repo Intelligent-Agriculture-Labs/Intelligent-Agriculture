@@ -16,6 +16,7 @@ import logging
 import os
 import threading
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutTimeout
 from dataclasses import dataclass
@@ -163,7 +164,46 @@ def get_json(
     raise DataUnavailable(f"no live data and no cache for {url}")
 
 
-DATE_KEYS = {"start", "end", "start_date", "end_date", "startDate", "endDate", "past_days"}
+def cached_call(
+    url: str,
+    params: dict[str, Any] | None,
+    fetch: Callable[[], Any],
+    *,
+    ttl_s: float,
+    fuzzy: bool = True,
+) -> Fetched:
+    """Same fallback chain as get_json, for sources that need their own request logic (Earthdata Login, OPeNDAP,
+    Cloud-Optimized GeoTIFF reads). `fetch()` returns JSON-serialisable data or raises DataUnavailable. The cache key is
+    `url` + `params` only, so credentials and tokens never reach the cache, the index or the committed demo cache."""
+    key = cache_key(url, params)
+    cpath = CACHE_DIR / f"{key}.json.gz"
+    dpath = DEMO_DIR / f"{key}.json.gz"
+    cached = _read(cpath) if cpath.exists() else None
+    if cached is not None and (time.time() - cached["t"] < ttl_s or offline_mode()):
+        return Fetched(cached["d"], "cache", cached["t"])
+    host = httpx.URL(url).host
+    if not offline_mode() and time.time() >= _host_down.get(host, 0.0):
+        try:
+            data = fetch()
+            _write(cpath, {"t": time.time(), "u": url, "p": params, "d": data})
+            _update_index(key, url, params)
+            return Fetched(data, "live", time.time())
+        except (DataUnavailable, httpx.HTTPError, ValueError, RuntimeError, TimeoutError, OSError) as e:
+            log.info("live fetch failed for %s: %s", url, type(e).__name__)
+            if isinstance(e, (TimeoutError, httpx.TimeoutException)):
+                _host_down[host] = time.time() + 300
+    if cached is not None:
+        return Fetched(cached["d"], "cache", cached["t"])
+    demo = _read(dpath) if dpath.exists() else None
+    if demo is not None:
+        return Fetched(demo["d"], "demo", demo["t"])
+    hit = _fuzzy_lookup(url, params) if fuzzy else None
+    if hit is not None:
+        return hit
+    raise DataUnavailable(f"no live data and no cache for {url}")
+
+
+DATE_KEYS = {"start", "end", "start_date", "end_date", "startDate", "endDate", "past_days", "time"}
 
 
 def _index_path(d: Path) -> Path:
@@ -189,7 +229,12 @@ def _fuzzy_lookup(url: str, params: dict[str, Any] | None) -> Fetched | None:
             p = meta.get("p") or {}
             if {k: v for k, v in p.items() if k not in DATE_KEYS} != want:
                 continue
-            end = str(p.get("end") or p.get("end_date") or p.get("endDate") or "")
+            end = str(
+                p.get("end")
+                or p.get("end_date")
+                or p.get("endDate")
+                or str(p.get("time") or "").split("/")[-1]
+            )
             if best is None or end > best[0]:
                 best = (end, d / f"{key}.json.gz", status)
     if best is None:

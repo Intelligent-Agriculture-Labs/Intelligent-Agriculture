@@ -61,6 +61,11 @@ def offline_synthetic(monkeypatch):
     monkeypatch.setattr(sources, "power_daily", _synthetic_power)
     monkeypatch.setattr(sources, "forecast", _synthetic_forecast)
     monkeypatch.setattr(sources, "imerg_daily", lambda lat, lon, start, end: None)  # no network in tests
+    monkeypatch.setattr(sources, "imerg_nrt", lambda lat, lon, start, end: None)
+    from fieldshift.engine import live_layers
+
+    monkeypatch.setattr(live_layers, "fetch", lambda lat, lon, today, **k: {"_status": {}})
+    monkeypatch.setenv("FIELDSHIFT_EARTHDATA", "off")
     monkeypatch.setattr(sources, "elevation", lambda lat, lon: (1200.0, 1.5, "live"))
     monkeypatch.setattr(
         sources,
