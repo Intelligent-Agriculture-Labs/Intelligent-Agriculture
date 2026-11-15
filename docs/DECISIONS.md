@@ -46,6 +46,7 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - The HTTP layer caches every response as gzip JSON, keyed by URL and parameters.
 - `scripts/build_demo_cache.py` copies the cache for the demo presets into `backend/demo_cache`, which is committed.
 - The offline mode (`FIELDSHIFT_OFFLINE=1`) falls back to a fuzzy match on the same endpoint and location with any date range. A pre-cached demo therefore keeps working on later days, and the UI labels it "offline".
+- Update (2026-11-15): `scripts/verify_offline_demo.py` checks the committed demo with the network blocked (all endpoints the app calls × 4 presets × 6 languages, `--today` for later days); `build_demo_cache.py` merges into the demo index instead of replacing it; offline, the satellite view falls back to the newest earlier week's analysis of the same field. Rebuild steps: docs/DATA.md#pre-cached-demo-dataset.
 
 ## ADR-009 Irrigation history assumption (16:45)
 - The model cannot see past irrigation on a 1–10 ha field: SMAP's 9 km pixel is dominated by surrounding desert.

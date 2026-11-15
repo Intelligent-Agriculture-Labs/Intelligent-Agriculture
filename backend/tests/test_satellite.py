@@ -61,3 +61,24 @@ def test_harvest_events_detects_cuts():
     vals = [0.5, 0.78, 0.40, 0.6, 0.85, 0.33]
     ev = sat.harvest_events(dates, vals)
     assert ev == [(d0 + dt.timedelta(days=15)).isoformat(), (d0 + dt.timedelta(days=45)).isoformat()]
+
+
+def test_offline_satellite_falls_back_to_an_earlier_week(tmp_path, monkeypatch):
+    """Offline, a field whose analysis was cached in an earlier week still gets it (the cache key has the week)."""
+    import json
+
+    from fieldshift.engine import satellite_service as svc
+
+    monkeypatch.setenv("FIELDSHIFT_OFFLINE", "1")
+    monkeypatch.setattr(svc, "CACHE_DIR", tmp_path / "cache")
+    monkeypatch.setattr(svc, "DEMO_DIR", tmp_path / "demo")
+    req = {"lat": 42.0, "lon": -93.7, "polygon": None, "crop": "maize", "lang": "en"}
+    today = dt.date.today()
+    end = today - dt.timedelta(days=today.weekday()) - dt.timedelta(weeks=3)
+    key = svc._key(req, end - dt.timedelta(days=365), end)
+    (tmp_path / "demo" / "satellite").mkdir(parents=True)
+    (tmp_path / "demo" / "satellite" / f"{key}.json").write_text(
+        json.dumps({"status": "done", "field_key": key})
+    )
+    r = svc.satellite_api(req)
+    assert r["status"] == "done" and r["field_key"] == key

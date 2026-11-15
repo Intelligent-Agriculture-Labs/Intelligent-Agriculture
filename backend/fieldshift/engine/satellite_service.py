@@ -22,7 +22,7 @@ from PIL import Image
 
 from ..data import dem as demmod
 from ..data import sentinel
-from ..data.http import CACHE_DIR, DEMO_DIR
+from ..data.http import CACHE_DIR, DEMO_DIR, offline_mode
 from ..science import satellite as sat
 from ..science import terrain
 from ..science.cropmodel import crop
@@ -68,6 +68,16 @@ def _cached(key: str) -> dict[str, Any] | None:
     return None
 
 
+def _latest_cached(req: dict[str, Any], end: dt.date, weeks: int = 156) -> dict[str, Any] | None:
+    """Newest cached default-window analysis (1 year up to a week start) of the same field, up to `weeks` back."""
+    for w in range(1, weeks + 1):
+        e = end - dt.timedelta(weeks=w)
+        hit = _cached(_key(req, e - dt.timedelta(days=365), e))
+        if hit:
+            return hit
+    return None
+
+
 def satellite_api(req: dict[str, Any]) -> dict[str, Any]:
     end = dt.date.fromisoformat(req["end"]) if req.get("end") else dt.date.today()
     end = end - dt.timedelta(days=end.weekday())  # week granularity -> stable cache key within a week
@@ -75,6 +85,8 @@ def satellite_api(req: dict[str, Any]) -> dict[str, Any]:
     key = _key(req, start, end)
     lang = req.get("lang") or "en"
     hit = _cached(key)
+    if hit is None and offline_mode() and not req.get("start") and not req.get("end"):
+        hit = _latest_cached(req, end)  # offline: last analysis of this field from an earlier week
     if hit:
         return dict(localize_tree(hit, "sat_", lang))  # cached in English, served in the farmer's language
     with _lock:

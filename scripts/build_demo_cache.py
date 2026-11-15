@@ -1,8 +1,17 @@
 """Warm the data cache for every demo preset and copy it into backend/demo_cache (committed).
 
-Run on the data box (VPS):  FIELDSHIFT_ORNL_RETRIES=6 backend/.venv/bin/python scripts/build_demo_cache.py
+Run on the data box (VPS, Earthdata Login in ~/.config/fieldshift/earthdata), in a fresh clone, with an empty cache:
+
+    export FIELDSHIFT_CACHE_DIR=$(mktemp -d)
+    backend/.venv/bin/python scripts/verify_offline_demo.py --online   # every request the app makes, all languages
+    FIELDSHIFT_ORNL_RETRIES=6 backend/.venv/bin/python scripts/build_demo_cache.py
+    FIELDSHIFT_CACHE_DIR=$(mktemp -d) backend/.venv/bin/python scripts/cache_earthdata_demo.py
+
+then copy backend/demo_cache back and check it offline with scripts/verify_offline_demo.py.
 It fetches NASA POWER (1984→today), forecast, SRTM, SoilGrids and the ORNL DAAC satellite layers
 (MODIS NDVI 2001→, MOD16 ET, SMAP, LST) patiently, runs every endpoint once, then copies the cache files.
+New entries are merged into demo_cache/index.json (same key = replaced; older entries stay, so the offline fuzzy
+match keeps them as a fallback and prefers the newest date range).
 """
 
 from __future__ import annotations
@@ -132,18 +141,22 @@ def main() -> None:
     # copy cache -> demo_cache (only gz payloads + index); keep demo_cache small: skip files > 8 MB
     http.DEMO_DIR.mkdir(parents=True, exist_ok=True)
     idx = json.loads((http.CACHE_DIR / "index.json").read_text())
-    kept = {}
+    idx_f = http.DEMO_DIR / "index.json"
+    old = json.loads(idx_f.read_text()) if idx_f.exists() else {}
+    kept = {k: m for k, m in old.items() if (http.DEMO_DIR / f"{k}.json.gz").exists()}
+    n_new = 0
     for key, meta in idx.items():
         src = http.CACHE_DIR / f"{key}.json.gz"
         if src.exists() and src.stat().st_size < 8_000_000:
             shutil.copy2(src, http.DEMO_DIR / src.name)
             kept[key] = meta
-    (http.DEMO_DIR / "index.json").write_text(json.dumps(kept, default=str))
+            n_new += 1
+    idx_f.write_text(json.dumps(kept, default=str))
     for sub in ("dem", "satellite"):  # elevation tiles (terrain maps) and satellite analyses (offline)
         if (http.CACHE_DIR / sub).exists():
             shutil.copytree(http.CACHE_DIR / sub, http.DEMO_DIR / sub, dirs_exist_ok=True)
     total = sum(f.stat().st_size for f in http.DEMO_DIR.glob("*.gz"))
-    print(f"demo_cache: {len(kept)} files, {total / 1e6:.1f} MB", flush=True)
+    print(f"demo_cache: {n_new} files copied, {len(kept)} indexed, {total / 1e6:.1f} MB", flush=True)
 
 
 if __name__ == "__main__":
