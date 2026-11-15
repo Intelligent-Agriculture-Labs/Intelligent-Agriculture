@@ -116,7 +116,7 @@ The team set the goals, chose the direction and reviewed the outputs. The app it
 
 ## Links
 - Repository: ☐ `<public GitHub URL>` (source of truth: private Gitea, see above)
-- Demo video (30 s): ☐ `<YouTube/Drive URL>`, from file `media/fieldshift-demo-30s.mp4`
+- Demo video (30 s): ☐ `<YouTube/Drive URL>`, from file `media/ia-demo-30s.mp4`
 - Slides (alternative demo format, 7 slides): `media/fieldshift-deck.pdf` (built by `scripts/build_site.py` from `site/deck.html`)
 - Live app: ☐ `<URL if hosted>`; otherwise `docker compose up --build`
 - Showcase page (no login): ☐ publish `site/dist` (built by `python3 scripts/build_site.py --repo <public URL>`) with GitHub Pages
