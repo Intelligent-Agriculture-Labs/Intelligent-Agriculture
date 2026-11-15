@@ -1,0 +1,8 @@
+# Tap-to-detect field outline (engine/fields.py; POST /api/fields/detect).
+detect_note:
+  en: "Check the outline and drag the corners to fix it — fences, tree lines and roads are detected best; similar-looking neighbouring fields may merge, and small plots are the hardest case."
+  es: "Revise el contorno y arrastre las esquinas para corregirlo: cercas, hileras de árboles y caminos se detectan mejor; campos vecinos parecidos pueden unirse y las parcelas pequeñas son el caso más difícil."
+  fr: "Vérifiez le contour et déplacez les coins pour le corriger — clôtures, haies et routes sont les mieux détectées ; des parcelles voisines semblables peuvent fusionner, et les petites parcelles sont le cas le plus difficile."
+  sw: "Kagua mpaka na uburute pembe kuurekebisha — uzio, mistari ya miti na barabara hutambuliwa vizuri zaidi; mashamba jirani yanayofanana yanaweza kuungana, na vishamba vidogo ndivyo vigumu zaidi."
+  hi: "सीमा जाँचें और कोनों को खींचकर ठीक करें — बाड़, पेड़ों की कतारें और सड़कें सबसे अच्छी पहचानी जाती हैं; मिलते-जुलते पड़ोसी खेत जुड़ सकते हैं, और छोटे भूखंड सबसे कठिन होते हैं।"
+  de: "Umriss prüfen und Ecken zum Korrigieren ziehen – Zäune, Baumreihen und Wege werden am besten erkannt; ähnlich aussehende Nachbarfelder können verschmelzen, kleine Parzellen sind am schwierigsten."

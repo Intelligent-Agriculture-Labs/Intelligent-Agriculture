@@ -18,11 +18,22 @@ function leaveTo(href: "/home" | "/") {
   router.replace(href);
 }
 
-/** Turn API errors into one friendly sentence. */
+/** Server error details (English) -> translated app messages. */
+const DETAIL_KEYS: [RegExp, string][] = [
+  [/valid e-mail/i, "account.errEmail"],
+  [/new password needs|password needs at least/i, "account.errPasswordShort"],
+  [/already exists/i, "account.errExists"],
+  [/too many attempts/i, "account.errTooMany"],
+  [/session has expired|please log in/i, "account.errSession"],
+  [/not correct/i, "account.errWrong"],
+];
+
+/** Turn API errors into one friendly sentence in the app language. */
 export function friendlyError(e: unknown, tr: (k: string) => string): string {
   if (e instanceof ApiError) {
     const m = e.message.match(/"detail"\s*:\s*"([^"]+)"/);
-    if (m) return m[1];
+    const hit = m ? DETAIL_KEYS.find(([rx]) => rx.test(m[1])) : undefined;
+    if (hit) return tr(hit[1]);
     if (e.status === 401) return tr("account.errWrong");
     if (e.status === 409) return tr("account.errExists");
     if (e.status === 429) return tr("account.errTooMany");

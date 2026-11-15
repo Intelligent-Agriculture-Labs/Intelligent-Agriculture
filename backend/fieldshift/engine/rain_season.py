@@ -14,11 +14,32 @@ from ..data.sources import source_ref
 from ..science import onset as on
 from ..science.cropmodel import crops
 from .context import FieldContext, build
-from .messages import day_label, t
+from .messages import day_label, day_month, has, t, tr_crop
 
 log = logging.getLogger("fieldshift.rain_season")
 FORECAST_DAYS = 16
-MODEL = "Agroclimatic onset (Sivakumar 1988; Stern et al. 1981), water-balance cessation (FAO), Liebmann/Dunning seasons"
+MODEL = "Agroclimatic onset (Sivakumar 1988; Stern et al. 1981), water-balance cessation (FAO), Liebmann/Dunning seasons"  # i18n: ok (t("model_onset"))
+
+
+def _md(s: str | None, lang: str) -> str:
+    """Localise a "15 Mar" day-month string from science/onset.py; anything else passes through."""
+    if not s:
+        return "?"
+    try:
+        return day_month(dt.datetime.strptime(f"{s} 2001", "%d %b %Y").date(), lang)
+    except ValueError:
+        return s
+
+
+def _reason(site: on.SiteClimatology, lat: float, lang: str) -> str:
+    app = on.params()["applicability"]
+    if site.applicable:
+        return t("reason_ok", lang)
+    if abs(lat) > float(app["max_abs_lat"]):
+        return t("reason_outside", lang, lat=app["max_abs_lat"])
+    if not site.seasons:
+        return t("reason_no_season", lang)
+    return t("reason_no_dry", lang, n=site.dry_days)
 
 
 # --------------------------------------------------------------------------- shared computation
@@ -56,8 +77,8 @@ def _sow_start(st: on.Status, today: dt.date) -> dt.date:
     return max(exp, today)
 
 
-def _short(name: str) -> str:
-    return name.split(" (")[0]
+def _short(name: str, lang: str = "en") -> str:
+    return tr_crop(name, lang).split(" (")[0]
 
 
 def _crop_advice(
@@ -67,13 +88,15 @@ def _crop_advice(
     if mine["fits"]:
         until = dt.date.fromisoformat(mine["sow_until"])
         if until < today + dt.timedelta(days=60):
-            detail += " " + t("onset_sow_until", lang, crop=_short(mine["name"]), day=until.strftime("%d %b"))
+            detail += " " + t(
+                "onset_sow_until", lang, crop=_short(mine["name"], lang), day=day_month(until, lang)
+            )
         return detail, risk
     others = [r for r in sow["crops"] if r["crop"] != mine["crop"]]
     alt = max(others, key=lambda r: (r["fit_pct"], -r["cycle_days"])) if others else mine
     if (mine["max_variety_days_half"] or 0) < 45:
         if alt["fit_pct"] < 50:  # even the best short crop fails in most years: say so plainly
-            late = t("onset_too_late_all", lang, crop=_short(mine["name"]), fit=alt["fit_pct"])
+            late = t("onset_too_late_all", lang, crop=_short(mine["name"], lang), fit=alt["fit_pct"])
             # a "sow now" from the onset alone would contradict this: the crop advice wins
             detail = (
                 late if detail.startswith(t("onset_advice_sow_now", lang, n=0)[:12]) else f"{detail} {late}"
@@ -82,8 +105,8 @@ def _crop_advice(
         detail += " " + t(
             "onset_too_late",
             lang,
-            crop=_short(mine["name"]),
-            alt=_short(alt["name"]).lower(),
+            crop=_short(mine["name"], lang),
+            alt=_lc(_short(alt["name"], lang), lang),
             fit=alt["fit_pct"],
         )
         return detail, "moderate" if risk == "low" else risk
@@ -93,13 +116,17 @@ def _crop_advice(
     detail += " " + t(
         "onset_short_cycle",
         lang,
-        crop=_short(mine["name"]),
+        crop=_short(mine["name"], lang),
         cycle=mine["cycle_days"],
         fit=mine["fit_pct"],
         days=days,
-        alt=_short(alt["name"]).lower(),
+        alt=_lc(_short(alt["name"], lang), lang),
     )
     return detail, "moderate" if risk == "low" else risk
+
+
+def _lc(s: str, lang: str) -> str:
+    return s if lang == "de" else s.lower()
 
 
 def _status_dict(st: on.Status, today: dt.date) -> dict[str, Any]:
@@ -139,7 +166,7 @@ def _sow_advice(st: on.Status, today: dt.date) -> str:
     return "none"
 
 
-def _insights(site: on.SiteClimatology, ref_year: int) -> list[str]:
+def _insights(site: on.SiteClimatology, ref_year: int, lang: str = "en") -> list[str]:
     split = int(on.params()["advice"]["trend_split_year"])
     out = []
     for sc in site.seasons:
@@ -147,24 +174,18 @@ def _insights(site: on.SiteClimatology, ref_year: int) -> list[str]:
         tr, lab = s["trend"], s["label"]
         y0 = sc.years[0].year if sc.years else 1984
         if tr["onset_p"] < 0.1:
-            d = "later" if tr["onset_days_per_decade"] > 0 else "earlier"
-            out.append(
-                f"{lab} rains now start {abs(tr['onset_days_per_decade']):.0f} days per decade {d} than in {y0} (p = {tr['onset_p']:.2f})."
-            )
+            key = "ins_onset_later" if tr["onset_days_per_decade"] > 0 else "ins_onset_earlier"
+            out.append(t(key, lang, season=lab, d=abs(tr["onset_days_per_decade"]), year=y0, p=tr["onset_p"]))
         if tr["length_p"] < 0.1:
-            d = "longer" if tr["length_days_per_decade"] > 0 else "shorter"
+            key = "ins_length_longer" if tr["length_days_per_decade"] > 0 else "ins_length_shorter"
             out.append(
-                f"The {lab} season has become {abs(tr['length_days_per_decade']):.0f} days per decade {d} since {y0} (p = {tr['length_p']:.2f})."
+                t(key, lang, season=lab, d=abs(tr["length_days_per_decade"]), year=y0, p=tr["length_p"])
             )
         a, b = tr["false_start_pct_before"], tr["false_start_pct_since"]
         if a is not None and b is not None and abs(b - a) >= 10:
-            out.append(
-                f"False starts of the {lab} rains: {a:.0f} % of years before {split}, {b:.0f} % since."
-            )
+            out.append(t("ins_false_starts", lang, season=lab, a=a, b=b, split=split))
     if not out and site.seasons:
-        out.append(
-            "No statistically clear shift (p < 0.1) in onset or season length since 1984; year-to-year swings dominate."
-        )
+        out.append(t("ins_no_shift", lang))
     return out
 
 
@@ -196,22 +217,29 @@ def rain_season_api(
         "lon": lon,
         "as_of": today.isoformat(),
         "applicable": site.applicable,
-        "reason": site.reason,
+        "reason": _reason(site, lat, lang),
         "regime": site.info["regime"],
         "harmonic_ratio": site.info["harmonic_ratio"],
         "dry_season_days": site.dry_days,
         "criteria": {
-            "onset": f"first day of {crit.onset_days} days with ≥ {crit.onset_mm:g} mm (starting wet), no dry spell > {crit.max_dry_spell_days} days in the next {crit.check_days} days",
+            "onset": t(
+                "crit_onset",
+                lang,
+                days=crit.onset_days,
+                mm=crit.onset_mm,
+                dry=crit.max_dry_spell_days,
+                check=crit.check_days,
+            ),
             "dry_day_mm": crit.dry_day_mm,
-            "cessation": f"{crit.awc_mm:g} mm soil store emptied by ET₀, not before mid-season",
-            "false_start": f"rain criterion met, then a dry spell > {crit.max_dry_spell_days} days within {crit.check_days} days",
+            "cessation": t("crit_cessation", lang, awc=crit.awc_mm),
+            "false_start": t("crit_false_start", lang, dry=crit.max_dry_spell_days, check=crit.check_days),
         },
         "seasons": [sc.summary(today.year, split) for sc in site.seasons],
         "status": _status_dict(st, today) if st else None,
         "sowing": sowing,
         "card": card,
-        "insights": _insights(site, today.year),
-        "method": MODEL,
+        "insights": _insights(site, today.year, lang),
+        "method": t("model_onset", lang),
         "model_doc": "rain-onset",
         "source": source_ref(
             "nasa_power",
@@ -241,7 +269,7 @@ def onset_cards(
         return []
 
 
-def _cum_series(ctx: FieldContext, st: on.Status, today: dt.date) -> dict[str, Any]:
+def _cum_series(ctx: FieldContext, st: on.Status, today: dt.date, lang: str = "en") -> dict[str, Any]:
     """Cumulative rain since the search window opened, with the median of past seasons as 'normal'."""
     w = ctx.weather
     i0 = ctx.idx(st.window_start)
@@ -259,7 +287,9 @@ def _cum_series(ctx: FieldContext, st: on.Status, today: dt.date) -> dict[str, A
     d = w.dates[i0:i1]
     return {
         "id": "rain_season_cum",
-        "label": f"Rain since {st.window_start.strftime('%d %b')} ({st.season.season.label} season)",
+        "label": t(
+            "series_rain_since", lang, date=day_month(st.window_start, lang), season=st.season.season.label
+        ),
         "unit": "mm",
         "points": [
             {"date": x.isoformat(), "value": round(float(v), 1)} for x, v in zip(d, vals, strict=True)
@@ -296,7 +326,7 @@ def _cards_from(
     crit = on.Criteria.from_config()
     lab = sc.season.label
     on_d = summ["onset"] or {}
-    p20, p50, p80 = on_d.get("p20", "?"), on_d.get("p50", "?"), on_d.get("p80", "?")
+    p20, p50, p80 = (_md(on_d.get(k), lang) for k in ("p20", "p50", "p80"))
     offs = [float(x) for x in sc.onset_offsets]
     p80_date = sc.date_at(float(np.percentile(offs, 80)), st.year) if offs else st.window_end
     p20_date = sc.date_at(float(np.percentile(offs, 20)), st.year) if offs else st.window_start
@@ -345,7 +375,7 @@ def _cards_from(
         detail = t(
             "onset_established_detail",
             lang,
-            end=dt.date.fromisoformat(end).strftime("%d %b") if end else "?",
+            end=day_month(dt.date.fromisoformat(end), lang) if end else "?",
         )
     else:  # failed
         title = t("onset_failed_title", lang, season=lab)
@@ -356,52 +386,94 @@ def _cards_from(
         detail, risk = _crop_advice(mine, sow, today, lang, detail, risk)
 
     # ---- Why
+    regime = site.info["regime"]
     steps = [
-        f"Rainy seasons here (NASA POWER {sc.years[0].year if sc.years else 1984}–{today.year - 1}): "
-        + ", ".join(
-            f"{s.season.label} (from ~{s.summary(st.year, split)['climatological_onset']})"
-            for s in site.seasons
-        )
-        + f"; regime {site.info['regime']} (2nd/1st harmonic ratio {site.info['harmonic_ratio']}).",
-        f"Onset rule (Sivakumar 1988): first day of {crit.onset_days} days with ≥ {crit.onset_mm:g} mm, with no dry spell "
-        f"longer than {crit.max_dry_spell_days} days in the next {crit.check_days} days.",
-        f"{lab} onset over {n_years} past seasons: median {p50}; 8 in 10 years between {p20} and {p80}.",
-        f"False starts (dry spell > {crit.max_dry_spell_days} days after the first good rain) in {fs if fs is not None else '–'} % of years; "
-        f"no valid onset at all in {summ['failed_pct']} % of years.",
+        t(
+            "on_step_seasons",
+            lang,
+            y0=sc.years[0].year if sc.years else 1984,
+            y1=today.year - 1,
+            list=", ".join(
+                t(
+                    "on_step_season_item",
+                    lang,
+                    season=s.season.label,
+                    date=_md(s.summary(st.year, split)["climatological_onset"], lang),
+                )
+                for s in site.seasons
+            ),
+            regime=t(f"regime_{regime}", lang) if has(f"regime_{regime}") else regime,
+            ratio=site.info["harmonic_ratio"],
+        ),
+        t(
+            "on_step_rule",
+            lang,
+            days=crit.onset_days,
+            mm=crit.onset_mm,
+            dry=crit.max_dry_spell_days,
+            check=crit.check_days,
+        ),
+        t("on_step_onset_stats", lang, season=lab, n=n_years, p50=p50, p20=p20, p80=p80),
+        t(
+            "on_step_false",
+            lang,
+            dry=crit.max_dry_spell_days,
+            fs=fs if fs is not None else "–",
+            failed=summ["failed_pct"],
+        ),
     ]
     ln = summ["length_days"]
     if ln:
-        steps.append(
-            f"Season length to the water-balance end ({crit.awc_mm:g} mm soil store emptied by ET₀): median {ln['p50']} days, "
-            f"short years (p20) {ln['p20']} days."
-        )
+        steps.append(t("on_step_length", lang, awc=crit.awc_mm, p50=ln["p50"], p20=ln["p20"]))
     steps.append(
-        f"Rain since {st.window_start.strftime('%d %b')}: {st.rain_since_window_mm:.0f} mm (incl. 16-day forecast where marked)."
+        t("on_step_rain_since", lang, date=day_month(st.window_start, lang), mm=st.rain_since_window_mm)
     )
     if st.phase == "started" and st.false_pct is not None:
         steps.append(
-            f"Apparent onset {st.onset}; {st.days_checked} of {crit.check_days} days checked with observations and forecast. "
-            f"In {st.false_n} similar past situations, a damaging dry spell still followed in {st.false_pct} %."
+            t(
+                "on_step_apparent",
+                lang,
+                date=st.onset,
+                checked=st.days_checked,
+                check=crit.check_days,
+                n=st.false_n,
+                pct=st.false_pct,
+            )
         )
     if mine is not None:
         steps.append(
-            f"{mine['name']}: {mine['need_days']} days from sowing to the end of grain fill (FAO-56 stages; total cycle "
-            f"{mine['cycle_days']} days). Sown on {mine['sow_from']}, it would have finished grain fill before the rains ended in "
-            f"{mine['fit_pct']} % of past seasons. The season ends after {sow['end_of_season']} in {round(100 * reliability)} % of years"
+            t(
+                "on_step_crop",
+                lang,
+                crop=tr_crop(mine["name"], lang),
+                need=mine["need_days"],
+                cycle=mine["cycle_days"],
+                sow=mine["sow_from"],
+                fit=mine["fit_pct"],
+                end=sow["end_of_season"],
+                rel=round(100 * reliability),
+            )
             + (
-                f", so sow by {mine['sow_until']}."
+                t("on_step_crop_fits", lang, date=mine["sow_until"])
                 if mine["fits"]
-                else f"; only varieties of ≤ {mine['max_variety_days']} days fit."
+                else t("on_step_crop_short", lang, days=mine["max_variety_days"])
             )
         )
     tr = summ["trend"]
     steps.append(
-        f"Since 1984 the {lab} onset has shifted {tr['onset_days_per_decade']:+.1f} days/decade (p = {tr['onset_p']:.2f}) and the season length "
-        f"{tr['length_days_per_decade']:+.1f} days/decade (p = {tr['length_p']:.2f})."
+        t(
+            "on_step_trend",
+            lang,
+            season=lab,
+            on=tr["onset_days_per_decade"],
+            onp=tr["onset_p"],
+            ln=tr["length_days_per_decade"],
+            lnp=tr["length_p"],
+        )
     )
     if series is not None:
         with contextlib.suppress(ValueError, IndexError):
-            series.append(_cum_series(ctx, st, today))
+            series.append(_cum_series(ctx, st, today, lang))
     conf = 0.5 if st.phase != "forecast" else 0.4
     return [
         {
@@ -417,16 +489,14 @@ def _cards_from(
                 "summary": t("onset_why_summary", lang, season=lab),
                 "steps": steps,
                 "series": ["rain_season_cum", "precip"],
-                "model": MODEL,
+                "model": t("model_onset", lang),
                 "model_doc": "rain-onset",
                 "confidence": conf,
-                "confidence_note": "Validated against published onset climatologies (docs/VALIDATION.md, V9); "
-                "a ~50 km rain grid misses single storms.",
+                "confidence_note": t("on_note", lang),
                 "caveats": [
-                    "Rain comes from NASA POWER (~50 km grid) and a forecast: a storm on your farm may not show, and vice versa. "
-                    "Your own rain gauge is the best check.",
-                    "Onset rules are agronomic (enough soil water to sow), not the meteorological monsoon onset announced by weather services.",
-                    "Crop cycle lengths are FAO-56 typical values; your variety may be shorter or longer.",
+                    t("on_caveat_grid", lang),
+                    t("on_caveat_agronomic", lang),
+                    t("on_caveat_cycle", lang),
                 ],
                 "sources": ["nasa_power", "openmeteo_forecast"],
             },
@@ -436,7 +506,13 @@ def _cards_from(
 
 # --------------------------------------------------------------------------- planner constraint
 def planner_season(
-    ctx: FieldContext, c: dict[str, Any], cid: str, p_next: dt.date, today: dt.date, irrigated: bool
+    ctx: FieldContext,
+    c: dict[str, Any],
+    cid: str,
+    p_next: dt.date,
+    today: dt.date,
+    irrigated: bool,
+    lang: str = "en",
 ) -> dict[str, Any] | None:
     """Onset climatology for the season the planned sowing date belongs to (rain-fed, tropical, annual only).
     Returns the sowing limits the planner's date scan must respect, or None where they don't apply."""
@@ -477,12 +553,23 @@ def planner_season(
         "false_start_pct": sc.false_start_pct(),
         "max_variety_days": row["max_variety_days"] if row else None,
         "note": (
-            f"Rain-fed sowing should follow the {sc.season.label} rains: they start after {p50.strftime('%d %b')} in half of past years "
-            f"(8 in 10: {p20.strftime('%d %b')}–{p80.strftime('%d %b')})."
+            t(
+                "plan_onset_note",
+                lang,
+                season=sc.season.label,
+                p50=day_month(p50, lang),
+                p20=day_month(p20, lang),
+                p80=day_month(p80, lang),
+            )
             + (
-                f" To finish grain fill before the rains end in {round(100 * rel)} % of years, sow by {latest.strftime('%d %b')}."
+                t("plan_onset_sow_by", lang, rel=round(100 * rel), date=day_month(latest, lang))
                 if latest
-                else f" A full-length variety finishes before the rains end in fewer than {round(10 * rel)} of 10 years: use an early variety (≤ {row['max_variety_days'] if row else '?'} days to maturity)."
+                else t(
+                    "plan_onset_early_variety",
+                    lang,
+                    n=round(10 * rel),
+                    days=row["max_variety_days"] if row else "?",
+                )
             )
         ),
     }

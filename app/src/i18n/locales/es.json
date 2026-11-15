@@ -38,7 +38,9 @@
     "none": "Ninguno",
     "gotIt": "Entendido",
     "showAll": "Ver los {{n}}",
-    "showLess": "Ver menos"
+    "showLess": "Ver menos",
+    "weekEarlier": "7 días antes",
+    "weekLater": "7 días después"
   },
   "banner": {
     "mock": "DATOS DE PRUEBA — no se pudo contactar con el servidor de FieldShift. Las cifras son de ejemplo, no son datos de la NASA.",
@@ -295,7 +297,10 @@
     "subtitleSatellite": "Imágenes Sentinel-2 de 10 m de su parcela de los últimos 12 meses: verdor, cortes y cosechas, y zonas de manejo con IA.",
     "layersButton": "Capas",
     "baseTitle": "Mapa de fondo",
-    "legendTitle": "Qué significan los colores"
+    "legendTitle": "Qué significan los colores",
+    "a11yMap": "Mapa",
+    "a11yTerrain": "Mapa del terreno",
+    "addCorner": "Añadir esquina"
   },
   "plan": {
     "title": "Planificador de temporada",
@@ -453,7 +458,8 @@
     "joinTitle": "Vincular este dispositivo",
     "joining": "Vinculando con la finca {{code}}…",
     "invalidCode": "Este enlace no contiene un código de finca válido.",
-    "openSettings": "Abrir ajustes"
+    "openSettings": "Abrir ajustes",
+    "defaultFarmName": "Mi finca"
   },
   "sat": {
     "noOutline": "Consejo: dibuje el contorno de su parcela (Editar parcela) para obtener estadísticas exactas. Sin contorno se analiza un pequeño cuadrado alrededor del punto.",
@@ -550,7 +556,8 @@
     "errPassword": "Introduzca su contraseña.",
     "errPasswordShort": "La contraseña necesita al menos 8 caracteres.",
     "showPassword": "Mostrar contraseña",
-    "hidePassword": "Ocultar contraseña"
+    "hidePassword": "Ocultar contraseña",
+    "errSession": "Su sesión ha caducado. Vuelva a iniciar sesión."
   },
   "share": {
     "title": "Compartir la finca con un código",
@@ -733,5 +740,20 @@
     "copy": "Copiar texto",
     "copied": "Copiado: péguelo en un SMS o WhatsApp",
     "share": "Compartir…"
+  },
+  "units": {
+    "days": "días",
+    "doy": "día del año",
+    "daysYr": "días/año",
+    "mmYr": "mm/año",
+    "tHaYr": "t/ha/año",
+    "usdHaYr": "USD/ha/año",
+    "index": "índice",
+    "pctLowerBetter": "% (menos es mejor)",
+    "kgNHaYr": "kg N/ha/año",
+    "cDecade": "°C/década",
+    "fDecade": "°F/década",
+    "mmDecade": "mm/década",
+    "inDecade": "in/década"
   }
 }

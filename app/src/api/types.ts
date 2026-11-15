@@ -230,6 +230,7 @@ export interface SimulateRequest {
   delta_t_c?: number; // climate scenario: + °C
   rain_factor?: number; // e.g. 0.8 = 20% less rain
   years?: number; // how many past seasons to simulate (default 20)
+  lang?: Lang; // language of the explanation texts
 }
 export interface SimYear {
   year: number;
@@ -350,6 +351,8 @@ export interface ClimateResponse {
 export interface CropInfo {
   id: string;
   name: string;
+  /** name per app language (GET /api/crops); `name` is English */
+  names?: Partial<Record<Lang, string>>;
   family: string;
   type: "annual" | "perennial" | "cover";
   n_fixing: boolean;
@@ -382,6 +385,7 @@ export interface TerrainRequest {
   lon: number;
   crop: string;
   polygon?: [number, number][] | null; // [lon, lat] ring
+  lang?: Lang;
 }
 export interface TerrainLegendItem {
   color: string;
@@ -425,6 +429,7 @@ export interface PlannerRequest {
   irrigation: IrrigationMethod;
   water_allocation_mm?: number | null;
   as_of?: string | null;
+  lang?: Lang;
 }
 export interface PlannerResponse {
   crop: string;
@@ -623,6 +628,7 @@ export interface SatelliteRequest {
   crop?: string;
   start?: string | null; // default: 365 days before end
   end?: string | null; // default: today (or as_of)
+  lang?: Lang; // results are cached per field and translated when served
 }
 export interface SatelliteScene {
   id: string;

@@ -1,0 +1,118 @@
+# Heat-stress card Why view (engine/heat_cards.py): outdoor WBGT for workers, THI for livestock.
+animal_dairy_cattle: {en: "dairy cattle", es: "vacas lecheras", fr: "vaches laitières", sw: "ng'ombe wa maziwa", hi: "दुधारू पशु", de: "Milchkühe"}
+animal_beef_cattle: {en: "beef cattle", es: "ganado de carne", fr: "bovins à viande", sw: "ng'ombe wa nyama", hi: "मांस वाले मवेशी", de: "Mastrinder"}
+animal_poultry_layers: {en: "laying hens", es: "gallinas ponedoras", fr: "poules pondeuses", sw: "kuku wa mayai", hi: "अंडा देने वाली मुर्गियाँ", de: "Legehennen"}
+animal_poultry_broilers: {en: "broilers", es: "pollos de engorde", fr: "poulets de chair", sw: "kuku wa nyama", hi: "ब्रॉयलर मुर्गियाँ", de: "Masthühner"}
+animal_sheep_goats: {en: "sheep & goats", es: "ovejas y cabras", fr: "moutons et chèvres", sw: "kondoo na mbuzi", hi: "भेड़ और बकरियाँ", de: "Schafe und Ziegen"}
+thi_class_none: {en: "no stress", es: "sin estrés", fr: "pas de stress", sw: "hakuna msongo", hi: "कोई तनाव नहीं", de: "kein Stress"}
+thi_class_alert: {en: "alert", es: "alerta", fr: "vigilance", sw: "tahadhari", hi: "सतर्क", de: "Warnung"}
+thi_class_danger: {en: "danger", es: "peligro", fr: "danger", sw: "hatari", hi: "खतरा", de: "Gefahr"}
+thi_class_emergency: {en: "emergency", es: "emergencia", fr: "urgence", sw: "dharura", hi: "आपात स्थिति", de: "Notfall"}
+series_wbgt:
+  en: "Daily max outdoor WBGT (heat stress for workers)"
+  es: "WBGT máximo diario al aire libre (estrés por calor de trabajadores)"
+  fr: "WBGT extérieur maximal du jour (stress thermique des travailleurs)"
+  sw: "WBGT ya juu ya kila siku nje (msongo wa joto kwa wafanyakazi)"
+  hi: "दैनिक अधिकतम बाहरी WBGT (कामगारों पर गर्मी का तनाव)"
+  de: "Tägliches Maximum WBGT im Freien (Hitzestress für Arbeitende)"
+series_thi:
+  en: "Daily max temperature–humidity index (cattle)"
+  es: "Índice temperatura-humedad máximo diario (ganado)"
+  fr: "Indice température-humidité maximal du jour (bovins)"
+  sw: "Kielelezo cha juu cha joto na unyevu kila siku (ng'ombe)"
+  hi: "दैनिक अधिकतम तापमान–आर्द्रता सूचकांक (मवेशी)"
+  de: "Täglicher Höchstwert Temperatur-Feuchte-Index (Rinder)"
+hs_caveat_sun:
+  en: "WBGT is for a person in full sun on open ground with light clothing; shade lowers it by several °C, heavy or protective clothing raises the effective value (NIOSH clothing adjustment)."
+  es: "El WBGT corresponde a una persona a pleno sol en terreno abierto con ropa ligera; la sombra lo baja varios °C y la ropa gruesa o de protección sube el valor efectivo (ajuste por ropa de NIOSH)."
+  fr: "Le WBGT vaut pour une personne en plein soleil sur terrain découvert en tenue légère ; l'ombre l'abaisse de plusieurs °C, une tenue épaisse ou de protection augmente la valeur effective (correction vestimentaire NIOSH)."
+  sw: "WBGT ni kwa mtu aliye juani moja kwa moja eneo wazi akiwa na nguo nyepesi; kivuli hupunguza nyuzi kadhaa, na nguo nzito au za kujikinga huongeza thamani halisi (marekebisho ya mavazi ya NIOSH)."
+  hi: "WBGT खुले मैदान में तेज़ धूप में हल्के कपड़ों वाले व्यक्ति के लिए है; छाया इसे कई °C घटाती है, भारी या सुरक्षात्मक कपड़े प्रभावी मान बढ़ाते हैं (NIOSH कपड़ा समायोजन)।"
+  de: "WBGT gilt für eine Person in voller Sonne auf offenem Gelände mit leichter Kleidung; Schatten senkt ihn um mehrere °C, schwere oder Schutzkleidung erhöht den wirksamen Wert (NIOSH-Kleidungskorrektur)."
+hs_caveat_grid:
+  en: "Weather is a ~10–50 km grid value; sheltered, irrigated or humid spots can be hotter."
+  es: "El tiempo es un valor de cuadrícula de ~10–50 km; los lugares resguardados, regados o húmedos pueden ser más calurosos."
+  fr: "La météo est une valeur de maille ~10–50 km ; les endroits abrités, irrigués ou humides peuvent être plus chauds."
+  sw: "Hali ya hewa ni thamani ya gridi ya ~km 10–50; maeneo yaliyokingwa, yanayomwagiliwa au yenye unyevu yanaweza kuwa na joto zaidi."
+  hi: "मौसम ~10–50 किमी ग्रिड का मान है; ओट वाली, सिंचित या नम जगहें अधिक गर्म हो सकती हैं।"
+  de: "Das Wetter ist ein Rasterwert (~10–50 km); geschützte, bewässerte oder feuchte Stellen können heißer sein."
+hs_step_weather:
+  en: "Hourly weather ({origin}): peak on {date} around {hour}:00 with {t:.1f} °C, {rh:.0f}% humidity, wind {wind:.1f} m/s and sunshine {ghi:.0f} W/m²."
+  es: "Tiempo horario ({origin}): máximo el {date} hacia las {hour}:00 con {t:.1f} °C, {rh:.0f}% de humedad, viento {wind:.1f} m/s y sol {ghi:.0f} W/m²."
+  fr: "Météo horaire ({origin}) : pic le {date} vers {hour}:00 avec {t:.1f} °C, {rh:.0f} % d'humidité, vent {wind:.1f} m/s et ensoleillement {ghi:.0f} W/m²."
+  sw: "Hali ya hewa ya kila saa ({origin}): kilele tarehe {date} karibu saa {hour}:00 kwa {t:.1f} °C, unyevu {rh:.0f}%, upepo {wind:.1f} m/s na jua {ghi:.0f} W/m²."
+  hi: "घंटेवार मौसम ({origin}): {date} को लगभग {hour}:00 बजे चरम, {t:.1f} °C, {rh:.0f}% आर्द्रता, हवा {wind:.1f} मी/से और धूप {ghi:.0f} W/m²।"
+  de: "Stündliches Wetter ({origin}): Höhepunkt am {date} gegen {hour}:00 Uhr mit {t:.1f} °C, {rh:.0f} % Luftfeuchte, Wind {wind:.1f} m/s und Sonne {ghi:.0f} W/m²."
+hs_step_wbgt:
+  en: "Outdoor wet-bulb globe temperature (Liljegren et al. 2008): {wbgt:.1f} °C (natural wet bulb and 150 mm black globe solved from their heat balances; air pressure {p:.0f} hPa from elevation)."
+  es: "Temperatura de globo y bulbo húmedo al aire libre (Liljegren et al. 2008): {wbgt:.1f} °C (bulbo húmedo natural y globo negro de 150 mm calculados por balance de calor; presión {p:.0f} hPa según la altitud)."
+  fr: "Température au thermomètre-globe mouillé en extérieur (Liljegren et al. 2008) : {wbgt:.1f} °C (bulbe humide naturel et globe noir de 150 mm calculés par bilan thermique ; pression {p:.0f} hPa d'après l'altitude)."
+  sw: "Joto la WBGT nje (Liljegren et al. 2008): {wbgt:.1f} °C (balbu nyevu asilia na tufe jeusi la mm 150 zimekokotolewa kwa mizania ya joto; shinikizo la hewa hPa {p:.0f} kutoka mwinuko)."
+  hi: "बाहरी वेट-बल्ब ग्लोब तापमान (Liljegren et al. 2008): {wbgt:.1f} °C (प्राकृतिक गीला बल्ब और 150 मिमी काला ग्लोब ऊष्मा संतुलन से; ऊँचाई से वायु दाब {p:.0f} hPa)।"
+  de: "Wet-Bulb-Globe-Temperatur im Freien (Liljegren et al. 2008): {wbgt:.1f} °C (natürliche Feuchttemperatur und 150-mm-Schwarzkugel aus ihren Wärmebilanzen; Luftdruck {p:.0f} hPa aus der Höhe)."
+hs_step_niosh:
+  en: "NIOSH limit for acclimatized workers: REL = 56.7 − 11.5·log10(M). Moderate field work (M = 300 W) → {rel300:.1f} °C; resting (115 W) → {rel115:.1f} °C."
+  es: "Límite NIOSH para trabajadores aclimatados: REL = 56,7 − 11,5·log10(M). Trabajo de campo moderado (M = 300 W) → {rel300:.1f} °C; en reposo (115 W) → {rel115:.1f} °C."
+  fr: "Limite NIOSH pour travailleurs acclimatés : REL = 56,7 − 11,5·log10(M). Travail modéré au champ (M = 300 W) → {rel300:.1f} °C ; au repos (115 W) → {rel115:.1f} °C."
+  sw: "Kikomo cha NIOSH kwa wafanyakazi waliozoea joto: REL = 56.7 − 11.5·log10(M). Kazi ya wastani shambani (M = 300 W) → {rel300:.1f} °C; kupumzika (115 W) → {rel115:.1f} °C."
+  hi: "अनुकूलित कामगारों के लिए NIOSH सीमा: REL = 56.7 − 11.5·log10(M)। मध्यम खेत का काम (M = 300 W) → {rel300:.1f} °C; आराम (115 W) → {rel115:.1f} °C।"
+  de: "NIOSH-Grenzwert für akklimatisierte Arbeitende: REL = 56,7 − 11,5·log10(M). Mittelschwere Feldarbeit (M = 300 W) → {rel300:.1f} °C; Ruhe (115 W) → {rel115:.1f} °C."
+hs_step_work:
+  en: "At {wbgt:.1f} °C, work at most {pct}% of each hour (time-weighted M stays within the REL): ≈{rest} min rest per hour in the shade. Unacclimatized workers (first 1–2 weeks): limit {rel:.1f} °C for moderate work."
+  es: "Con {wbgt:.1f} °C, trabaje como máximo el {pct}% de cada hora (el M ponderado se mantiene bajo el REL): ≈{rest} min de descanso por hora a la sombra. Trabajadores no aclimatados (primeras 1–2 semanas): límite de {rel:.1f} °C para trabajo moderado."
+  fr: "À {wbgt:.1f} °C, travaillez au plus {pct} % de chaque heure (M pondéré dans le temps sous le REL) : ≈{rest} min de pause par heure à l'ombre. Travailleurs non acclimatés (1–2 premières semaines) : limite de {rel:.1f} °C pour un travail modéré."
+  sw: "Kwa {wbgt:.1f} °C, fanya kazi si zaidi ya {pct}% ya kila saa (M ya wastani wa muda inabaki ndani ya REL): ≈dakika {rest} za kupumzika kivulini kila saa. Wafanyakazi wasiozoea joto (wiki 1–2 za kwanza): kikomo {rel:.1f} °C kwa kazi ya wastani."
+  hi: "{wbgt:.1f} °C पर हर घंटे का अधिकतम {pct}% काम करें (समय-भारित M, REL के भीतर रहे): हर घंटे ≈{rest} मिनट छाया में आराम। जो कामगार अनुकूलित नहीं हैं (पहले 1–2 सप्ताह): मध्यम काम की सीमा {rel:.1f} °C।"
+  de: "Bei {wbgt:.1f} °C höchstens {pct} % jeder Stunde arbeiten (zeitgewichtetes M bleibt unter dem REL): ≈{rest} min Pause pro Stunde im Schatten. Nicht akklimatisierte Arbeitende (erste 1–2 Wochen): Grenze {rel:.1f} °C bei mittelschwerer Arbeit."
+hs_step_daily: {en: "Daily max WBGT: {list}.", es: "WBGT máximo diario: {list}.", fr: "WBGT maximal du jour : {list}.", sw: "WBGT ya juu kila siku: {list}.", hi: "दैनिक अधिकतम WBGT: {list}।", de: "Tägliches WBGT-Maximum: {list}."}
+hs_step_hours:
+  en: "Hours with restricted work on {days}: {start}:00–{end}:00 (local time)."
+  es: "Horas con trabajo restringido el {days}: {start}:00–{end}:00 (hora local)."
+  fr: "Heures de travail restreint le {days} : {start}:00–{end}:00 (heure locale)."
+  sw: "Saa za kazi yenye kikomo {days}: {start}:00–{end}:00 (saa za eneo)."
+  hi: "{days} को प्रतिबंधित काम के घंटे: {start}:00–{end}:00 (स्थानीय समय)।"
+  de: "Stunden mit eingeschränkter Arbeit am {days}: {start}:00–{end}:00 Uhr (Ortszeit)."
+hs_thr_single: {en: "threshold {v:.0f}", es: "umbral {v:.0f}", fr: "seuil {v:.0f}", sw: "kiwango {v:.0f}", hi: "सीमा {v:.0f}", de: "Schwelle {v:.0f}"}
+hs_thr_classes: {en: "classes {a}/{b}/{c}", es: "clases {a}/{b}/{c}", fr: "classes {a}/{b}/{c}", sw: "madaraja {a}/{b}/{c}", hi: "श्रेणियाँ {a}/{b}/{c}", de: "Klassen {a}/{b}/{c}"}
+hs_step_animal:
+  en: "{animal}: max THI {v:.1f} on {date} → {cls} ({thr}; {ref})."
+  es: "{animal}: THI máximo {v:.1f} el {date} → {cls} ({thr}; {ref})."
+  fr: "{animal} : THI maximal {v:.1f} le {date} → {cls} ({thr} ; {ref})."
+  sw: "{animal}: THI ya juu {v:.1f} tarehe {date} → {cls} ({thr}; {ref})."
+  hi: "{animal}: {date} को अधिकतम THI {v:.1f} → {cls} ({thr}; {ref})।"
+  de: "{animal}: maximaler THI {v:.1f} am {date} → {cls} ({thr}; {ref})."
+hs_step_livestock:
+  en: "Livestock actions: shade, unlimited cool water (cattle drink up to 2× more in heat), handle and move animals only in the cool early morning, ventilate poultry houses, feed in the evening."
+  es: "Para el ganado: sombra, agua fresca sin límite (el ganado bebe hasta el doble con calor), manejar y mover animales solo temprano en la mañana fresca, ventilar los galpones de aves y alimentar al atardecer."
+  fr: "Pour le bétail : ombre, eau fraîche à volonté (les bovins boivent jusqu'à 2× plus par chaleur), manipuler et déplacer les animaux seulement tôt le matin au frais, ventiler les poulaillers, nourrir le soir."
+  sw: "Kwa mifugo: kivuli, maji baridi bila kikomo (ng'ombe hunywa hadi mara 2 zaidi wakati wa joto), shughulikia na kuhamisha wanyama asubuhi na mapema tu, pitisha hewa mabanda ya kuku, lisha jioni."
+  hi: "पशुओं के लिए: छाया, असीमित ठंडा पानी (गर्मी में मवेशी 2 गुना तक अधिक पीते हैं), पशुओं को केवल सुबह की ठंडक में संभालें और ले जाएँ, मुर्गीघरों में हवा आने दें, शाम को चारा दें।"
+  de: "Für Tiere: Schatten, kühles Wasser ohne Begrenzung (Rinder trinken bei Hitze bis zu doppelt so viel), Tiere nur am kühlen frühen Morgen treiben und behandeln, Geflügelställe lüften, abends füttern."
+hs_caveat_housed:
+  en: "THI uses outdoor air; housed animals (poultry, dairy barns) can be hotter or cooler than outside."
+  es: "El THI usa el aire exterior; los animales estabulados (aves, establos lecheros) pueden estar más calientes o frescos que afuera."
+  fr: "Le THI utilise l'air extérieur ; les animaux en bâtiment (volailles, étables laitières) peuvent avoir plus chaud ou plus frais qu'à l'extérieur."
+  sw: "THI hutumia hewa ya nje; wanyama walio bandani (kuku, mabanda ya ng'ombe wa maziwa) wanaweza kuwa na joto zaidi au kidogo kuliko nje."
+  hi: "THI बाहरी हवा पर आधारित है; बंद जगह में रखे पशु (मुर्गियाँ, डेयरी शेड) बाहर से अधिक गर्म या ठंडे हो सकते हैं।"
+  de: "Der THI nutzt die Außenluft; Tiere im Stall (Geflügel, Milchviehställe) können es wärmer oder kühler haben als draußen."
+hs_sum:
+  en: "Heat stress for people and animals from forecast temperature, humidity, wind and sunshine: outdoor wet-bulb globe temperature (WBGT) for field workers and temperature–humidity index (THI) for livestock."
+  es: "Estrés por calor para personas y animales según temperatura, humedad, viento y sol previstos: temperatura de globo y bulbo húmedo (WBGT) para quienes trabajan en el campo e índice temperatura-humedad (THI) para el ganado."
+  fr: "Stress thermique des personnes et des animaux d'après la température, l'humidité, le vent et l'ensoleillement prévus : WBGT en extérieur pour les travailleurs des champs et indice température-humidité (THI) pour le bétail."
+  sw: "Msongo wa joto kwa watu na wanyama kutoka utabiri wa joto, unyevu, upepo na jua: WBGT ya nje kwa wafanyakazi wa shambani na kielelezo cha joto-unyevu (THI) kwa mifugo."
+  hi: "पूर्वानुमानित तापमान, आर्द्रता, हवा और धूप से लोगों और पशुओं पर गर्मी का तनाव: खेत कामगारों के लिए बाहरी WBGT और पशुओं के लिए तापमान–आर्द्रता सूचकांक (THI)।"
+  de: "Hitzestress für Menschen und Tiere aus vorhergesagter Temperatur, Feuchte, Wind und Sonne: WBGT im Freien für Feldarbeitende und Temperatur-Feuchte-Index (THI) für Nutztiere."
+model_heat_stress:
+  en: "Outdoor WBGT (Liljegren et al. 2008) with NIOSH 2016 / ISO 7243 work–rest limits; livestock THI (NRC 1971; Marai et al. 2007)"
+  es: "WBGT exterior (Liljegren et al. 2008) con límites de trabajo y descanso NIOSH 2016 / ISO 7243; THI del ganado (NRC 1971; Marai et al. 2007)"
+  fr: "WBGT extérieur (Liljegren et al. 2008) avec limites travail–repos NIOSH 2016 / ISO 7243 ; THI du bétail (NRC 1971 ; Marai et al. 2007)"
+  sw: "WBGT ya nje (Liljegren et al. 2008) na vikomo vya kazi–mapumziko vya NIOSH 2016 / ISO 7243; THI ya mifugo (NRC 1971; Marai et al. 2007)"
+  hi: "बाहरी WBGT (Liljegren et al. 2008) NIOSH 2016 / ISO 7243 काम–आराम सीमाओं के साथ; पशु THI (NRC 1971; Marai et al. 2007)"
+  de: "WBGT im Freien (Liljegren et al. 2008) mit Arbeits-Pausen-Grenzen nach NIOSH 2016 / ISO 7243; Tier-THI (NRC 1971; Marai et al. 2007)"
+hs_note:
+  en: "WBGT model agrees with an independent implementation to <0.02 °C and is validated against field measurements in the literature (≈1 °C); the forecast itself is the main uncertainty."
+  es: "El modelo WBGT coincide con una implementación independiente a <0,02 °C y está validado con mediciones de campo publicadas (≈1 °C); la principal incertidumbre es el propio pronóstico."
+  fr: "Le modèle WBGT concorde avec une implémentation indépendante à <0,02 °C et est validé par des mesures de terrain publiées (≈1 °C) ; la prévision elle-même est la principale incertitude."
+  sw: "Modeli ya WBGT inakubaliana na utekelezaji huru kwa <0.02 °C na imethibitishwa dhidi ya vipimo vya shambani vilivyochapishwa (≈1 °C); utabiri wenyewe ndio chanzo kikuu cha kutokuwa na uhakika."
+  hi: "WBGT मॉडल एक स्वतंत्र कार्यान्वयन से <0.02 °C तक मेल खाता है और प्रकाशित क्षेत्र मापों से सत्यापित है (≈1 °C); मुख्य अनिश्चितता स्वयं पूर्वानुमान है।"
+  de: "Das WBGT-Modell stimmt mit einer unabhängigen Implementierung auf <0,02 °C überein und ist an veröffentlichten Feldmessungen validiert (≈1 °C); die Hauptunsicherheit ist die Vorhersage selbst."

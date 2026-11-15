@@ -28,7 +28,18 @@ from . import water_supply as wsup
 from .context import FieldContext, build, enrichment
 from .fire_cards import fire_cards
 from .heat_cards import heat_stress_cards
-from .messages import day_label, risk_word, t
+from .messages import (
+    crop_name,
+    crop_names,
+    day_label,
+    day_month,
+    has,
+    month_name,
+    risk_word,
+    t,
+    tr_crop,
+    word,
+)
 from .solar_service import solar_pump_cards
 
 log = logging.getLogger("fieldshift.service")
@@ -126,22 +137,46 @@ def _plan_card(c: dict[str, Any], lang: str, state_key: str) -> dict[str, Any]:
         "risk": "low",
         "icon": "swap-horizontal",
         "title": t("plan_title", lang),
-        "detail": t("plan_detail", lang, crop=c["name"].lower(), state=t(f"state_{state_key}", lang)),
+        "detail": t("plan_detail", lang, crop=_crop_lc(c, lang), state=t(f"state_{state_key}", lang)),
         "due": None,
         "amount": None,
         "why": _why(
-            "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives "
-            "over the last 15 seasons of NASA POWER weather at this location.",
-            ["Rotations are compared on water, income, soil health, erosion, pest cycles and climate risk."],
+            t("plan_why_summary", lang),
+            [t("plan_why_step_compare", lang)],
             ["tmax", "tmin"],
-            "Season-state rule",
+            t("model_season_state", lang),
             "rotations",
             0.8,
-            "Season state follows directly from temperature and the season model.",
+            t("plan_why_note", lang),
             [],
             ["nasa_power"],
         ),
     }
+
+
+def _crop_lc(c: dict[str, Any], lang: str) -> str:
+    """Crop name for use mid-sentence (lower-case except in German)."""
+    n = tr_crop(c["name"], lang)
+    return n if lang == "de" else n.lower()
+
+
+def _lc(s: str, lang: str) -> str:
+    """Lower-case a name for use mid-sentence (German nouns keep their capital)."""
+    return s if lang == "de" else s.lower()
+
+
+_INDICATOR_KEYS = {
+    "SPEI-12 months": "dr_ind_spei12",
+    "soil-moisture percentile": "dr_ind_sm",
+    "vegetation health index": "dr_ind_vhi",
+}
+
+
+def _indicator_text(part: str, lang: str) -> str:
+    """Translate the indicator name in a drought.combined_level() part ("soil-moisture percentile = 12")."""
+    name, sep, val = part.partition(" = ")
+    key = _INDICATOR_KEYS.get(name)
+    return f"{t(key, lang)}{sep}{val}" if key else part
 
 
 def _clim_years(ctx: FieldContext, n: int = 15) -> list[int]:
@@ -210,7 +245,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     cards: list[dict[str, Any]] = []
     series: list[dict[str, Any]] = []
     i_today = ctx.idx(today)
-    caveat_grid = "Weather comes from NASA POWER (~50 km grid) and a forecast (~10–25 km): conditions at your field can differ, especially near hills or water."
+    caveat_grid = t("why_caveat_grid", lang)
 
     # ---------- water balance (current season)
     wstate: dict[str, Any] = {}
@@ -312,7 +347,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         series.append(
             _series(
                 "soil_depletion",
-                "Root-zone water used (depletion)",
+                t("series_soil_depletion", lang),
                 "mm",
                 sm_dates,
                 daily["dr"],
@@ -322,18 +357,16 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         )
         series.append(
             _series(
-                "raw_threshold", "Stress point (RAW)", "mm", sm_dates, daily["raw"], "nasa_power", "modelled"
+                "raw_threshold", t("series_raw", lang), "mm", sm_dates, daily["raw"], "nasa_power", "modelled"
             )
         )
         series.append(
-            _series(
-                "taw", "Total available water (TAW)", "mm", sm_dates, daily["taw"], "soilgrids", "modelled"
-            )
+            _series("taw", t("series_taw", lang), "mm", sm_dates, daily["taw"], "soilgrids", "modelled")
         )
         series.append(
             _series(
                 "irrigation_applied",
-                "Irrigation (model schedule)",
+                t("series_irrigation_applied", lang),
                 "mm",
                 sm_dates,
                 daily["irr"],
@@ -342,10 +375,23 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             )
         )
         steps = [
-            f"Season started {planting.isoformat()}; crop stage today: {res.final_stage} (Kc ≈ {res.final_kc:.2f}).",
-            f"Reference evapotranspiration ET₀ (FAO-56 Penman–Monteith from NASA POWER) over the next 7 days: {et07:.0f} mm; forecast rain: {rain7:.0f} mm.",
-            f"Soil: {ctx.soil['texture'] if ctx.soil else 'loam (default)'} holds ~{ctx.taw_per_m:.0f} mm water per metre; root zone today holds {taw_t:.0f} mm (TAW); stress begins after {raw_t:.0f} mm are used (RAW).",
-            f"Estimated water used from the root zone today: {dr_t:.0f} mm ({pct_left}% of available water left).",
+            t(
+                "wb_step_season",
+                lang,
+                date=planting.isoformat(),
+                stage=word("stage", res.final_stage, lang),
+                kc=res.final_kc,
+            ),
+            t("wb_step_et0", lang, et0=et07, rain=rain7),
+            t(
+                "wb_step_soil",
+                lang,
+                soil=word("soil", ctx.soil["texture"], lang) if ctx.soil else t("soil_default", lang),
+                taw_m=ctx.taw_per_m,
+                taw=taw_t,
+                raw=raw_t,
+            ),
+            t("wb_step_used", lang, dr=dr_t, pct=pct_left),
         ]
         caveats = [caveat_grid]
         # ECOSTRESS field ET: live overpasses (Earthdata) + the pre-extracted record of the demo fields
@@ -362,7 +408,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 series.append(
                     _series(
                         "ecostress_et",
-                        "Measured field ET (NASA ECOSTRESS, 70 m)",
+                        t("series_ecostress_et", lang),
                         "mm/day",
                         [d_ for d_, _ in eco],
                         [v for _, v in eco],
@@ -373,20 +419,30 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 ld, lv = eco[-1]
                 if ld in ddates:
                     steps.append(
-                        f"NASA ECOSTRESS measured {lv:.1f} mm/day of evapotranspiration on this field on {ld.isoformat()} (70 m); "
-                        f"the model had {daily['eta'][ddates.index(ld)]:.1f} mm/day."
+                        t(
+                            "wb_step_ecostress",
+                            lang,
+                            et=lv,
+                            date=ld.isoformat(),
+                            model=daily["eta"][ddates.index(ld)],
+                        )
                     )
                 if ctx.statuses.get("ecostress") in (None, "unavailable"):
                     ctx.statuses["ecostress"] = "cache"
         if fusion and "scale" in fusion:
             steps.append(
-                f"Sentinel-2 ({fusion['date'].isoformat()}, 10 m) shows field NDVI {fusion['ndvi']:.2f} → satellite crop coefficient {fusion['kcb_sat']:.2f} "
-                f"vs. {fusion['kc_model']:.2f} in the crop model; crop water use from that day is scaled by {fusion['scale']:.2f} (data fusion)."
+                t(
+                    "wb_step_fusion",
+                    lang,
+                    date=fusion["date"].isoformat(),
+                    ndvi=fusion["ndvi"],
+                    kcb=fusion["kcb_sat"],
+                    kc=fusion["kc_model"],
+                    scale=fusion["scale"],
+                )
             )
         if irrigated and not known:
-            caveats.append(
-                "We assume you irrigated whenever the model said so. Enter your last irrigation for a sharper estimate."
-            )
+            caveats.append(t("wb_caveat_assumed", lang))
         conf = (0.7 if known else 0.55) + (0.1 if fusion and "scale" in fusion else 0.0)
         ndays = rules()["irrigation"]["lookahead_days"]
         if irrigated:
@@ -397,11 +453,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 wstate["next_irrigation_mm"] = gross
                 days_left = (stress_day - today).days
                 risk = "high" if days_left <= rules()["irrigation"]["urgent_days"] else "moderate"
+                steps.append(t("wb_step_stress_on", lang, date=stress_day.isoformat()))
                 steps.append(
-                    f"Projecting forward with the forecast, depletion reaches the stress point on {stress_day.isoformat()}."
-                )
-                steps.append(
-                    f"Refilling the root zone needs ~{net:.0f} mm net; with {method} irrigation (~{eff:.0%} efficient) apply ~{gross} mm."
+                    t("wb_step_refill", lang, net=net, method=word("irr", method, lang), eff=eff, gross=gross)
                 )
                 cards.append(
                     {
@@ -416,22 +470,20 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                         "due": stress_day.isoformat(),
                         "amount": {"value": gross, "unit": "mm"},
                         "why": _why(
-                            f"Your crop will run short of easily available soil water around {stress_day.isoformat()}. Irrigating ~{gross} mm before then avoids yield loss.",
+                            t("wb_sum_irrigate", lang, date=stress_day.isoformat(), gross=gross),
                             steps,
                             ["soil_depletion", "raw_threshold", "et0", "precip", "ecostress_et"],
-                            "FAO-56 single-Kc root-zone water balance",
+                            t("model_water_balance", lang),
                             "water-balance",
                             conf,
-                            "Water balance driven by NASA POWER and forecast; field irrigation history is assumed.",
+                            t("wb_note_assumed", lang),
                             caveats,
                             ["nasa_power", "openmeteo_forecast", "soilgrids", "srtm"],
                         ),
                     }
                 )
             else:
-                steps.append(
-                    f"With the forecast, depletion stays below the stress point for at least {ndays} days."
-                )
+                steps.append(t("wb_step_no_stress", lang, days=ndays))
                 cards.append(
                     {
                         "id": "irrigate",
@@ -443,22 +495,20 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                         "due": None,
                         "amount": None,
                         "why": _why(
-                            f"Soil water stays above the stress point for the next {ndays} days.",
+                            t("wb_sum_no_irrigation", lang, days=ndays),
                             steps,
                             ["soil_depletion", "raw_threshold", "et0", "precip", "ecostress_et"],
-                            "FAO-56 single-Kc root-zone water balance",
+                            t("model_water_balance", lang),
                             "water-balance",
                             conf,
-                            "Water balance driven by NASA POWER and forecast.",
+                            t("wb_note", lang),
                             caveats,
                             ["nasa_power", "openmeteo_forecast", "soilgrids"],
                         ),
                     }
                 )
         elif not (stress_day and stress_day <= horizon):
-            steps.append(
-                f"With the forecast, the crop stays above the stress point for at least {ndays} days."
-            )
+            steps.append(t("wb_step_rainfed_ok", lang, days=ndays))
             cards.append(
                 {
                     "id": "rainfed_ok",
@@ -470,13 +520,13 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                     "due": None,
                     "amount": None,
                     "why": _why(
-                        f"Rain and stored soil water cover crop demand for the next {ndays} days.",
+                        t("wb_sum_rainfed_ok", lang, days=ndays),
                         steps,
                         ["soil_depletion", "raw_threshold", "precip"],
-                        "FAO-56 single-Kc root-zone water balance",
+                        t("model_water_balance", lang),
                         "water-balance",
                         0.5,
-                        "Rain-fed estimate from NASA POWER + forecast.",
+                        t("wb_note_rainfed", lang),
                         caveats,
                         ["nasa_power", "openmeteo_forecast", "soilgrids"],
                     ),
@@ -495,13 +545,13 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                     "due": stress_day.isoformat(),
                     "amount": None,
                     "why": _why(
-                        "Without rain or irrigation, the crop will start to close its stomata and lose yield.",
+                        t("wb_sum_rainfed_stress", lang),
                         steps,
                         ["soil_depletion", "raw_threshold", "precip"],
-                        "FAO-56 single-Kc root-zone water balance",
+                        t("model_water_balance", lang),
                         "water-balance",
                         0.5,
-                        "Rain-fed estimate from NASA POWER + forecast.",
+                        t("wb_note_rainfed", lang),
                         caveats,
                         ["nasa_power", "openmeteo_forecast", "soilgrids"],
                     ),
@@ -542,21 +592,26 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                     "risk": "low",
                     "icon": "swap-horizontal",
                     "title": t("plan_title", lang),
-                    "detail": t("plan_detail", lang, crop=c["name"].lower(), state=state),
+                    "detail": t("plan_detail", lang, crop=_crop_lc(c, lang), state=state),
                     "due": None,
                     "amount": None,
                     "why": _why(
-                        "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives "
-                        "over the last 15 seasons of NASA POWER weather at this location.",
+                        t("plan_why_summary", lang),
                         [
-                            f"7-day mean temperature {np.nanmean((recent[0] + recent[1]) / 2):.1f} °C; {c['name']} grows very little below ~{c['t_base'] + 6} °C.",
-                            "Rotations are compared on water, income, soil health, erosion, pest cycles and climate risk.",
+                            t(
+                                "plan_why_step_cold",
+                                lang,
+                                temp=np.nanmean((recent[0] + recent[1]) / 2),
+                                crop=crop_name(cid, lang, c["name"]),
+                                tbase=c["t_base"] + 6,
+                            ),
+                            t("plan_why_step_compare", lang),
                         ],
                         ["tmax", "tmin"],
-                        "Season-state rule",
+                        t("model_season_state", lang),
                         "rotations",
                         0.8,
-                        "Season state follows directly from temperature and the season model.",
+                        t("plan_why_note", lang),
                         [],
                         ["nasa_power"],
                     ),
@@ -576,7 +631,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     series.append(
         _series(
             "precip",
-            "Rain",
+            t("series_precip", lang),
             "mm/day",
             wd,
             w.rain[i0:i1],
@@ -588,7 +643,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     series.append(
         _series(
             "et0",
-            "Reference ET₀ (crop water demand)",
+            t("series_et0", lang),
             "mm/day",
             wd,
             w.et0[i0:i1],
@@ -600,7 +655,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     series.append(
         _series(
             "tmax",
-            "Max temperature",
+            t("series_tmax", lang),
             "°C",
             wd,
             w.tmax[i0:i1],
@@ -609,7 +664,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             [clim_tmax[k] for k in doy],
         )
     )
-    series.append(_series("tmin", "Min temperature", "°C", wd, w.tmin[i0:i1], "nasa_power", "observed"))
+    series.append(_series("tmin", t("series_tmin", lang), "°C", wd, w.tmin[i0:i1], "nasa_power", "observed"))
     fc_start = next((wd[k].isoformat() for k in range(len(wd)) if kinds[k] == 2), None)
 
     # ---------- satellite checks of the water balance (SMAP root zone, ECOSTRESS ET)
@@ -650,7 +705,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         (w.rain - w.et0)[:obs_end], pd_, today, 365
     )  # EXP-03: improves USDM agreement
     vhi, ndvi_card = _ndvi_block(ctx, series, lang, today, planting, c)
-    sm_pct = _smap_block(ctx, series)
+    sm_pct = _smap_block(ctx, series, lang)
     level, parts = drt.combined_level(spi30, spi90, spei90, sm_pct, vhi, spei365=spei365)
     acc90 = drt.rolling_sum(w.rain[:obs_end], 90)
     spi_series_d = w.dates[max(0, obs_end - 365) : obs_end]
@@ -661,7 +716,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     series.append(
         _series(
             "spi90",
-            "SPI-90 (rain vs. normal)",
+            t("series_spi90", lang),
             "σ",
             spi_series_d,
             [np.nan if v is None else v for v in spi_vals],
@@ -676,11 +731,11 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     if len(s90) > 10 and np.isfinite(acc90[i_today]):
         rank_pct = round(100 * float(np.mean(s90 <= acc90[i_today])))
     dsteps = [
-        f"Rain in the last 90 days: {acc90[i_today]:.0f} mm; typical for this time of year: {np.median(s90):.0f} mm (NASA POWER 1984–{today.year})."
+        t("dr_step_rain90", lang, rain=acc90[i_today], typ=np.median(s90), year=today.year)
         if rank_pct is not None
-        else "Rain history unavailable.",
-        *[f"Indicator: {p}" for p in parts],
-        "Levels follow the U.S. Drought Monitor scale (D0–D4); indicators are blended by a weighted 'convergence of evidence'.",
+        else t("dr_step_no_history", lang),
+        *[t("dr_indicator", lang, text=_indicator_text(p, lang)) for p in parts],
+        t("dr_step_scale", lang),
     ]
     gw_block, gw_card = wsup.groundwater(ctx, irrigated, lang, series, today)
     gda_block, gda_card = satellite_water.grace_da(ctx, irrigated, lang, series, today)
@@ -695,17 +750,21 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             )
             + ". Context only; not part of the level."
         )
-    if (rs := wsup.rain_step(ctx)) is not None:
+    if (rs := wsup.rain_step(ctx, lang)) is not None:
         dsteps.insert(1, rs)
     if gw_block is not None:
         dsteps.append(
-            f"Long-term water supply (NASA GRACE/GRACE-FO, ~300 km): storage trend {gw_block['slope_cm_yr']:+.1f} cm/yr "
-            f"(p = {gw_block['p_value']:.2f}), {gw_block['change_cm']:+.0f} cm since 2003. Shown for context; it does not "
-            "change the drought level (multi-month latency, regional footprint)."
+            t(
+                "dr_step_grace",
+                lang,
+                slope=gw_block["slope_cm_yr"],
+                p=gw_block["p_value"],
+                change=gw_block["change_cm"],
+            )
         )
     # ---- AI drought classifier (gradient boosting on USDM labels) where it was validated
     ml_info = None
-    model_name = "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + satellite indicators"
+    model_name = t("model_drought_rules", lang)
     loaded_ml = drought_ml.load()
     if loaded_ml is not None and drought_ml.in_validated_domain(lat, lon, loaded_ml[1]):
         meta = loaded_ml[1]
@@ -725,20 +784,18 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 # held-out numbers for this region (leave-one-region-out), on the harmonised None/D0/D1/D2+ scale
                 rv = reg["harmonised"][meta.get("served_key", "new_model")]
                 within1, rho = rv["within1_acc"], rv["spearman"]
-                where = (
-                    f"held-out sites in this region ({reg['n_sites']} sites, labels: {reg['label'].upper()})"
-                )
+                where = t("dr_ml_where_region", lang, n=reg["n_sites"], label=reg["label"].upper())
             else:
                 within1, rho = hv["within1_acc"], hv["spearman_vs_dsci"]
-                where = "U.S. counties it never saw"
+                where = t("dr_ml_where_us", lang)
             n_sites = meta.get("n_sites", meta["n_counties"])
             ml_info = {
                 "level": ml_level,
                 "probabilities": [round(p_, 3) for p_ in proba],
                 "rules_level": level,
-                "model": "Gradient-boosted trees trained on drought maps (U.S. Drought Monitor"
+                "model": "Gradient-boosted trees trained on drought maps (U.S. Drought Monitor"  # i18n: ok (API metadata)
                 + (
-                    ", European Drought Observatory, Global Drought Observatory)"
+                    ", European Drought Observatory, Global Drought Observatory)"  # i18n: ok
                     if meta.get("feature_set") == "v2"
                     else ")"
                 ),
@@ -749,16 +806,24 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 "region": region,
             }
             dsteps.append(
-                f"AI classifier (gradient boosting on {meta['n_samples']:,} drought-map labels from {n_sites} sites): "
-                f"{drt.LABELS[ml_level]} with {100 * max(proba):.0f} % probability. On {where} it is within one category "
-                f"{100 * within1:.0f} % of the time (rule-based blend: {drt.LABELS[level]})."
+                t(
+                    "dr_step_ml",
+                    lang,
+                    n_samples=f"{meta['n_samples']:,}",
+                    n_sites=n_sites,
+                    label=t(f"drought_level_{ml_level}", lang),
+                    prob=100 * max(proba),
+                    where=where,
+                    acc=100 * within1,
+                    rules_label=t(f"drought_level_{level}", lang),
+                )
             )
             level = ml_level
-            model_name = "AI drought classifier (gradient boosting on drought-monitor labels, NASA POWER features) + rule-based SPI/SPEI blend"
+            model_name = t("model_drought_ml", lang)
     drought = {
         "ml": ml_info,
         "level": level,
-        "label": drt.LABELS[level],
+        "label": t(f"drought_level_{level}", lang),
         "spi30": spi30,
         "spi90": spi90,
         "spei90": spei90,
@@ -766,17 +831,14 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         "sm_percentile": sm_pct,
         "vhi": vhi,
         "why": _why(
-            f"{drt.LABELS[level]} based on {len(parts)} indicators.",
+            t("dr_sum", lang, label=t(f"drought_level_{level}", lang), n=len(parts)),
             dsteps,
             ["spi90", "precip", "et0", "ndvi", "smap_sm"],
             model_name,
             "drought",
             0.6 if len(parts) >= 3 else 0.45,
-            "Agreement between independent indicators raises confidence.",
-            [
-                "SPI uses ~50 km NASA POWER rain; local storms can be missed.",
-                "SMAP soil moisture is a 9 km footprint and only the top ~5 cm.",
-            ],
+            t("dr_note", lang),
+            [t("dr_caveat_spi", lang), t("dr_caveat_smap", lang)],
             ["nasa_power", *wsup.rain_sources(ctx), "smap_l3e", "smap_l4", "modis_ndvi"]
             + (["grace_fo"] if gw_block is not None else [])
             + (["grace_da"] if gda_block is not None else []),
@@ -793,7 +855,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 "category": "drought",
                 "risk": risk,
                 "icon": "flame",
-                "title": t("drought_title", lang, label=drt.LABELS[level]),
+                "title": t("drought_title", lang, label=t(f"drought_level_{level}", lang)),
                 "detail": (
                     t(
                         "drought_detail_12m",
@@ -815,7 +877,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         cards.append(gw_card)
     if gda_card:
         cards.append(gda_card)
-    wsup.annotate_rain(ctx, cards, series)
+    wsup.annotate_rain(ctx, cards, series, lang)
 
     # ---------- disease (hourly forecast)
     in_season = planting <= today and (
@@ -965,7 +1027,7 @@ def _ndvi_block(
     series.append(
         _series(
             "ndvi",
-            "Vegetation greenness (MODIS NDVI, 250 m)",
+            t("series_ndvi", lang),
             "NDVI",
             [dates[k] for k in recent],
             vals[recent],
@@ -995,28 +1057,25 @@ def _ndvi_block(
             "due": None,
             "amount": None,
             "why": _why(
-                f"The latest MODIS NDVI ({vals[last]:.2f}) is {abs(z):.1f} standard deviations below the {dates[0].year}–{today.year} average for this time of year ({mu:.2f}).",
+                t("ndvi_sum", lang, v=vals[last], z=abs(z), y0=dates[0].year, y1=today.year, mu=mu),
                 [
-                    f"MODIS 16-day composite of {dates[last].isoformat()}: NDVI {vals[last]:.2f}.",
-                    f"Same period in {int(same.sum()) - 1} earlier years: mean {mu:.2f}, standard deviation {sd:.2f}.",
-                    "A strong negative anomaly can mean water stress, pest damage, hail, late planting or a different crop than in past years.",
+                    t("ndvi_step_latest", lang, date=dates[last].isoformat(), v=vals[last]),
+                    t("ndvi_step_clim", lang, n=int(same.sum()) - 1, mu=mu, sd=sd),
+                    t("ndvi_step_meaning", lang),
                 ],
                 ["ndvi"],
-                "NDVI anomaly (z-score vs. same-period climatology)",
+                t("model_ndvi", lang),
                 "ndvi",
                 0.45,
-                "250 m pixels mix your field with neighbours; a different crop than in past years also changes NDVI.",
-                [
-                    "MODIS pixel is 250 m (~6 ha): small fields are mixed with neighbouring land.",
-                    "Cloudy periods reduce data quality.",
-                ],
+                t("ndvi_note", lang),
+                [t("ndvi_caveat_pixel", lang), t("caveat_clouds", lang)],
                 ["modis_ndvi"],
             ),
         }
     return round(float(vci), 1), card
 
 
-def _smap_block(ctx: FieldContext, series: list[dict[str, Any]]) -> float | None:
+def _smap_block(ctx: FieldContext, series: list[dict[str, Any]], lang: str = "en") -> float | None:
     """SMAP soil moisture for the drought status and the Why charts. Sources, merged by date: the pre-extracted record
     of the demo sites (data/smap_points, SMAP L4 via NSIDC OPeNDAP), live SMAP L4 (Earthdata, last ~6 weeks) and ORNL's
     L3E subsets. Returns the root-zone percentile (SMAP L4's own climatological percentile; where L4 has none, the rank
@@ -1094,11 +1153,7 @@ def _smap_block(ctx: FieldContext, series: list[dict[str, Any]]) -> float | None
         return None
     sdates = [d for d, _ in sm]
     vals = np.array([v for _, v in sm])
-    series.append(
-        _series(
-            "smap_sm", "Surface soil moisture (SMAP, 9 km)", "m³/m³", sdates, vals, "smap_l3e", "observed"
-        )
-    )
+    series.append(_series("smap_sm", t("series_smap", lang), "m³/m³", sdates, vals, "smap_l3e", "observed"))
     if len(vals) >= 20:
         return drt.percentile_of(float(np.mean(vals[-3:])), vals)
     return None
@@ -1126,7 +1181,7 @@ def _disease_cards(
         series.append(
             _series(
                 f"risk_{did}",
-                f"{meta['name']} infection risk",
+                t("series_infection_risk", lang, name=risk_cards.legacy_name(did, lang, meta["name"])),
                 "0–1",
                 sdates,
                 [s[d] for d in sdates],
@@ -1157,22 +1212,24 @@ def _disease_cards(
                 "due": first.isoformat(),
                 "amount": None,
                 "why": _why(
-                    f"Forecast hourly humidity and temperature favour {meta['name'].lower()} infection, peaking on {dmax.isoformat()}.",
+                    t(
+                        "dis_sum",
+                        lang,
+                        name=_lc(risk_cards.legacy_name(did, lang, meta["name"]), lang),
+                        date=dmax.isoformat(),
+                    ),
                     [
-                        f"Model: {meta['ref']}.",
-                        f"On {dmax.isoformat()}: {wet_hours} hours with relative humidity ≥ 90 %, minimum temperature {tmin_d:.0f} °C.",
-                        f"Risk score {smax:.2f} (0 = unfavourable, 1 = fully favourable).",
-                        "Risk means the weather suits infection — it does not mean the disease is present. Scout before you spray.",
+                        t("dis_step_model", lang, ref=word("dis_ref", did, lang)),
+                        t("dis_step_day", lang, date=dmax.isoformat(), hours=wet_hours, tmin=tmin_d),
+                        t("dis_step_score", lang, score=smax),
+                        t("dis_step_scout", lang),
                     ],
                     [f"risk_{did}", "tmin", "precip"],
-                    meta["ref"],
+                    word("dis_ref", did, lang),
                     "disease",
                     0.5,
-                    "Leaf wetness is estimated from humidity; forecast skill drops after ~3 days.",
-                    [
-                        "Forecast grid ~10–25 km; humid hollows and irrigated canopies are wetter than the grid.",
-                        "Relative humidity ≥ 90 % is a proxy for leaf wetness.",
-                    ],
+                    t("dis_note", lang),
+                    [t("dis_caveat_grid", lang), t("dis_caveat_rh", lang)],
                     ["openmeteo_forecast", "nasa_power"],
                 ),
             }
@@ -1214,13 +1271,17 @@ def _pest_cards(
                 days=days_until,
             )
             due = (today + dt.timedelta(days=days_until)).isoformat()
-            action = ev["action"]
+            action = _pest_action(pid, p, ev, lang)
             risk = "moderate" if days_until > 3 else "high"
         elif p.get("recurring") and c_type != "perennial" and 0 <= (today - planting).days <= 60:
-            title = f"{p['name']}: {lastev['action'] if lastev else ev['action'] if ev else ''}".strip()
-            title = f"{p['name']}: scout weekly (generation {st['generation']})" if lang == "en" else title
+            title = t(
+                "pest_scout_title",
+                lang,
+                pest=risk_cards.legacy_pest(pid, lang, p["name"]),
+                gen=st["generation"],
+            )
             due = today.isoformat()
-            action = "Young plants are most vulnerable in the whorl stage; scout 20 plants in 5 spots weekly (FAO FAW guidance)."
+            action = t("pest_faw_action", lang)
             risk = "moderate"
         elif recent and lastev:
             title = t(
@@ -1230,7 +1291,7 @@ def _pest_cards(
                 event=risk_cards.legacy_event(lastev["label"], lang),
             )
             due = today.isoformat()
-            action = lastev["action"]
+            action = _pest_action(pid, p, lastev, lang)
             risk = "high"
         else:
             continue
@@ -1245,26 +1306,37 @@ def _pest_cards(
                 "due": due,
                 "amount": None,
                 "why": _why(
-                    f"Insects develop with heat. Since {st['biofix']}, {st['dd_today']} degree-days (base {p['t_low']} °C) have accumulated.",
+                    t("pest_sum", lang, biofix=st["biofix"], dd=st["dd_today"], tlow=p["t_low"]),
                     [
-                        f"Degree-days to date: {st['dd_today']} °C·d; in 7 days: {st['dd_in_week']} °C·d (NASA POWER + forecast).",
-                        f"Next life stage '{ev['label'] if ev else lastev['label']}' at {ev['dd'] if ev else lastev['dd']} °C·d ({p['ref']}).",
-                        "Degree-day models predict *when* to scout, not *how many* insects there are.",
+                        t("pest_step_dd", lang, dd=st["dd_today"], dd7=st["dd_in_week"]),
+                        t(
+                            "pest_step_next",
+                            lang,
+                            stage=risk_cards.legacy_event((ev or lastev)["label"], lang),
+                            dd=(ev or lastev)["dd"],
+                            ref=p["ref"],
+                        ),
+                        t("pest_step_when", lang),
                     ],
                     ["tmax", "tmin"],
-                    f"Degree-day phenology ({p['ref']})",
+                    t("model_pest_dd", lang, ref=p["ref"]),
                     "pests",
                     0.55,
-                    "Thresholds are regional literature values; local biofix observations improve timing.",
-                    [
-                        "Air temperature from a ~50 km grid; field microclimate differs.",
-                        "Uses 1 Jan (N) / 1 Jul (S) biofix unless a trap catch is entered.",
-                    ],
+                    t("pest_note", lang),
+                    [t("pest_caveat_grid", lang), t("pest_caveat_biofix", lang)],
                     ["nasa_power", "openmeteo_forecast"],
                 ),
             }
         )
     return out
+
+
+def _pest_action(pid: str, p: dict[str, Any], ev: dict[str, Any], lang: str) -> str:
+    """Translated IPM action of a pest life-stage event (config/messages/pests.yaml); English fallback."""
+    for i, e in enumerate(p["events"]):
+        if e[1] == ev["label"] and has(f"pest_action_{pid}_{i}"):
+            return t(f"pest_action_{pid}_{i}", lang)
+    return str(ev["action"])
 
 
 def _temp_cards(
@@ -1292,23 +1364,28 @@ def _temp_cards(
                     "title": t(
                         "frost_title", lang, day=day_label(fdates[k], today, lang), t=round(float(tmin[k]))
                     ),
-                    "detail": t("frost_detail", lang, crop=c["name"], kill=kill),
+                    "detail": t("frost_detail", lang, crop=crop_name(cid, lang, c["name"]), kill=kill),
                     "due": fdates[k].isoformat(),
                     "amount": None,
                     "why": _why(
-                        f"Forecast minimum {tmin[k]:.1f} °C on {fdates[k].isoformat()} vs. damage threshold {kill} °C for {c['name']}.",
+                        t(
+                            "frost_sum",
+                            lang,
+                            tmin=tmin[k],
+                            date=fdates[k].isoformat(),
+                            kill=kill,
+                            crop=crop_name(cid, lang, c["name"]),
+                        ),
                         [
-                            f"Forecast Tmin {tmin[k]:.1f} °C.",
-                            f"Damage threshold for {c['name']}: {kill} °C (literature).",
+                            t("frost_step_tmin", lang, tmin=tmin[k]),
+                            t("frost_step_thr", lang, crop=crop_name(cid, lang, c["name"]), kill=kill),
                         ],
                         ["tmin"],
-                        "Threshold rule on forecast minimum temperature",
+                        t("model_frost", lang),
                         "frost",
                         0.6,
-                        "Frost is very local; low spots can be 2–4 °C colder.",
-                        [
-                            "Forecast is for 2 m air temperature; ground frost can occur at higher air temperatures."
-                        ],
+                        t("frost_note", lang),
+                        [t("frost_caveat", lang)],
                         ["openmeteo_forecast"],
                     ),
                 }
@@ -1325,20 +1402,20 @@ def _temp_cards(
                     "title": t(
                         "heat_title", lang, day=day_label(fdates[k], today, lang), t=round(float(tmax[k]))
                     ),
-                    "detail": t("heat_detail", lang, crop=c["name"], thr=c["t_heat"]),
+                    "detail": t("heat_detail", lang, crop=crop_name(cid, lang, c["name"]), thr=c["t_heat"]),
                     "due": fdates[k].isoformat(),
                     "amount": None,
                     "why": _why(
-                        f"Forecast maximum {tmax[k]:.1f} °C exceeds the heat-stress threshold of {c['t_heat']} °C.",
+                        t("heat_sum", lang, tmax=tmax[k], thr=c["t_heat"]),
                         [
-                            f"Forecast Tmax {tmax[k]:.1f} °C on {fdates[k].isoformat()}.",
-                            f"Heat threshold for {c['name']}: {c['t_heat']} °C.",
+                            t("heat_step_tmax", lang, tmax=tmax[k], date=fdates[k].isoformat()),
+                            t("heat_step_thr", lang, crop=crop_name(cid, lang, c["name"]), thr=c["t_heat"]),
                         ],
                         ["tmax"],
-                        "Threshold rule on forecast maximum temperature",
+                        t("model_heat", lang),
                         "heat",
                         0.6,
-                        "Short heat spikes matter most at flowering.",
+                        t("heat_note", lang),
                         [],
                         ["openmeteo_forecast", "nasa_power"],
                     ),
@@ -1390,21 +1467,18 @@ def _planting_cards(
             "category": "planning",
             "risk": "low" if start <= planting <= end else "moderate",
             "icon": "calendar",
-            "title": t("planting_title", lang, start=start.strftime("%d %b"), end=end.strftime("%d %b")),
+            "title": t("planting_title", lang, start=day_month(start, lang), end=day_month(end, lang)),
             "detail": t("planting_detail", lang, n=len(years), y=round(best[1], 1)),
             "due": start.isoformat(),
             "amount": None,
             "why": _why(
-                "Sowing dates were simulated with the FieldShift season model over past seasons of NASA POWER weather.",
-                [
-                    f"{p.strftime('%d %b')}: median {m:.1f} t/ha, bad-year (p10) {p10:.1f} t/ha"
-                    for p, m, p10, _ in results
-                ],
+                t("sow_sum", lang),
+                [t("sow_step", lang, date=day_month(p, lang), m=m, p10=p10) for p, m, p10, _ in results],
                 [],
-                "Planting-window optimisation (season model × 15 years)",
+                t("model_sowing", lang),
                 "planting",
                 0.5,
-                "Past weather is a guide, not a forecast; variety choice changes the result.",
+                t("sow_note", lang),
                 [],
                 ["nasa_power", "soilgrids"],
             ),
@@ -1427,6 +1501,7 @@ def simulate_api(req: dict[str, Any]) -> dict[str, Any]:
     years = list(range(last - nyears + 1, last + 1))
     strategy = req.get("irrigation_strategy", "full")
     method = req.get("irrigation_method", "sprinkler")
+    lang = req.get("lang") or "en"
 
     def run(w_: Any, strat: str) -> tuple[list[dict[str, Any]], Any]:
         req_gdd = gdd_requirement(
@@ -1499,7 +1574,7 @@ def simulate_api(req: dict[str, Any]) -> dict[str, Any]:
         daily = [
             _series(
                 "kc",
-                "Crop coefficient (canopy development)",
+                t("series_kc", lang),
                 "–",
                 dd,
                 mid.daily["kc"],
@@ -1507,18 +1582,29 @@ def simulate_api(req: dict[str, Any]) -> dict[str, Any]:
                 "modelled",
             ),
             _series(
-                "soil_depletion", "Root-zone depletion", "mm", dd, mid.daily["dr"], "nasa_power", "modelled"
+                "soil_depletion",
+                t("series_depletion_short", lang),
+                "mm",
+                dd,
+                mid.daily["dr"],
+                "nasa_power",
+                "modelled",
             ),
             _series(
-                "raw_threshold", "Stress point (RAW)", "mm", dd, mid.daily["raw"], "nasa_power", "modelled"
+                "raw_threshold", t("series_raw", lang), "mm", dd, mid.daily["raw"], "nasa_power", "modelled"
             ),
         ]
     steps = [
-        f"Simulated {len(rows)} seasons ({years[0]}–{years[-1]}) of real NASA POWER weather at this location.",
-        f"Scenario: {strategy.replace('_', ' ')} irrigation, {dT:+.1f} °C, rain × {rf:.2f}.",
-        f"Median yield {summ.get('yield_median')} t/ha vs. {base.get('yield_median')} t/ha with full irrigation and today's climate.",
-        f"Median irrigation {summ.get('irrigation_median_mm')} mm vs. {base.get('irrigation_median_mm')} mm.",
-        "Warmer scenarios shorten the season (thermal time) and raise water demand (ET₀ +3 %/°C).",
+        t("sim_step_years", lang, n=len(rows), y0=years[0], y1=years[-1]),
+        t("sim_step_scenario", lang, strategy=word("strategy", strategy, lang), dt=dT, rf=rf),
+        t("sim_step_yield", lang, y=summ.get("yield_median"), base=base.get("yield_median")),
+        t(
+            "sim_step_irrigation",
+            lang,
+            v=summ.get("irrigation_median_mm"),
+            base=base.get("irrigation_median_mm"),
+        ),
+        t("sim_step_warmer", lang),
     ]
     return {
         "crop": cid,
@@ -1528,18 +1614,14 @@ def simulate_api(req: dict[str, Any]) -> dict[str, Any]:
         "baseline": base,
         "daily_example": daily,
         "why": _why(
-            "What-if results from the FieldShift season model (FAO-56 water balance + FAO-33 yield response).",
+            t("sim_sum", lang),
             steps,
             ["kc", "soil_depletion"],
-            "FAO-56 water balance + FAO-33 yield response + thermal-time phenology",
+            t("model_season", lang),
             "season-model",
             0.5,
-            "Relative differences between scenarios are more reliable than absolute yields.",
-            [
-                "Yields are water-limited potentials for good management (scaled to typical yields). Low-input farms often reach far less "
-                "(the 'yield gap'); compare scenarios, not absolute numbers.",
-                "Pests, diseases and nutrient limits are not simulated.",
-            ],
+            t("sim_note", lang),
+            [t("sim_caveat_yieldgap", lang), t("sim_caveat_pests", lang)],
             ["nasa_power", "soilgrids"],
         ),
     }
@@ -1559,6 +1641,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         else ("full" if irrigated else "rainfed")
     )
     alloc = req.get("water_allocation_mm")
+    lang = req.get("lang") or "en"
     pr = {
         "water": 0.3,
         "soil": 0.2,
@@ -1567,7 +1650,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         "risk": 0.15,
         **(req.get("priorities") or {}),
     }
-    gw_factor, gw_note = wsup.rotation_water_weight(lat, lon, irrigated, today)
+    gw_factor, gw_note = wsup.rotation_water_weight(lat, lon, irrigated, today, lang)
     pr["water"] *= gw_factor
     last_full = today.year - 2  # leave room for fall-sown crops into the following year
     years = list(range(last_full - 14, last_full + 1))
@@ -1587,8 +1670,8 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
     cfg = rot.rotation_config()
     current = {
         "id": "current",
-        "name": "Your current rotation",
-        "idea": "What you grow today.",
+        "name": t("rot_tpl_current_name", lang),
+        "idea": t("rot_tpl_current_idea", lang),
         "slots": [{"crop": cr, "year": k + 1} for k, cr in enumerate(req["current_rotation"])],
     }
     templates = [current] + list(cfg["templates"])
@@ -1623,13 +1706,13 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         for s, ss in zip(tpl["slots"], st, strict=True):
             if ss.n < 0.6 * len(years):
                 feasible = False
-                notes.append(f"{crop(s['crop'])['name']}: not enough simulated seasons")
+                notes.append(t("rot_note_few_seasons", lang, crop=crop_name(s["crop"], lang)))
             elif np.mean([f > 0 for f in ss.frost]) > 0.3 and crop(s["crop"])["type"] not in (
                 "perennial",
                 "cover",
             ):
                 feasible = False
-                notes.append(f"{crop(s['crop'])['name']}: frost during the season in >30 % of years")
+                notes.append(t("rot_note_frost", lang, crop=crop_name(s["crop"], lang)))
             elif (
                 ss.yields
                 and np.median(ss.yields)
@@ -1637,7 +1720,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                 and crop(s["crop"])["typical_yield_t_ha"] > 0
             ):
                 feasible = False
-                notes.append(f"{crop(s['crop'])['name']}: local season too short/cold or too dry")
+                notes.append(t("rot_note_unfit", lang, crop=crop_name(s["crop"], lang)))
         if tpl["id"] != "current" and not feasible:
             continue
         if not irrigated and tpl["id"] != "current" and "irrigated" in tpl.get("tags", []):
@@ -1674,7 +1757,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         raw = sc["raw"]
         craw = cur[2]["raw"]
         cs = cur[4]
-        water_label = "Irrigation water" if irrigated else "Crop water shortfall"
+        water_label = t("met_water_irrigated" if irrigated else "met_water_rainfed", lang)
         return [
             {
                 "id": "water",
@@ -1686,9 +1769,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "income",
-                "label": "Gross margin (indicative)"
-                if abs(lat) >= 20
-                else "Net revenue after ~30 % input costs (indicative)",
+                "label": t("met_income_margin" if abs(lat) >= 20 else "met_income_net", lang),
                 "value": round(raw["income"]),
                 "unit": "USD/ha/yr",
                 "score": scores["income"],
@@ -1696,7 +1777,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "soil",
-                "label": "Soil-health index",
+                "label": t("met_soil", lang),
                 "value": round(raw["soil"]),
                 "unit": "0–100",
                 "score": round(scores["soil"], 1),
@@ -1704,7 +1785,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "erosion",
-                "label": "Erosion risk (relative)",
+                "label": t("met_erosion", lang),
                 "value": round(raw["erosion"], 2),
                 "unit": "index",
                 "score": round(sc["fixed_scores"]["erosion"], 1),
@@ -1712,7 +1793,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "pests",
-                "label": "Pest-cycle disruption",
+                "label": t("met_pests", lang),
                 "value": round(raw["pests"]),
                 "unit": "0–100",
                 "score": round(scores["pests"], 1),
@@ -1720,7 +1801,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "risk",
-                "label": "Climate risk (bad seasons)",
+                "label": t("met_risk", lang),
                 "value": round(100 * raw["risk"]),
                 "unit": "% (lower better)",
                 "score": round(scores["risk"], 1),
@@ -1728,7 +1809,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "nitrogen",
-                "label": "Biological N",
+                "label": t("met_nitrogen", lang),
                 "value": round(raw["nitrogen"]),
                 "unit": "kg N/ha/yr",
                 "score": min(100.0, raw["nitrogen"]),
@@ -1736,7 +1817,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "bare_days",
-                "label": "Bare-soil days",
+                "label": t("met_bare_days", lang),
                 "value": round(raw["bare_days"]),
                 "unit": "days/yr",
                 "score": round(100 * (1 - raw["bare_days"] / 365), 1),
@@ -1751,7 +1832,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         strategies.append(
             {
                 "id": tpl["id"],
-                "name": tpl["name"],
+                "name": _tpl_text(tpl, "name", lang),
                 "is_current": tpl["id"] == "current",
                 "slots": [
                     {
@@ -1766,27 +1847,32 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                 "calendar": sc["calendar"],
                 "metrics": mets,
                 "total_score": total,
-                "why_suggested": tpl.get("idea", ""),
-                "evidence": _evidence(tpl, st, ctx, normals, irrigated),
-                "benefits": _benefits(mets) if tpl["id"] != "current" else [],
-                "info_gaps": _gaps(tpl),
-                "risks_local_review": _risks(tpl, notes),
+                "why_suggested": _tpl_text(tpl, "idea", lang),
+                "evidence": _evidence(tpl, st, ctx, normals, irrigated, lang),
+                "benefits": _benefits(mets, lang) if tpl["id"] != "current" else [],
+                "info_gaps": _gaps(tpl, lang),
+                "risks_local_review": _risks(tpl, notes, lang),
                 "sources": ["nasa_power", "srtm", "soilgrids"] + (["grace_fo"] if gw_note else []),
             }
         )
 
-    vuln = _vulnerable_periods(ctx, normals, lat)
-    clim = climate_api(lat, lon, today)
+    vuln = _vulnerable_periods(ctx, normals, lat, lang)
+    clim = climate_api(lat, lon, today, lang)
     return {
         "strategies": strategies,
         "climate_context": clim["insights"][:4],
         "groundwater_note": gw_note,
         "vulnerable_periods": vuln,
         "sources": [source_ref(s, ctx.statuses.get(s, "live")) for s in ("nasa_power", "srtm", "soilgrids")],
-        "disclaimer": "FieldShift compares rotations under the last 15 seasons of NASA weather at your location. It supports, but does not replace, "
-        "your judgement and local agronomic advice. Prices and costs are indicative and must be checked against your market.",
+        "disclaimer": t("rot_disclaimer", lang),
         "years_simulated": [years[0], years[-1]],
     }
+
+
+def _tpl_text(tpl: dict[str, Any], field: str, lang: str) -> str:
+    """Translated template name/idea (config/messages/rotations.yaml); the YAML text if not translated."""
+    key = f"rot_tpl_{tpl['id']}_{field}"
+    return t(key, lang) if has(key) else str(tpl.get(field, ""))
 
 
 def _same_rotation(a: dict[str, Any], b: dict[str, Any]) -> bool:
@@ -1810,23 +1896,31 @@ def _evidence(
     ctx: FieldContext,
     normals: list[dict[str, float]],
     irrigated: bool,
+    lang: str = "en",
 ) -> list[str]:
     ev = []
     hot = max(normals, key=lambda n: n["et0"])
     ev.append(
-        f"Peak crop water demand in {dt.date(2000, int(hot['month']), 1):%B}: ET₀ ≈ {hot['et0']:.0f} mm/month vs. {hot['precip']:.0f} mm rain (NASA POWER 1991–2020)."
+        t("rot_ev_peak", lang, month=month_name(int(hot["month"]), lang), et0=hot["et0"], rain=hot["precip"])
     )
     for s, ss in zip(tpl["slots"], st, strict=True):
         if not ss.yields:
             continue
-        cname = crop(s["crop"])["name"]
+        cname = crop_name(s["crop"], lang)
         if irrigated:
             ev.append(
-                f"{cname}: simulated median irrigation {np.median(ss.irr):.0f} mm, median yield {np.median(ss.yields):.1f} t/ha over {ss.n} seasons."
+                t("rot_ev_irrigated", lang, crop=cname, irr=np.median(ss.irr), y=np.median(ss.yields), n=ss.n)
             )
         else:
             ev.append(
-                f"{cname}: simulated median yield {np.median(ss.yields):.1f} t/ha; failed seasons {100 * ss.fail_share:.0f} % of {ss.n}."
+                t(
+                    "rot_ev_rainfed",
+                    lang,
+                    crop=cname,
+                    y=np.median(ss.yields),
+                    fail=100 * ss.fail_share,
+                    n=ss.n,
+                )
             )
     seen = set()
     uniq = []
@@ -1836,65 +1930,63 @@ def _evidence(
             uniq.append(e)
     if ctx.slope_pct is not None:
         uniq.append(
-            f"Field slope {ctx.slope_pct:.1f} % (NASA SRTM 30 m) — {'low' if ctx.slope_pct < 3 else 'notable'} erosion leverage."
+            t("rot_ev_slope_low" if ctx.slope_pct < 3 else "rot_ev_slope_notable", lang, slope=ctx.slope_pct)
         )
     return uniq[:6]
 
 
-def _benefits(mets: list[dict[str, Any]]) -> list[str]:
-    phr = {
-        "water": "Uses less water: {v} {u}",
-        "income": "Higher indicative margin: {v} {u}",
-        "soil": "Healthier soil (index {v}/100)",
-        "erosion": "Lower erosion risk (index {v})",
-        "pests": "Breaks pest and disease cycles (score {v}/100)",
-        "risk": "Fewer bad seasons ({v} % risk)",
-        "nitrogen": "More biological nitrogen: {v} {u}",
-        "bare_days": "Fewer bare-soil days: {v} {u}",
-    }
+_UNIT_KEYS = {
+    "mm/yr": "unit_mm_yr",
+    "USD/ha/yr": "unit_usd_ha_yr",
+    "index": "unit_index",
+    "% (lower better)": "unit_pct_lower_better",
+    "kg N/ha/yr": "unit_kgn_ha_yr",
+    "days/yr": "unit_days_yr",
+    "days": "unit_days",
+    "doy": "unit_doy",
+}
+
+
+def unit_text(unit: str, lang: str) -> str:
+    """Display form of a wire unit in `lang` (numeric units such as mm or °C are language-neutral)."""
+    key = _UNIT_KEYS.get(unit)
+    return t(key, lang) if key else unit
+
+
+def _benefits(mets: list[dict[str, Any]], lang: str = "en") -> list[str]:
     out = [
-        phr[m["id"]].format(v=m["value"], u=m["unit"]) + " vs. your current rotation."
+        t(f"rot_ben_{m['id']}", lang, v=m["value"], u=unit_text(m["unit"], lang))
         for m in mets
         if m["vs_current"] >= 8
     ]
-    return out or ["Similar overall to your current rotation; may suit different priorities."]
+    return out or [t("rot_ben_similar", lang)]
 
 
-def _gaps(tpl: dict[str, Any]) -> list[str]:
-    gaps = [
-        "Prices and costs are national averages — local market access (hay buyers, elevators) is not known to FieldShift."
-    ]
+def _gaps(tpl: dict[str, Any], lang: str = "en") -> list[str]:
+    gaps = [t("rot_gap_prices", lang)]
     if any(crop(s["crop"]).get("low_confidence") for s in tpl["slots"]):
-        gaps.append(
-            "Some crops here (e.g. teff, cover mixes) are not in FAO-56; their water parameters are literature estimates."
-        )
-    gaps.append("Soil data are 250 m SoilGrids estimates, not a field soil test.")
+        gaps.append(t("rot_gap_lowconf", lang))
+    gaps.append(t("rot_gap_soil", lang))
     return gaps
 
 
-def _risks(tpl: dict[str, Any], notes: list[str]) -> list[str]:
+def _risks(tpl: dict[str, Any], notes: list[str], lang: str = "en") -> list[str]:
     out = list(notes)
     crops_in = {s["crop"] for s in tpl["slots"]}
     if "alfalfa" in crops_in:
-        out.append(
-            "Alfalfa autotoxicity: do not re-seed alfalfa directly after alfalfa; check stand age and weeds."
-        )
+        out.append(t("rot_risk_alfalfa", lang))
     if any(s.get("irrigate_until") for s in tpl["slots"]):
-        out.append(
-            "Split-season irrigation depends on water-right rules and stand health — confirm with your water district."
-        )
+        out.append(t("rot_risk_split", lang))
     if "teff" in crops_in:
-        out.append(
-            "Teff needs a fine, firm seedbed and has a niche hay market — verify buyers before planting."
-        )
+        out.append(t("rot_risk_teff", lang))
     if "cover_rye_vetch" in crops_in:
-        out.append("Cover crops use some spring water in dry regions; terminate early if the season is dry.")
-    out.append("Check herbicide carry-over restrictions before switching crops.")
+        out.append(t("rot_risk_cover", lang))
+    out.append(t("rot_risk_herbicide", lang))
     return out
 
 
 def _vulnerable_periods(
-    ctx: FieldContext, normals: list[dict[str, float]], lat: float
+    ctx: FieldContext, normals: list[dict[str, float]], lat: float, lang: str = "en"
 ) -> list[dict[str, Any]]:
     out = []
     for n in normals:
@@ -1902,7 +1994,7 @@ def _vulnerable_periods(
             out.append(
                 {
                     "month": n["month"],
-                    "issue": f"High water demand: ET₀ {n['et0']:.0f} mm vs. rain {n['precip']:.0f} mm",
+                    "issue": t("vuln_water", lang, et0=n["et0"], rain=n["precip"]),
                     "risk": "high",
                 }
             )
@@ -1910,7 +2002,7 @@ def _vulnerable_periods(
             out.append(
                 {
                     "month": n["month"],
-                    "issue": f"Frost risk with active growth (mean Tmin {n['tmin']:.0f} °C)",
+                    "issue": t("vuln_frost", lang, tmin=n["tmin"]),
                     "risk": "moderate",
                 }
             )
@@ -1918,7 +2010,7 @@ def _vulnerable_periods(
             out.append(
                 {
                     "month": n["month"],
-                    "issue": f"Heat stress likely (mean Tmax {n['tmax']:.0f} °C)",
+                    "issue": t("vuln_heat", lang, tmax=n["tmax"]),
                     "risk": "moderate",
                 }
             )
@@ -1926,7 +2018,7 @@ def _vulnerable_periods(
 
 
 # --------------------------------------------------------------------------- climate
-def climate_api(lat: float, lon: float, today: dt.date | None = None) -> dict[str, Any]:
+def climate_api(lat: float, lon: float, today: dt.date | None = None, lang: str = "en") -> dict[str, Any]:
     today = today or dt.date.today()
     ctx = build(lat, lon, today)
     w = ctx.weather
@@ -1935,21 +2027,22 @@ def climate_api(lat: float, lon: float, today: dt.date | None = None) -> dict[st
     # trends since 1984 need one homogeneous rain record: POWER only (IMERG starts in 1998)
     rain_h = ctx.rain_power if ctx.rain_power is not None else w.rain
     ym = climmod.yearly_metrics(d, w.tmax[:n], w.tmin[:n], rain_h[:n], w.et0[:n], lat)
-    labels = {
-        "tmax_summer": ("Warm-season mean max temperature", "°C"),
-        "tmin_winter": ("Winter mean min temperature", "°C"),
-        "gdd": ("Growing degree-days (base 10 °C)", "°C·d"),
-        "frost_free_days": ("Frost-free season length", "days"),
-        "last_spring_frost_doy": ("Last spring frost (day of year)", "doy"),
-        "first_fall_frost_doy": ("First autumn frost (day of year)", "doy"),
-        "heat_days": ("Days ≥ 35 °C", "days"),
-        "precip_annual": ("Annual rain", "mm"),
-        "precip_growing": ("Warm-season rain", "mm"),
-        "et0_annual": ("Annual reference ET₀", "mm"),
-        "water_deficit": ("Warm-season water deficit (ET₀ − rain)", "mm"),
-        "heavy_rain_days": (f"Heavy-rain days (≥ {ym['heavy_thr_mm']} mm)", "days"),
-        "dry_spell_max": ("Longest warm-season dry spell", "days"),
+    units = {
+        "tmax_summer": "°C",
+        "tmin_winter": "°C",
+        "gdd": "°C·d",
+        "frost_free_days": "days",
+        "last_spring_frost_doy": "doy",
+        "first_fall_frost_doy": "doy",
+        "heat_days": "days",
+        "precip_annual": "mm",
+        "precip_growing": "mm",
+        "et0_annual": "mm",
+        "water_deficit": "mm",
+        "heavy_rain_days": "days",
+        "dry_spell_max": "days",
     }
+    labels = {mid: (t(f"clim_{mid}", lang, thr=ym["heavy_thr_mm"]), u) for mid, u in units.items()}
     years = ym["years"]
     metrics = []
     insights = []
@@ -1982,15 +2075,21 @@ def climate_api(lat: float, lon: float, today: dt.date | None = None) -> dict[st
             "heavy_rain_days",
             "last_spring_frost_doy",
         ):
-            direction = "risen" if slope > 0 else "fallen"
             insights.append(
-                f"{label} has {direction} by {abs(slope):.1f} {unit} per decade since {years[0]} "
-                f"({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+                t(
+                    "clim_insight_up" if slope > 0 else "clim_insight_down",
+                    lang,
+                    label=label,
+                    slope=abs(slope),
+                    unit=unit_text(unit, lang),
+                    year=years[0],
+                    base=base,
+                    recent=recent,
+                    p=p,
+                )
             )
     if not insights:
-        insights.append(
-            f"No statistically clear trend (p < 0.1) in the main indicators since {years[0]}; year-to-year variability dominates."
-        )
+        insights.append(t("clim_no_trend", lang, year=years[0]))
     normals = climmod.monthly_normals(d, w.tmax, w.tmin, w.rain, w.et0, 1991, 2020)
     return {
         "years": years,
@@ -2010,6 +2109,7 @@ def crop_list() -> list[dict[str, Any]]:
         {
             "id": k,
             "name": v["name"],
+            "names": crop_names(k),
             "family": v["family"],
             "type": v["type"],
             "n_fixing": v["n_fix_kg_ha"] > 0,

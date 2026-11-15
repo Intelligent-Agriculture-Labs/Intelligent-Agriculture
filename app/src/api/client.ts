@@ -180,7 +180,7 @@ export const api = {
     ),
   simulate: (r: SimulateRequest) =>
     withFallback<SimulateResponse>(
-      k("sim", r.lat, r.lon, r.crop, r.planting_date, r.irrigation_strategy, r.delta_t_c, r.rain_factor, r.water_allocation_mm),
+      k("sim", r.lat, r.lon, r.crop, r.planting_date, r.irrigation_strategy, r.delta_t_c, r.rain_factor, r.water_allocation_mm, r.lang ?? "en"),
       () => http("/api/simulate", r),
       async () => (await import("./__fixtures__/MOCK_simulate.json")).default as unknown as SimulateResponse,
     ),
@@ -190,16 +190,16 @@ export const api = {
       () => http("/api/rotations", r),
       async () => (await import("./__fixtures__/MOCK_rotations.json")).default as unknown as RotationResponse,
     ),
-  climate: (lat: number, lon: number) =>
+  climate: (lat: number, lon: number, lang: string = "en") =>
     withFallback<ClimateResponse>(
-      k("climate", lat, lon),
-      () => http(`/api/climate?lat=${lat}&lon=${lon}`),
+      k("climate", lat, lon, lang),
+      () => http(`/api/climate?lat=${lat}&lon=${lon}&lang=${encodeURIComponent(lang)}`),
       async () => (await import("./__fixtures__/MOCK_climate.json")).default as unknown as ClimateResponse,
     ),
   terrain: (r: TerrainRequest) =>
-    withCache<TerrainResponse>(k("terrain", r.lat, r.lon, r.crop, JSON.stringify(r.polygon ?? null)), () => http("/api/terrain", r)),
+    withCache<TerrainResponse>(k("terrain", r.lat, r.lon, r.crop, JSON.stringify(r.polygon ?? null), r.lang ?? "en"), () => http("/api/terrain", r)),
   planner: (r: PlannerRequest) =>
-    withCache<PlannerResponse>(k("plan", r.lat, r.lon, r.crop, r.planting_date, r.irrigation, r.water_allocation_mm ?? "", r.as_of ?? ""), () =>
+    withCache<PlannerResponse>(k("plan", r.lat, r.lon, r.crop, r.planting_date, r.irrigation, r.water_allocation_mm ?? "", r.as_of ?? "", r.lang ?? "en"), () =>
       http("/api/planner", r),
     ),
   /* ---- farm sync (no account: random farm_id + short sync code) ---- */
@@ -234,10 +234,10 @@ export const api = {
   adviceText: (f: FieldInput, name: string, maxChars = 320) => http<AdviceText>(`/api/advice/text?name=${encodeURIComponent(name)}&max_chars=${maxChars}`, f),
   glossary: (lang: string) => withCache<GlossaryEntry[]>(k("glossary", lang), () => http(`/api/glossary?lang=${encodeURIComponent(lang)}`)),
   /** tap-to-delineate: field boundary from high-res imagery around a point (sub-metre Esri or US NAIP) */
-  detectField: (b: { lat: number; lon: number; source?: "esri" | "naip" }) => http<FieldDetectResponse>("/api/fields/detect", b, "POST", 45000),
+  detectField: (b: { lat: number; lon: number; source?: "esri" | "naip"; lang?: string }) => http<FieldDetectResponse>("/api/fields/detect", b, "POST", 45000),
   /** one call of the async satellite job (start or poll); the caller polls until status === "done" */
   satelliteOnce: (r: SatelliteRequest) => http<SatelliteResponse>("/api/satellite", r, "POST", 60000),
-  satelliteKey: (r: SatelliteRequest) => k("sat", r.lat, r.lon, JSON.stringify(r.polygon ?? null), r.start ?? "", r.end ?? ""),
+  satelliteKey: (r: SatelliteRequest) => k("sat", r.lat, r.lon, JSON.stringify(r.polygon ?? null), r.start ?? "", r.end ?? "", r.lang ?? "en"),
   saveSatellite: (key: string, data: SatelliteResponse) => writeCache(key, data),
   cachedSatellite: (key: string) => readCache<SatelliteResponse>(key),
   /** absolute URL for server-relative paths such as terrain PNG overlays */

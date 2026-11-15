@@ -8,6 +8,8 @@
  * Messages in:   {type:"marker", lat, lon, zoom?} | {type:"polygon", points:[[lon,lat],...], editable?} | {type:"layer", id}
  *                {type:"fit"}  (zoom to the polygon)
  */
+/* eslint-disable import/no-named-as-default-member -- i18n.t on the shared instance, as in i18n/index.ts */
+import i18n from "i18next";
 export const ESRI_IMAGERY_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 export const ESRI_ATTRIBUTION = "Imagery: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 export const NAIP_URL = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}";
@@ -18,6 +20,9 @@ export const S2_CLOUDLESS_URL = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudles
 export const S2_CLOUDLESS_ATTRIBUTION =
   'Sentinel-2 cloudless – <a href="https://s2maps.eu">s2maps.eu</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2023)';
 
+/** Escape a translated label for an HTML attribute. */
+const attr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+
 export function leafletHtml(initial: { lat: number; lon: number; zoom: number }): string {
   return `<!doctype html><html><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
@@ -26,7 +31,7 @@ export function leafletHtml(initial: { lat: number; lon: number; zoom: number })
 .fs-vertex{width:20px!important;height:20px!important;margin:-10px 0 0 -10px!important;border-radius:50%;background:#f2c94c;border:3px solid #fff;box-shadow:0 0 3px rgba(0,0,0,.6)}
 .fs-selected{background:#e5484d;width:24px!important;height:24px!important;margin:-12px 0 0 -12px!important}
 .fs-mid{width:18px!important;height:18px!important;margin:-9px 0 0 -9px!important;border-radius:50%;background:rgba(255,255,255,.85);border:2px solid #f2c94c;color:#5b4500;font:700 14px/14px system-ui;text-align:center}</style>
-</head><body><div id="m" role="application" aria-label="Map"></div>
+</head><body><div id="m" role="application" aria-label="${attr(i18n.t("map.a11yMap"))}"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
@@ -74,7 +79,7 @@ export function leafletHtml(initial: { lat: number; lon: number; zoom: number })
     if(ll.length>=3){
       ll.forEach(function(p,i){
         var q=ll[(i+1)%ll.length]; var mid=[(p[0]+q[0])/2,(p[1]+q[1])/2];
-        var h=L.marker(mid,{icon:L.divIcon({className:"fs-mid",html:"+"}),keyboard:false,title:"Add corner",bubblingMouseEvents:false}).addTo(map);
+        var h=L.marker(mid,{icon:L.divIcon({className:"fs-mid",html:"+"}),keyboard:false,title:${JSON.stringify(i18n.t("map.addCorner"))},bubblingMouseEvents:false}).addTo(map);
         h.on("click",function(e){L.DomEvent.stop(e); send({type:"insertVertex",after:i,lat:+mid[0].toFixed(7),lon:+mid[1].toFixed(7)});});
         vertices.push(h);
       });

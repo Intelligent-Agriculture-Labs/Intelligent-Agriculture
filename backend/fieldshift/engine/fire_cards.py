@@ -11,7 +11,7 @@ import yaml
 
 from ..data import firms
 from ..science.cropmodel import crop
-from .messages import t
+from .messages import crop_name, crop_short, has, month_name, t, word
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 NEAR_KM = 10.0  # fire risk to the field
@@ -80,9 +80,16 @@ def residue_benefits(cid: str, yield_t_ha: float) -> dict[str, float] | None:
     }
 
 
-def _crop_word(name: str, lang: str) -> str:
-    w = name.split(" (")[0]
+def _crop_word(cid: str, lang: str) -> str:
+    w = crop_short(cid, lang)
     return w if lang == "de" else w.lower()
+
+
+# English notes from data/firms.py -> message keys
+_FIRMS_NOTES = {
+    "Keyless FIRMS feed covers the last 24 h only; add a free MAP_KEY for 48 h and MODIS.": "fire_note_keyless",  # i18n: ok
+    "Recorded FIRMS detections (demo data).": "fire_note_demo",  # i18n: ok
+}
 
 
 def _months_near(today: dt.date, months: list[int], ahead: int = 1) -> bool:
@@ -111,14 +118,12 @@ def fire_cards(
         statuses["firms"] = fires_res.status
     fires = fires_res.fires if fires_res else []
     near = [f for f in fires if f.km <= NEAR_KM]
-    src_note = f"NASA FIRMS ({fires_res.mode}, {fires_res.status})" if fires_res else "NASA FIRMS"
-    caveats_f = [
-        "A detection is a 375 m (VIIRS) or 1 km (MODIS) pixel containing an active fire at satellite overpass; "
-        "small or short fires and fires under thick cloud or smoke can be missed.",
-        "Detections are not checked on the ground; low-confidence detections are excluded.",
-    ]
+    src_note = f"NASA FIRMS ({fires_res.mode}, {fires_res.status})" if fires_res else "NASA FIRMS"  # i18n: ok
+    caveats_f = [t("fire_caveat_pixel", lang), t("fire_caveat_ground", lang)]
     if fires_res and fires_res.note:
-        caveats_f.append(fires_res.note)
+        caveats_f.append(
+            t(_FIRMS_NOTES[fires_res.note], lang) if fires_res.note in _FIRMS_NOTES else fires_res.note
+        )
     if fires and fires_res is not None:
         nearest = fires[0]
         km = NEAR_KM if near else SMOKE_KM
@@ -126,12 +131,30 @@ def fire_cards(
         risk = "high" if nearest.km <= 2 else "moderate" if (near or len(fires) >= 20) else "low"
         sats = sorted({f.satellite for f in fires})
         steps = [
-            f"{src_note}: {len(fires)} active-fire detections within {SMOKE_KM:.0f} km between "
-            f"{fires_res.start.isoformat()} and {fires_res.end.isoformat()} (satellites: {', '.join(sats)}).",
-            f"{len(near)} within {NEAR_KM:.0f} km of the field; nearest {nearest.km:.1f} km {firms.compass(nearest.bearing)} "
-            f"on {nearest.date.isoformat()} {nearest.time_utc[:2]}:{nearest.time_utc[2:]} UTC (fire radiative power {nearest.frp_mw:.1f} MW, {nearest.confidence} confidence).",
-            f"Total fire radiative power within {SMOKE_KM:.0f} km: {sum(f.frp_mw for f in fires):.0f} MW — many fires upwind mean smoke and poor air (PM2.5).",
-            "Risk to the field rises with dry fuel (stubble, dry grass, hay) and wind towards the field.",
+            t(
+                "fire_step_count",
+                lang,
+                src=src_note,
+                n=len(fires),
+                km=SMOKE_KM,
+                start=fires_res.start.isoformat(),
+                end=fires_res.end.isoformat(),
+                sats=", ".join(sats),
+            ),
+            t(
+                "fire_step_nearest",
+                lang,
+                n=len(near),
+                km=NEAR_KM,
+                d=nearest.km,
+                dir=COMPASS.get(lang, COMPASS["en"])[firms.compass(nearest.bearing)],
+                date=nearest.date.isoformat(),
+                time=f"{nearest.time_utc[:2]}:{nearest.time_utc[2:]}",
+                frp=nearest.frp_mw,
+                conf=word("fire_conf", str(nearest.confidence), lang),
+            ),
+            t("fire_step_frp", lang, km=SMOKE_KM, mw=sum(f.frp_mw for f in fires)),
+            t("fire_step_fuel", lang),
         ]
         out.append(
             {
@@ -151,13 +174,13 @@ def fire_cards(
                 "due": today.isoformat(),
                 "amount": None,
                 "why": why(
-                    f"NASA satellites detected {len(fires)} active fires within {SMOKE_KM:.0f} km in the last 48 hours; the nearest is {nearest.km:.1f} km away.",
+                    t("fire_sum", lang, n=len(fires), km=SMOKE_KM, d=nearest.km),
                     steps,
                     [],
-                    "Distance to NASA FIRMS active-fire detections (VIIRS 375 m / MODIS 1 km, Schroeder et al. 2014; Giglio et al. 2016)",
+                    t("model_fire", lang),
                     "fires",
                     0.7 if fires_res.status in ("live", "cache") else 0.5,
-                    "Satellite detections are reliable for flaming fires; they say nothing about wind direction at your field.",
+                    t("fire_note", lang),
                     caveats_f,
                     ["firms"],
                 ),
@@ -176,28 +199,45 @@ def fire_cards(
     if b is None:
         return out
     risk = "high" if (near and _months_near(today, months, 0)) else "moderate"
+    region = t(f"residue_region_{rid}", lang) if has(f"residue_region_{rid}") else r["name"]
     steps = [
-        f"Your field is in a residue-burning region: {r['name']} (burning peaks in months {', '.join(str(m) for m in months)}; {r['ref']}).",
-        f"Typical {c['name']} yield {c.get('typical_yield_t_ha')} t/ha × residue-to-grain ratio {residue_cfg()['residue'][cid]['rgr']} "
-        f"→ ~{b['residue_t_ha']:.1f} t/ha of residue holding {b['c_t_ha']:.1f} t carbon.",
-        f"Burning it loses ~{b['n_lost_kg_ha']:.0f} kg N, {b['p_lost_kg_ha']:.1f} kg P, {b['k_lost_kg_ha']:.0f} kg K and {b['s_lost_kg_ha']:.1f} kg S per ha "
-        f"(≈90% of N, 25% of P, 20% of K; Dobermann & Fairhurst 2002) and releases ~{b['co2_t_ha']:.1f} t CO₂/ha plus smoke (PM2.5).",
-        f"Kept as mulch or incorporated, ~{b['soc_gain_t_ha']:.2f} t C/ha is added to soil organic carbon in the first year (≈12% humification; Powlson et al. 2008), "
-        "improving water infiltration and soil structure year on year.",
-        "Options: sow the next crop directly into the standing stubble (Happy Seeder / Super Seeder; Sidhu et al. 2015), chop and spread the straw "
-        "(Super-SMS on the combine), or incorporate with a mulcher + disc 2–3 weeks before sowing. Shyamsundar et al. (2019, Science) found Happy Seeder sowing the most profitable option.",
+        t(
+            "res_step_region",
+            lang,
+            region=region,
+            months=", ".join(month_name(m, lang) for m in months),
+            ref=r["ref"],
+        ),
+        t(
+            "res_step_amount",
+            lang,
+            crop=crop_name(cid, lang, c["name"]),
+            y=c.get("typical_yield_t_ha"),
+            rgr=residue_cfg()["residue"][cid]["rgr"],
+            res=b["residue_t_ha"],
+            c=b["c_t_ha"],
+        ),
+        t(
+            "res_step_loss",
+            lang,
+            n=b["n_lost_kg_ha"],
+            p=b["p_lost_kg_ha"],
+            k=b["k_lost_kg_ha"],
+            s=b["s_lost_kg_ha"],
+            co2=b["co2_t_ha"],
+        ),
+        t("res_step_soc", lang, soc=b["soc_gain_t_ha"]),
+        t("res_step_options", lang),
     ]
     if fires:
-        steps.append(
-            f"NASA FIRMS currently shows {len(fires)} fires within {SMOKE_KM:.0f} km — burning is happening around you now."
-        )
+        steps.append(t("res_step_fires_now", lang, n=len(fires), km=SMOKE_KM))
     out.append(
         {
             "id": "residue_no_burn",
             "category": "planning",
             "risk": risk,
             "icon": "leaf-outline",
-            "title": t("residue_title", lang, crop=_crop_word(c["name"], lang)),
+            "title": t("residue_title", lang, crop=_crop_word(cid, lang)),
             "detail": t(
                 "residue_detail",
                 lang,
@@ -208,17 +248,14 @@ def fire_cards(
             "due": None,
             "amount": {"value": round(b["n_lost_kg_ha"]), "unit": "kg N/ha"},
             "why": why(
-                f"Burning {c['name'].split(' (')[0].lower()} residue destroys nitrogen, sulphur and carbon your soil needs; mulching or incorporating keeps them.",
+                t("res_sum", lang, crop=_crop_word(cid, lang)),
                 steps,
                 [],
-                "Residue nutrient balance (residue-to-grain ratio × nutrient content × burning loss)",
+                t("model_residue", lang),
                 "fires",
                 0.55,
-                "Residue amount scales with your actual yield; nutrient contents are literature averages.",
-                [
-                    "Uses a typical yield for the crop; enter your own yield for a sharper estimate.",
-                    "Burning bans and machinery subsidies (e.g. CRM scheme in India) differ by state.",
-                ],
+                t("res_note", lang),
+                [t("res_caveat_yield", lang), t("res_caveat_bans", lang)],
                 ["firms"] if fires else ["nasa_power"],
             ),
         }

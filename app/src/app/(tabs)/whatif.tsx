@@ -62,6 +62,7 @@ export default function WhatIf() {
           delta_t_c: dT,
           rain_factor: rain,
           years,
+          lang: settings.lang,
         }
       : null;
   // the simulation runs once on open, then only when the user presses "Run"

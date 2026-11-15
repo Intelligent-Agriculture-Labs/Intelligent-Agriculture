@@ -34,7 +34,7 @@ export function PlanSeason({ field }: { field: Field }) {
   const [showAllOps, setShowAllOps] = useState(false);
   const [allocText, setAllocText] = useState(field.water_allocation_mm ? String(field.water_allocation_mm) : "");
   const alloc = field.water_allocation_mm ?? null;
-  const q = useQuery<PlannerResponse>(`${field.lat},${field.lon},${field.crop},${field.planting_date},${field.irrigation},${alloc}`, () =>
+  const q = useQuery<PlannerResponse>(`${field.lat},${field.lon},${field.crop},${field.planting_date},${field.irrigation},${alloc},${settings.lang}`, () =>
     api.planner({
       lat: field.lat,
       lon: field.lon,
@@ -42,6 +42,7 @@ export function PlanSeason({ field }: { field: Field }) {
       planting_date: field.planting_date,
       irrigation: field.irrigation,
       water_allocation_mm: alloc,
+      lang: settings.lang,
     }),
   );
   const { data, origin, savedAt, error } = q;

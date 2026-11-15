@@ -13,11 +13,14 @@ from __future__ import annotations
 import datetime as dt
 import math
 from collections.abc import Callable
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
 
+from ..engine.messages import day_month
+from ..engine.messages import t as _msg
 from . import leafwet as lw
 from .pests import region_of
 
@@ -112,12 +115,21 @@ def _complete_days(h: lw.Hourly, min_hours: int = 18) -> set[dt.date]:
     return {d for d, n in cnt.items() if n >= min_hours}
 
 
+# Language of the evidence lines (set by engine/risk_cards.py per request; context-local).
+LANG: ContextVar[str] = ContextVar("globalrisk_lang", default="en")
+
+
+def _t(key: str, **kw: Any) -> str:
+    return _msg(key, LANG.get(), **kw)
+
+
+def _when(ts: dt.datetime) -> str:
+    return f"{day_month(ts.date(), LANG.get())} {ts.hour:02d}:00"
+
+
 def _fmt_wp(wp: lw.WetPeriod, need: float) -> str:
-    need_s = f"{need:.0f} h" if math.isfinite(need) else "not reachable at this temperature"
-    return (
-        f"Wet period from {wp.start:%d %b %H:00}: {wp.hours} h leaf wetness at a mean {wp.t_mean:.1f} °C "
-        f"(needed at that temperature: {need_s})."
-    )
+    need_s = _t("gr_need_hours", h=need) if math.isfinite(need) else _t("gr_need_unreachable")
+    return _t("gr_wet_period", start=_when(wp.start), hours=wp.hours, t=wp.t_mean, need=need_s)
 
 
 def _infection_model(
@@ -194,21 +206,28 @@ def rice_blast(x: RiskInput) -> RiskResult:
         t_ok = 15.0 <= wp.t_mean <= 25.0
         m_ok = np.isfinite(m5) and 20.0 <= m5 <= 25.0
         if t_ok and m_ok and wp.hours >= need:
-            s, why = 1.0, "favourable"
+            s, why = 1.0, _t("gr_blast_favourable")
         elif wp.hours >= 10 and (t_ok or m_ok) and not (t_ok and m_ok and wp.hours >= need):
-            s, why = 0.5, "quasi-favourable (one temperature condition missed)"
+            s, why = 0.5, _t("gr_blast_quasi")
         elif t_ok and m_ok:
-            s, why = 0.5 * wp.hours / need, "wet period too short"
+            s, why = 0.5 * wp.hours / need, _t("gr_blast_short")
         else:
-            s, why = 0.0, "unfavourable"
-        need_s = f"{need:.0f} h" if math.isfinite(need) else "outside 15–25 °C"
+            s, why = 0.0, _t("gr_blast_unfavourable")
+        need_s = _t("gr_need_hours", h=need) if math.isfinite(need) else _t("gr_need_outside")
         for dd in _days_covered(h, wp):
             if s <= best.get(dd, (-1.0, ""))[0]:
                 continue
             best[dd] = (
                 s,
-                f"Wet period from {wp.start:%d %b %H:00}: {wp.hours} h at a mean {wp.t_mean:.1f} °C (BLASTAM needs "
-                f"{need_s}); 5-day mean temperature {m5:.1f} °C (needs 20–25 °C) → {why}.",
+                _t(
+                    "gr_blast",
+                    start=_when(wp.start),
+                    hours=wp.hours,
+                    t=wp.t_mean,
+                    need=need_s,
+                    m5=m5,
+                    why=why,
+                ),
             )
     for d in sorted(ok):
         s, why = best.get(d, (0.0, ""))
@@ -244,10 +263,7 @@ def tropical_late_blight(x: RiskInput) -> RiskResult:
         sv, wp = best.get(d, (0, None))  # type: ignore[assignment]
         r.scores[d] = sv / 4
         if wp is not None:
-            r.evidence[d] = [
-                f"Longest humid period from {wp.start:%d %b %H:00}: {wp.hours} h at RH ≥ 90 %, mean {wp.t_mean:.1f} °C "
-                f"→ Wallin severity value {sv} of 4."
-            ]
+            r.evidence[d] = [_t("gr_wallin", start=_when(wp.start), hours=wp.hours, t=wp.t_mean, sv=sv)]
     ds = sorted(r.scores)
     r.extra["sv7"] = {d: int(sum(4 * r.scores[e] for e in ds if 0 <= (d - e).days < 7)) for d in ds}
     return r
@@ -290,10 +306,7 @@ def gray_leaf_spot(x: RiskInput) -> RiskResult:
             continue
         a, b = float(warm[m].sum()) * win / n_days, float(wetn[m].sum()) * win / n_days
         r.scores[d] = round(min(1.0, 0.5 * (min(1.0, a / ref_w) + min(1.0, b / ref_n))), 3)
-        r.evidence[d] = [
-            f"Last {win} days: {a:.0f} h at 22–30 °C (epidemic-level ≈ {ref_w:.0f} h) and {b:.0f} humid night hours "
-            f"at RH ≥ 90 % (≈ {ref_n:.0f} h), from Paul & Munkvold 2005."
-        ]
+        r.evidence[d] = [_t("gr_gls", win=win, a=a, refw=ref_w, b=b, refn=ref_n)]
     return r
 
 
@@ -324,8 +337,7 @@ def coffee_leaf_rust(x: RiskInput) -> RiskResult:
             r.scores[d] = round(r.scores[d] * 0.5, 3)
         if r.scores[d] > 0:
             r.evidence.setdefault(d, []).append(
-                f"Daily maximum {tx:.1f} °C ({'inside' if 22 <= tx <= 28 else 'outside'} the 22–28 °C band that "
-                "shortens the latent period; Avelino et al. 2015)."
+                _t("gr_coffee_inside" if 22 <= tx <= 28 else "gr_coffee_outside", tx=tx)
             )
     return r
 
@@ -360,14 +372,14 @@ def cassava_whitefly(x: RiskInput) -> RiskResult:
         if not np.isfinite(tm):
             continue
         s = _band(tm, 28.0, 30.0, 4.0) * _band(rn, 30.0, 150.0, 100.0)
-        txt = f"Last 30 days: mean temperature {tm:.1f} °C (best 28–30), rain {rn:.0f} mm (best 30–150)"
+        rh_txt = ""
         if x.rh is not None:
             rh = float(np.nanmean(x.rh[k - 30 : k]))
             if np.isfinite(rh):
                 s *= _band(rh, 55.0, 70.0, 15.0)
-                txt += f", RH {rh:.0f} % (best 55–70)"
+                rh_txt = _t("gr_whitefly_rh", rh=rh)
         r.scores[d] = round(s, 3)
-        r.evidence[d] = [txt + " — Katono et al. 2021."]
+        r.evidence[d] = [_t("gr_whitefly", tm=tm, rn=rn, rh=rh_txt)]
     return r
 
 
@@ -386,9 +398,7 @@ def desert_locust(x: RiskInput) -> RiskResult:
         warm = 1.0 if tm >= 20 else max(0.0, (tm - 15) / 5)
         s = min(1.0, rn / 25.0) * warm
         r.scores[d] = round(s if rn >= 10 else 0.0, 3)
-        r.evidence[d] = [
-            f"Rain in the last 30 days: {rn:.0f} mm (FAO: breeding usually needs ≥ 25 mm); mean temperature {tm:.1f} °C."
-        ]
+        r.evidence[d] = [_t("gr_locust", rn=rn, tm=tm)]
     return r
 
 
@@ -449,14 +459,14 @@ MODELS: dict[str, Model] = {
             "disease",
             ["rice"],
             rice_blast,
-            "BLASTAM criteria (Japanese prefectural forecasting; Yokouchi, Higuchi & Munakata wetness table)",
+            "BLASTAM criteria (Japanese prefectural forecasting; Yokouchi, Higuchi & Munakata wetness table)",  # i18n: ok (citation)
         ),
         Model(
             "wheat_leaf_rust",
             "disease",
             ["winter_wheat", "spring_wheat", "durum_wheat", "triticale_forage", "spelt"],
             wheat_leaf_rust,
-            "Magarey et al. 2005 Table 2 (P. recondita); Roelfs, Singh & Saari 1992",
+            "Magarey et al. 2005 Table 2 (P. recondita); Roelfs, Singh & Saari 1992",  # i18n: ok (citation)
             season=(
                 20,
                 240,
@@ -467,7 +477,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["winter_wheat", "spring_wheat", "durum_wheat", "triticale_forage", "spelt", "barley"],
             wheat_stem_rust,
-            "Roelfs, Singh & Saari 1992; Magarey et al. 2005",
+            "Roelfs, Singh & Saari 1992; Magarey et al. 2005",  # i18n: ok (citation)
             season=(
                 20,
                 240,
@@ -478,7 +488,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["potato", "tomato"],
             tropical_late_blight,
-            "Wallin 1962 severity values (BLITECAST, Krause et al. 1975)",
+            "Wallin 1962 severity values (BLITECAST, Krause et al. 1975)",  # i18n: ok (citation)
             tropics_only=True,
         ),
         Model(
@@ -486,7 +496,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["maize", "maize_silage", "sweet_corn"],
             gray_leaf_spot,
-            "Paul & Munkvold 2005 weather predictors",
+            "Paul & Munkvold 2005 weather predictors",  # i18n: ok (citation)
             season=(30, 120),
         ),
         Model(
@@ -494,7 +504,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["coffee"],
             coffee_leaf_rust,
-            "Kushalappa & Eskes 1989; Avelino et al. 2015; Magarey et al. 2005",
+            "Kushalappa & Eskes 1989; Avelino et al. 2015; Magarey et al. 2005",  # i18n: ok (citation)
             tropics_only=True,
         ),
         Model(
@@ -502,7 +512,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["banana", "plantain"],
             black_sigatoka,
-            "Jacome & Schuh 1991, 1992; Magarey et al. 2005",
+            "Jacome & Schuh 1991, 1992; Magarey et al. 2005",  # i18n: ok (citation)
             tropics_only=True,
         ),
         Model(
@@ -510,7 +520,7 @@ MODELS: dict[str, Model] = {
             "pest",
             ["cassava"],
             cassava_whitefly,
-            "Katono et al. 2021",
+            "Katono et al. 2021",  # i18n: ok (citation)
             hourly=False,
             regions=["africa", "asia"],
             season=(0, 120),
@@ -521,7 +531,7 @@ MODELS: dict[str, Model] = {
             "pest",
             ["*"],
             desert_locust,
-            "FAO Desert Locust Guidelines (Symmons & Cressman 2001)",
+            "FAO Desert Locust Guidelines (Symmons & Cressman 2001)",  # i18n: ok (citation)
             hourly=False,
             in_range_fn=lambda lat, lon, _e: in_locust_area(lat, lon),
             min_score=0.55,

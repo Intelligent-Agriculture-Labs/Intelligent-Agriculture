@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default-member -- i18n.t on the shared instance, as in i18n/index.ts */
+import i18n from "i18next";
 import { ESRI_ATTRIBUTION, ESRI_IMAGERY_URL, NAIP_ATTRIBUTION, NAIP_URL, S2_CLOUDLESS_ATTRIBUTION, S2_CLOUDLESS_URL } from "./leafletHtml";
 
 /**
@@ -7,12 +9,15 @@ import { ESRI_ATTRIBUTION, ESRI_IMAGERY_URL, NAIP_ATTRIBUTION, NAIP_URL, S2_CLOU
  *               {type:"opacity", value} | {type:"field", lat, lon, polygon:[[lon,lat],...]}
  * Messages out: {type:"ready"} | {type:"overlayError"}
  */
+/** Escape a translated label for an HTML attribute. */
+const attr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+
 export function terrainHtml(initial: { lat: number; lon: number }): string {
   return `<!doctype html><html><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>html,body,#m{height:100%;margin:0;background:#dfe8d8}.leaflet-container{font:14px system-ui,sans-serif}</style>
-</head><body><div id="m" role="application" aria-label="Terrain map"></div>
+</head><body><div id="m" role="application" aria-label="${attr(i18n.t("map.a11yTerrain"))}"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){

@@ -1,0 +1,97 @@
+# Sentinel-2 field analysis (engine/satellite_service.py, science/satellite.py). Results are cached in English and
+# localised when served: each English text below is matched (placeholders = any text) and re-filled in the
+# requested language, so keep placeholders plain ({name}, no format spec).
+sat_msg_search: {en: "Searching Sentinel-2 archive…", es: "Buscando en el archivo de Sentinel-2…", fr: "Recherche dans l'archive Sentinel-2…", sw: "Inatafuta kwenye kumbukumbu ya Sentinel-2…", hi: "Sentinel-2 संग्रह में खोज रहे हैं…", de: "Sentinel-2-Archiv wird durchsucht…"}
+sat_msg_none: {en: "No Sentinel-2 scenes found for this field and period.", es: "No se encontraron escenas de Sentinel-2 para este campo y periodo.", fr: "Aucune scène Sentinel-2 trouvée pour cette parcelle et cette période.", sw: "Hakuna picha za Sentinel-2 zilizopatikana kwa shamba hili na kipindi hiki.", hi: "इस खेत और अवधि के लिए कोई Sentinel-2 दृश्य नहीं मिला।", de: "Keine Sentinel-2-Aufnahmen für dieses Feld und diesen Zeitraum gefunden."}
+sat_msg_reading: {en: "Reading {n} Sentinel-2 scenes of your field (10 m)…", es: "Leyendo {n} escenas de Sentinel-2 de su campo (10 m)…", fr: "Lecture de {n} scènes Sentinel-2 de votre parcelle (10 m)…", sw: "Inasoma picha {n} za Sentinel-2 za shamba lako (m 10)…", hi: "आपके खेत के {n} Sentinel-2 दृश्य पढ़ रहे हैं (10 मी)…", de: "{n} Sentinel-2-Aufnahmen Ihres Feldes werden gelesen (10 m)…"}
+sat_msg_network: {en: "Sentinel-2 images could not be read (network).", es: "No se pudieron leer las imágenes de Sentinel-2 (red).", fr: "Les images Sentinel-2 n'ont pas pu être lues (réseau).", sw: "Picha za Sentinel-2 hazikuweza kusomwa (mtandao).", hi: "Sentinel-2 चित्र पढ़े नहीं जा सके (नेटवर्क)।", de: "Sentinel-2-Bilder konnten nicht gelesen werden (Netzwerk)."}
+sat_msg_zones: {en: "Detecting crop phenology and computing AI management zones…", es: "Detectando la fenología del cultivo y calculando zonas de manejo con IA…", fr: "Détection de la phénologie et calcul des zones de gestion par IA…", sw: "Inatambua hatua za ukuaji wa zao na kukokotoa kanda za usimamizi kwa AI…", hi: "फसल की फ़ीनोलॉजी पहचान रहे हैं और AI प्रबंधन क्षेत्र बना रहे हैं…", de: "Phänologie wird erkannt und KI-Bewirtschaftungszonen werden berechnet…"}
+sat_season_bare: {en: "bare / fallow or sparse cover", es: "suelo desnudo / barbecho o cobertura escasa", fr: "sol nu / jachère ou couvert clairsemé", sw: "wazi / shamba la kupumzika au kifuniko kidogo", hi: "खाली / परती या विरल आवरण", de: "offen / Brache oder lückiger Bewuchs"}
+sat_season_cycles: {en: "{n} growth cycles (e.g. repeated cuttings)", es: "{n} ciclos de crecimiento (p. ej. cortes repetidos)", fr: "{n} cycles de croissance (p. ex. coupes répétées)", sw: "mizunguko {n} ya ukuaji (mf. ukataji unaorudiwa)", hi: "{n} वृद्धि चक्र (जैसे बार-बार कटाई)", de: "{n} Wachstumszyklen (z. B. wiederholte Schnitte)"}
+sat_season_double: {en: "double crop (two seasons)", es: "doble cultivo (dos temporadas)", fr: "double culture (deux saisons)", sw: "mazao mawili (misimu miwili)", hi: "दोहरी फसल (दो मौसम)", de: "Doppelnutzung (zwei Saisons)"}
+sat_season_perennial: {en: "perennial / continuously green", es: "perenne / siempre verde", fr: "pérenne / vert en continu", sw: "ya kudumu / kijani daima", hi: "बहुवर्षीय / लगातार हरा", de: "mehrjährig / durchgehend grün"}
+sat_season_single: {en: "single season", es: "una sola temporada", fr: "une seule saison", sw: "msimu mmoja", hi: "एक मौसम", de: "eine Saison"}
+sat_feat_mean: {en: "mean NDVI", es: "NDVI medio", fr: "NDVI moyen", sw: "NDVI ya wastani", hi: "औसत NDVI", de: "mittlerer NDVI"}
+sat_feat_peak: {en: "peak NDVI", es: "NDVI máximo", fr: "NDVI maximal", sw: "NDVI ya kilele", hi: "अधिकतम NDVI", de: "maximaler NDVI"}
+sat_feat_cv: {en: "NDVI variability", es: "variabilidad del NDVI", fr: "variabilité du NDVI", sw: "utofauti wa NDVI", hi: "NDVI परिवर्तनशीलता", de: "NDVI-Schwankung"}
+sat_method: {en: "k-means on standardized per-pixel features ({features}), k chosen by silhouette", es: "k-means sobre variables estandarizadas por píxel ({features}), k elegido por silueta", fr: "k-means sur des variables standardisées par pixel ({features}), k choisi par silhouette", sw: "k-means kwa vigezo vilivyosanifishwa kwa kila pikseli ({features}), k imechaguliwa kwa silhouette", hi: "प्रति-पिक्सेल मानकीकृत विशेषताओं पर k-means ({features}), k सिल्हूट से चुना गया", de: "k-Means auf standardisierten Pixelmerkmalen ({features}), k per Silhouette gewählt"}
+sat_zone_higher: {en: "Higher vigour", es: "Mayor vigor", fr: "Vigueur plus forte", sw: "Nguvu zaidi ya ukuaji", hi: "अधिक ओज", de: "Höhere Wüchsigkeit"}
+sat_zone_lower: {en: "Lower vigour", es: "Menor vigor", fr: "Vigueur plus faible", sw: "Nguvu ndogo ya ukuaji", hi: "कम ओज", de: "Geringere Wüchsigkeit"}
+sat_zone_high: {en: "High vigour", es: "Vigor alto", fr: "Vigueur forte", sw: "Ukuaji wenye nguvu", hi: "उच्च ओज", de: "Hohe Wüchsigkeit"}
+sat_zone_medium: {en: "Medium vigour", es: "Vigor medio", fr: "Vigueur moyenne", sw: "Ukuaji wa wastani", hi: "मध्यम ओज", de: "Mittlere Wüchsigkeit"}
+sat_zone_low: {en: "Low vigour", es: "Vigor bajo", fr: "Vigueur faible", sw: "Ukuaji dhaifu", hi: "कम ओज", de: "Geringe Wüchsigkeit"}
+sat_zone_medhigh: {en: "Medium-high vigour", es: "Vigor medio-alto", fr: "Vigueur moyenne à forte", sw: "Ukuaji wa wastani hadi nguvu", hi: "मध्यम-उच्च ओज", de: "Mittel-hohe Wüchsigkeit"}
+sat_zone_medlow: {en: "Medium-low vigour", es: "Vigor medio-bajo", fr: "Vigueur moyenne à faible", sw: "Ukuaji wa wastani hadi dhaifu", hi: "मध्यम-निम्न ओज", de: "Mittel-geringe Wüchsigkeit"}
+sat_adv_uniform:
+  en: "The field is fairly uniform; manage it as one unit."
+  es: "El campo es bastante uniforme; manéjelo como una sola unidad."
+  fr: "La parcelle est assez homogène ; conduisez-la comme une seule unité."
+  sw: "Shamba linafanana kwa kiasi kikubwa; lisimamie kama kitengo kimoja."
+  hi: "खेत काफ़ी एक-समान है; इसे एक इकाई की तरह संभालें।"
+  de: "Das Feld ist recht einheitlich; als eine Einheit bewirtschaften."
+sat_adv_gap:
+  en: "Vigour differs by {gap} NDVI between the best ({hi} % of the field) and the weakest zone ({lo} %)."
+  es: "El vigor difiere en {gap} de NDVI entre la mejor zona ({hi} % del campo) y la más débil ({lo} %)."
+  fr: "La vigueur diffère de {gap} de NDVI entre la meilleure zone ({hi} % de la parcelle) et la plus faible ({lo} %)."
+  sw: "Nguvu ya ukuaji inatofautiana kwa NDVI {gap} kati ya kanda bora ({hi} % ya shamba) na dhaifu zaidi ({lo} %)."
+  hi: "सबसे अच्छे क्षेत्र (खेत का {hi} %) और सबसे कमज़ोर क्षेत्र ({lo} %) के बीच ओज में {gap} NDVI का अंतर है।"
+  de: "Die Wüchsigkeit unterscheidet sich um {gap} NDVI zwischen der besten Zone ({hi} % des Feldes) und der schwächsten ({lo} %)."
+sat_adv_wet:
+  en: "The weak zone sits where water collects: check for waterlogging, drainage or salinity before adding inputs."
+  es: "La zona débil está donde se acumula el agua: revise encharcamiento, drenaje o salinidad antes de añadir insumos."
+  fr: "La zone faible se trouve là où l'eau s'accumule : vérifiez engorgement, drainage ou salinité avant d'ajouter des intrants."
+  sw: "Kanda dhaifu iko mahali maji hukusanyika: kagua kutuama kwa maji, mifereji au chumvi kabla ya kuongeza pembejeo."
+  hi: "कमज़ोर क्षेत्र वहाँ है जहाँ पानी जमा होता है: खाद-दवा डालने से पहले जलभराव, निकासी या लवणता जाँचें।"
+  de: "Die schwache Zone liegt, wo sich Wasser sammelt: vor weiteren Betriebsmitteln Staunässe, Drainage oder Versalzung prüfen."
+sat_adv_slope:
+  en: "The weak zone is on steeper ground: likely thinner soil and erosion — keep it covered and consider lower seeding rates."
+  es: "La zona débil está en terreno más empinado: probablemente suelo más delgado y erosión; manténgala cubierta y considere densidades de siembra menores."
+  fr: "La zone faible est sur un terrain plus pentu : sol probablement plus mince et érosion — gardez-la couverte et envisagez des densités de semis plus faibles."
+  sw: "Kanda dhaifu iko kwenye mteremko mkali zaidi: huenda udongo ni mwembamba na kuna mmomonyoko — ifunike na fikiria kupanda mbegu chache."
+  hi: "कमज़ोर क्षेत्र अधिक ढलान पर है: संभवतः पतली मिट्टी और कटाव — इसे ढका रखें और कम बीज दर पर विचार करें।"
+  de: "Die schwache Zone liegt am steileren Hang: vermutlich flachgründiger Boden und Erosion – bedeckt halten und geringere Saatstärken erwägen."
+sat_adv_samples:
+  en: "Take separate soil samples in each zone: weak vigour often traces back to compaction, pH or nutrient patches."
+  es: "Tome muestras de suelo separadas en cada zona: el bajo vigor suele deberse a compactación, pH o manchas de nutrientes."
+  fr: "Prélevez des échantillons de sol séparés dans chaque zone : une faible vigueur vient souvent du tassement, du pH ou de carences localisées."
+  sw: "Chukua sampuli tofauti za udongo katika kila kanda: ukuaji dhaifu mara nyingi hutokana na udongo kugandamizwa, pH au upungufu wa virutubisho sehemu fulani."
+  hi: "हर क्षेत्र से अलग मिट्टी नमूने लें: कमज़ोर ओज अक्सर मिट्टी के दबाव, pH या पोषक तत्वों की कमी वाले हिस्सों से होता है।"
+  de: "In jeder Zone getrennte Bodenproben nehmen: schwache Wüchsigkeit geht oft auf Verdichtung, pH oder Nährstoffnester zurück."
+sat_adv_use:
+  en: "Use the zones for variable-rate seeding/fertiliser or targeted scouting; walk the weakest zone first."
+  es: "Use las zonas para siembra o fertilización variable o para inspecciones dirigidas; recorra primero la zona más débil."
+  fr: "Utilisez les zones pour une modulation du semis/de la fertilisation ou une observation ciblée ; parcourez d'abord la zone la plus faible."
+  sw: "Tumia kanda kwa upandaji/mbolea kwa viwango tofauti au ukaguzi maalum; tembelea kanda dhaifu zaidi kwanza."
+  hi: "क्षेत्रों का उपयोग अलग-अलग बीज/उर्वरक दर या लक्षित निरीक्षण के लिए करें; सबसे कमज़ोर क्षेत्र पहले देखें।"
+  de: "Die Zonen für teilflächenspezifische Saat/Düngung oder gezielte Kontrollen nutzen; die schwächste Zone zuerst begehen."
+sat_adv_variable:
+  en: "The weak zone is also the most variable over time — a sign of stress in dry spells (water-holding capacity)."
+  es: "La zona débil es también la más variable en el tiempo: señal de estrés en periodos secos (capacidad de retención de agua)."
+  fr: "La zone faible est aussi la plus variable dans le temps — signe de stress pendant les périodes sèches (réserve utile)."
+  sw: "Kanda dhaifu pia ndiyo inayobadilika zaidi kwa muda — ishara ya msongo wakati wa ukame (uwezo wa kushika maji)."
+  hi: "कमज़ोर क्षेत्र समय के साथ सबसे अधिक बदलता भी है — सूखे दौर में तनाव का संकेत (जल धारण क्षमता)।"
+  de: "Die schwache Zone schwankt auch zeitlich am stärksten – ein Zeichen für Stress in Trockenphasen (Wasserhaltevermögen)."
+sat_src_name: {en: "Copernicus Sentinel-2 L2A (via Earth Search, AWS Open Data)", es: "Copernicus Sentinel-2 L2A (vía Earth Search, AWS Open Data)", fr: "Copernicus Sentinel-2 L2A (via Earth Search, AWS Open Data)", sw: "Copernicus Sentinel-2 L2A (kupitia Earth Search, AWS Open Data)", hi: "Copernicus Sentinel-2 L2A (Earth Search, AWS Open Data के माध्यम से)", de: "Copernicus Sentinel-2 L2A (über Earth Search, AWS Open Data)"}
+sat_src_res: {en: "10 m, 5-day revisit", es: "10 m, revisita cada 5 días", fr: "10 m, revisite tous les 5 jours", sw: "m 10, hupita tena kila siku 5", hi: "10 मी, हर 5 दिन में दोबारा", de: "10 m, Wiederholung alle 5 Tage"}
+sat_src_latency: {en: "~1 day", es: "~1 día", fr: "~1 jour", sw: "~siku 1", hi: "~1 दिन", de: "~1 Tag"}
+sat_caveat_clouds:
+  en: "Clouds and shadows are masked with the Sentinel-2 scene classification; scenes with < 60 % clear field pixels are skipped."
+  es: "Las nubes y sombras se enmascaran con la clasificación de escena de Sentinel-2; se omiten las escenas con < 60 % de píxeles despejados del campo."
+  fr: "Nuages et ombres sont masqués avec la classification de scène Sentinel-2 ; les scènes avec < 60 % de pixels dégagés sur la parcelle sont ignorées."
+  sw: "Mawingu na vivuli vinafichwa kwa uainishaji wa picha wa Sentinel-2; picha zenye < 60 % ya pikseli safi za shamba zinarukwa."
+  hi: "बादल और छाया Sentinel-2 दृश्य वर्गीकरण से हटाए जाते हैं; जिन दृश्यों में खेत के < 60 % पिक्सेल साफ़ हों उन्हें छोड़ दिया जाता है।"
+  de: "Wolken und Schatten werden mit der Sentinel-2-Szenenklassifikation maskiert; Aufnahmen mit < 60 % klaren Feldpixeln werden übersprungen."
+sat_caveat_ndvi:
+  en: "NDVI shows canopy greenness, not yield; differences between zones need to be checked on the ground."
+  es: "El NDVI muestra el verdor del follaje, no el rendimiento; las diferencias entre zonas deben comprobarse en terreno."
+  fr: "Le NDVI montre la verdure du couvert, pas le rendement ; les différences entre zones doivent être vérifiées sur le terrain."
+  sw: "NDVI huonyesha ukijani wa majani, si mavuno; tofauti kati ya kanda zinahitaji kuthibitishwa shambani."
+  hi: "NDVI छत्र की हरियाली दिखाता है, उपज नहीं; क्षेत्रों के अंतर खेत में जाकर जाँचें।"
+  de: "NDVI zeigt das Grün des Bestands, nicht den Ertrag; Unterschiede zwischen Zonen müssen vor Ort geprüft werden."
+sat_caveat_zones:
+  en: "Management zones are statistical (unsupervised); their causes (soil, water, pests) need local diagnosis."
+  es: "Las zonas de manejo son estadísticas (no supervisadas); sus causas (suelo, agua, plagas) requieren un diagnóstico local."
+  fr: "Les zones de gestion sont statistiques (non supervisées) ; leurs causes (sol, eau, ravageurs) demandent un diagnostic local."
+  sw: "Kanda za usimamizi ni za kitakwimu (bila usimamizi); sababu zake (udongo, maji, wadudu) zinahitaji uchunguzi wa eneo."
+  hi: "प्रबंधन क्षेत्र सांख्यिकीय (बिना निगरानी) हैं; उनके कारण (मिट्टी, पानी, कीट) स्थानीय जाँच से पता करें।"
+  de: "Bewirtschaftungszonen sind statistisch (unüberwacht); ihre Ursachen (Boden, Wasser, Schädlinge) brauchen eine Diagnose vor Ort."

@@ -14,25 +14,27 @@ from PIL import Image
 from ..data.dem import lonlat_to_tile, tile_to_lonlat
 from ..data.http import CACHE_DIR, DEMO_DIR, DataUnavailable, offline_mode
 from ..science import fielddetect
+from .messages import t
 
 IMAGERY = {
     "esri": (
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        "Imagery: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+        "Imagery: Esri, Maxar, Earthstar Geographics, and the GIS User Community",  # i18n: ok (attribution)
         19,
     ),
     "naip": (
         "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}",
-        "USDA NAIP / USGS The National Map (public domain)",
+        "USDA NAIP / USGS The National Map (public domain)",  # i18n: ok (attribution)
         16,
     ),
 }
 
 
+# technical method descriptions (API metadata, not shown to farmers)
 METHODS = {
-    "learned": "Learned field-edge map (tiny U-Net trained on Fields of The World) + scale-adaptive candidate regions "
+    "learned": "Learned field-edge map (tiny U-Net trained on Fields of The World) + scale-adaptive candidate regions "  # i18n: ok
     "ranked by a learned IoU predictor + Douglas–Peucker (tap-to-delineate)",
-    "classical": "Field-scale graph segmentation (Felzenszwalb) + edge-aware region growing + Douglas–Peucker "
+    "classical": "Field-scale graph segmentation (Felzenszwalb) + edge-aware region growing + Douglas–Peucker "  # i18n: ok
     "(tap-to-delineate)",
 }
 
@@ -87,7 +89,7 @@ def _merge_close(ring: list[list[float]], lat: float, min_m: float) -> list[list
     return out if len(out) >= 3 else ring
 
 
-def detect_field(lat: float, lon: float, source: str | None = None) -> dict[str, Any]:
+def detect_field(lat: float, lon: float, source: str | None = None, lang: str = "en") -> dict[str, Any]:
     src = source or "esri"
     attempts = [(src, 17), (src, 16)] if src == "esri" else [(src, 16), (src, 15)]
     last: dict[str, Any] | None = None
@@ -121,5 +123,5 @@ def detect_field(lat: float, lon: float, source: str | None = None) -> dict[str,
         "imagery": IMAGERY[last["_src"]][1],
         "pixel_m": round(m_per_px, 2),
         "params": last["params"],
-        "note": "Check the outline and drag the corners to fix it — fences, tree lines and roads are detected best; similar-looking neighbouring fields may merge, and small plots are the hardest case.",
+        "note": t("detect_note", lang),
     }

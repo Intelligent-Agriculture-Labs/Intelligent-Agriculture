@@ -16,6 +16,7 @@ The optimizer is a beam search over climate-feasible crops (+ automatic cover-cr
 
 from __future__ import annotations
 
+from contextvars import ContextVar
 from functools import lru_cache
 from pathlib import Path
 from statistics import median
@@ -24,6 +25,8 @@ from typing import Any
 import numpy as np
 import yaml
 
+from ..engine.messages import crop_name, has
+from ..engine.messages import t as _msg
 from .cropmodel import crop, crops
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
@@ -70,8 +73,31 @@ def rule(rid: str) -> dict[str, Any] | None:
     return next((r for r in knowledge()["rules"] if r.get("id") == rid), None)
 
 
+# Output language of the texts built here (set per request by engine/plan_service.py; context-local, thread-safe).
+_LANG: ContextVar[str] = ContextVar("rotation_plan_lang", default="en")
+
+
+def set_lang(lang: str) -> None:
+    _LANG.set(lang or "en")
+
+
+def _t(key: str, **kw: Any) -> str:
+    return _msg(key, _LANG.get(), **kw)
+
+
+def ktext(kind: str, ident: str, field: str, default: str) -> str:
+    """Translated knowledge-base text (config/messages/rotation_knowledge.yaml: rk_<kind>_<id>_<field>)."""
+    key = f"rk_{kind}_{ident}_{field}"
+    return _msg(key, _LANG.get()) if has(key) else default
+
+
 def cname(cid: str) -> str:
-    return str(crop(cid)["name"])
+    return crop_name(cid, _LANG.get(), str(crop(cid)["name"]))
+
+
+def family_name(family: str) -> str:
+    key = f"family_{family}"
+    return _msg(key, _LANG.get()) if has(key) else family
 
 
 def _short(text: str, n: int = 90) -> str:
@@ -99,21 +125,29 @@ def apply_rules(seq: list[str], i: int) -> tuple[float, list[dict[str, Any]], li
         pct = float(r["yield_effect_pct"])
         eff += pct / 100.0
         matched.add(r["id"])
-        conf = " (estimate)" if r.get("low_confidence") else ""
+        conf = _t("rp_estimate") if r.get("low_confidence") else ""
+        text = ktext("rule", str(r["id"]), "text", str(r.get("text", "")))
         if pct < 0:
             issues.append(
                 {
                     "id": f"rule:{r['id']}",
                     "severity": "problem" if pct <= -15 else "caution",
-                    "title": f"{cname(cid)} after {cname(hit)}: about {pct:.0f} % yield{conf}",
-                    "explanation": str(r.get("text", "")),
-                    "suggestion": f"Put a crop from another family between {cname(hit)} and {cname(cid)}.",
+                    "title": _t("rp_rule_title", crop=cname(cid), prev=cname(hit), pct=pct, conf=conf),
+                    "explanation": text,
+                    "suggestion": _t("rp_rule_suggestion", prev=cname(hit), crop=cname(cid)),
                     "sources": (r.get("sources") or [])[:2],
                 }
             )
         else:
             benefits.append(
-                f"{cname(hit)} before {cname(cid)}: about +{pct:.0f} % yield{conf} — {_short(str(r.get('text', '')), 140)}"
+                _t(
+                    "rp_rule_benefit",
+                    prev=cname(hit),
+                    crop=cname(cid),
+                    pct=pct,
+                    conf=conf,
+                    text=_short(text, 140),
+                )
             )
     return eff, issues, benefits, matched
 
@@ -205,10 +239,11 @@ def check_year(
                 {
                     "id": "return_interval",
                     "severity": sev if tol != "high" else "caution",
-                    "title": f"{cname(cid)} again too soon",
-                    "explanation": f"{cname(cid)} was grown {gap} year(s) earlier ({years[prev_same[-1]]}). Research recommends waiting at least {need} "
-                    f"years before growing it again on the same field, so its soil-borne pests and diseases die out.",
-                    "suggestion": f"Grow a crop from another family here and keep {cname(cid)} for {years[prev_same[-1]] + need} or later.",
+                    "title": _t("rp_return_title", crop=cname(cid)),
+                    "explanation": _t(
+                        "rp_return_expl", crop=cname(cid), gap=gap, year=years[prev_same[-1]], need=need
+                    ),
+                    "suggestion": _t("rp_return_sugg", crop=cname(cid), year=years[prev_same[-1]] + need),
                     "sources": k["sources"][:2],
                 }
             )
@@ -229,9 +264,9 @@ def check_year(
                 {
                     "id": "old_stand",
                     "severity": "caution",
-                    "title": f"{cname(cid)} stand is {run} years old",
-                    "explanation": "Old stands thin out and yields fall; most guides plough out after 4–5 years.",
-                    "suggestion": "Plan to end the stand and follow with a cereal that uses its nitrogen.",
+                    "title": _t("rp_old_stand_title", crop=cname(cid), run=run),
+                    "explanation": _t("rp_old_stand_expl"),
+                    "suggestion": _t("rp_old_stand_sugg"),
                     "sources": k["sources"][:1],
                 }
             )
@@ -251,10 +286,15 @@ def check_year(
                 {
                     "id": "family_interval",
                     "severity": "caution",
-                    "title": f"Same plant family as {cname(seq[prev_fam[-1]])}",
-                    "explanation": f"{cname(cid)} and {cname(seq[prev_fam[-1]])} are both {c['family']}; they share pests and diseases. "
-                    f"Leave {fam_need} years between crops of this family.",
-                    "suggestion": "Alternate plant families (e.g. grass → legume → brassica/other).",
+                    "title": _t("rp_family_title", crop=cname(seq[prev_fam[-1]])),
+                    "explanation": _t(
+                        "rp_family_expl",
+                        crop=cname(cid),
+                        prev=cname(seq[prev_fam[-1]]),
+                        family=family_name(c["family"]),
+                        need=fam_need,
+                    ),
+                    "suggestion": _t("rp_family_sugg"),
                     "sources": k["sources"][:1],
                 }
             )
@@ -271,14 +311,19 @@ def check_year(
         sev_w = {"high": 1.0, "medium": 0.6, "low": 0.3}.get(str(p.get("severity", "medium")), 0.6)
         sev = "problem" if (lvl == "high" and sev_w >= 1.0) else "caution"
         hy = ", ".join(f"{cname(seq[j])} {years[j]}" for j in host_years[-3:])
+        pname = ktext("path", pid, "name", str(p.get("name", pid)))
         issues.append(
             {
                 "id": f"shared_pathogen:{pid}",
                 "severity": sev,
-                "title": f"{lvl.capitalize()} {p.get('name', pid)} risk",
-                "explanation": f"{p.get('note') or p.get('name', pid)} It survives about {p.get('survival_years', '?')} years in the soil, "
-                f"and earlier host crops ({hy}) kept it alive.",
-                "suggestion": f"Leave {p.get('break_years', 3)} years without its host crops before {cname(cid)}.",
+                "title": _t("rp_path_title", level=_t(f"rp_level_{lvl}"), name=pname),
+                "explanation": _t(
+                    "rp_path_expl",
+                    note=ktext("path", pid, "note", str(p.get("note") or "")) or pname,
+                    survival=p.get("survival_years", "?"),
+                    hosts=hy,
+                ),
+                "suggestion": _t("rp_path_sugg", years=p.get("break_years", 3), crop=cname(cid)),
                 "sources": (p.get("sources") or [])[:2],
             }
         )
@@ -294,11 +339,14 @@ def check_year(
                 {
                     "id": "poor_predecessor",
                     "severity": "caution",
-                    "title": f"{cname(prev)} is a poor crop before {cname(cid)}",
-                    "explanation": k.get("note")
-                    or f"{cname(cid)} does worse after {cname(prev)} (pests, residue or nitrogen tie-up).",
-                    "suggestion": f"Put a better predecessor before {cname(cid)}"
-                    + (f", e.g. {cname(k['good_predecessors'][0])}." if k["good_predecessors"] else "."),
+                    "title": _t("rp_poor_title", prev=cname(prev), crop=cname(cid)),
+                    "explanation": ktext("crop", cid, "note", str(k.get("note") or ""))
+                    or _t("rp_poor_expl", crop=cname(cid), prev=cname(prev)),
+                    "suggestion": _t(
+                        "rp_poor_sugg_eg", crop=cname(cid), good=cname(k["good_predecessors"][0])
+                    )
+                    if k["good_predecessors"]
+                    else _t("rp_poor_sugg", crop=cname(cid)),
                     "sources": k["sources"][:1],
                 }
             )
@@ -308,8 +356,14 @@ def check_year(
             prev in k["good_predecessors"] or pk["preceding_crop_value"] in ("high", "medium")
         ):
             benefits.append(
-                f"{cname(prev)} is a good crop before {cname(cid)}"
-                + (f" ({pk['note']})" if pk.get("note") and prev in k["good_predecessors"] else ".")
+                _t(
+                    "rp_good_pred_note",
+                    prev=cname(prev),
+                    crop=cname(cid),
+                    note=ktext("crop", prev, "note", pk["note"]),
+                )
+                if pk.get("note") and prev in k["good_predecessors"]
+                else _t("rp_good_pred", prev=cname(prev), crop=cname(cid))
             )
             scale = (rule("predecessor_value_scale") or {}).get("scale") or {
                 "high": 15,
@@ -325,9 +379,9 @@ def check_year(
                 {
                     "id": "allelopathy",
                     "severity": "info",
-                    "title": f"Residues of {cname(prev)}",
-                    "explanation": str(pk["allelopathy"]),
-                    "suggestion": "Incorporate or let residues break down before sowing; avoid very small-seeded crops right after.",
+                    "title": _t("rp_residue_title", prev=cname(prev)),
+                    "explanation": ktext("crop", prev, "allelopathy", str(pk["allelopathy"])),
+                    "suggestion": _t("rp_residue_sugg"),
                     "sources": pk["sources"][:1],
                 }
             )
@@ -338,15 +392,15 @@ def check_year(
     if c["family"] == "Fabaceae":
         n_credit = max(n_credit, 0.0)
     if n_credit >= 20:
-        benefits.append(f"About {n_credit:.0f} kg N/ha left by the previous crops — less fertiliser needed.")
+        benefits.append(_t("rp_n_credit", n=n_credit))
     elif n_credit <= -15:
         issues.append(
             {
                 "id": "n_deficit",
                 "severity": "info",
-                "title": "Nitrogen tied up by straw",
-                "explanation": f"Residues of the previous crop tie up about {abs(n_credit):.0f} kg N/ha while they decompose.",
-                "suggestion": "Plan a little extra nitrogen at sowing or follow with a legume.",
+                "title": _t("rp_n_deficit_title"),
+                "explanation": _t("rp_n_deficit_expl", n=abs(n_credit)),
+                "suggestion": _t("rp_n_deficit_sugg"),
                 "sources": [],
             }
         )
@@ -359,8 +413,8 @@ def check_year(
             {
                 "id": "establishment",
                 "severity": "info",
-                "title": f"{cname(cid)} establishment year",
-                "explanation": "A new stand yields about 70 % of a full year while roots establish.",
+                "title": _t("rp_establish_title", crop=cname(cid)),
+                "explanation": _t("rp_establish_expl"),
                 "suggestion": None,
                 "sources": [],
             }
@@ -375,9 +429,9 @@ def check_year(
             {
                 "id": "climate",
                 "severity": "problem",
-                "title": f"{cname(cid)} struggles in this climate",
-                "explanation": st["feasible_issue"],
-                "suggestion": "Choose a crop from the list that fits this field's season.",
+                "title": _t("rp_climate_title", crop=cname(cid)),
+                "explanation": _t(st["feasible_issue"], **(st.get("feasible_issue_kw") or {})),
+                "suggestion": _t("rp_climate_sugg"),
                 "sources": [],
             }
         )
@@ -387,9 +441,9 @@ def check_year(
             {
                 "id": "water_shortfall",
                 "severity": "caution",
-                "title": "Needs more water than you have",
-                "explanation": f"{cname(cid)} needs about {st['irrigation_mm']:.0f} mm of irrigation in a typical year here; your allocation is {alloc:.0f} mm.",
-                "suggestion": "Pick a lower-water crop, use deficit irrigation, or split the field.",
+                "title": _t("rp_water_title"),
+                "explanation": _t("rp_water_expl", crop=cname(cid), irr=st["irrigation_mm"], alloc=alloc),
+                "suggestion": _t("rp_water_sugg"),
                 "sources": [],
             }
         )
@@ -398,9 +452,9 @@ def check_year(
             {
                 "id": "drought_risk",
                 "severity": "caution",
-                "title": "Often fails in dry years",
-                "explanation": f"Without irrigation, {cname(cid)} failed in {100 * st['fail_share']:.0f} % of the last {st['n']} seasons at this field.",
-                "suggestion": "Consider a more drought-tolerant crop (e.g. sorghum, millet, cowpea) or earlier sowing.",
+                "title": _t("rp_drought_title"),
+                "explanation": _t("rp_drought_expl", crop=cname(cid), pct=100 * st["fail_share"], n=st["n"]),
+                "suggestion": _t("rp_drought_sugg"),
                 "sources": [],
             }
         )
@@ -418,10 +472,10 @@ def check_year(
             {
                 "id": "bare_soil",
                 "severity": "caution" if (erosion or 0) > 3 else "info",
-                "title": f"Soil bare for ~{bare} days",
-                "explanation": "Bare soil loses structure, carbon and — on slopes or in heavy rain — topsoil."
-                + (f" Estimated erosion here: {erosion:.1f} t/ha per year." if erosion is not None else ""),
-                "suggestion": "Sow a cover crop after harvest.",
+                "title": _t("rp_bare_title", days=bare),
+                "explanation": _t("rp_bare_expl")
+                + (_t("rp_bare_erosion", e=erosion) if erosion is not None else ""),
+                "suggestion": _t("rp_bare_sugg"),
                 "sources": [],
             }
         )
@@ -529,7 +583,12 @@ def evaluate_plan(
                 worst = max(worst, pres)
         if yrs:
             dp.append(
-                {"pathogen": pid, "name": p.get("name", pid), "level": pressure_level(worst), "years": yrs}
+                {
+                    "pathogen": pid,
+                    "name": ktext("path", pid, "name", str(p.get("name", pid))),
+                    "level": pressure_level(worst),
+                    "years": yrs,
+                }
             )
     score = float(np.mean([y["score"] for y in out])) if out else 0.0
     n_prob = sum(y["verdict"] == "problem" for y in out)
@@ -599,7 +658,10 @@ def optimize(
     return best[1], best[0]
 
 
-def slot_summary(slot: Any, c: dict[str, Any], feasible_issue: str | None, cid: str) -> dict[str, Any]:
+def slot_summary(
+    slot: Any, c: dict[str, Any], feasible_issue: str | None, cid: str, issue_kw: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """`feasible_issue` is a message key (config/messages/rotation_plan.yaml) filled with `issue_kw`."""
     ys = slot.yields or [0.0]
     return {
         "yield_median": float(median(ys)),
@@ -611,6 +673,7 @@ def slot_summary(slot: Any, c: dict[str, Any], feasible_issue: str | None, cid: 
         "season_days": int(slot.length or c.get("season_days", 120)),
         "n": int(slot.n),
         "feasible_issue": feasible_issue,
+        "feasible_issue_kw": issue_kw or {},
         "small_grain": cid
         in {
             "winter_wheat",

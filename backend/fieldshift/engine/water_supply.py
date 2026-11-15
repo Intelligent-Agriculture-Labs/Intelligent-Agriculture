@@ -16,12 +16,7 @@ from ..science import groundwater as gw
 from .context import FieldContext
 from .messages import t
 
-GRACE_CAVEATS = [
-    "This is a regional signal: your own well can stay steady while the region loses water, or the reverse.",
-    "GRACE senses total water storage (groundwater + soil water + surface water + snow) over ~300 km "
-    "(one 3° mascon), not the aquifer under your field; local wells can behave differently.",
-    "GRACE data arrive ~2–3 months late, and the GRACE → GRACE-FO gap (Jul 2017 – May 2018) has no data.",
-]
+GRACE_CAVEATS = ["gw_caveat_regional", "gw_caveat_total", "gw_caveat_latency"]  # message keys
 
 
 def rain_sources(ctx: FieldContext) -> list[str]:
@@ -30,7 +25,7 @@ def rain_sources(ctx: FieldContext) -> list[str]:
     return ["gpm_imerg", "gpm_imerg_nrt"] if ctx.rain_meta.get("imerg_nrt_last") else ["gpm_imerg"]
 
 
-def rain_step(ctx: FieldContext) -> str | None:
+def rain_step(ctx: FieldContext, lang: str = "en") -> str | None:
     """One sentence on where the rain numbers come from (for every rain-driven Why)."""
     m = ctx.rain_meta
     if m.get("imerg_used") and m.get("imerg_nrt_last"):
@@ -42,13 +37,9 @@ def rain_step(ctx: FieldContext) -> str | None:
             f"not gauge-calibrated and are checked against Final in VALIDATION V13b."
         )
     if m.get("imerg_used"):
-        return (
-            f"Rain: NASA POWER (MERRA-2) and NASA GPM IMERG satellite rain averaged day by day (IMERG to {m['imerg_last']}; "
-            f"later days use POWER scaled to IMERG's climatology). Against 18 rain gauges on 6 continents this blend "
-            f"beat POWER alone at 16 (VALIDATION V13)."
-        )
+        return t("rain_step_imerg", lang, last=m["imerg_last"])
     if m.get("reason") == "outside_validated_band":
-        return "Rain: NASA POWER only — GPM IMERG blending is validated only between 45° S and 45° N."
+        return t("rain_step_power_only", lang)
     return None
 
 
@@ -66,13 +57,20 @@ def rain_source_block(ctx: FieldContext) -> dict[str, Any]:
     }
 
 
-def _trend_text(tr: gw.StorageTrend) -> str:
+def _trend_text(tr: gw.StorageTrend, lang: str = "en") -> str:
     sig = (
-        "statistically significant"
+        "gw_sig_yes"
         if tr.p_value < gw.ALPHA
-        else ("probable but not certain" if tr.p_value < gw.ALPHA_LIKELY else "not significant")
+        else ("gw_sig_likely" if tr.p_value < gw.ALPHA_LIKELY else "gw_sig_no")
     )
-    return f"{tr.slope_cm_yr:+.2f} ± {1.96 * tr.slope_se_cm_yr:.2f} cm/yr (95 % range), p = {tr.p_value:.3f} — {sig}"
+    return t(
+        "gw_trend_text",
+        lang,
+        slope=tr.slope_cm_yr,
+        se=1.96 * tr.slope_se_cm_yr,
+        p=tr.p_value,
+        sig=t(sig, lang),
+    )
 
 
 def groundwater(
@@ -94,7 +92,7 @@ def groundwater(
     series.append(
         _series(
             "grace_tws",
-            "Water storage anomaly (GRACE/GRACE-FO, ~300 km)",
+            t("series_grace_tws", lang),
             "cm",
             dates,
             vals,
@@ -105,7 +103,7 @@ def groundwater(
     series.append(
         _series(
             "grace_trend",
-            "Long-term trend (fitted)",
+            t("series_grace_trend", lang),
             "cm",
             dates,
             gw.trend_line(dates, vals),
@@ -115,46 +113,33 @@ def groundwater(
     )
     falling = tr.status in ("declining", "likely_declining")
     steps = [
-        f"NASA GRACE and GRACE-FO weigh the water stored under and on the land each month ({tr.first} to {tr.last}, "
-        f"{tr.n_months} months; JPL RL06.3 mascons).",
-        f"Trend at this location: {_trend_text(tr)}. Change since 2003: {tr.change_cm:+.0f} cm of water.",
-        f"Last 3 months (seasonal cycle removed): {tr.anomaly_cm:+.0f} cm vs. the 2004–2009 mean, "
-        f"lower than {100 - tr.percentile:.0f} % of months on record.",
+        t("gw_step_intro", lang, first=tr.first, last=tr.last, n=tr.n_months),
+        t("gw_step_trend", lang, trend=_trend_text(tr, lang), change=tr.change_cm),
+        t("gw_step_recent", lang, anom=tr.anomaly_cm, pct=100 - tr.percentile),
     ]
     if tr.recent_slope_cm_yr is not None:
-        steps.append(
-            f"Last 5 years alone: {tr.recent_slope_cm_yr:+.1f} cm/yr (wet or dry spells dominate short windows)."
-        )
-    steps.append(
-        "Check against wells (VALIDATION V14): in 11 U.S. aquifer regions, GRACE's yearly storage moved with USGS "
-        "groundwater levels in all 11 (median r = 0.56) and the trend direction matched in 8; it can disagree where "
-        "irrigation recharge keeps shallow wells steady while the wider region dries (e.g. Fallon, Nevada)."
-    )
+        steps.append(t("gw_step_5y", lang, slope=tr.recent_slope_cm_yr))
+    steps.append(t("gw_step_wells", lang))
     if r["moved_km"]:
-        steps.append(f"Nearest land cell used ({r['moved_km']} km away).")
+        steps.append(t("gw_step_moved", lang, km=r["moved_km"]))
     conf = 0.6 if tr.status in ("declining", "rising") else 0.45
-    note = (
-        "A long, statistically tested record; but the footprint is ~300 km and includes soil and surface water."
-        if tr.p_value < gw.ALPHA
-        else "Year-to-year swings are large compared with the trend, so its direction is uncertain."
-    )
-    status_word = {
-        "declining": "falling",
-        "likely_declining": "probably falling",
-        "stable": "no clear trend",
-        "likely_rising": "probably rising",
-        "rising": "rising",
-    }[tr.status]
+    note = t("gw_note_sig" if tr.p_value < gw.ALPHA else "gw_note_uncertain", lang)
     why = _why(
-        f"Water stored in this region is {status_word}: {tr.slope_cm_yr:+.1f} cm per year since {tr.first[:4]} "
-        f"(p = {tr.p_value:.2f}).",
+        t(
+            "gw_sum",
+            lang,
+            status=t(f"gw_status_{tr.status}", lang),
+            slope=tr.slope_cm_yr,
+            year=tr.first[:4],
+            p=tr.p_value,
+        ),
         steps,
         ["grace_tws", "grace_trend"],
-        "Harmonic regression with AR(1)-adjusted trend test on GRACE/GRACE-FO mascons",
+        t("model_grace", lang),
         "groundwater",
         conf,
         note,
-        GRACE_CAVEATS,
+        [t(k, lang) for k in GRACE_CAVEATS],
         ["grace_fo"],
     )
     block = {
@@ -169,10 +154,8 @@ def groundwater(
     if irrigated and falling:
         steps_card = [
             *steps,
-            "On an irrigated farm, falling storage means pumping is drawing down the aquifer faster than rain and rivers "
-            "refill it: wells get deeper and pumping costs rise.",
-            "Water-saving rotations (fewer thirsty crops in a row, deficit irrigation, winter cover crops instead of "
-            "summer-irrigated crops) reduce the draw; compare them in the Rotations tab.",
+            t("gw_step_irrigated", lang),
+            t("gw_step_rotations", lang),
         ]
         card = {
             "id": "groundwater_trend",
@@ -189,7 +172,7 @@ def groundwater(
 
 
 def rotation_water_weight(
-    lat: float, lon: float, irrigated: bool, today: dt.date
+    lat: float, lon: float, irrigated: bool, today: dt.date, lang: str = "en"
 ) -> tuple[float, str | None]:
     """Multiplier for the 'water' priority in rotation ranking, and an explanation (irrigated + storage falling)."""
     if not irrigated:
@@ -199,9 +182,8 @@ def rotation_water_weight(
     if tr is None or tr.status not in ("declining", "likely_declining"):
         return 1.0, None
     factor = 1.5 if tr.status == "declining" else 1.25
-    return factor, (
-        f"NASA GRACE/GRACE-FO: water storage in this region is falling ({tr.slope_cm_yr:+.1f} cm/yr since {tr.first[:4]}, "
-        f"p = {tr.p_value:.2f}), so water use counts {factor:g}× in the ranking. Prefer rotations that pump less."
+    return factor, t(
+        "gw_rotation_note", lang, slope=tr.slope_cm_yr, year=tr.first[:4], p=tr.p_value, f=factor
     )
 
 
@@ -213,11 +195,13 @@ def latest_month(lat: float, lon: float) -> str | None:
 RAIN_CARDS = {"irrigate", "rainfed_ok", "rainfed_stress", "drought"}
 
 
-def annotate_rain(ctx: FieldContext, cards: list[dict[str, Any]], series: list[dict[str, Any]]) -> None:
+def annotate_rain(
+    ctx: FieldContext, cards: list[dict[str, Any]], series: list[dict[str, Any]], lang: str = "en"
+) -> None:
     """Credit GPM IMERG wherever blended rain drives a card or chart (no-op when POWER rain is served)."""
     if not ctx.rain_meta.get("imerg_used"):
         return
-    step = rain_step(ctx)
+    step = rain_step(ctx, lang)
     for cd in cards:
         if cd["id"] not in RAIN_CARDS:
             continue
@@ -228,5 +212,5 @@ def annotate_rain(ctx: FieldContext, cards: list[dict[str, Any]], series: list[d
             why["steps"] = [*why["steps"], step]
     for s in series:
         if s["id"] == "precip":
-            s["label"] = "Rain (NASA POWER + GPM IMERG)"
+            s["label"] = t("series_precip_imerg", lang)
             s["source"] = "gpm_imerg"

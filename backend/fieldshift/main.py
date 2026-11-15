@@ -59,6 +59,7 @@ class SimulateRequest(BaseModel):
     rain_factor: float = Field(1.0, ge=0.3, le=1.7)
     years: int = Field(20, ge=5, le=35)
     as_of: str | None = None
+    lang: Lang = "en"
 
 
 class Priorities(BaseModel):
@@ -140,6 +141,7 @@ class SolarPumpRequest(BaseModel):
     diesel_price_usd_l: float | None = Field(None, gt=0, le=10)
     capex_usd_kwp: float | None = Field(None, gt=0, le=10000)
     as_of: str | None = None
+    lang: Lang = "en"
 
 
 @app.post("/api/solar-pump")
@@ -161,6 +163,7 @@ def solar_pump_ep(req: SolarPumpRequest) -> dict[str, Any]:
             diesel_price_usd_l=req.diesel_price_usd_l,
             capex_usd_kwp=req.capex_usd_kwp,
             as_of=req.as_of,
+            lang=req.lang,
         )
     except ValueError as e:
         raise HTTPException(422, str(e)) from e
@@ -168,11 +171,14 @@ def solar_pump_ep(req: SolarPumpRequest) -> dict[str, Any]:
 
 @app.get("/api/climate")
 def climate_ep(
-    lat: float = Query(ge=-60, le=75), lon: float = Query(ge=-180, le=180), as_of: str | None = None
+    lat: float = Query(ge=-60, le=75),
+    lon: float = Query(ge=-180, le=180),
+    as_of: str | None = None,
+    lang: Lang = "en",
 ) -> dict[str, Any]:
     import datetime as dt
 
-    return service.climate_api(lat, lon, dt.date.fromisoformat(as_of) if as_of else None)
+    return service.climate_api(lat, lon, dt.date.fromisoformat(as_of) if as_of else None, lang)
 
 
 @app.get("/api/export/advice.csv")
@@ -327,6 +333,7 @@ class SatelliteRequest(BaseModel):
     crop: str | None = None
     start: str | None = None
     end: str | None = None
+    lang: Lang = "en"
 
 
 @app.post("/api/satellite")
@@ -357,6 +364,7 @@ class DetectRequest(BaseModel):
     lat: float = Field(ge=-60, le=75)
     lon: float = Field(ge=-180, le=180)
     source: Literal["esri", "naip"] | None = None
+    lang: Lang = "en"
 
 
 @app.post("/api/fields/detect")
@@ -364,7 +372,7 @@ def detect_ep(req: DetectRequest) -> dict[str, Any]:
     """Tap-to-detect: returns an editable field polygon around the tapped point."""
     from .engine import fields
 
-    return fields.detect_field(req.lat, req.lon, req.source)
+    return fields.detect_field(req.lat, req.lon, req.source, req.lang)
 
 
 class RegisterRequest(BaseModel):
@@ -619,6 +627,7 @@ class PlannerRequest(BaseModel):
     irrigation: Irr = "sprinkler"
     water_allocation_mm: float | None = None
     as_of: str | None = None
+    lang: Lang = "en"
 
 
 @app.post("/api/planner")
@@ -654,6 +663,7 @@ class TerrainRequest(BaseModel):
     lon: float = Field(ge=-180, le=180)
     crop: str = "maize"
     polygon: list[list[float]] | None = None
+    lang: Lang = "en"
 
 
 @app.post("/api/terrain")

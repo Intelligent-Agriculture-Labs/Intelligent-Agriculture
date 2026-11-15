@@ -14,6 +14,7 @@ from ..science import rotation as rot
 from ..science import rotation_plan as rp
 from ..science.cropmodel import crop, crops
 from .context import build
+from .messages import crop_name, t
 
 _cache: dict[tuple[Any, ...], tuple[dict[str, dict[str, Any]], list[str]]] = {}
 _lock = threading.Lock()
@@ -61,24 +62,26 @@ def _crop_stats(
             )
         except Exception:  # a crop with incomplete parameters must not break the planner
             continue
-        issue = None
+        issue = (
+            None  # message key (config/messages/rotation_plan.yaml), translated when the plan is evaluated
+        )
+        issue_kw: dict[str, Any] = {}
         if slot.n < 0.6 * len(years):
-            issue = "Not enough complete seasons in the weather record for this crop here."
+            issue = "rp_feas_few_seasons"
         elif (
             c["type"] not in ("perennial", "cover")
             and slot.frost
             and np.mean([f > 0 for f in slot.frost]) > 0.3
         ):
-            issue = f"Damaging frost during the season in {100 * np.mean([f > 0 for f in slot.frost]):.0f} % of the last {len(years)} years."
+            issue = "rp_feas_frost"
+            issue_kw = {"pct": 100 * float(np.mean([f > 0 for f in slot.frost])), "n": len(years)}
         elif (
             c["typical_yield_t_ha"] > 0
             and slot.yields
             and np.median(slot.yields) < 0.35 * c["typical_yield_t_ha"] * w.yield_factor(cid, irrigated)
         ):
-            issue = (
-                "The local season is too short, cold or dry: simulated yields are below a third of normal."
-            )
-        stats[cid] = rp.slot_summary(slot, c, issue, cid)
+            issue = "rp_feas_unfit"
+        stats[cid] = rp.slot_summary(slot, c, issue, cid, issue_kw)
         if issue is None and c["type"] != "cover":
             feasible.append(cid)
     with _lock:
@@ -94,10 +97,10 @@ def _field_rkls(req: dict[str, Any], first_crop: str) -> float | None:
     try:
         from . import maps
 
-        t = maps.terrain_api(
+        ter = maps.terrain_api(
             {"lat": req["lat"], "lon": req["lon"], "crop": first_crop, "polygon": req.get("polygon")}
         )
-        ero = next(lyr for lyr in t["layers"] if lyr["id"] == "erosion")
+        ero = next(lyr for lyr in ter["layers"] if lyr["id"] == "erosion")
         c = crop(first_crop)
         cf = (
             0.02
@@ -172,7 +175,11 @@ def _area_ha(poly: list[list[float]] | None) -> float | None:
 
 
 def plan_impact(
-    cur: list[dict[str, Any]], new: list[dict[str, Any]], poly: list[list[float]] | None, label: str
+    cur: list[dict[str, Any]],
+    new: list[dict[str, Any]],
+    poly: list[list[float]] | None,
+    label: str,
+    lang: str = "en",
 ) -> dict[str, Any]:
     """Current plan vs. improved plan over the planning horizon (per hectare and, with an outline, for the field)."""
     n = max(1, len(cur))
@@ -209,28 +216,28 @@ def plan_impact(
     gains: list[str] = []
     costs: list[str] = []
     if water > 5:
-        gains.append(f"{water:.0f} mm less irrigation per year")
+        gains.append(t("plan_gain_water", lang, v=water))
     elif water < -5:
-        costs.append(f"{-water:.0f} mm more irrigation per year")
+        costs.append(t("plan_cost_water", lang, v=-water))
     if n_saved > 5:
-        gains.append(f"{n_saved:.0f} kg less fertiliser N per ha (≈ {n_saved * CO2E_PER_KG_N:.0f} kg CO₂e)")
+        gains.append(t("plan_gain_n", lang, v=n_saved, co2=n_saved * CO2E_PER_KG_N))
     elif n_saved < -5:
-        costs.append(f"{-n_saved:.0f} kg more fertiliser N per ha")
+        costs.append(t("plan_cost_n", lang, v=-n_saved))
     if soil > 0.5:
-        gains.append(f"{soil:.1f} t/ha more topsoil kept")
+        gains.append(t("plan_gain_soil", lang, v=soil))
     elif soil < -0.5:
-        costs.append(f"{-soil:.1f} t/ha more soil loss")
+        costs.append(t("plan_cost_soil", lang, v=-soil))
     if margin > 20:
-        gains.append(f"+${margin:.0f}/ha indicative margin")
+        gains.append(t("plan_gain_margin", lang, v=margin))
     elif margin < -20:
-        costs.append(f"${-margin:.0f}/ha less indicative margin")
+        costs.append(t("plan_cost_margin", lang, v=-margin))
     headline = (
-        ("Over these years the " + label + " would give " + "; ".join(gains) + ".")
+        t("plan_headline_gains", lang, label=label, gains="; ".join(gains))
         if gains
-        else "The improved plan mainly lowers disease and pest risk."
+        else t("plan_headline_pests", lang)
     )
     if costs:
-        headline += " Trade-off: " + "; ".join(costs) + "."
+        headline += t("plan_tradeoff", lang, costs="; ".join(costs))
     return {
         "vs": label,
         "years": len(cur),
@@ -238,8 +245,7 @@ def plan_impact(
         "field_area_ha": round(area, 2) if area else None,
         "field_total": field_total,
         "headline": headline,
-        "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the "
-        "direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted.",
+        "method": t("plan_impact_method", lang),
     }
 
 
@@ -251,6 +257,8 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     if not plan:
         raise ValueError("plan must contain at least one known crop")
     pri = {**DEFAULT_PRI, **(req.get("priorities") or {})}
+    lang = req.get("lang") or "en"
+    rp.set_lang(lang)
     own = [x["crop"] for x in [*history, *plan]]
     irrigation = req.get("irrigation", "none")
     alloc = req.get("water_allocation_mm")
@@ -318,10 +326,16 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
             fixed = [i["title"] for i in y["issues"] if i["severity"] != "info"][:2]
             sugg.append(
                 {
-                    "title": f"{y['year']}: grow {crop(best[1])['name']} instead of {crop(y['crop'])['name']}",
-                    "explanation": ("This avoids: " + "; ".join(fixed) + ".")
+                    "title": t(
+                        "plan_sugg_swap_title",
+                        lang,
+                        year=y["year"],
+                        new=crop_name(best[1], lang),
+                        old=crop_name(y["crop"], lang),
+                    ),
+                    "explanation": t("plan_sugg_avoids", lang, items="; ".join(fixed))
                     if fixed
-                    else "Better fit for this field.",
+                    else t("plan_sugg_better", lang),
                     "plan": trial,
                     "score": round(best[0], 1),
                     "score_gain": round(best[0] - base, 1),
@@ -338,8 +352,8 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
                 _, s2 = rp.evaluate_plan(history, trial, stats, field, pri)
                 sugg.append(
                     {
-                        "title": f"{y['year']}: sow {crop(cov)['name']} after harvest",
-                        "explanation": "Keeps the soil covered over the bare period, adds organic matter and (legume mixes) nitrogen.",
+                        "title": t("plan_sugg_cover_title", lang, year=y["year"], cover=crop_name(cov, lang)),
+                        "explanation": t("plan_sugg_cover_expl", lang),
                         "plan": trial,
                         "score": round(s2["score"], 1),
                         "score_gain": round(s2["score"] - base, 1),
@@ -367,29 +381,28 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
         )
         if best_score > base + 0.5:
             changed = [
-                f"{p['year']}: {crop(p['crop'])['name']}"
+                f"{p['year']}: {crop_name(p['crop'], lang)}"
                 for p, q in zip(best_plan, plan, strict=True)
                 if p["crop"] != q["crop"]
             ]
             optimized = {
                 "plan": best_plan,
                 "score": round(best_score, 1),
-                "explanation": "Searched thousands of crop sequences that fit this field's climate, scoring each year for disease breaks, "
-                "nitrogen, soil cover, water and income with your priorities. Changes: "
-                + (", ".join(changed) or "cover crops only")
-                + ".",
+                "explanation": t(
+                    "plan_opt_expl", lang, changes=", ".join(changed) or t("plan_opt_covers_only", lang)
+                ),
             }
 
     n_prob = sum(y["verdict"] == "problem" for y in years)
     n_caut = sum(y["verdict"] == "caution" for y in years)
     if n_prob:
-        headline = f"{n_prob} year(s) need a change — see the red years."
+        headline = t("plan_headline_problem", lang, n=n_prob)
     elif n_caut:
-        headline = f"Workable plan — {n_caut} year(s) could be better."
+        headline = t("plan_headline_caution", lang, n=n_caut)
     else:
-        headline = "Good plan — no biological or water problems found."
+        headline = t("plan_headline_good", lang)
     if optimized and optimized["score"] - base >= 5:
-        headline += f" The optimised plan scores {optimized['score']:.0f} vs {base:.0f}."
+        headline += t("plan_headline_opt", lang, opt=optimized["score"], base=base)
     summary["headline"] = headline
     impact = None
     better: list[dict[str, Any]] | None = None
@@ -400,7 +413,11 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     if better:
         y2, _ = rp.evaluate_plan(history, better, stats, field, pri)
         impact = plan_impact(
-            years, y2, req.get("polygon"), "optimised plan" if optimized else "suggested change"
+            years,
+            y2,
+            req.get("polygon"),
+            t("plan_label_optimised" if optimized else "plan_label_suggested", lang),
+            lang,
         )
     return {
         "impact": impact,
@@ -414,6 +431,5 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
             source_ref("srtm", "live"),
             source_ref("soilgrids", "live"),
         ],
-        "disclaimer": "Rotation rules come from published agronomic research (see Rotation science); yields and water use are simulated with NASA "
-        "weather at your field. Local conditions, varieties and markets differ — check with your adviser before big changes.",
+        "disclaimer": t("plan_disclaimer", lang),
     }

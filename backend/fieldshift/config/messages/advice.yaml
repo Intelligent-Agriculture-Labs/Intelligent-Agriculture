@@ -1,0 +1,599 @@
+# Why-view texts of the advice cards (engine/service.py: water balance, planning). {placeholders} may carry
+# Python format specs ({x:.0f}); keep them unchanged in every language.
+why_caveat_grid:
+  en: "Weather comes from NASA POWER (~50 km grid) and a forecast (~10–25 km): conditions at your field can differ, especially near hills or water."
+  es: "El tiempo viene de NASA POWER (cuadrícula de ~50 km) y de un pronóstico (~10–25 km): en su campo puede ser distinto, sobre todo cerca de cerros o agua."
+  fr: "La météo provient de NASA POWER (maille ~50 km) et d'une prévision (~10–25 km) : les conditions sur votre parcelle peuvent différer, surtout près des collines ou de l'eau."
+  sw: "Hali ya hewa inatoka NASA POWER (gridi ya ~km 50) na utabiri (~km 10–25): shambani kwako inaweza kuwa tofauti, hasa karibu na milima au maji."
+  hi: "मौसम NASA POWER (~50 किमी ग्रिड) और पूर्वानुमान (~10–25 किमी) से है: आपके खेत की स्थिति अलग हो सकती है, खासकर पहाड़ियों या पानी के पास।"
+  de: "Das Wetter stammt aus NASA POWER (~50-km-Raster) und einer Vorhersage (~10–25 km): Auf Ihrem Feld kann es anders sein, besonders nahe Hügeln oder Gewässern."
+series_soil_depletion:
+  en: "Root-zone water used (depletion)"
+  es: "Agua usada de la zona de raíces (agotamiento)"
+  fr: "Eau consommée dans la zone racinaire (épuisement)"
+  sw: "Maji yaliyotumika eneo la mizizi (upungufu)"
+  hi: "जड़ क्षेत्र से उपयोग हुआ पानी (कमी)"
+  de: "Verbrauchtes Wasser im Wurzelraum (Entleerung)"
+series_raw:
+  en: "Stress point (RAW)"
+  es: "Punto de estrés (RAW)"
+  fr: "Seuil de stress (RAW)"
+  sw: "Kiwango cha msongo (RAW)"
+  hi: "तनाव बिंदु (RAW)"
+  de: "Stressgrenze (RAW)"
+series_taw:
+  en: "Total available water (TAW)"
+  es: "Agua disponible total (TAW)"
+  fr: "Eau totale disponible (TAW)"
+  sw: "Jumla ya maji yanayopatikana (TAW)"
+  hi: "कुल उपलब्ध पानी (TAW)"
+  de: "Gesamt verfügbares Wasser (TAW)"
+series_irrigation_applied:
+  en: "Irrigation (model schedule)"
+  es: "Riego (calendario del modelo)"
+  fr: "Irrigation (calendrier du modèle)"
+  sw: "Umwagiliaji (ratiba ya modeli)"
+  hi: "सिंचाई (मॉडल समय-सारणी)"
+  de: "Bewässerung (Modellplan)"
+series_ecostress_et:
+  en: "Measured field ET (NASA ECOSTRESS, 70 m)"
+  es: "ET medida del campo (NASA ECOSTRESS, 70 m)"
+  fr: "ET mesurée de la parcelle (NASA ECOSTRESS, 70 m)"
+  sw: "ET iliyopimwa shambani (NASA ECOSTRESS, m 70)"
+  hi: "खेत का मापा गया ET (NASA ECOSTRESS, 70 मी)"
+  de: "Gemessene Feld-ET (NASA ECOSTRESS, 70 m)"
+stage_initial: {en: "initial", es: "inicial", fr: "initiale", sw: "mwanzo", hi: "प्रारंभिक", de: "Anfangsphase"}
+stage_development: {en: "development", es: "desarrollo", fr: "développement", sw: "ukuaji", hi: "विकास", de: "Entwicklung"}
+stage_mid: {en: "mid-season", es: "plena temporada", fr: "mi-saison", sw: "katikati ya msimu", hi: "मध्य-मौसम", de: "Hauptwachstum"}
+stage_late: {en: "late season", es: "final de temporada", fr: "fin de saison", sw: "mwisho wa msimu", hi: "अंतिम चरण", de: "Abreife"}
+stage_evergreen: {en: "evergreen", es: "siempre verde", fr: "toujours vert", sw: "kijani daima", hi: "सदाबहार", de: "immergrün"}
+stage_cold-rest: {en: "cold rest", es: "reposo invernal", fr: "repos hivernal", sw: "mapumziko ya baridi", hi: "शीत विश्राम", de: "Winterruhe"}
+stage_regrowth: {en: "regrowth", es: "rebrote", fr: "repousse", sw: "kuchipua upya", hi: "पुनर्वृद्धि", de: "Wiederaustrieb"}
+stage_pre-cut: {en: "before cut", es: "antes del corte", fr: "avant la coupe", sw: "kabla ya kukata", hi: "कटाई से पहले", de: "vor dem Schnitt"}
+stage_dormant: {en: "dormant", es: "latente", fr: "en dormance", sw: "imelala", hi: "सुप्त", de: "Ruhephase"}
+stage_harvested: {en: "harvested", es: "cosechado", fr: "récolté", sw: "imevunwa", hi: "कटाई हो चुकी", de: "geerntet"}
+irr_drip: {en: "drip", es: "goteo", fr: "goutte-à-goutte", sw: "matone", hi: "ड्रिप", de: "Tropf"}
+irr_sprinkler: {en: "sprinkler", es: "aspersión", fr: "aspersion", sw: "vinyunyizio", hi: "स्प्रिंकलर", de: "Beregnung"}
+irr_pivot: {en: "centre pivot", es: "pivote central", fr: "pivot central", sw: "pivoti", hi: "सेंटर पिवट", de: "Kreisberegnung"}
+irr_furrow: {en: "furrow", es: "surcos", fr: "à la raie", sw: "mifereji", hi: "कूँड़", de: "Furchen"}
+irr_flood: {en: "flood", es: "inundación", fr: "submersion", sw: "mafuriko", hi: "बाढ़ (क्यारी)", de: "Überstau"}
+irr_none: {en: "no", es: "sin", fr: "sans", sw: "bila", hi: "बिना", de: "ohne"}
+soil_default: {en: "loam (default)", es: "franco (por defecto)", fr: "limon (par défaut)", sw: "tifutifu (chaguo-msingi)", hi: "दोमट (डिफ़ॉल्ट)", de: "Lehm (Standard)"}
+soil_sand: {en: "sand", es: "arenoso", fr: "sable", sw: "mchanga", hi: "बलुई", de: "Sand"}
+soil_loamy sand: {en: "loamy sand", es: "arenoso franco", fr: "sable limoneux", sw: "mchanga tifutifu", hi: "दोमट बलुई", de: "lehmiger Sand"}
+soil_sandy loam: {en: "sandy loam", es: "franco arenoso", fr: "limon sableux", sw: "tifutifu ya mchanga", hi: "बलुई दोमट", de: "sandiger Lehm"}
+soil_loam: {en: "loam", es: "franco", fr: "limon", sw: "tifutifu", hi: "दोमट", de: "Lehm"}
+soil_silt loam: {en: "silt loam", es: "franco limoso", fr: "limon fin", sw: "tifutifu ya tope", hi: "गादयुक्त दोमट", de: "schluffiger Lehm"}
+soil_silt: {en: "silt", es: "limoso", fr: "limon très fin", sw: "tope", hi: "गाद", de: "Schluff"}
+soil_sandy clay loam: {en: "sandy clay loam", es: "franco arcillo-arenoso", fr: "limon argilo-sableux", sw: "tifutifu ya mfinyanzi na mchanga", hi: "बलुई चिकनी दोमट", de: "sandig-toniger Lehm"}
+soil_clay loam: {en: "clay loam", es: "franco arcilloso", fr: "limon argileux", sw: "tifutifu ya mfinyanzi", hi: "चिकनी दोमट", de: "toniger Lehm"}
+soil_silty clay loam: {en: "silty clay loam", es: "franco arcillo-limoso", fr: "limon argileux fin", sw: "tifutifu ya mfinyanzi na tope", hi: "गादयुक्त चिकनी दोमट", de: "schluffig-toniger Lehm"}
+soil_sandy clay: {en: "sandy clay", es: "arcillo-arenoso", fr: "argile sableuse", sw: "mfinyanzi wa mchanga", hi: "बलुई चिकनी", de: "sandiger Ton"}
+soil_silty clay: {en: "silty clay", es: "arcillo-limoso", fr: "argile limoneuse", sw: "mfinyanzi wa tope", hi: "गादयुक्त चिकनी", de: "schluffiger Ton"}
+soil_clay: {en: "clay", es: "arcilloso", fr: "argile", sw: "mfinyanzi", hi: "चिकनी मिट्टी", de: "Ton"}
+wb_step_season:
+  en: "Season started {date}; crop stage today: {stage} (Kc ≈ {kc:.2f})."
+  es: "La temporada empezó el {date}; etapa del cultivo hoy: {stage} (Kc ≈ {kc:.2f})."
+  fr: "Saison commencée le {date} ; stade de la culture aujourd'hui : {stage} (Kc ≈ {kc:.2f})."
+  sw: "Msimu ulianza {date}; hatua ya zao leo: {stage} (Kc ≈ {kc:.2f})."
+  hi: "मौसम {date} को शुरू हुआ; आज फसल की अवस्था: {stage} (Kc ≈ {kc:.2f})।"
+  de: "Saisonbeginn {date}; Entwicklungsstadium heute: {stage} (Kc ≈ {kc:.2f})."
+wb_step_et0:
+  en: "Reference evapotranspiration ET₀ (FAO-56 Penman–Monteith from NASA POWER) over the next 7 days: {et0:.0f} mm; forecast rain: {rain:.0f} mm."
+  es: "Evapotranspiración de referencia ET₀ (FAO-56 Penman–Monteith con NASA POWER) en los próximos 7 días: {et0:.0f} mm; lluvia prevista: {rain:.0f} mm."
+  fr: "Évapotranspiration de référence ET₀ (FAO-56 Penman–Monteith, NASA POWER) sur les 7 prochains jours : {et0:.0f} mm ; pluie prévue : {rain:.0f} mm."
+  sw: "Uvukizaji wa marejeo ET₀ (FAO-56 Penman–Monteith kutoka NASA POWER) kwa siku 7 zijazo: mm {et0:.0f}; mvua inayotarajiwa: mm {rain:.0f}."
+  hi: "अगले 7 दिनों में संदर्भ वाष्पोत्सर्जन ET₀ (NASA POWER से FAO-56 पेनमैन–मॉन्टिथ): {et0:.0f} मिमी; अनुमानित वर्षा: {rain:.0f} मिमी।"
+  de: "Referenzverdunstung ET₀ (FAO-56 Penman–Monteith aus NASA POWER) in den nächsten 7 Tagen: {et0:.0f} mm; vorhergesagter Regen: {rain:.0f} mm."
+wb_step_soil:
+  en: "Soil: {soil} holds ~{taw_m:.0f} mm water per metre; root zone today holds {taw:.0f} mm (TAW); stress begins after {raw:.0f} mm are used (RAW)."
+  es: "Suelo: {soil} retiene ~{taw_m:.0f} mm de agua por metro; la zona de raíces guarda hoy {taw:.0f} mm (TAW); el estrés empieza tras usar {raw:.0f} mm (RAW)."
+  fr: "Sol : {soil}, retient ~{taw_m:.0f} mm d'eau par mètre ; la zone racinaire contient aujourd'hui {taw:.0f} mm (TAW) ; le stress commence après {raw:.0f} mm consommés (RAW)."
+  sw: "Udongo: {soil} hushika ~mm {taw_m:.0f} za maji kwa mita; eneo la mizizi leo lina mm {taw:.0f} (TAW); msongo huanza baada ya mm {raw:.0f} kutumika (RAW)."
+  hi: "मिट्टी: {soil}, प्रति मीटर ~{taw_m:.0f} मिमी पानी रखती है; आज जड़ क्षेत्र में {taw:.0f} मिमी (TAW) है; {raw:.0f} मिमी उपयोग होने के बाद तनाव शुरू होता है (RAW)।"
+  de: "Boden: {soil}, speichert ~{taw_m:.0f} mm Wasser pro Meter; der Wurzelraum fasst heute {taw:.0f} mm (TAW); Stress beginnt nach {raw:.0f} mm Verbrauch (RAW)."
+wb_step_used:
+  en: "Estimated water used from the root zone today: {dr:.0f} mm ({pct}% of available water left)."
+  es: "Agua usada estimada de la zona de raíces hoy: {dr:.0f} mm (queda {pct}% del agua disponible)."
+  fr: "Eau consommée estimée dans la zone racinaire aujourd'hui : {dr:.0f} mm ({pct} % de l'eau disponible restante)."
+  sw: "Makadirio ya maji yaliyotumika eneo la mizizi leo: mm {dr:.0f} ({pct}% ya maji yanayopatikana yamebaki)."
+  hi: "आज जड़ क्षेत्र से अनुमानित उपयोग हुआ पानी: {dr:.0f} मिमी ({pct}% उपलब्ध पानी शेष)।"
+  de: "Geschätzter Wasserverbrauch im Wurzelraum heute: {dr:.0f} mm ({pct} % des verfügbaren Wassers übrig)."
+wb_step_ecostress:
+  en: "NASA ECOSTRESS measured {et:.1f} mm/day of evapotranspiration on this field on {date} (70 m); the model had {model:.1f} mm/day."
+  es: "NASA ECOSTRESS midió {et:.1f} mm/día de evapotranspiración en este campo el {date} (70 m); el modelo tenía {model:.1f} mm/día."
+  fr: "NASA ECOSTRESS a mesuré {et:.1f} mm/jour d'évapotranspiration sur cette parcelle le {date} (70 m) ; le modèle donnait {model:.1f} mm/jour."
+  sw: "NASA ECOSTRESS ilipima uvukizaji wa mm {et:.1f}/siku shambani hapa tarehe {date} (m 70); modeli ilikuwa na mm {model:.1f}/siku."
+  hi: "NASA ECOSTRESS ने {date} को इस खेत पर {et:.1f} मिमी/दिन वाष्पोत्सर्जन मापा (70 मी); मॉडल में {model:.1f} मिमी/दिन था।"
+  de: "NASA ECOSTRESS hat am {date} auf diesem Feld {et:.1f} mm/Tag Verdunstung gemessen (70 m); das Modell hatte {model:.1f} mm/Tag."
+wb_step_fusion:
+  en: "Sentinel-2 ({date}, 10 m) shows field NDVI {ndvi:.2f} → satellite crop coefficient {kcb:.2f} vs. {kc:.2f} in the crop model; crop water use from that day is scaled by {scale:.2f} (data fusion)."
+  es: "Sentinel-2 ({date}, 10 m) muestra un NDVI de {ndvi:.2f} → coeficiente de cultivo satelital {kcb:.2f} frente a {kc:.2f} en el modelo; el uso de agua desde ese día se escala por {scale:.2f} (fusión de datos)."
+  fr: "Sentinel-2 ({date}, 10 m) indique un NDVI de {ndvi:.2f} → coefficient cultural satellite {kcb:.2f} contre {kc:.2f} dans le modèle ; la consommation d'eau dès ce jour est multipliée par {scale:.2f} (fusion de données)."
+  sw: "Sentinel-2 ({date}, m 10) inaonyesha NDVI {ndvi:.2f} → kigezo cha zao cha setilaiti {kcb:.2f} dhidi ya {kc:.2f} kwenye modeli; matumizi ya maji kuanzia siku hiyo yanazidishwa kwa {scale:.2f} (kuunganisha data)."
+  hi: "Sentinel-2 ({date}, 10 मी) खेत का NDVI {ndvi:.2f} दिखाता है → उपग्रह फसल गुणांक {kcb:.2f} बनाम मॉडल में {kc:.2f}; उस दिन से फसल जल उपयोग को {scale:.2f} से गुणा किया गया (डेटा संलयन)।"
+  de: "Sentinel-2 ({date}, 10 m) zeigt Feld-NDVI {ndvi:.2f} → Satelliten-Kulturkoeffizient {kcb:.2f} statt {kc:.2f} im Modell; der Wasserverbrauch ab diesem Tag wird mit {scale:.2f} skaliert (Datenfusion)."
+wb_caveat_assumed:
+  en: "We assume you irrigated whenever the model said so. Enter your last irrigation for a sharper estimate."
+  es: "Suponemos que regó cada vez que el modelo lo indicó. Anote su último riego para una estimación más precisa."
+  fr: "Nous supposons que vous avez irrigué chaque fois que le modèle l'indiquait. Saisissez votre dernière irrigation pour une estimation plus fine."
+  sw: "Tunadhani ulimwagilia kila modeli iliposema. Weka umwagiliaji wako wa mwisho kupata makadirio sahihi zaidi."
+  hi: "हम मानते हैं कि मॉडल के कहने पर आपने हर बार सिंचाई की। अधिक सटीक अनुमान के लिए अपनी पिछली सिंचाई दर्ज करें।"
+  de: "Wir nehmen an, dass Sie immer bewässert haben, wenn das Modell es empfahl. Tragen Sie Ihre letzte Bewässerung ein, um die Schätzung zu verbessern."
+wb_step_stress_on:
+  en: "Projecting forward with the forecast, depletion reaches the stress point on {date}."
+  es: "Proyectando con el pronóstico, el agotamiento alcanza el punto de estrés el {date}."
+  fr: "En projetant avec la prévision, l'épuisement atteint le seuil de stress le {date}."
+  sw: "Tukiendeleza kwa utabiri, upungufu unafikia kiwango cha msongo tarehe {date}."
+  hi: "पूर्वानुमान के साथ आगे देखने पर, कमी {date} को तनाव बिंदु पर पहुँचती है।"
+  de: "Mit der Vorhersage fortgeschrieben erreicht die Entleerung am {date} die Stressgrenze."
+wb_step_refill:
+  en: "Refilling the root zone needs ~{net:.0f} mm net; with {method} irrigation (~{eff:.0%} efficient) apply ~{gross} mm."
+  es: "Rellenar la zona de raíces requiere ~{net:.0f} mm netos; con riego por {method} (~{eff:.0%} de eficiencia) aplique ~{gross} mm."
+  fr: "Recharger la zone racinaire demande ~{net:.0f} mm nets ; en irrigation {method} (efficience ~{eff:.0%}) apportez ~{gross} mm."
+  sw: "Kujaza eneo la mizizi kunahitaji ~mm {net:.0f} halisi; kwa umwagiliaji wa {method} (ufanisi ~{eff:.0%}) weka ~mm {gross}."
+  hi: "जड़ क्षेत्र को भरने के लिए ~{net:.0f} मिमी शुद्ध पानी चाहिए; {method} सिंचाई (~{eff:.0%} दक्षता) से ~{gross} मिमी दें।"
+  de: "Zum Auffüllen des Wurzelraums braucht es ~{net:.0f} mm netto; mit {method}bewässerung (~{eff:.0%} Wirkungsgrad) ~{gross} mm ausbringen."
+wb_sum_irrigate:
+  en: "Your crop will run short of easily available soil water around {date}. Irrigating ~{gross} mm before then avoids yield loss."
+  es: "Su cultivo se quedará sin agua fácilmente disponible hacia el {date}. Regar ~{gross} mm antes evita pérdidas de rendimiento."
+  fr: "Votre culture manquera d'eau facilement disponible vers le {date}. Irriguer ~{gross} mm avant évite une perte de rendement."
+  sw: "Zao lako litakosa maji yanayopatikana kwa urahisi karibu {date}. Kumwagilia ~mm {gross} kabla ya hapo kunazuia hasara ya mavuno."
+  hi: "लगभग {date} तक आपकी फसल को आसानी से मिलने वाला पानी कम पड़ेगा। उससे पहले ~{gross} मिमी सिंचाई करने से उपज का नुकसान नहीं होगा।"
+  de: "Ihrer Kultur geht um den {date} das leicht verfügbare Bodenwasser aus. Wer vorher ~{gross} mm bewässert, vermeidet Ertragsverluste."
+model_water_balance:
+  en: "FAO-56 single-Kc root-zone water balance"
+  es: "Balance hídrico de la zona de raíces FAO-56 (Kc único)"
+  fr: "Bilan hydrique de la zone racinaire FAO-56 (Kc unique)"
+  sw: "Mizania ya maji ya eneo la mizizi FAO-56 (Kc moja)"
+  hi: "FAO-56 एकल-Kc जड़ क्षेत्र जल संतुलन"
+  de: "FAO-56-Wasserbilanz des Wurzelraums (Einzel-Kc)"
+wb_note_assumed:
+  en: "Water balance driven by NASA POWER and forecast; field irrigation history is assumed."
+  es: "Balance hídrico con NASA POWER y pronóstico; el historial de riego del campo es supuesto."
+  fr: "Bilan hydrique piloté par NASA POWER et la prévision ; l'historique d'irrigation est supposé."
+  sw: "Mizania ya maji kwa NASA POWER na utabiri; historia ya umwagiliaji wa shamba imekisiwa."
+  hi: "जल संतुलन NASA POWER और पूर्वानुमान से; खेत की सिंचाई का इतिहास माना गया है।"
+  de: "Wasserbilanz aus NASA POWER und Vorhersage; die Bewässerungshistorie des Feldes ist angenommen."
+wb_note:
+  en: "Water balance driven by NASA POWER and forecast."
+  es: "Balance hídrico con NASA POWER y pronóstico."
+  fr: "Bilan hydrique piloté par NASA POWER et la prévision."
+  sw: "Mizania ya maji kwa NASA POWER na utabiri."
+  hi: "जल संतुलन NASA POWER और पूर्वानुमान से।"
+  de: "Wasserbilanz aus NASA POWER und Vorhersage."
+wb_note_rainfed:
+  en: "Rain-fed estimate from NASA POWER + forecast."
+  es: "Estimación de secano con NASA POWER + pronóstico."
+  fr: "Estimation en pluvial avec NASA POWER + prévision."
+  sw: "Makadirio ya kilimo cha mvua kutoka NASA POWER + utabiri."
+  hi: "NASA POWER + पूर्वानुमान से वर्षा-आधारित अनुमान।"
+  de: "Regenfeldbau-Schätzung aus NASA POWER + Vorhersage."
+wb_step_no_stress:
+  en: "With the forecast, depletion stays below the stress point for at least {days} days."
+  es: "Con el pronóstico, el agotamiento se mantiene bajo el punto de estrés al menos {days} días."
+  fr: "Avec la prévision, l'épuisement reste sous le seuil de stress pendant au moins {days} jours."
+  sw: "Kwa utabiri, upungufu unabaki chini ya kiwango cha msongo kwa angalau siku {days}."
+  hi: "पूर्वानुमान के साथ, कमी कम से कम {days} दिनों तक तनाव बिंदु से नीचे रहती है।"
+  de: "Mit der Vorhersage bleibt die Entleerung mindestens {days} Tage unter der Stressgrenze."
+wb_sum_no_irrigation:
+  en: "Soil water stays above the stress point for the next {days} days."
+  es: "El agua del suelo se mantiene sobre el punto de estrés los próximos {days} días."
+  fr: "L'eau du sol reste au-dessus du seuil de stress pendant les {days} prochains jours."
+  sw: "Maji ya udongo yanabaki juu ya kiwango cha msongo kwa siku {days} zijazo."
+  hi: "अगले {days} दिनों तक मिट्टी का पानी तनाव बिंदु से ऊपर रहेगा।"
+  de: "Das Bodenwasser bleibt in den nächsten {days} Tagen über der Stressgrenze."
+wb_step_rainfed_ok:
+  en: "With the forecast, the crop stays above the stress point for at least {days} days."
+  es: "Con el pronóstico, el cultivo se mantiene sobre el punto de estrés al menos {days} días."
+  fr: "Avec la prévision, la culture reste au-dessus du seuil de stress pendant au moins {days} jours."
+  sw: "Kwa utabiri, zao linabaki juu ya kiwango cha msongo kwa angalau siku {days}."
+  hi: "पूर्वानुमान के साथ, फसल कम से कम {days} दिनों तक तनाव बिंदु से ऊपर रहती है।"
+  de: "Mit der Vorhersage bleibt die Kultur mindestens {days} Tage über der Stressgrenze."
+wb_sum_rainfed_ok:
+  en: "Rain and stored soil water cover crop demand for the next {days} days."
+  es: "La lluvia y el agua almacenada en el suelo cubren la demanda del cultivo los próximos {days} días."
+  fr: "La pluie et l'eau stockée dans le sol couvrent les besoins de la culture pendant les {days} prochains jours."
+  sw: "Mvua na maji yaliyohifadhiwa udongoni yanatosheleza mahitaji ya zao kwa siku {days} zijazo."
+  hi: "अगले {days} दिनों तक वर्षा और मिट्टी में जमा पानी फसल की ज़रूरत पूरी करते हैं।"
+  de: "Regen und gespeichertes Bodenwasser decken den Bedarf der Kultur in den nächsten {days} Tagen."
+wb_sum_rainfed_stress:
+  en: "Without rain or irrigation, the crop will start to close its stomata and lose yield."
+  es: "Sin lluvia ni riego, el cultivo empezará a cerrar sus estomas y a perder rendimiento."
+  fr: "Sans pluie ni irrigation, la culture va fermer ses stomates et perdre du rendement."
+  sw: "Bila mvua au umwagiliaji, zao litaanza kufunga vinyweleo vyake na kupoteza mavuno."
+  hi: "बारिश या सिंचाई के बिना फसल अपने रंध्र बंद करने लगेगी और उपज घटेगी।"
+  de: "Ohne Regen oder Bewässerung schließt die Kultur ihre Spaltöffnungen und verliert Ertrag."
+plan_why_summary:
+  en: "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives over the last 15 seasons of NASA POWER weather at this location."
+  es: "Entre temporadas es el momento de decidir qué sembrar después. FieldShift simula su rotación actual y alternativas con las últimas 15 temporadas de clima NASA POWER en este lugar."
+  fr: "L'intersaison est le moment de décider quoi cultiver ensuite. FieldShift simule votre rotation actuelle et des alternatives sur les 15 dernières saisons de météo NASA POWER à cet endroit."
+  sw: "Kati ya misimu ndio wakati wa kuamua utapanda nini kinachofuata. FieldShift huiga mzunguko wako wa sasa na mbadala kwa misimu 15 iliyopita ya hali ya hewa ya NASA POWER mahali hapa."
+  hi: "दो मौसमों के बीच यह तय करने का समय है कि आगे क्या उगाएँ। FieldShift इस स्थान पर पिछले 15 मौसमों के NASA POWER मौसम पर आपके मौजूदा फसल-चक्र और विकल्पों का अनुकरण करता है।"
+  de: "Zwischen den Saisons entscheidet man, was als Nächstes wächst. FieldShift simuliert Ihre jetzige Fruchtfolge und Alternativen mit den letzten 15 Jahren NASA-POWER-Wetter an diesem Ort."
+plan_why_step_compare:
+  en: "Rotations are compared on water, income, soil health, erosion, pest cycles and climate risk."
+  es: "Las rotaciones se comparan por agua, ingresos, salud del suelo, erosión, ciclos de plagas y riesgo climático."
+  fr: "Les rotations sont comparées sur l'eau, le revenu, la santé du sol, l'érosion, les cycles de ravageurs et le risque climatique."
+  sw: "Mizunguko inalinganishwa kwa maji, mapato, afya ya udongo, mmomonyoko, mizunguko ya wadudu na hatari ya hali ya hewa."
+  hi: "फसल-चक्रों की तुलना पानी, आय, मिट्टी की सेहत, कटाव, कीट-चक्र और जलवायु जोखिम पर होती है।"
+  de: "Fruchtfolgen werden nach Wasser, Einkommen, Bodengesundheit, Erosion, Schädlingszyklen und Klimarisiko verglichen."
+plan_why_step_cold:
+  en: "7-day mean temperature {temp:.1f} °C; {crop} grows very little below ~{tbase} °C."
+  es: "Temperatura media de 7 días {temp:.1f} °C; {crop} casi no crece por debajo de ~{tbase} °C."
+  fr: "Température moyenne sur 7 jours {temp:.1f} °C ; {crop} pousse très peu sous ~{tbase} °C."
+  sw: "Wastani wa joto la siku 7 ni {temp:.1f} °C; {crop} hukua kidogo sana chini ya ~{tbase} °C."
+  hi: "7 दिन का औसत तापमान {temp:.1f} °C; ~{tbase} °C से नीचे {crop} बहुत कम बढ़ता है।"
+  de: "7-Tage-Mitteltemperatur {temp:.1f} °C; {crop} wächst unter ~{tbase} °C kaum."
+model_season_state:
+  en: "Season-state rule"
+  es: "Regla de estado de la temporada"
+  fr: "Règle d'état de la saison"
+  sw: "Kanuni ya hali ya msimu"
+  hi: "मौसम-अवस्था नियम"
+  de: "Saisonstatus-Regel"
+plan_why_note:
+  en: "Season state follows directly from temperature and the season model."
+  es: "El estado de la temporada se deduce directamente de la temperatura y del modelo de temporada."
+  fr: "L'état de la saison découle directement de la température et du modèle de saison."
+  sw: "Hali ya msimu inatokana moja kwa moja na joto na modeli ya msimu."
+  hi: "मौसम की अवस्था सीधे तापमान और मौसम मॉडल से निकलती है।"
+  de: "Der Saisonstatus folgt direkt aus der Temperatur und dem Saisonmodell."
+series_precip: {en: "Rain", es: "Lluvia", fr: "Pluie", sw: "Mvua", hi: "वर्षा", de: "Regen"}
+series_et0:
+  en: "Reference ET₀ (crop water demand)"
+  es: "ET₀ de referencia (demanda de agua)"
+  fr: "ET₀ de référence (besoin en eau)"
+  sw: "ET₀ ya marejeo (mahitaji ya maji)"
+  hi: "संदर्भ ET₀ (फसल जल माँग)"
+  de: "Referenz-ET₀ (Wasserbedarf)"
+series_tmax: {en: "Max temperature", es: "Temperatura máxima", fr: "Température maximale", sw: "Joto la juu", hi: "अधिकतम तापमान", de: "Höchsttemperatur"}
+series_tmin: {en: "Min temperature", es: "Temperatura mínima", fr: "Température minimale", sw: "Joto la chini", hi: "न्यूनतम तापमान", de: "Tiefsttemperatur"}
+series_spi90:
+  en: "SPI-90 (rain vs. normal)"
+  es: "SPI-90 (lluvia vs. normal)"
+  fr: "SPI-90 (pluie vs. normale)"
+  sw: "SPI-90 (mvua dhidi ya kawaida)"
+  hi: "SPI-90 (सामान्य की तुलना में वर्षा)"
+  de: "SPI-90 (Regen vs. normal)"
+series_ndvi:
+  en: "Vegetation greenness (MODIS NDVI, 250 m)"
+  es: "Verdor de la vegetación (MODIS NDVI, 250 m)"
+  fr: "Verdure de la végétation (MODIS NDVI, 250 m)"
+  sw: "Ukijani wa mimea (MODIS NDVI, m 250)"
+  hi: "वनस्पति हरियाली (MODIS NDVI, 250 मी)"
+  de: "Vegetationsgrün (MODIS NDVI, 250 m)"
+series_smap_l3e:
+  en: "Surface soil moisture (SMAP L3E, 9 km)"
+  es: "Humedad superficial del suelo (SMAP L3E, 9 km)"
+  fr: "Humidité du sol en surface (SMAP L3E, 9 km)"
+  sw: "Unyevu wa juu wa udongo (SMAP L3E, km 9)"
+  hi: "सतही मिट्टी की नमी (SMAP L3E, 9 किमी)"
+  de: "Oberflächen-Bodenfeuchte (SMAP L3E, 9 km)"
+series_smap_l4:
+  en: "Root-zone soil moisture (SMAP L4, 0–100 cm, 9 km)"
+  es: "Humedad del suelo en la zona de raíces (SMAP L4, 0–100 cm, 9 km)"
+  fr: "Humidité du sol racinaire (SMAP L4, 0–100 cm, 9 km)"
+  sw: "Unyevu wa udongo eneo la mizizi (SMAP L4, sm 0–100, km 9)"
+  hi: "जड़ क्षेत्र मिट्टी नमी (SMAP L4, 0–100 सेमी, 9 किमी)"
+  de: "Bodenfeuchte im Wurzelraum (SMAP L4, 0–100 cm, 9 km)"
+series_smap:
+  en: "Surface soil moisture (SMAP, 9 km)"
+  es: "Humedad superficial del suelo (SMAP, 9 km)"
+  fr: "Humidité du sol en surface (SMAP, 9 km)"
+  sw: "Unyevu wa juu wa udongo (SMAP, km 9)"
+  hi: "सतही मिट्टी की नमी (SMAP, 9 किमी)"
+  de: "Oberflächen-Bodenfeuchte (SMAP, 9 km)"
+series_infection_risk:
+  en: "{name} infection risk"
+  es: "Riesgo de infección de {name}"
+  fr: "Risque d'infection : {name}"
+  sw: "Hatari ya maambukizi ya {name}"
+  hi: "{name} संक्रमण जोखिम"
+  de: "Infektionsrisiko {name}"
+drought_level_0: {en: "No drought", es: "Sin sequía", fr: "Pas de sécheresse", sw: "Hakuna ukame", hi: "सूखा नहीं", de: "Keine Dürre"}
+drought_level_1: {en: "Abnormally dry (D0)", es: "Anormalmente seco (D0)", fr: "Anormalement sec (D0)", sw: "Ukavu usio wa kawaida (D0)", hi: "असामान्य रूप से सूखा (D0)", de: "Ungewöhnlich trocken (D0)"}
+drought_level_2: {en: "Moderate drought (D1)", es: "Sequía moderada (D1)", fr: "Sécheresse modérée (D1)", sw: "Ukame wa wastani (D1)", hi: "मध्यम सूखा (D1)", de: "Mäßige Dürre (D1)"}
+drought_level_3: {en: "Severe drought (D2)", es: "Sequía severa (D2)", fr: "Sécheresse sévère (D2)", sw: "Ukame mkali (D2)", hi: "गंभीर सूखा (D2)", de: "Schwere Dürre (D2)"}
+drought_level_4: {en: "Extreme drought (D3)", es: "Sequía extrema (D3)", fr: "Sécheresse extrême (D3)", sw: "Ukame mkali sana (D3)", hi: "अत्यधिक सूखा (D3)", de: "Extreme Dürre (D3)"}
+drought_level_5: {en: "Exceptional drought (D4)", es: "Sequía excepcional (D4)", fr: "Sécheresse exceptionnelle (D4)", sw: "Ukame wa kipekee (D4)", hi: "असाधारण सूखा (D4)", de: "Außergewöhnliche Dürre (D4)"}
+dr_step_rain90:
+  en: "Rain in the last 90 days: {rain:.0f} mm; typical for this time of year: {typ:.0f} mm (NASA POWER 1984–{year})."
+  es: "Lluvia de los últimos 90 días: {rain:.0f} mm; lo típico en esta época: {typ:.0f} mm (NASA POWER 1984–{year})."
+  fr: "Pluie des 90 derniers jours : {rain:.0f} mm ; normale à cette période : {typ:.0f} mm (NASA POWER 1984–{year})."
+  sw: "Mvua ya siku 90 zilizopita: mm {rain:.0f}; kawaida kwa wakati huu wa mwaka: mm {typ:.0f} (NASA POWER 1984–{year})."
+  hi: "पिछले 90 दिनों की वर्षा: {rain:.0f} मिमी; साल के इस समय सामान्य: {typ:.0f} मिमी (NASA POWER 1984–{year})।"
+  de: "Regen der letzten 90 Tage: {rain:.0f} mm; üblich zu dieser Jahreszeit: {typ:.0f} mm (NASA POWER 1984–{year})."
+dr_step_no_history: {en: "Rain history unavailable.", es: "Historial de lluvia no disponible.", fr: "Historique de pluie indisponible.", sw: "Historia ya mvua haipatikani.", hi: "वर्षा इतिहास उपलब्ध नहीं।", de: "Regenhistorie nicht verfügbar."}
+dr_indicator: {en: "Indicator: {text}", es: "Indicador: {text}", fr: "Indicateur : {text}", sw: "Kiashiria: {text}", hi: "संकेतक: {text}", de: "Indikator: {text}"}
+dr_ind_spei12: {en: "SPEI-12 months", es: "SPEI-12 meses", fr: "SPEI-12 mois", sw: "SPEI-miezi 12", hi: "SPEI-12 महीने", de: "SPEI-12 Monate"}
+dr_ind_sm: {en: "soil-moisture percentile", es: "percentil de humedad del suelo", fr: "percentile d'humidité du sol", sw: "asilimia-nafasi ya unyevu wa udongo", hi: "मिट्टी नमी प्रतिशतक", de: "Bodenfeuchte-Perzentil"}
+dr_ind_vhi: {en: "vegetation health index", es: "índice de salud de la vegetación", fr: "indice de santé de la végétation", sw: "kielelezo cha afya ya mimea", hi: "वनस्पति स्वास्थ्य सूचकांक", de: "Vegetationsgesundheitsindex"}
+dr_step_scale:
+  en: "Levels follow the U.S. Drought Monitor scale (D0–D4); indicators are blended by a weighted 'convergence of evidence'."
+  es: "Los niveles siguen la escala del U.S. Drought Monitor (D0–D4); los indicadores se combinan por 'convergencia de evidencias' ponderada."
+  fr: "Les niveaux suivent l'échelle de l'U.S. Drought Monitor (D0–D4) ; les indicateurs sont combinés par « convergence des preuves » pondérée."
+  sw: "Viwango vinafuata kipimo cha U.S. Drought Monitor (D0–D4); viashiria vinaunganishwa kwa uzito wa 'ushahidi unaokubaliana'."
+  hi: "स्तर U.S. Drought Monitor पैमाने (D0–D4) पर हैं; संकेतकों को भारित 'साक्ष्य अभिसरण' से मिलाया जाता है।"
+  de: "Die Stufen folgen der Skala des U.S. Drought Monitor (D0–D4); die Indikatoren werden gewichtet nach dem Prinzip „übereinstimmender Belege“ kombiniert."
+dr_step_grace:
+  en: "Long-term water supply (NASA GRACE/GRACE-FO, ~300 km): storage trend {slope:+.1f} cm/yr (p = {p:.2f}), {change:+.0f} cm since 2003. Shown for context; it does not change the drought level (multi-month latency, regional footprint)."
+  es: "Agua a largo plazo (NASA GRACE/GRACE-FO, ~300 km): tendencia de almacenamiento {slope:+.1f} cm/año (p = {p:.2f}), {change:+.0f} cm desde 2003. Se muestra como contexto; no cambia el nivel de sequía (retraso de meses, escala regional)."
+  fr: "Ressource en eau à long terme (NASA GRACE/GRACE-FO, ~300 km) : tendance du stock {slope:+.1f} cm/an (p = {p:.2f}), {change:+.0f} cm depuis 2003. Donné pour contexte ; ne modifie pas le niveau de sécheresse (délai de plusieurs mois, échelle régionale)."
+  sw: "Upatikanaji wa maji wa muda mrefu (NASA GRACE/GRACE-FO, ~km 300): mwelekeo wa hifadhi sm {slope:+.1f}/mwaka (p = {p:.2f}), sm {change:+.0f} tangu 2003. Ni kwa muktadha tu; haubadilishi kiwango cha ukame (huchelewa miezi kadhaa, eneo pana)."
+  hi: "दीर्घकालिक जल आपूर्ति (NASA GRACE/GRACE-FO, ~300 किमी): भंडारण रुझान {slope:+.1f} सेमी/वर्ष (p = {p:.2f}), 2003 से {change:+.0f} सेमी। केवल संदर्भ के लिए; यह सूखा स्तर नहीं बदलता (कई महीनों की देरी, क्षेत्रीय पैमाना)।"
+  de: "Langfristiger Wasservorrat (NASA GRACE/GRACE-FO, ~300 km): Speichertrend {slope:+.1f} cm/Jahr (p = {p:.2f}), {change:+.0f} cm seit 2003. Nur zur Einordnung; ändert die Dürrestufe nicht (Monate Verzögerung, regionaler Maßstab)."
+model_drought_rules:
+  en: "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + satellite indicators"
+  es: "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + indicadores satelitales"
+  fr: "SPI/SPEI (McKee 1993 ; Vicente-Serrano 2010) + indicateurs satellitaires"
+  sw: "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + viashiria vya setilaiti"
+  hi: "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + उपग्रह संकेतक"
+  de: "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + Satellitenindikatoren"
+model_drought_ml:
+  en: "AI drought classifier (gradient boosting on drought-monitor labels, NASA POWER features) + rule-based SPI/SPEI blend"
+  es: "Clasificador de sequía con IA (gradient boosting sobre etiquetas de monitores de sequía, variables NASA POWER) + combinación SPI/SPEI por reglas"
+  fr: "Classificateur de sécheresse par IA (gradient boosting sur les cartes des observatoires de sécheresse, variables NASA POWER) + combinaison SPI/SPEI par règles"
+  sw: "Kiainishi cha ukame cha AI (gradient boosting kwa lebo za ufuatiliaji wa ukame, vigezo vya NASA POWER) + mchanganyiko wa SPI/SPEI kwa kanuni"
+  hi: "AI सूखा वर्गीकरणकर्ता (सूखा-मॉनिटर लेबल पर ग्रेडिएंट बूस्टिंग, NASA POWER विशेषताएँ) + नियम-आधारित SPI/SPEI मिश्रण"
+  de: "KI-Dürreklassifikator (Gradient Boosting auf Dürremonitor-Karten, NASA-POWER-Merkmale) + regelbasierte SPI/SPEI-Kombination"
+dr_ml_where_region:
+  en: "held-out sites in this region ({n} sites, labels: {label})"
+  es: "sitios de prueba en esta región ({n} sitios, etiquetas: {label})"
+  fr: "sites de test de cette région ({n} sites, étiquettes : {label})"
+  sw: "maeneo ya majaribio katika ukanda huu (maeneo {n}, lebo: {label})"
+  hi: "इस क्षेत्र के परीक्षण स्थल ({n} स्थल, लेबल: {label})"
+  de: "zurückgehaltenen Orten dieser Region ({n} Orte, Labels: {label})"
+dr_ml_where_us:
+  en: "U.S. counties it never saw"
+  es: "condados de EE. UU. que nunca vio"
+  fr: "comtés américains jamais vus"
+  sw: "kaunti za Marekani ambazo haijawahi kuona"
+  hi: "अमेरिकी काउंटी जो इसने कभी नहीं देखीं"
+  de: "US-Countys, die es nie gesehen hat"
+dr_step_ml:
+  en: "AI classifier (gradient boosting on {n_samples} drought-map labels from {n_sites} sites): {label} with {prob:.0f} % probability. On {where} it is within one category {acc:.0f} % of the time (rule-based blend: {rules_label})."
+  es: "Clasificador de IA (gradient boosting con {n_samples} etiquetas de mapas de sequía de {n_sites} sitios): {label} con {prob:.0f} % de probabilidad. En {where} acierta con un margen de una categoría el {acc:.0f} % de las veces (combinación por reglas: {rules_label})."
+  fr: "Classificateur IA (gradient boosting sur {n_samples} étiquettes de cartes de sécheresse de {n_sites} sites) : {label} avec {prob:.0f} % de probabilité. Sur des {where}, il est à une catégorie près dans {acc:.0f} % des cas (combinaison par règles : {rules_label})."
+  sw: "Kiainishi cha AI (gradient boosting kwa lebo {n_samples} za ramani za ukame kutoka maeneo {n_sites}): {label} kwa uwezekano wa {prob:.0f} %. Katika {where} kiko ndani ya kundi moja mara {acc:.0f} % (mchanganyiko wa kanuni: {rules_label})."
+  hi: "AI वर्गीकरणकर्ता ({n_sites} स्थलों के {n_samples} सूखा-मानचित्र लेबल पर ग्रेडिएंट बूस्टिंग): {label}, {prob:.0f} % संभावना। {where} पर यह {acc:.0f} % बार एक श्रेणी के भीतर सही रहता है (नियम-आधारित मिश्रण: {rules_label})।"
+  de: "KI-Klassifikator (Gradient Boosting auf {n_samples} Dürrekarten-Labels von {n_sites} Orten): {label} mit {prob:.0f} % Wahrscheinlichkeit. Bei {where} liegt er in {acc:.0f} % der Fälle höchstens eine Stufe daneben (regelbasierte Kombination: {rules_label})."
+dr_sum:
+  en: "{label} based on {n} indicators."
+  es: "{label} según {n} indicadores."
+  fr: "{label} d'après {n} indicateurs."
+  sw: "{label} kwa msingi wa viashiria {n}."
+  hi: "{n} संकेतकों के आधार पर {label}।"
+  de: "{label} auf Basis von {n} Indikatoren."
+dr_note:
+  en: "Agreement between independent indicators raises confidence."
+  es: "La coincidencia entre indicadores independientes aumenta la confianza."
+  fr: "L'accord entre indicateurs indépendants renforce la confiance."
+  sw: "Kukubaliana kwa viashiria huru huongeza uhakika."
+  hi: "स्वतंत्र संकेतकों की सहमति से भरोसा बढ़ता है।"
+  de: "Übereinstimmung unabhängiger Indikatoren erhöht die Zuverlässigkeit."
+dr_caveat_spi:
+  en: "SPI uses ~50 km NASA POWER rain; local storms can be missed."
+  es: "El SPI usa lluvia NASA POWER de ~50 km; puede no captar tormentas locales."
+  fr: "Le SPI utilise la pluie NASA POWER à ~50 km ; les orages locaux peuvent échapper."
+  sw: "SPI hutumia mvua ya NASA POWER ya ~km 50; dhoruba za eneo dogo zinaweza kukosekana."
+  hi: "SPI ~50 किमी की NASA POWER वर्षा का उपयोग करता है; स्थानीय तूफ़ान छूट सकते हैं।"
+  de: "Der SPI nutzt NASA-POWER-Regen im ~50-km-Raster; lokale Gewitter können fehlen."
+dr_caveat_smap:
+  en: "SMAP soil moisture is a 9 km footprint and only the top ~5 cm."
+  es: "La humedad SMAP cubre 9 km y solo los ~5 cm superiores."
+  fr: "L'humidité SMAP couvre 9 km et seulement les ~5 cm supérieurs."
+  sw: "Unyevu wa SMAP ni wa eneo la km 9 na sm ~5 za juu tu."
+  hi: "SMAP मिट्टी नमी 9 किमी क्षेत्र की है और केवल ऊपरी ~5 सेमी की।"
+  de: "SMAP-Bodenfeuchte gilt für 9 km und nur die oberen ~5 cm."
+ndvi_sum:
+  en: "The latest MODIS NDVI ({v:.2f}) is {z:.1f} standard deviations below the {y0}–{y1} average for this time of year ({mu:.2f})."
+  es: "El último NDVI de MODIS ({v:.2f}) está {z:.1f} desviaciones estándar por debajo del promedio {y0}–{y1} para esta época ({mu:.2f})."
+  fr: "Le dernier NDVI MODIS ({v:.2f}) est {z:.1f} écarts-types sous la moyenne {y0}–{y1} pour cette période ({mu:.2f})."
+  sw: "NDVI ya karibuni ya MODIS ({v:.2f}) iko mikengeuko sanifu {z:.1f} chini ya wastani wa {y0}–{y1} kwa wakati huu wa mwaka ({mu:.2f})."
+  hi: "नवीनतम MODIS NDVI ({v:.2f}) साल के इस समय के {y0}–{y1} औसत ({mu:.2f}) से {z:.1f} मानक विचलन कम है।"
+  de: "Der jüngste MODIS-NDVI ({v:.2f}) liegt {z:.1f} Standardabweichungen unter dem Mittel {y0}–{y1} für diese Jahreszeit ({mu:.2f})."
+ndvi_step_latest:
+  en: "MODIS 16-day composite of {date}: NDVI {v:.2f}."
+  es: "Compuesto MODIS de 16 días del {date}: NDVI {v:.2f}."
+  fr: "Composite MODIS 16 jours du {date} : NDVI {v:.2f}."
+  sw: "Mchanganyiko wa siku 16 wa MODIS wa {date}: NDVI {v:.2f}."
+  hi: "{date} का MODIS 16-दिवसीय संयोजन: NDVI {v:.2f}।"
+  de: "MODIS-16-Tage-Komposit vom {date}: NDVI {v:.2f}."
+ndvi_step_clim:
+  en: "Same period in {n} earlier years: mean {mu:.2f}, standard deviation {sd:.2f}."
+  es: "Mismo periodo en {n} años anteriores: media {mu:.2f}, desviación estándar {sd:.2f}."
+  fr: "Même période sur {n} années antérieures : moyenne {mu:.2f}, écart-type {sd:.2f}."
+  sw: "Kipindi hicho hicho katika miaka {n} iliyopita: wastani {mu:.2f}, mkengeuko sanifu {sd:.2f}."
+  hi: "पिछले {n} वर्षों में यही अवधि: औसत {mu:.2f}, मानक विचलन {sd:.2f}।"
+  de: "Gleicher Zeitraum in {n} früheren Jahren: Mittel {mu:.2f}, Standardabweichung {sd:.2f}."
+ndvi_step_meaning:
+  en: "A strong negative anomaly can mean water stress, pest damage, hail, late planting or a different crop than in past years."
+  es: "Una anomalía negativa fuerte puede indicar estrés hídrico, daño por plagas, granizo, siembra tardía o un cultivo distinto al de años anteriores."
+  fr: "Une forte anomalie négative peut signifier stress hydrique, ravageurs, grêle, semis tardif ou une autre culture que les années passées."
+  sw: "Hitilafu kubwa hasi inaweza kumaanisha msongo wa maji, uharibifu wa wadudu, mvua ya mawe, kupanda kwa kuchelewa au zao tofauti na miaka iliyopita."
+  hi: "बड़ी नकारात्मक विसंगति का अर्थ पानी की कमी, कीट नुकसान, ओले, देर से बुवाई या पिछले वर्षों से अलग फसल हो सकता है।"
+  de: "Eine starke negative Abweichung kann Wasserstress, Schädlingsschäden, Hagel, späte Saat oder eine andere Kultur als in den Vorjahren bedeuten."
+model_ndvi:
+  en: "NDVI anomaly (z-score vs. same-period climatology)"
+  es: "Anomalía de NDVI (puntuación z frente a la climatología del mismo periodo)"
+  fr: "Anomalie de NDVI (score z par rapport à la climatologie de la même période)"
+  sw: "Hitilafu ya NDVI (alama z dhidi ya hali ya kawaida ya kipindi hicho)"
+  hi: "NDVI विसंगति (उसी अवधि की जलवायु के सापेक्ष z-स्कोर)"
+  de: "NDVI-Anomalie (z-Wert gegenüber der Klimatologie desselben Zeitraums)"
+ndvi_note:
+  en: "250 m pixels mix your field with neighbours; a different crop than in past years also changes NDVI."
+  es: "Los píxeles de 250 m mezclan su campo con los vecinos; un cultivo distinto al de otros años también cambia el NDVI."
+  fr: "Les pixels de 250 m mélangent votre parcelle avec ses voisines ; une autre culture que les années passées change aussi le NDVI."
+  sw: "Pikseli za m 250 huchanganya shamba lako na majirani; zao tofauti na miaka iliyopita pia hubadilisha NDVI."
+  hi: "250 मी पिक्सेल आपके खेत को पड़ोसी खेतों से मिलाते हैं; पिछले वर्षों से अलग फसल भी NDVI बदलती है।"
+  de: "250-m-Pixel mischen Ihr Feld mit Nachbarflächen; eine andere Kultur als in Vorjahren verändert den NDVI ebenfalls."
+ndvi_caveat_pixel:
+  en: "MODIS pixel is 250 m (~6 ha): small fields are mixed with neighbouring land."
+  es: "El píxel MODIS mide 250 m (~6 ha): los campos pequeños se mezclan con terrenos vecinos."
+  fr: "Le pixel MODIS fait 250 m (~6 ha) : les petites parcelles sont mélangées aux terres voisines."
+  sw: "Pikseli ya MODIS ni m 250 (~ha 6): mashamba madogo yanachanganyika na ardhi jirani."
+  hi: "MODIS पिक्सेल 250 मी (~6 हेक्टेयर) का है: छोटे खेत पड़ोसी ज़मीन से मिल जाते हैं।"
+  de: "Ein MODIS-Pixel misst 250 m (~6 ha): kleine Felder werden mit Nachbarflächen gemischt."
+caveat_clouds:
+  en: "Cloudy periods reduce data quality."
+  es: "Los periodos nublados reducen la calidad de los datos."
+  fr: "Les périodes nuageuses réduisent la qualité des données."
+  sw: "Vipindi vya mawingu hupunguza ubora wa data."
+  hi: "बादल वाले समय में डेटा की गुणवत्ता घटती है।"
+  de: "Bewölkte Phasen mindern die Datenqualität."
+dis_sum:
+  en: "Forecast hourly humidity and temperature favour {name} infection, peaking on {date}."
+  es: "La humedad y la temperatura horarias previstas favorecen la infección de {name}, con un máximo el {date}."
+  fr: "L'humidité et la température horaires prévues favorisent l'infection ({name}), avec un pic le {date}."
+  sw: "Unyevu na joto la kila saa linalotabiriwa vinachochea maambukizi ya {name}, kilele tarehe {date}."
+  hi: "पूर्वानुमानित घंटेवार नमी और तापमान {name} संक्रमण के अनुकूल हैं, चरम {date} को।"
+  de: "Vorhergesagte stündliche Feuchte und Temperatur begünstigen eine Infektion mit {name}, Höhepunkt am {date}."
+dis_step_model: {en: "Model: {ref}.", es: "Modelo: {ref}.", fr: "Modèle : {ref}.", sw: "Modeli: {ref}.", hi: "मॉडल: {ref}।", de: "Modell: {ref}."}
+dis_step_day:
+  en: "On {date}: {hours} hours with relative humidity ≥ 90 %, minimum temperature {tmin:.0f} °C."
+  es: "El {date}: {hours} horas con humedad relativa ≥ 90 %, temperatura mínima {tmin:.0f} °C."
+  fr: "Le {date} : {hours} heures avec humidité relative ≥ 90 %, température minimale {tmin:.0f} °C."
+  sw: "Tarehe {date}: saa {hours} zenye unyevu ≥ 90 %, joto la chini {tmin:.0f} °C."
+  hi: "{date} को: {hours} घंटे सापेक्ष आर्द्रता ≥ 90 %, न्यूनतम तापमान {tmin:.0f} °C।"
+  de: "Am {date}: {hours} Stunden mit relativer Luftfeuchte ≥ 90 %, Tiefsttemperatur {tmin:.0f} °C."
+dis_step_score:
+  en: "Risk score {score:.2f} (0 = unfavourable, 1 = fully favourable)."
+  es: "Puntuación de riesgo {score:.2f} (0 = desfavorable, 1 = totalmente favorable)."
+  fr: "Score de risque {score:.2f} (0 = défavorable, 1 = pleinement favorable)."
+  sw: "Alama ya hatari {score:.2f} (0 = haifai, 1 = inafaa kabisa)."
+  hi: "जोखिम स्कोर {score:.2f} (0 = प्रतिकूल, 1 = पूरी तरह अनुकूल)।"
+  de: "Risikowert {score:.2f} (0 = ungünstig, 1 = voll günstig)."
+dis_step_scout:
+  en: "Risk means the weather suits infection — it does not mean the disease is present. Scout before you spray."
+  es: "Riesgo significa que el tiempo favorece la infección, no que la enfermedad esté presente. Revise el campo antes de aplicar."
+  fr: "Le risque signifie que la météo favorise l'infection, pas que la maladie est présente. Observez avant de traiter."
+  sw: "Hatari inamaanisha hali ya hewa inafaa maambukizi — si kwamba ugonjwa upo. Kagua kabla ya kunyunyiza."
+  hi: "जोखिम का अर्थ है कि मौसम संक्रमण के अनुकूल है — यह नहीं कि रोग मौजूद है। छिड़काव से पहले खेत जाँचें।"
+  de: "Risiko heißt: Das Wetter begünstigt eine Infektion – nicht, dass die Krankheit da ist. Erst kontrollieren, dann spritzen."
+dis_note:
+  en: "Leaf wetness is estimated from humidity; forecast skill drops after ~3 days."
+  es: "El mojado foliar se estima a partir de la humedad; la fiabilidad del pronóstico baja tras ~3 días."
+  fr: "L'humectation foliaire est estimée à partir de l'humidité ; la fiabilité de la prévision baisse après ~3 jours."
+  sw: "Unyevu wa majani unakadiriwa kutoka kwa unyevu wa hewa; usahihi wa utabiri hupungua baada ya ~siku 3."
+  hi: "पत्ती का गीलापन नमी से अनुमानित है; ~3 दिन बाद पूर्वानुमान की सटीकता घटती है।"
+  de: "Die Blattnässe wird aus der Luftfeuchte geschätzt; die Vorhersagegüte sinkt nach ~3 Tagen."
+dis_caveat_grid:
+  en: "Forecast grid ~10–25 km; humid hollows and irrigated canopies are wetter than the grid."
+  es: "Cuadrícula del pronóstico ~10–25 km; las hondonadas húmedas y los cultivos regados son más húmedos que la cuadrícula."
+  fr: "Maille de prévision ~10–25 km ; les creux humides et les couverts irrigués sont plus humides que la maille."
+  sw: "Gridi ya utabiri ~km 10–25; mabonde yenye unyevu na mimea inayomwagiliwa huwa na unyevu zaidi kuliko gridi."
+  hi: "पूर्वानुमान ग्रिड ~10–25 किमी; नम निचले हिस्से और सिंचित फसलें ग्रिड से अधिक गीली होती हैं।"
+  de: "Vorhersageraster ~10–25 km; feuchte Senken und bewässerte Bestände sind nasser als das Raster."
+dis_caveat_rh:
+  en: "Relative humidity ≥ 90 % is a proxy for leaf wetness."
+  es: "Una humedad relativa ≥ 90 % se usa como indicador de mojado foliar."
+  fr: "Une humidité relative ≥ 90 % sert d'indicateur d'humectation foliaire."
+  sw: "Unyevu ≥ 90 % unatumika kama kiashiria cha unyevu wa majani."
+  hi: "सापेक्ष आर्द्रता ≥ 90 % को पत्ती के गीलेपन का संकेतक माना गया है।"
+  de: "Relative Luftfeuchte ≥ 90 % dient als Ersatzgröße für Blattnässe."
+frost_sum:
+  en: "Forecast minimum {tmin:.1f} °C on {date} vs. damage threshold {kill} °C for {crop}."
+  es: "Mínima prevista {tmin:.1f} °C el {date} frente al umbral de daño de {kill} °C para {crop}."
+  fr: "Minimale prévue {tmin:.1f} °C le {date}, pour un seuil de dégâts de {kill} °C ({crop})."
+  sw: "Joto la chini linalotabiriwa {tmin:.1f} °C tarehe {date} dhidi ya kiwango cha madhara {kill} °C kwa {crop}."
+  hi: "{date} को अनुमानित न्यूनतम {tmin:.1f} °C, जबकि {crop} की क्षति सीमा {kill} °C है।"
+  de: "Vorhergesagtes Minimum {tmin:.1f} °C am {date}, Schadschwelle für {crop}: {kill} °C."
+frost_step_tmin: {en: "Forecast Tmin {tmin:.1f} °C.", es: "Mínima prevista {tmin:.1f} °C.", fr: "Minimale prévue {tmin:.1f} °C.", sw: "Joto la chini linalotabiriwa {tmin:.1f} °C.", hi: "अनुमानित न्यूनतम {tmin:.1f} °C।", de: "Vorhergesagtes Minimum {tmin:.1f} °C."}
+frost_step_thr:
+  en: "Damage threshold for {crop}: {kill} °C (literature)."
+  es: "Umbral de daño para {crop}: {kill} °C (literatura)."
+  fr: "Seuil de dégâts pour {crop} : {kill} °C (littérature)."
+  sw: "Kiwango cha madhara kwa {crop}: {kill} °C (machapisho)."
+  hi: "{crop} की क्षति सीमा: {kill} °C (शोध साहित्य)।"
+  de: "Schadschwelle für {crop}: {kill} °C (Literatur)."
+model_frost:
+  en: "Threshold rule on forecast minimum temperature"
+  es: "Regla de umbral sobre la temperatura mínima prevista"
+  fr: "Règle de seuil sur la température minimale prévue"
+  sw: "Kanuni ya kiwango kwa joto la chini linalotabiriwa"
+  hi: "अनुमानित न्यूनतम तापमान पर सीमा नियम"
+  de: "Schwellenregel für die vorhergesagte Tiefsttemperatur"
+frost_note:
+  en: "Frost is very local; low spots can be 2–4 °C colder."
+  es: "La helada es muy local; las zonas bajas pueden estar 2–4 °C más frías."
+  fr: "Le gel est très local ; les points bas peuvent être 2–4 °C plus froids."
+  sw: "Baridi kali ni ya eneo dogo sana; maeneo ya chini yanaweza kuwa baridi zaidi kwa 2–4 °C."
+  hi: "पाला बहुत स्थानीय होता है; निचले हिस्से 2–4 °C अधिक ठंडे हो सकते हैं।"
+  de: "Frost ist sehr lokal; Senken können 2–4 °C kälter sein."
+frost_caveat:
+  en: "Forecast is for 2 m air temperature; ground frost can occur at higher air temperatures."
+  es: "El pronóstico es de temperatura del aire a 2 m; puede helar a ras de suelo con temperaturas del aire más altas."
+  fr: "La prévision concerne l'air à 2 m ; une gelée au sol peut survenir avec une température de l'air plus élevée."
+  sw: "Utabiri ni wa joto la hewa la m 2; baridi kali ya ardhini inaweza kutokea hata hewa ikiwa na joto zaidi."
+  hi: "पूर्वानुमान 2 मी हवा के तापमान का है; ज़मीनी पाला अधिक हवा तापमान पर भी पड़ सकता है।"
+  de: "Die Vorhersage gilt für 2 m Lufttemperatur; Bodenfrost ist auch bei höheren Lufttemperaturen möglich."
+heat_sum:
+  en: "Forecast maximum {tmax:.1f} °C exceeds the heat-stress threshold of {thr} °C."
+  es: "La máxima prevista de {tmax:.1f} °C supera el umbral de estrés por calor de {thr} °C."
+  fr: "La maximale prévue de {tmax:.1f} °C dépasse le seuil de stress thermique de {thr} °C."
+  sw: "Joto la juu linalotabiriwa {tmax:.1f} °C linazidi kiwango cha msongo wa joto cha {thr} °C."
+  hi: "अनुमानित अधिकतम {tmax:.1f} °C, ताप-तनाव सीमा {thr} °C से अधिक है।"
+  de: "Das vorhergesagte Maximum von {tmax:.1f} °C übersteigt die Hitzestressschwelle von {thr} °C."
+heat_step_tmax:
+  en: "Forecast Tmax {tmax:.1f} °C on {date}."
+  es: "Máxima prevista {tmax:.1f} °C el {date}."
+  fr: "Maximale prévue {tmax:.1f} °C le {date}."
+  sw: "Joto la juu linalotabiriwa {tmax:.1f} °C tarehe {date}."
+  hi: "{date} को अनुमानित अधिकतम {tmax:.1f} °C।"
+  de: "Vorhergesagtes Maximum {tmax:.1f} °C am {date}."
+heat_step_thr:
+  en: "Heat threshold for {crop}: {thr} °C."
+  es: "Umbral de calor para {crop}: {thr} °C."
+  fr: "Seuil de chaleur pour {crop} : {thr} °C."
+  sw: "Kiwango cha joto kwa {crop}: {thr} °C."
+  hi: "{crop} की ताप सीमा: {thr} °C।"
+  de: "Hitzeschwelle für {crop}: {thr} °C."
+model_heat:
+  en: "Threshold rule on forecast maximum temperature"
+  es: "Regla de umbral sobre la temperatura máxima prevista"
+  fr: "Règle de seuil sur la température maximale prévue"
+  sw: "Kanuni ya kiwango kwa joto la juu linalotabiriwa"
+  hi: "अनुमानित अधिकतम तापमान पर सीमा नियम"
+  de: "Schwellenregel für die vorhergesagte Höchsttemperatur"
+heat_note:
+  en: "Short heat spikes matter most at flowering."
+  es: "Los picos cortos de calor importan sobre todo en la floración."
+  fr: "Les pics de chaleur brefs comptent surtout à la floraison."
+  sw: "Joto kali la muda mfupi lina madhara zaidi wakati wa kuchanua maua."
+  hi: "छोटी अवधि की गर्मी फूल आने के समय सबसे अधिक मायने रखती है।"
+  de: "Kurze Hitzespitzen zählen vor allem zur Blüte."
+sow_sum:
+  en: "Sowing dates were simulated with the FieldShift season model over past seasons of NASA POWER weather."
+  es: "Las fechas de siembra se simularon con el modelo de temporada de FieldShift sobre temporadas pasadas de clima NASA POWER."
+  fr: "Les dates de semis ont été simulées avec le modèle de saison FieldShift sur les saisons passées de météo NASA POWER."
+  sw: "Tarehe za kupanda ziliigwa kwa modeli ya msimu ya FieldShift kwa misimu iliyopita ya hali ya hewa ya NASA POWER."
+  hi: "बुवाई की तारीखों का FieldShift मौसम मॉडल से पिछले मौसमों के NASA POWER मौसम पर अनुकरण किया गया।"
+  de: "Saattermine wurden mit dem FieldShift-Saisonmodell über vergangene Jahre NASA-POWER-Wetter simuliert."
+sow_step:
+  en: "{date}: median {m:.1f} t/ha, bad-year (p10) {p10:.1f} t/ha"
+  es: "{date}: mediana {m:.1f} t/ha, año malo (p10) {p10:.1f} t/ha"
+  fr: "{date} : médiane {m:.1f} t/ha, mauvaise année (p10) {p10:.1f} t/ha"
+  sw: "{date}: wastani wa kati t/ha {m:.1f}, mwaka mbaya (p10) t/ha {p10:.1f}"
+  hi: "{date}: माध्यिका {m:.1f} t/ha, खराब वर्ष (p10) {p10:.1f} t/ha"
+  de: "{date}: Median {m:.1f} t/ha, schlechtes Jahr (p10) {p10:.1f} t/ha"
+model_sowing:
+  en: "Planting-window optimisation (season model × 15 years)"
+  es: "Optimización de la ventana de siembra (modelo de temporada × 15 años)"
+  fr: "Optimisation de la fenêtre de semis (modèle de saison × 15 ans)"
+  sw: "Kuboresha kipindi cha kupanda (modeli ya msimu × miaka 15)"
+  hi: "बुवाई-अवधि अनुकूलन (मौसम मॉडल × 15 वर्ष)"
+  de: "Optimierung des Saatfensters (Saisonmodell × 15 Jahre)"
+sow_note:
+  en: "Past weather is a guide, not a forecast; variety choice changes the result."
+  es: "El clima pasado orienta, no pronostica; la variedad elegida cambia el resultado."
+  fr: "La météo passée guide, elle ne prévoit pas ; le choix variétal change le résultat."
+  sw: "Hali ya hewa iliyopita ni mwongozo, si utabiri; aina ya mbegu hubadilisha matokeo."
+  hi: "पिछला मौसम मार्गदर्शन है, पूर्वानुमान नहीं; किस्म का चुनाव परिणाम बदलता है।"
+  de: "Vergangenes Wetter ist ein Anhaltspunkt, keine Vorhersage; die Sortenwahl ändert das Ergebnis."
+dis_ref_late_blight: {en: "Hutton criteria (AHDB 2017)", es: "Criterios de Hutton (AHDB 2017)", fr: "Critères de Hutton (AHDB 2017)", sw: "Vigezo vya Hutton (AHDB 2017)", hi: "Hutton मानदंड (AHDB 2017)", de: "Hutton-Kriterien (AHDB 2017)"}
+dis_ref_stripe_rust: {en: "de Vallavieille-Pope et al. 1995", es: "de Vallavieille-Pope et al. 1995", fr: "de Vallavieille-Pope et al. 1995", sw: "de Vallavieille-Pope et al. 1995", hi: "de Vallavieille-Pope et al. 1995", de: "de Vallavieille-Pope et al. 1995"}
+dis_ref_powdery_mildew: {en: "Gubler et al. 1999 (simplified)", es: "Gubler et al. 1999 (simplificado)", fr: "Gubler et al. 1999 (simplifié)", sw: "Gubler et al. 1999 (kilichorahisishwa)", hi: "Gubler et al. 1999 (सरलीकृत)", de: "Gubler et al. 1999 (vereinfacht)"}
+dis_ref_legume_leaf_disease: {en: "Leaf-wetness proxy (Sentelhas et al. 2008)", es: "Indicador de mojado foliar (Sentelhas et al. 2008)", fr: "Indicateur d'humectation foliaire (Sentelhas et al. 2008)", sw: "Kiashiria cha unyevu wa majani (Sentelhas et al. 2008)", hi: "पत्ती-गीलापन संकेतक (Sentelhas et al. 2008)", de: "Blattnässe-Ersatzgröße (Sentelhas et al. 2008)"}
+dis_ref_white_mould: {en: "Wet-hours × temperature window", es: "Horas húmedas × rango de temperatura", fr: "Heures humides × plage de température", sw: "Saa za unyevu × kiwango cha joto", hi: "गीले घंटे × तापमान दायरा", de: "Nassstunden × Temperaturfenster"}
+dis_ref_downy_mildew_millet: {en: "Wet-hours × temperature window", es: "Horas húmedas × rango de temperatura", fr: "Heures humides × plage de température", sw: "Saa za unyevu × kiwango cha joto", hi: "गीले घंटे × तापमान दायरा", de: "Nassstunden × Temperaturfenster"}

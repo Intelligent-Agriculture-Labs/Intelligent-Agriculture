@@ -38,7 +38,9 @@
     "none": "Hakuna",
     "gotIt": "Nimeelewa",
     "showAll": "Onyesha zote {{n}}",
-    "showLess": "Onyesha chache"
+    "showLess": "Onyesha chache",
+    "weekEarlier": "Siku 7 mapema",
+    "weekLater": "Siku 7 baadaye"
   },
   "banner": {
     "mock": "DATA YA MFANO — seva ya FieldShift haipatikani. Namba zilizo hapa chini ni za mfano, si data za NASA.",
@@ -90,7 +92,7 @@
     "updated": "Imesasishwa {{date}}",
     "why": "Kwa nini?",
     "changeField": "Badilisha shamba",
-    "attribution": "Data: {{list}}",
+    "attribution": "Takwimu: {{list}}",
     "seasonSoFar": "Msimu hadi sasa",
     "seasonEt": "Maji yaliyotumiwa na zao",
     "seasonRain": "Mvua",
@@ -295,7 +297,10 @@
     "subtitleSatellite": "Picha za Sentinel-2 za mita 10 za shamba lako kwa miezi 12 iliyopita: ukijani, ukataji na mavuno, na kanda za usimamizi kwa AI.",
     "layersButton": "Tabaka",
     "baseTitle": "Ramani ya nyuma",
-    "legendTitle": "Maana ya rangi"
+    "legendTitle": "Maana ya rangi",
+    "a11yMap": "Ramani",
+    "a11yTerrain": "Ramani ya ardhi",
+    "addCorner": "Ongeza pembe"
   },
   "plan": {
     "title": "Mpangaji wa msimu",
@@ -453,7 +458,8 @@
     "joinTitle": "Unganisha kifaa hiki",
     "joining": "Inaunganisha na shamba {{code}}…",
     "invalidCode": "Kiungo hiki hakina msimbo halali wa shamba.",
-    "openSettings": "Fungua mipangilio"
+    "openSettings": "Fungua mipangilio",
+    "defaultFarmName": "Shamba langu"
   },
   "sat": {
     "noOutline": "Kidokezo: chora mpaka wa shamba lako (Hariri shamba) kupata takwimu sahihi. Bila mpaka, mraba mdogo kuzunguka alama unachambuliwa.",
@@ -550,7 +556,8 @@
     "errPassword": "Tafadhali weka nenosiri lako.",
     "errPasswordShort": "Nenosiri linahitaji angalau herufi 8.",
     "showPassword": "Onyesha nenosiri",
-    "hidePassword": "Ficha nenosiri"
+    "hidePassword": "Ficha nenosiri",
+    "errSession": "Muda wa kuingia umekwisha. Tafadhali ingia tena."
   },
   "share": {
     "title": "Shiriki shamba kwa msimbo",
@@ -733,5 +740,20 @@
     "copy": "Nakili maandishi",
     "copied": "Imenakiliwa — ibandike kwenye SMS au WhatsApp",
     "share": "Shiriki…"
+  },
+  "units": {
+    "days": "siku",
+    "doy": "siku ya mwaka",
+    "daysYr": "siku/mwaka",
+    "mmYr": "mm/mwaka",
+    "tHaYr": "t/ha/mwaka",
+    "usdHaYr": "USD/ha/mwaka",
+    "index": "kielelezo",
+    "pctLowerBetter": "% (chini ni bora)",
+    "kgNHaYr": "kg N/ha/mwaka",
+    "cDecade": "°C/muongo",
+    "fDecade": "°F/muongo",
+    "mmDecade": "mm/muongo",
+    "inDecade": "in/muongo"
   }
 }

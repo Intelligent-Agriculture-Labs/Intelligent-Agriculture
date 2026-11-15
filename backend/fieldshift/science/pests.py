@@ -29,7 +29,7 @@ PESTS: dict[str, dict[str, Any]] = {
             ),
             (450, "Larval feeding declining", "Consider early cutting instead of spraying if near harvest"),
         ],
-        "ref": "UC IPM Alfalfa Pest Management Guidelines; Purdue E-series (48 °F base)",
+        "ref": "UC IPM Alfalfa Pest Management Guidelines; Purdue E-series (48 °F base)",  # i18n: ok (citation)
     },
     "western_corn_rootworm": {
         "range": ["north_america", "europe"],
@@ -42,7 +42,7 @@ PESTS: dict[str, dict[str, Any]] = {
             (570, "Peak larval injury", "Dig roots to rate injury"),
             (760, "Adult emergence", "Scout silks for adult beetles"),
         ],
-        "ref": "Iowa State University Extension (52 °F base, soil DD approximated with air temperature)",
+        "ref": "Iowa State University Extension (52 °F base, soil DD approximated with air temperature)",  # i18n: ok (citation)
     },
     "european_corn_borer": {
         "range": ["north_america", "europe", "asia"],
@@ -54,7 +54,7 @@ PESTS: dict[str, dict[str, Any]] = {
             (208, "First-generation moth flight", "Scout for egg masses"),
             (611, "Second-generation moth flight", "Scout ears/stalks"),
         ],
-        "ref": "Mason et al. (1996) NCR-327",
+        "ref": "Mason et al. (1996) NCR-327",  # i18n: ok (citation)
     },
     "corn_earworm": {
         "range": ["north_america", "south_america"],
@@ -63,7 +63,7 @@ PESTS: dict[str, dict[str, Any]] = {
         "t_low": 12.6,
         "t_high": 33.3,
         "events": [(420, "Larvae on silks/fruit", "Scout silks or fruit")],
-        "ref": "UC IPM degree-day models (Heliothis zea)",
+        "ref": "UC IPM degree-day models (Heliothis zea)",  # i18n: ok (citation)
     },
     "colorado_potato_beetle": {
         "range": ["north_america", "europe", "asia"],
@@ -75,16 +75,16 @@ PESTS: dict[str, dict[str, Any]] = {
             (105, "Overwintered adults emerge", "Scout field edges"),
             (300, "First-generation larvae", "Scout for small larvae; threshold-based control"),
         ],
-        "ref": "Ferro et al. (1985); University of Maine IPM",
+        "ref": "Ferro et al. (1985); University of Maine IPM",  # i18n: ok (citation)
     },
     "cereal_aphids": {
         "range": ["north_america", "south_america", "europe", "asia", "africa", "oceania"],
-        "name": "Russian wheat aphid / cereal aphids",
+        "name": "Russian wheat aphid / cereal aphids",  # i18n: ok (name via pest_disease.yaml legacy_pest_names)
         "crops": ["winter_wheat", "barley", "triticale_forage"],
         "t_low": 5.0,
         "t_high": 30.0,
         "events": [(250, "Spring population build-up", "Check 100 tillers for rolled leaves")],
-        "ref": "Colorado State University Extension (indicative)",
+        "ref": "Colorado State University Extension (indicative)",  # i18n: ok (citation)
     },
     "fall_armyworm": {
         "range": ["north_america", "south_america", "africa", "asia", "oceania"],
@@ -98,7 +98,7 @@ PESTS: dict[str, dict[str, Any]] = {
             (391, "New generation of moths", "Scout whorls for egg masses, windowpane damage and fresh frass")
         ],
         "recurring": True,  # continuous generations where it does not overwinter (tropics)
-        "ref": "Du Plessis et al. 2020 (12.6 °C, 391 °C·d/generation); FAO FAW guidance",
+        "ref": "Du Plessis et al. 2020 (12.6 °C, 391 °C·d/generation); FAO FAW guidance",  # i18n: ok (citation)
     },
 }
 

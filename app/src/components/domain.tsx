@@ -3,8 +3,9 @@ import { Pressable, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
+import i18n from "i18next";
 import { api } from "@/api/client";
-import type { ActionCard as ActionCardT, CropInfo, RotationMetric, RotationStrategy } from "@/api/types";
+import type { ActionCard as ActionCardT, CropInfo, Lang, RotationMetric, RotationStrategy } from "@/api/types";
 import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 import { fmt, type UnitSystem } from "@/lib/units";
 import { Txt } from "./ui";
@@ -107,9 +108,11 @@ export function useCrops(): CropInfo[] {
   }, []);
   return crops;
 }
-export function cropName(crops: CropInfo[], id: string | null | undefined): string {
+/** Crop name in the current app language (server sends `names` per language; English `name` as fallback). */
+export function cropName(crops: CropInfo[], id: string | null | undefined, lang: string = i18n.language): string {
   if (!id) return "—";
-  return crops.find((c) => c.id === id)?.name ?? id.replace(/_/g, " ");
+  const c = crops.find((x) => x.id === id);
+  return c?.names?.[lang as Lang] ?? c?.name ?? id.replace(/_/g, " ");
 }
 
 const CROP_COLORS = ["#2f6b3a", "#1d5e8c", "#b5651d", "#7b4fa0", "#a8323e", "#4d7d2b", "#8c6d1d", "#2b6f7d"];

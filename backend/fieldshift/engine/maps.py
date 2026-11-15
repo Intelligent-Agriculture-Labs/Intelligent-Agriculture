@@ -18,48 +18,39 @@ from ..data import sources
 from ..data.http import DataUnavailable, get_json
 from ..science import terrain
 from ..science.cropmodel import crop
+from .messages import crop_name, t, word
 
 _PNG: OrderedDict[str, bytes] = OrderedDict()
 _LOCK = threading.Lock()
 
 # class breaks & colours (colour-blind-safe sequential palettes)
 SLOPE_CLASSES = [
-    (2, "#1a9850", "0–2 % flat"),
-    (5, "#a6d96a", "2–5 % gentle"),
-    (8, "#fee08b", "5–8 % moderate"),
-    (15, "#f46d43", "8–15 % strong"),
-    (1e9, "#a50026", "> 15 % steep"),
+    (2, "#1a9850", "slope_flat"),  # third item: message key (or a language-neutral label)
+    (5, "#a6d96a", "slope_gentle"),
+    (8, "#fee08b", "slope_moderate"),
+    (15, "#f46d43", "slope_strong"),
+    (1e9, "#a50026", "slope_steep"),
 ]
 LOSS_CLASSES = [
-    (1, "#1a9850", "< 1 t/ha/yr (tolerable)"),
+    (1, "#1a9850", "loss_tolerable"),
     (3, "#a6d96a", "1–3"),
     (5, "#fee08b", "3–5"),
-    (10, "#f46d43", "5–10 (high)"),
-    (1e9, "#a50026", "> 10 (severe)"),
+    (10, "#f46d43", "loss_high"),
+    (1e9, "#a50026", "loss_severe"),
 ]
+# zone id -> (colour, label key, advice key) in config/messages/maps.yaml
 ZONES = {
-    "erosion": (
-        "#b2182b",
-        "Erosion hotspot",
-        "The worst-eroding part of the field: start here. Grass strips or contour bunds across the slope, terraces (e.g. fanya juu) on steep parts, permanent cover on the steepest spots.",
-    ),
-    "erosion_risk": (
-        "#f4a259",
-        "Erosion risk",
-        "Soil loss above the tolerable ~5 t/ha a year: keep the soil covered (residue, cover crops), plough and plant along the contour.",
-    ),
-    "wet": (
-        "#2c7fb8",
-        "Wet / waterlogging-prone",
-        "Water collects here: check drainage, avoid early-spring traffic, consider water-tolerant crops.",
-    ),
-    "frost": (
-        "#6a51a3",
-        "Frost-prone hollow",
-        "Cold air pools here on clear nights: avoid frost-sensitive crops and very early sowing.",
-    ),
-    "core": ("#bfe0a4", "Productive core", "No major terrain constraint; manage as the main field."),
+    "erosion": ("#b2182b", "zone_erosion", "zone_erosion_advice"),
+    "erosion_risk": ("#f4a259", "zone_erosion_risk", "zone_erosion_risk_advice"),
+    "wet": ("#2c7fb8", "zone_wet", "zone_wet_advice"),
+    "frost": ("#6a51a3", "zone_frost", "zone_frost_advice"),
+    "core": ("#bfe0a4", "zone_core", "zone_core_advice"),
 }
+
+
+def _lbl(key: str, lang: str) -> str:
+    """Class label: a message key, or a language-neutral range such as "1–3"."""
+    return key if key[0].isdigit() else t(key, lang)
 
 
 def _hex(c: str) -> tuple[int, int, int]:
@@ -127,6 +118,7 @@ def _annual_precip(lat: float, lon: float) -> float:
 
 def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
     lat, lon = float(req["lat"]), float(req["lon"])
+    lang = req.get("lang") or "en"
     cid = req.get("crop") or "maize"
     c = crop(cid)
     poly = req.get("polygon")
@@ -228,7 +220,7 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
             out.append(
                 {
                     "color": col,
-                    "label": lab,
+                    "label": _lbl(lab, lang),
                     "share_pct": round(100 * float(np.mean((f >= lo) & (f < hi))), 1),
                 }
             )
@@ -239,18 +231,18 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
     zf = zone[mask]
     for zid, (col, lab, adv) in ZONES.items():
         share = round(100 * float(np.mean(zf == zid)), 1)
-        zone_shares.append({"id": zid, "color": col, "label": lab, "share_pct": share, "advice": adv})
+        zone_shares.append(
+            {"id": zid, "color": col, "label": t(lab, lang), "share_pct": share, "advice": t(adv, lang)}
+        )
 
-    srtm_note = "Elevation from AWS Terrain Tiles (NASA SRTM 30 m outside the U.S., USGS 3DEP in the U.S.), resampled to ~{:.0f} m pixels.".format(
-        meta["cell_m"]
-    )
+    srtm_note = t("map_srtm_note", lang, m=meta["cell_m"])
     base_src = [
         {
             "id": "srtm",
-            "name": "Elevation: AWS Terrain Tiles (NASA SRTM, USGS 3DEP)",
-            "provider": "Mapzen/AWS Open Data; NASA; USGS",
+            "name": t("src_srtm_name", lang),
+            "provider": "Mapzen/AWS Open Data; NASA; USGS",  # i18n: ok (organisation names)
             "url": "https://registry.opendata.aws/terrain-tiles/",
-            "resolution": "~30 m source (10 m in U.S.)",
+            "resolution": t("src_srtm_res", lang),
             "latency": "static",
             "last_date": None,
             "is_nasa": True,
@@ -262,74 +254,81 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
     layers: list[dict[str, Any]] = [
         {
             "id": "elevation",
-            "label": "Elevation & relief",
+            "label": t("layer_elevation", lang),
             "unit": "m",
             "legend": [
                 {"color": "#2b6c4a", "label": f"{e_lo:.0f} m"},
                 {"color": "#a36f3c", "label": f"{e_hi:.0f} m"},
             ],
             "stats": st(elev),
-            "why": f"Shaded relief from the DEM. Elevation range in view: {e_lo:.0f}–{e_hi:.0f} m. {srtm_note}",
+            "why": t("layer_elevation_why", lang, lo=e_lo, hi=e_hi, note=srtm_note),
         },
         {
             "id": "slope",
-            "label": "Slope",
+            "label": t("layer_slope", lang),
             "unit": "%",
             "legend": class_shares(L["slope_pct"], SLOPE_CLASSES),
             "stats": sl,
-            "why": f"Steepness from Horn's method. Your field: mean {sl['mean']:.1f} %, steepest 10 % above {sl['p90']:.1f} %. Slopes above ~8 % need contour work and permanent cover.",
+            "why": t("layer_slope_why", lang, mean=sl["mean"], p90=sl["p90"]),
         },
         {
             "id": "erosion",
-            "label": "Erosion risk (RUSLE)",
+            "label": t("layer_erosion", lang),
             "unit": "t/ha/yr",
             "legend": class_shares(L["soil_loss"], LOSS_CLASSES),
             "stats": loss,
-            "why": (
-                f"Estimated long-term soil loss A = R·K·LS·C (RUSLE) with R = {r_fac:.0f} MJ·mm/ha/h/yr from NASA POWER mean annual rain "
-                f"({p_ann:.0f} mm), K = {k_fac:.3f} for {texture} soil, LS from slope and upslope flow area, and C = {cf:.2f} for {c['name']}. "
-                f"Field mean {loss['mean']:.1f}, hotspots (p90) {loss['p90']:.1f} t/ha/yr. Values are indicative (no support practices, P = 1)."
+            "why": t(
+                "layer_erosion_why",
+                lang,
+                r=r_fac,
+                p=p_ann,
+                k=k_fac,
+                soil=word("soil", texture, lang),
+                cf=cf,
+                crop=crop_name(cid, lang, c["name"]),
+                mean=loss["mean"],
+                p90=loss["p90"],
             ),
         },
         {
             "id": "wetness",
-            "label": "Wetness (water collects)",
+            "label": t("layer_wetness", lang),
             "unit": "TWI",
             "legend": [
-                {"color": "#f7fbff", "label": "dry / shedding"},
-                {"color": "#08306b", "label": "wet / collecting"},
+                {"color": "#f7fbff", "label": t("legend_dry", lang)},
+                {"color": "#08306b", "label": t("legend_wet", lang)},
             ],
             "stats": st(L["twi"]),
-            "why": "Topographic wetness index ln(a / tan β): high where a large upslope area drains into flat ground. Shows where water ponds and soils stay wet longer.",
+            "why": t("layer_wetness_why", lang),
         },
         {
             "id": "frost",
-            "label": "Frost-prone hollows",
+            "label": t("layer_frost", lang),
             "unit": "index",
             "legend": [
-                {"color": "#f2f0f7", "label": "low"},
-                {"color": "#3f007d", "label": "cold-air pooling"},
+                {"color": "#f2f0f7", "label": t("legend_low", lang)},
+                {"color": "#3f007d", "label": t("legend_cold_pool", lang)},
             ],
             "stats": st(L["frost_index"]),
-            "why": "Valleys and hollows lower than their surroundings (negative topographic position within ~300 m) on gentle slopes collect cold, dense air on clear, calm nights — late spring and early autumn frosts hit here first.",
+            "why": t("layer_frost_why", lang),
         },
         {
             "id": "zones",
-            "label": "Management zones",
+            "label": t("layer_zones", lang),
             "unit": "",
             "legend": [
                 {"color": z["color"], "label": f"{z['label']} ({z['share_pct']} %)"} for z in zone_shares
             ],
             "stats": {},
-            "why": "Zones combine the maps: erosion risk (RUSLE ≥ 5 t/ha/yr, about the tolerable soil loss) and erosion hotspots (≥ 10 t/ha/yr, or the worst quarter of the at-risk part of this field), wet spots (top 10 % wetness on < 3 % slope), frost hollows (index ≥ 0.5); the rest is the productive core.",
+            "why": t("layer_zones_why", lang),
         },
         {
             "id": "hillshade",
-            "label": "Hillshade",
+            "label": t("layer_hillshade", lang),
             "unit": "",
             "legend": [],
             "stats": {},
-            "why": "Relief illuminated from the north-west to make landforms visible.",
+            "why": t("layer_hillshade_why", lang),
         },
     ]
     for lyr in layers:
@@ -356,9 +355,9 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
         or [
             {
                 "id": "core",
-                "label": ZONES["core"][1],
+                "label": t(ZONES["core"][1], lang),
                 "share_pct": 100.0,
-                "advice": "No major terrain constraint in your field.",
+                "advice": t("zone_core_none", lang),
                 "color": ZONES["core"][0],
             }
         ],
@@ -369,7 +368,7 @@ def terrain_api(req: dict[str, Any]) -> dict[str, Any]:
         ],
         "caveats": [
             srtm_note,
-            "Without a drawn field outline, statistics use a 150 m radius around your pin.",
-            "Terrain maps show where water, soil and cold air move; they do not include drainage tiles, terraces or field roads.",
+            t("map_caveat_radius", lang),
+            t("map_caveat_features", lang),
         ],
     }

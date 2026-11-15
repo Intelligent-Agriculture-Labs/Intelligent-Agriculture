@@ -38,7 +38,9 @@
     "none": "Keine",
     "gotIt": "Verstanden",
     "showAll": "Alle {{n}} zeigen",
-    "showLess": "Weniger zeigen"
+    "showLess": "Weniger zeigen",
+    "weekEarlier": "7 Tage früher",
+    "weekLater": "7 Tage später"
   },
   "banner": {
     "mock": "BEISPIELDATEN — der FieldShift-Server war nicht erreichbar. Die Zahlen unten sind Platzhalter, keine NASA-Daten.",
@@ -295,7 +297,10 @@
     "subtitleSatellite": "10-m-Sentinel-2-Bilder Ihres Feldes der letzten 12 Monate: Grünheit, Schnitte und Ernten sowie KI-Bewirtschaftungszonen.",
     "layersButton": "Ebenen",
     "baseTitle": "Hintergrundkarte",
-    "legendTitle": "Was die Farben bedeuten"
+    "legendTitle": "Was die Farben bedeuten",
+    "a11yMap": "Karte",
+    "a11yTerrain": "Geländekarte",
+    "addCorner": "Ecke hinzufügen"
   },
   "plan": {
     "title": "Saisonplaner",
@@ -453,7 +458,8 @@
     "joinTitle": "Dieses Gerät verbinden",
     "joining": "Verbinde mit Betrieb {{code}}…",
     "invalidCode": "Dieser Link enthält keinen gültigen Betriebscode.",
-    "openSettings": "Einstellungen öffnen"
+    "openSettings": "Einstellungen öffnen",
+    "defaultFarmName": "Mein Hof"
   },
   "sat": {
     "noOutline": "Tipp: Zeichnen Sie den Feldumriss (Feld bearbeiten) für genaue Feldstatistiken. Ohne Umriss wird ein kleines Quadrat um den Punkt ausgewertet.",
@@ -550,7 +556,8 @@
     "errPassword": "Bitte geben Sie Ihr Passwort ein.",
     "errPasswordShort": "Das Passwort braucht mindestens 8 Zeichen.",
     "showPassword": "Passwort anzeigen",
-    "hidePassword": "Passwort verbergen"
+    "hidePassword": "Passwort verbergen",
+    "errSession": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
   },
   "share": {
     "title": "Hof mit einem Code teilen",
@@ -733,5 +740,20 @@
     "copy": "Text kopieren",
     "copied": "Kopiert — in SMS oder WhatsApp einfügen",
     "share": "Teilen…"
+  },
+  "units": {
+    "days": "Tage",
+    "doy": "Tag im Jahr",
+    "daysYr": "Tage/Jahr",
+    "mmYr": "mm/Jahr",
+    "tHaYr": "t/ha/Jahr",
+    "usdHaYr": "USD/ha/Jahr",
+    "index": "Index",
+    "pctLowerBetter": "% (niedriger ist besser)",
+    "kgNHaYr": "kg N/ha/Jahr",
+    "cDecade": "°C/Jahrzehnt",
+    "fDecade": "°F/Jahrzehnt",
+    "mmDecade": "mm/Jahrzehnt",
+    "inDecade": "in/Jahrzehnt"
   }
 }

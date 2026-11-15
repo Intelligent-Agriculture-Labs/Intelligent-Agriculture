@@ -12,6 +12,7 @@ import { Button, Card, Chip, ChipRow, ErrorView, KV, LabeledSlider, Section, Txt
 import { Disclosure, InfoButton, Sheet } from "@/components/kit";
 import { radius, space, useTheme } from "@/lib/theme";
 import type { Field } from "@/state/farm";
+import { useStore } from "@/state/store";
 
 const POLL_MS = 3000;
 const MAX_POLLS = 200; // ~10 min
@@ -20,9 +21,11 @@ type SatState = { data: SatelliteResponse | null; fromCache: boolean; savedAt: s
 
 /** Starts (or resumes) the server-side Sentinel-2 job for a field and polls it until done; caches the result per field. */
 export function useSatellite(field: Field | null) {
+  const lang = useStore().settings.lang;
   const req: SatelliteRequest | null = useMemo(
-    () => (field ? { lat: field.lat, lon: field.lon, polygon: field.polygon && field.polygon.length >= 3 ? field.polygon : null, crop: field.crop } : null),
-    [field],
+    () =>
+      field ? { lat: field.lat, lon: field.lon, polygon: field.polygon && field.polygon.length >= 3 ? field.polygon : null, crop: field.crop, lang } : null,
+    [field, lang],
   );
   const key = req ? api.satelliteKey(req) : null;
   const [state, setState] = useState<SatState>({ data: null, fromCache: false, savedAt: null, error: null, polling: false });
