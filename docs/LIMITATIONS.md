@@ -42,10 +42,10 @@
 - **Global pest and disease models** (MODELS §5b, VALIDATION V11):
   - Leaf wetness is estimated from gridded RH ≥ 90 % (plus rain hours). In the humid tropics this is met almost every night, so the coffee-rust, Sigatoka and gray-leaf-spot scores saturate and cannot separate bad years from normal ones (V11 #4–6).
   - NASA POWER hourly replays lack terrain downscaling in the live replay path: mountain fields can be several °C off. The validation corrects this with a lapse rate; the replay mode does not.
-  - BLASTAM's wetness came from AMeDAS rain, wind and sunshine; FieldShift uses humidity. The stem-rust light requirement after dew is not modelled.
+  - BLASTAM's wetness came from AMeDAS rain, wind and sunshine; IA uses humidity. The stem-rust light requirement after dew is not modelled.
   - Some parameters are assumptions, not published constants, and are marked so in MODELS §5b: the Sigatoka Wmin of 12 h, the desert-locust warm factor and the 400 mm habitat limit, and the gray-leaf-spot 14-day pro-rating.
   - **Desert locust:** only rain at the field's own grid cell is used, while breeding happens in nearby deserts. The card is awareness only and points to FAO Locust Watch and national locust units.
-  - **Coffee and banana are not FieldShift crops yet,** so their models produce no cards.
+  - **Coffee and banana are not IA crops yet,** so their models produce no cards.
   - **Northern leaf blight** was dropped because its published criteria could not be verified.
 - **Pest degree-day thresholds** are literature values, mostly from North American extension services. Geographic ranges are coarse (continent level). Titles are translated; the per-stage action text is English-only.
 - **Rotation scores** use transparent but simplified indices (soil-health index, RUSLE-inspired erosion index, pest-cycle score). They have not been calibrated against field trials.

@@ -1,14 +1,18 @@
-<img src="assets/icon.svg" width="64" height="64" alt="FieldShift logo">
+<picture><source srcset="assets/logo.svg" media="(prefers-color-scheme: dark)"><img src="assets/logo-light.svg" height="96" alt="IA · Intelligent Agriculture"></picture>
 
-# FieldShift: 40 years of NASA data, turned into this week's farm decisions
+# IA · Intelligent Agriculture: 40 years of NASA data, turned into this week's farm decisions
+
+**Better decisions. Better harvests.**
 
 **NASA Space Apps Challenge 2026 · "Field Shift: Adapting Farms with NASA Data"** · Web · iOS · Android · syncs phone ↔ PC · 6 languages · works offline
 
-FieldShift is a free app for farmers that turns NASA Earth observations into plain-language decisions. Open it, tap inside your field on sub-metre satellite imagery (FieldShift finds the boundary; you can drag the corners), and it answers four questions for every field:
+> The product was renamed from IA to **IA (Intelligent Agriculture)**. The codebase keeps its code name: the Python package `fieldshift`, the app's npm package, bundle id `org.fieldshift.app`, API routes, env vars and storage keys are unchanged.
+
+IA is a free app for farmers that turns NASA Earth observations into plain-language decisions. Open it, tap inside your field on sub-metre satellite imagery (IA finds the boundary; you can drag the corners), and it answers four questions for every field:
 
 1. **"What should I do this week, and why?"** At most three action cards, such as *Irrigate 38 mm by Thursday*, *High stripe-rust risk from Friday: inspect leaves* or *Fall armyworm: new generation in ~4 days*. Each has a **Why?** view with the NASA data against normal, the model, its confidence, caveats and sources.
 2. **"What is happening inside my field?"** 10 m Sentinel-2 greenness history with green-up, cuttings and harvests seen from space; **AI management zones**; computed terrain maps of erosion (RUSLE), wetness, frost hollows and slope.
-3. **"What should I grow in the next years?"** A **multi-year rotation plan per field**. Each year is checked against cited agronomy: 30 soil-borne diseases and pests, nitrogen from legumes, bare soil and erosion, water and climate fit, across **54 crops**. FieldShift says what to change, proposes an AI-optimised plan and shows its **impact**: water, fertiliser, CO₂e, topsoil and income, with trade-offs stated.
+3. **"What should I grow in the next years?"** A **multi-year rotation plan per field**. Each year is checked against cited agronomy: 30 soil-borne diseases and pests, nitrogen from legumes, bare soil and erosion, water and climate fit, across **54 crops**. IA says what to change, proposes an AI-optimised plan and shows its **impact**: water, fertiliser, CO₂e, topsoil and income, with trade-offs stated.
 4. **"Is my farm ready for the climate I actually farm in?"** 40-year climate trends at the field, What-if scenarios (+°C, −rain, sowing date, irrigation) and a season planner.
 
 It is built for real farms. **Accounts** sync phone and PC, and it works **offline**. Each week's advice fits in **two SMS** in six languages: English, Spanish, French, Swahili, Hindi and German. A **glossary** explains every term in plain words.
@@ -22,16 +26,16 @@ iPhone 17 simulator, native Release build, real data (`app/scripts/capture-film-
 More:
 - web: [terrain zones](media/web-map-mobile.png), [layers](media/web-layers-mobile.png), [field editor](media/web-fields-desktop.png), [insights](media/web-insights-mobile.png), [account](media/web-account-mobile.png), [share as text](media/web-share-text-mobile.png);
 - [iOS](media/) and [Android](media/) captures and [`media/BUILDS.md`](media/BUILDS.md);
-- the **30 s video** [`media/fieldshift-demo-30s.mp4`](media/fieldshift-demo-30s.mp4) and **7-slide deck** [`media/fieldshift-deck.pdf`](media/fieldshift-deck.pdf);
+- the **30 s video** [`media/ia-demo-30s.mp4`](media/ia-demo-30s.mp4) (same file as `media/fieldshift-demo-30s.mp4`) and **7-slide deck** [`media/fieldshift-deck.pdf`](media/fieldshift-deck.pdf);
 - a static showcase site with no login: `python3 scripts/build_site.py` → `site/dist/` (GitHub Pages-ready).
 
 ## The story: Lahontan Valley, Nevada
-The challenge photo shows a Nevada alfalfa farmer, so FieldShift's hero demo is a real ~5.5 ha border-irrigated alfalfa field near Fallon. The NASA POWER record there shows:
+The challenge photo shows a Nevada alfalfa farmer, so IA's hero demo is a real ~5.5 ha border-irrigated alfalfa field near Fallon. The NASA POWER record there shows:
 - **days ≥ 35 °C** rising from **26 to 50 a year** since 1984;
 - **warm-season rain** falling from **95 to 55 mm**;
 - **July crop water demand of ~220 mm against 7 mm of rain**.
 
-FieldShift turns that into action:
+IA turns that into action:
 - **Weekly:** when and how much to irrigate. In the July 2025 replay: "Irrigate … mm by Sun 20 · moderate drought (D1)".
 - **Season:** five alfalfa cuttings, the first in late May; a 1,100 mm water allocation covers ~73 % of full need, so the plan shows where to cut.
 - **Strategy:** **split-season alfalfa** saves ~45 % of the water at a cost in income; a **teff → winter wheat** break disrupts pest cycles.
@@ -39,7 +43,7 @@ FieldShift turns that into action:
 The same engine serves a rain-fed smallholder in **Machakos, Kenya** (in Swahili), rain-fed wheat in **Córdoba, Spain**, and corn–soy in **Iowa**.
 
 ## How NASA (and partner) data drives every feature
-| Data | What FieldShift computes from it |
+| Data | What IA computes from it |
 |---|---|
 | **NASA POWER** daily agroclimatology, 1984→now | FAO-56 Penman–Monteith ET₀ → daily root-zone water balance → irrigation timing and amount. Crop stages and pest degree-days. SPI/SPEI and AI-drought features. 40-year climate trends. Every simulated season (rotations, What-if, planner). RUSLE rain erosivity |
 | **NASA POWER hourly** | Disease infection-risk models (Hutton late blight, stripe rust, …) in replay/back-tests |
@@ -105,10 +109,10 @@ Mobile builds and development setup: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md),
 - Terraced plots may need manual outline edits.
 - The Esri basemap is for this non-commercial demo.
 
-See [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md). FieldShift supports, and does not replace, farmer judgement and local agronomic advice.
+See [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md). IA supports, and does not replace, farmer judgement and local agronomic advice.
 
 ## Team
-FieldShift team: Lino Brendler (team owner). Built for the NASA Space Apps Challenge 2026.
+Team IA: Lino Brendler (team owner). Built for the NASA Space Apps Challenge 2026.
 
 ## Use of Super Intelligence (SI) tools (disclosure)
 This project was built with substantial help from SI (AI) tools, as the Space Apps rules require us to disclose:

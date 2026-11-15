@@ -141,7 +141,7 @@ CDI_TO_LEVEL = np.array([0, 1, 2, 3, 0, 1, 1], dtype=np.int64)  # see cdi_level(
 
 
 def cdi_level(px: np.ndarray) -> int | None:
-    """CDI classes in a 0.5° box -> FieldShift level (0 None, 1 D0, 2 D1, 3 D2).
+    """CDI classes in a 0.5° box -> IA level (0 None, 1 D0, 2 D1, 3 D2).
 
     Watch (precipitation deficit) ~ D0, Warning (soil-moisture deficit) ~ D1, Alert (vegetation stress) ~ D2.
     Recovery -> None; the two temporary-recovery classes -> D0 (the event is not over). The box level follows

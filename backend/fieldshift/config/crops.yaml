@@ -1,4 +1,4 @@
-# FieldShift crop parameter table — version 1.0.0
+# IA crop parameter table — version 1.0.0
 # Sources (see docs/MODELS.md for full references):
 #   kc_*, stages, root_m, p ............ FAO-56 Tables 11, 12, 22 (Allen et al. 1998); arid-region stage lengths where given
 #   ky ................................... FAO-33 / FAO-56 yield response factor (Doorenbos & Kassam 1979)

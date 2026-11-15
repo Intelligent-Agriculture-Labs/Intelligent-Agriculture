@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FieldShift</title>
-<meta name="description" content="FieldShift turns 40 years of NASA Earth observations into this week's farm decisions and a science-based crop-rotation plan for every field. NASA Space Apps Challenge 2026.">
-<link rel="icon" href="assets/icon.svg">
+<title>IA · Intelligent Agriculture</title>
+<meta name="description" content="IA (Intelligent Agriculture). Better decisions. Better harvests. IA turns 40 years of NASA Earth observations into this week's farm decisions and a science-based crop-rotation plan for every field. NASA Space Apps Challenge 2026.">
+<link rel="icon" href="assets/logo-mark.svg">
+<meta name="theme-color" content="#050807">
 <style>
 :root{--bg:#f6f7f2;--card:#fff;--ink:#17231a;--muted:#55635a;--line:#e3e8df;--accent:#2f6b3a;--accent-ink:#fff;--soft:#eaf1e5}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101611;--card:#172019;--ink:#e8efe6;--muted:#a3b2a6;--line:#25302a;--accent:#7fc28b;--accent-ink:#0d1a10;--soft:#1c2a1f}}
@@ -35,6 +36,8 @@ video{width:100%;border-radius:16px;border:1px solid var(--line);background:#000
 table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 th{color:var(--muted);font-weight:600}
 footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+h1.brand{margin:14px 0 6px;line-height:0}h1.brand img{width:min(420px,88vw);height:auto}
+.slogan{font-size:clamp(20px,2.6vw,26px);font-weight:700;margin:6px 0 10px;color:var(--ink)}
 code{background:var(--soft);padding:2px 6px;border-radius:6px}
 </style>
 </head>
@@ -42,13 +45,14 @@ code{background:var(--soft);padding:2px 6px;border-radius:6px}
 <div class="wrap">
 <header class="hero">
   <div class="eyebrow">NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data</div>
-  <h1>FieldShift</h1>
+  <h1 class="brand"><picture><source srcset="assets/logo.svg" media="(prefers-color-scheme: dark)"><img src="assets/logo-light.svg" alt="IA · Intelligent Agriculture" width="420" height="100"></picture></h1>
+  <p class="slogan">Better decisions. Better harvests.</p>
   <p class="lead">40 years of NASA Earth observations, turned into <strong>this week's farm decisions</strong> and a <strong>science-based crop-rotation plan for every field</strong>, in plain language and six languages. Works on web, iOS and Android, online or offline.</p>
   <div class="cta"><a class="btn" href="#video">Watch the 30-second demo</a><a class="btn secondary" href="{{REPO_URL}}">Source code</a><a class="btn secondary" href="#run">Run it yourself</a></div>
 </header>
 
 <section id="video"><h2>Demo</h2><p class="sub">30 seconds, motion-designed in code from real app screens, NASA imagery and data, with an original synthesised score.</p>
-<video controls preload="metadata" poster="assets/poster.png"><source src="assets/fieldshift-demo-30s.mp4" type="video/mp4"></video></section>
+<video controls preload="metadata" poster="assets/poster.png"><source src="assets/ia-demo-30s.mp4" type="video/mp4"></video></section>
 
 <section><h2>What a farmer gets</h2><p class="sub">Simple on the surface, deep underneath: every number is one tap from its NASA evidence.</p>
 <div class="grid">
@@ -61,11 +65,11 @@ code{background:var(--soft);padding:2px 6px;border-radius:6px}
 <section><h2>Screens</h2>
 <div class="shots">{{SHOTS}}</div></section>
 
-<section><h2>Measured impact</h2><p class="sub">FieldShift planner on the four demo farm fields: the current crop every year vs. the plan FieldShift suggests, simulated with NASA POWER weather at each field (<code>scripts/site_impact.py</code>; model estimates, not measured on farms).</p>
+<section><h2>Measured impact</h2><p class="sub">IA planner on the four demo farm fields: the current crop every year vs. the plan IA suggests, simulated with NASA POWER weather at each field (<code>scripts/site_impact.py</code>; model estimates, not measured on farms).</p>
 <div class="stats">{{IMPACT}}</div></section>
 
 <section><h2>NASA data, used for real</h2>
-<table><tr><th>Data</th><th>What FieldShift computes</th></tr>
+<table><tr><th>Data</th><th>What IA computes</th></tr>
 <tr><td>NASA POWER (1984 → today)</td><td>FAO-56 crop water demand and soil-water balance, crop and pest development, drought indices, 40-year climate trends, every simulated season</td></tr>
 <tr><td>SMAP L3E / L4 soil moisture</td><td>Root-zone moisture percentile in the drought status; validation</td></tr>
 <tr><td>ECOSTRESS (70 m) · MODIS NDVI / ET / LST</td><td>Measured field water use; vegetation anomalies; ET cross-checks</td></tr>
@@ -79,7 +83,7 @@ code{background:var(--soft);padding:2px 6px;border-radius:6px}
 <section id="run"><h2>Run it yourself</h2><p class="sub">One command, no account, works offline with the bundled NASA demo data.</p>
 <p><code>git clone {{REPO_URL}} &amp;&amp; cd fieldshift &amp;&amp; FIELDSHIFT_OFFLINE=1 docker compose up --build</code> → open <code>http://localhost:8080</code></p></section>
 
-<footer>FieldShift · Apache-2.0 · Built for the NASA Space Apps Challenge 2026. Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, GIBS; Copernicus Sentinel-2 &amp; ERA5; ISRIC SoilGrids; Open-Meteo; U.S. Drought Monitor. Imagery: Esri, Maxar, Earthstar Geographics. Use of SI (AI) tools is disclosed in the repository README. FieldShift supports, and does not replace, farmer judgement and local advice.</footer>
+<footer>IA · Intelligent Agriculture · Apache-2.0 · Built for the NASA Space Apps Challenge 2026. Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, GIBS; Copernicus Sentinel-2 &amp; ERA5; ISRIC SoilGrids; Open-Meteo; U.S. Drought Monitor. Imagery: Esri, Maxar, Earthstar Geographics. Use of SI (AI) tools is disclosed in the repository README. IA supports, and does not replace, farmer judgement and local advice.</footer>
 </div>
 </body>
 </html>

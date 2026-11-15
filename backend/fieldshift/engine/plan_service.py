@@ -238,7 +238,7 @@ def plan_impact(
         "field_area_ha": round(area, 2) if area else None,
         "field_total": field_total,
         "headline": headline,
-        "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the "
+        "method": "Differences between the two plans as simulated at this field (IA season model, NASA POWER weather). CO₂e counts only the "
         "direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted.",
     }
 

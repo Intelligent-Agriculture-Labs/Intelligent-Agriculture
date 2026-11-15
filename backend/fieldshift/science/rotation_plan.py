@@ -7,7 +7,7 @@ Biology (config/rotation_knowledge.yaml; sources in docs/ROTATION_SCIENCE.md):
     Pressure in a host year = Σ over earlier host years of exp(−Δt·ln2 / half_life). Levels: <0.25 low, <0.6 medium, else high.
   * Predecessor effects: good/poor predecessors, preceding-crop value, allelopathy notes, and rules with yield effects.
   * Nitrogen carry-over: n_effect_kg_ha of the previous main crop plus the cover crop's fixation.
-Agronomy: each crop is simulated over 15 past seasons at the field (FieldShift season model: NASA POWER weather, soil,
+Agronomy: each crop is simulated over 15 past seasons at the field (IA season model: NASA POWER weather, soil,
 irrigation method and allocation); rotation effects scale yield; bare-soil days from season lengths; RUSLE erosion with the
 field's own LS·R·K and the crop's C factor (cover crops reduce C).
 Score per year = priority-weighted mean of five 0–100 components (pests/disease, soil, water, income, climate risk).

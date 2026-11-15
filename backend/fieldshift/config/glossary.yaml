@@ -106,16 +106,16 @@ terms:
     hi: {term: "प्रबंधन क्षेत्र (AI)", plain: "खेत के वे हिस्से जो लगातार बेहतर या कमज़ोर उगते हैं, AI द्वारा पहचाने गए।", why: "हर क्षेत्र को अलग तरीके से संभालें।"}
     de: {term: "Bewirtschaftungszonen (KI)", plain: "Teile Ihres Feldes, die dauerhaft besser oder schlechter wachsen – per KI aus Satellitenbildern ermittelt.", why: "Zonen unterschiedlich bewirtschaften."}
   confidence:
-    en: {term: "Confidence", plain: "How sure FieldShift is about a piece of advice, based on data quality and how well the method has been tested.", why: "Low confidence means: check in the field before acting."}
-    es: {term: "Confianza", plain: "Qué tan seguro está FieldShift según la calidad de datos y el método.", why: "Confianza baja: compruebe en el campo antes de actuar."}
+    en: {term: "Confidence", plain: "How sure IA is about a piece of advice, based on data quality and how well the method has been tested.", why: "Low confidence means: check in the field before acting."}
+    es: {term: "Confianza", plain: "Qué tan seguro está IA según la calidad de datos y el método.", why: "Confianza baja: compruebe en el campo antes de actuar."}
     fr: {term: "Confiance", plain: "Degré de certitude selon la qualité des données et la méthode.", why: "Confiance faible : vérifiez sur le terrain."}
-    sw: {term: "Uhakika", plain: "Jinsi FieldShift ilivyo na uhakika kulingana na ubora wa data na mbinu.", why: "Uhakika mdogo: kagua shambani kwanza."}
-    hi: {term: "विश्वास", plain: "डेटा गुणवत्ता और विधि के आधार पर FieldShift कितना निश्चित है।", why: "कम विश्वास: पहले खेत में जाँच करें।"}
-    de: {term: "Sicherheit", plain: "Wie sicher FieldShift ist – je nach Datenqualität und Methode.", why: "Geringe Sicherheit: vor dem Handeln im Feld prüfen."}
+    sw: {term: "Uhakika", plain: "Jinsi IA ilivyo na uhakika kulingana na ubora wa data na mbinu.", why: "Uhakika mdogo: kagua shambani kwanza."}
+    hi: {term: "विश्वास", plain: "डेटा गुणवत्ता और विधि के आधार पर IA कितना निश्चित है।", why: "कम विश्वास: पहले खेत में जाँच करें।"}
+    de: {term: "Sicherheit", plain: "Wie sicher IA ist – je nach Datenqualität und Methode.", why: "Geringe Sicherheit: vor dem Handeln im Feld prüfen."}
   replay:
-    en: {term: "Replay", plain: "Shows the advice FieldShift would have given on a real past date, using the real data of that time.", why: "Lets you see how the app works in the middle of a season, and check it against what happened."}
-    es: {term: "Repetición", plain: "Muestra el consejo que habría dado FieldShift en una fecha pasada real.", why: "Permite ver la app a mitad de temporada."}
-    fr: {term: "Relecture", plain: "Montre le conseil qu'aurait donné FieldShift à une date passée réelle.", why: "Voir l'appli en pleine saison."}
-    sw: {term: "Rudia", plain: "Huonyesha ushauri ambao FieldShift ingetoa tarehe halisi iliyopita.", why: "Huonyesha programu katikati ya msimu."}
-    hi: {term: "रीप्ले", plain: "बीती वास्तविक तारीख पर FieldShift जो सलाह देता, वह दिखाता है।", why: "मौसम के बीच ऐप कैसे काम करता है, यह देखें।"}
-    de: {term: "Wiedergabe", plain: "Zeigt den Rat, den FieldShift an einem echten vergangenen Datum gegeben hätte.", why: "Zeigt die App mitten in der Saison."}
+    en: {term: "Replay", plain: "Shows the advice IA would have given on a real past date, using the real data of that time.", why: "Lets you see how the app works in the middle of a season, and check it against what happened."}
+    es: {term: "Repetición", plain: "Muestra el consejo que habría dado IA en una fecha pasada real.", why: "Permite ver la app a mitad de temporada."}
+    fr: {term: "Relecture", plain: "Montre le conseil qu'aurait donné IA à une date passée réelle.", why: "Voir l'appli en pleine saison."}
+    sw: {term: "Rudia", plain: "Huonyesha ushauri ambao IA ingetoa tarehe halisi iliyopita.", why: "Huonyesha programu katikati ya msimu."}
+    hi: {term: "रीप्ले", plain: "बीती वास्तविक तारीख पर IA जो सलाह देता, वह दिखाता है।", why: "मौसम के बीच ऐप कैसे काम करता है, यह देखें।"}
+    de: {term: "Wiedergabe", plain: "Zeigt den Rat, den IA an einem echten vergangenen Datum gegeben hätte.", why: "Zeigt die App mitten in der Saison."}

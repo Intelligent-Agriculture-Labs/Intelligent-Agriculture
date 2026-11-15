@@ -7,7 +7,7 @@ Reference: GHCN-Daily station precipitation (NOAA NCEI, QC-flagged values droppe
 West Africa, South-East Asia, northern Australia, Latin America and the Caribbean.
 
 Products (all from the anonymous NASA POWER daily point API, so the app can use them worldwide):
-  P_lst   PRECTOTCORR (MERRA-2 bias-corrected) in local solar time — what FieldShift uses today
+  P_lst   PRECTOTCORR (MERRA-2 bias-corrected) in local solar time — what IA uses today
   I       IMERG_PRECTOT (GPM IMERG Final, 0.1°) — UTC days only (POWER returns fill values for LST)
   B50     0.5 · (P_lst + I) daily blend
   MR      P_lst rescaled month by month to IMERG's monthly total (POWER timing, IMERG amounts)

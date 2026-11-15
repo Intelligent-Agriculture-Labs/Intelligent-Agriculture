@@ -1,6 +1,6 @@
 # Data sources
 
-All sources were verified reachable on 2026-11-14 from both the Mac and the VPS. FieldShift needs **no API keys** by default. Each source sits behind `backend/fieldshift/data/http.py`, which provides:
+All sources were verified reachable on 2026-11-14 from both the Mac and the VPS. IA needs **no API keys** by default. Each source sits behind `backend/fieldshift/data/http.py`, which provides:
 - a disk cache (TTL by data age);
 - retries with exponential backoff;
 - per-host rate limiting;
@@ -63,7 +63,7 @@ NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`
   - Global SPEIbase (CSIC, ODbL). Climatic and monthly, computed from CRU, and again close to the model's own SPEI features.
   - GDO Risk of Drought Impact for Agriculture. It mixes in exposure and vulnerability, which is not hazard severity.
   - So the weak global label is GDO's modelled soil-moisture anomaly. It is independent of NASA POWER rain, but it is still a single indicator, and we say so wherever it is used.
-- **CDL, SSURGO, PRISM:** US-only. FieldShift's backbone is global so smallholders outside the US get the same product; these are planned as US-only enrichments.
+- **CDL, SSURGO, PRISM:** US-only. IA's backbone is global so smallholders outside the US get the same product; these are planned as US-only enrichments.
 
 ## NASA FIRMS: modes and how to enable the full API
 `backend/fieldshift/data/firms.py` chooses a mode from the environment.

@@ -308,7 +308,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
         "risk_calendar": risk_cal,
         "rain_season": rain_lim,
         "why": (
-            "Every number here comes from re-running the FieldShift season model for each of the last 15 seasons of NASA POWER weather "
+            "Every number here comes from re-running the IA season model for each of the last 15 seasons of NASA POWER weather "
             "at your field: dates are medians, 'spread' is the 10–90 % range between years."
         ),
         "sources": ["nasa_power", "soilgrids", "srtm"],

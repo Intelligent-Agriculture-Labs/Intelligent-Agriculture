@@ -12,7 +12,7 @@ test("core flow: demo farm → at most 3 action cards → Why? with chart", asyn
 
   // this week's advice as a short text message (SMS / WhatsApp)
   await page.getByTestId("share-text").click();
-  await expect(page.getByTestId("share-text-preview")).toContainText(/FieldShift/, { timeout: 60_000 });
+  await expect(page.getByTestId("share-text-preview")).toContainText(/^IA/, { timeout: 60_000 });
   await expect(page.getByTestId("share-text-sms")).toContainText(/SMS/);
   await page.keyboard.press("Escape");
 

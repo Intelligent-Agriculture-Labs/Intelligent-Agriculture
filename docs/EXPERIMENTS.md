@@ -32,7 +32,7 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
 
 ## EXP-03 Adding a 12-month indicator improves drought status vs. the U.S. Drought Monitor
 - **Hypothesis:** USDM integrates long-term hydrology (snowpack, reservoirs, groundwater), especially in the West. A drought status built only from 30–90-day indicators under-detects it.
-- **Method:** weekly 2005–2024, Churchill County NV (Fallon) and Story County IA (Ames). Spearman ρ between the FieldShift indicator and the USDM DSCI; hit rate and false-alarm ratio (FAR) for "≥ D1 over the county".
+- **Method:** weekly 2005–2024, Churchill County NV (Fallon) and Story County IA (Ames). Spearman ρ between the IA indicator and the USDM DSCI; hit rate and false-alarm ratio (FAR) for "≥ D1 over the county".
 - **Result:**
 
   | Site | Indicator | ρ | Hit rate | FAR |

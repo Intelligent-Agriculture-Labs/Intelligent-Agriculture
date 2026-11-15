@@ -298,7 +298,7 @@ def report(res: dict[str, Any]) -> str:
     L += [
         "**(a) India, 9 cities: median onset vs. IMD new normal onset date (1961–2019)**",
         "",
-        "| City | lat, lon | Season | FieldShift median onset | IMD normal | Error (days) | False starts |",
+        "| City | lat, lon | Season | IA median onset | IMD normal | Error (days) | False starts |",
         "|---|---|---|---|---|---|---|",
     ]
     for n, c in k["cities"].items():
@@ -313,7 +313,7 @@ def report(res: dict[str, Any]) -> str:
     L += [
         "**(b) Kerala: per-year onset vs. IMD monsoon onset over Kerala (1984–2025)**",
         "",
-        "| Site | n years | FieldShift median | IMD median | Bias (days) | MAE (days) | within ±10 d | r |",
+        "| Site | n years | IA median | IMD median | Bias (days) | MAE (days) | within ±10 d | r |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for n, c in res["kerala"].items():
@@ -326,9 +326,9 @@ def report(res: dict[str, Any]) -> str:
         "",
         "**(c) West African Sahel / Sudan zone vs. Sivakumar (1988), Niger and Burkina Faso**",
         "",
-        f"Niamey mean onset: FieldShift {nia['mean_onset']} (1984–2025) vs. Sivakumar 12 Jun (1904–1984): **{nia['onset_error_days']:+.0f} days**.",
+        f"Niamey mean onset: IA {nia['mean_onset']} (1984–2025) vs. Sivakumar 12 Jun (1904–1984): **{nia['onset_error_days']:+.0f} days**.",
         "",
-        "| Station | Mean onset | SD (days) | False starts | Failed | Length, Sivakumar | Length, FieldShift (water balance) | Length, FieldShift (Sivakumar's end rule) |",
+        "| Station | Mean onset | SD (days) | False starts | Failed | Length, Sivakumar | Length, IA (water balance) | Length, IA (Sivakumar's end rule) |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for n, c in sa["stations"].items():
@@ -341,9 +341,9 @@ def report(res: dict[str, Any]) -> str:
         f"Season length over {wb['n']} stations: water balance (used in the app) bias {wb['bias_days']:+.1f} days, **MAE {wb['mae_days']} days**, r = {wb['r']}; "
         f"Sivakumar's end rule on POWER rain: bias {se['bias_days']:+.1f}, MAE {se['mae_days']} days, r = {se['r']}.",
         "",
-        "**(d) Kenya, Machakos (bimodal) vs. Omoyo et al. (2015), Machakos station 1979–2009; FieldShift 1984–2009**",
+        "**(d) Kenya, Machakos (bimodal) vs. Omoyo et al. (2015), Machakos station 1979–2009; IA 1984–2009**",
         "",
-        "| Season | Criteria | n | FieldShift mean onset | Reference mean onset | Error (days) | Failed seasons |",
+        "| Season | Criteria | n | IA mean onset | Reference mean onset | Error (days) | Failed seasons |",
         "|---|---|---|---|---|---|---|",
     ]
     for key, c in res["machakos"].items():
@@ -358,7 +358,7 @@ def report(res: dict[str, Any]) -> str:
         "",
         "**(e) Australia, Darwin (southern hemisphere, season across New Year) vs. Bureau of Meteorology**",
         "",
-        f"FieldShift median onset {dw['median_onset_ours']} ({dw['season']}, n = {dw['n']}); BoM's 50 mm rule computed on the same POWER rain: "
+        f"IA median onset {dw['median_onset_ours']} ({dw['season']}, n = {dw['n']}); BoM's 50 mm rule computed on the same POWER rain: "
         f"{dw['median_onset_bom_rule_power']}; BoM: the western Top End usually reaches onset by late October or early November. "
         f"Error vs. 1 Nov: **{dw['error_days_vs_1_nov']:+d} days**.",
     ]

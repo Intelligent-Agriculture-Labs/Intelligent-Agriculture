@@ -1,10 +1,10 @@
-"""FieldShift validation suite — run on the data box (VPS):
+"""IA validation suite — run on the data box (VPS):
 
     backend/.venv/bin/python scripts/validate.py            # all experiments
     backend/.venv/bin/python scripts/validate.py et0 usdm   # subset
 
 Writes docs/validation/results.json and PNG figures to docs/validation/. Every experiment compares a
-FieldShift output with an *independent* reference dataset. Results are reported as they come out,
+IA output with an *independent* reference dataset. Results are reported as they come out,
 including weak ones (see docs/VALIDATION.md).
 """
 
@@ -84,7 +84,7 @@ def era5_daily(lat: float, lon: float, start: dt.date, end: dt.date, daily: str)
 
 # --------------------------------------------------------------------------- 1. ET0
 def exp_et0() -> dict[str, Any]:
-    """FieldShift FAO-56 PM ET0 from NASA POWER vs. FAO-56 ET0 computed by Open-Meteo from ERA5 (independent reanalysis)."""
+    """IA FAO-56 PM ET0 from NASA POWER vs. FAO-56 ET0 computed by Open-Meteo from ERA5 (independent reanalysis)."""
     res = {}
     for sid, (lat, lon) in SITES.items():
         ctx = build(lat, lon, AS_OF)
@@ -106,7 +106,7 @@ def exp_et0() -> dict[str, Any]:
             lim = max(mm.max(), mr.max()) * 1.05
             ax.plot([0, lim], [0, lim], "k--", lw=0.8)
             ax.set_xlabel("ERA5 FAO-56 ET₀ (mm/month)")
-            ax.set_ylabel("FieldShift ET₀ from NASA POWER (mm/month)")
+            ax.set_ylabel("IA ET₀ from NASA POWER (mm/month)")
             ax.set_title(
                 f"ET₀ monthly, {sid} 2015–2024\nr={res[sid]['monthly_mm']['r']}, bias={res[sid]['monthly_mm']['bias']} mm"
             )
@@ -118,7 +118,7 @@ def exp_et0() -> dict[str, Any]:
 
 # --------------------------------------------------------------------------- 2. soil water vs ERA5-Land
 def exp_soil_water() -> dict[str, Any]:
-    """Rain-fed FieldShift root-zone relative water (1 − Dr/TAW) vs. ERA5-Land 7–100 cm soil moisture, growing seasons."""
+    """Rain-fed IA root-zone relative water (1 − Dr/TAW) vs. ERA5-Land 7–100 cm soil moisture, growing seasons."""
     cases = {
         "ames_ia": ("maize", "05-01"),
         "cordoba_es": ("winter_wheat", "11-15"),
@@ -169,7 +169,7 @@ def exp_soil_water() -> dict[str, Any]:
 
 # --------------------------------------------------------------------------- 2b. soil water vs SMAP L4
 def exp_smap() -> dict[str, Any]:
-    """Rain-fed FieldShift root-zone relative water vs. NASA SMAP L4 root-zone soil moisture (AppEEARS), growing seasons."""
+    """Rain-fed IA root-zone relative water vs. NASA SMAP L4 root-zone soil moisture (AppEEARS), growing seasons."""
     from fieldshift.science.cropmodel import crop
 
     cases = {
@@ -227,7 +227,7 @@ def exp_smap() -> dict[str, Any]:
 
 # --------------------------------------------------------------------------- 3. drought vs U.S. Drought Monitor
 def exp_usdm() -> dict[str, Any]:
-    """Weekly FieldShift drought indicators vs. USDM county Drought Severity & Coverage Index (DSCI = Σ cumulative % area D0–D4)."""
+    """Weekly IA drought indicators vs. USDM county Drought Severity & Coverage Index (DSCI = Σ cumulative % area D0–D4)."""
     counties = {"fallon_nv": "32001", "ames_ia": "19169"}
     res = {}
     for sid, fips in counties.items():
@@ -302,10 +302,10 @@ def exp_usdm() -> dict[str, Any]:
             dd = [dt.date.fromisoformat(r["mapDate"][:10]) for r in rows][: len(dsci)]
             ax.plot(dd, dsci_a, label="USDM DSCI (0–500)", color="#b45309")
             ax2 = ax.twinx()
-            ax2.plot(dd, spei90, label="FieldShift SPEI-90 (NASA POWER)", color="#2563eb", lw=0.8)
+            ax2.plot(dd, spei90, label="IA SPEI-90 (NASA POWER)", color="#2563eb", lw=0.8)
             ax2.invert_yaxis()
             ax.set_title(
-                f"Drought: FieldShift vs U.S. Drought Monitor — {sid} (ρ = {res[sid]['spearman_spei90']})"
+                f"Drought: IA vs U.S. Drought Monitor — {sid} (ρ = {res[sid]['spearman_spei90']})"
             )
             fig.legend(loc="upper left", fontsize=7)
             fig.tight_layout()
@@ -406,7 +406,7 @@ def exp_mod16() -> dict[str, Any]:
             lim = max(a.max(), b.max()) * 1.05
             ax.plot([0, lim], [0, lim], "k--", lw=0.8)
             ax.set_xlabel("NASA ECOSTRESS daily ET, 70 m (mm/day)")
-            ax.set_ylabel("FieldShift model ETa (mm/day)")
+            ax.set_ylabel("IA model ETa (mm/day)")
             ax.set_title(
                 f"Fallon alfalfa field, May–Sep 2018–2024\nr={out['ecostress_daily']['r']}, bias={out['ecostress_daily']['bias']} mm/d"
             )

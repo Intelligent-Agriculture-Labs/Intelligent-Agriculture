@@ -54,7 +54,7 @@ SRC = {
     ),
 }
 Z = int(os.environ.get("Z", 17))
-cli = httpx.Client(timeout=30, headers={"User-Agent": "FieldShift-research/1.0 (field boundary benchmark)"})
+cli = httpx.Client(timeout=30, headers={"User-Agent": "IA-research/1.0 (field boundary benchmark)"})
 
 
 def lonlat_to_tile(lon, lat, z):

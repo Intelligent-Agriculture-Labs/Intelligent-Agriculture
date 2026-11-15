@@ -1,7 +1,7 @@
 """Rotation strategy explorer.
 
 For each candidate rotation (the farmer's current one + templates from config/rotations.yaml) we
-simulate every crop slot over the last N seasons of NASA POWER weather with the FieldShift season model,
+simulate every crop slot over the last N seasons of NASA POWER weather with the IA season model,
 then score 7 indicators on a 0–100 scale (higher = better for the farmer):
 
   water     mean gross irrigation (irrigated) or ET deficit (rainfed), mm/yr

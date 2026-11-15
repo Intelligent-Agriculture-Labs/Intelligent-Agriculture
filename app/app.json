@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FieldShift",
+    "name": "IA",
     "slug": "fieldshift",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +10,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "org.fieldshift.app",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "FieldShift uses your location to find NASA data for your field.",
+        "CFBundleDisplayName": "IA",
+        "NSLocationWhenInUseUsageDescription": "IA uses your location to find NASA data for your field.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         }
@@ -18,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#2f6b3a",
+        "backgroundColor": "#07110b",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -31,7 +32,8 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
       "output": "single",
-      "name": "FieldShift",
+      "name": "IA · Intelligent Agriculture",
+      "shortName": "IA",
       "themeColor": "#2f6b3a"
     },
     "plugins": [
@@ -42,7 +44,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "FieldShift uses your location to find NASA data for your field."
+          "locationWhenInUsePermission": "IA uses your location to find NASA data for your field."
         }
       ],
       "expo-asset",
@@ -70,7 +72,7 @@
       "expo-secure-store"
     ],
     "scheme": "fieldshift",
-    "description": "NASA Earth observations turned into weekly farm decisions and crop-rotation strategies.",
+    "description": "IA · Intelligent Agriculture. Better decisions. Better harvests. NASA Earth observations turned into weekly farm decisions and crop-rotation strategies.",
     "experiments": {
       "typedRoutes": false
     }

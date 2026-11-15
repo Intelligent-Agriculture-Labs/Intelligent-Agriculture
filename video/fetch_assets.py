@@ -17,7 +17,7 @@ from PIL import Image
 
 OUT = Path(__file__).resolve().parent / "assets"
 LAT, LON = 39.44087, -118.83012  # Fallon, Nevada demo field (centre)
-UA = {"User-Agent": "FieldShift-film/1.0"}
+UA = {"User-Agent": "IA-Intelligent-Agriculture-film/1.0"}
 try:
     import certifi
 

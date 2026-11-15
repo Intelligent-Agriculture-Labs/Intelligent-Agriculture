@@ -1,4 +1,4 @@
-"""Train and validate the FieldShift ML drought classifier on several continents (run on the data box).
+"""Train and validate the IA ML drought classifier on several continents (run on the data box).
 
     FIELDSHIFT_CACHE_DIR=~/fs-gdml-data/cache backend/.venv/bin/python scripts/drought_labels_global.py
     FIELDSHIFT_CACHE_DIR=~/fs-gdml-data/cache backend/.venv/bin/python scripts/train_drought_ml.py

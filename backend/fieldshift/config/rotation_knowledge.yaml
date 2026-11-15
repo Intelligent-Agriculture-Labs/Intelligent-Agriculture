@@ -1,4 +1,4 @@
-# FieldShift rotation knowledge base — version 1.0.0
+# IA rotation knowledge base — version 1.0.0
 # Biological basis for rotation planning (see docs/ROTATION_SCIENCE.md).
 #   pathogens .... soil-/residue-borne organisms (and parasitic weeds/insects) that rotation controls.
 #                  hosts = crop ids in crops.yaml ∪ crops_extra.yaml; survival_years = persistence without a host;

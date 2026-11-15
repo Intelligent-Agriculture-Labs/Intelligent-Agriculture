@@ -1,4 +1,4 @@
-"""Build FieldShift's global GRACE/GRACE-FO water-storage asset from the JPL RL06.3 CRI mascon grid.
+"""Build IA's global GRACE/GRACE-FO water-storage asset from the JPL RL06.3 CRI mascon grid.
 
     python scripts/grace_extract.py                  # downloads the latest granule (needs Earthdata Login)
     python scripts/grace_extract.py path/to/GRCTellus.JPL.*.nc

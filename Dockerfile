@@ -1,4 +1,4 @@
-# FieldShift: one image serving the API (/api, /docs) and the web app (/).
+# IA: one image serving the API (/api, /docs) and the web app (/).
 # Stage 1 builds the Expo web bundle; stage 2 is the Python API that also serves the static files.
 FROM node:22-alpine AS web
 WORKDIR /app

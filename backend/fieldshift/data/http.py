@@ -127,7 +127,7 @@ def get_json(
                     timeout=timeout_s,
                     headers={
                         "Accept": "application/json",
-                        "User-Agent": "FieldShift/1.0 (NASA Space Apps 2026)",
+                        "User-Agent": "IA-Intelligent-Agriculture/1.0 (NASA Space Apps 2026)",
                         **(headers or {}),
                     },
                     follow_redirects=True,

@@ -14,8 +14,8 @@ SHOTS=("4:welcome" "9:onboarding" "20:home-today" "34:home-replay" "44:why" "59:
 TOTAL=202
 
 ios_udid() {
-  local u; u=$(xcrun simctl list devices | grep -E "FieldShift iPhone 17 \(iOS 27\).*Booted|FieldShift iPhone 17 \(iOS 27\)" | head -1 | grep -oE "[0-9A-F-]{36}" || true)
-  if [ -z "$u" ]; then u=$(xcrun simctl create "FieldShift iPhone 17 (iOS 27)" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0); fi
+  local u; u=$(xcrun simctl list devices | grep -E "IA iPhone 17 \(iOS 27\).*Booted|IA iPhone 17 \(iOS 27\)" | head -1 | grep -oE "[0-9A-F-]{36}" || true)
+  if [ -z "$u" ]; then u=$(xcrun simctl create "IA iPhone 17 (iOS 27)" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0); fi
   xcrun simctl boot "$u" 2>/dev/null || true; xcrun simctl bootstatus "$u" -b >/dev/null; echo "$u"
 }
 
@@ -23,10 +23,11 @@ ios_build() { # $1 = 1 for capture tour
   cd "$APP"
   [ -d ios ] || { CI=1 npx expo prebuild -p ios --no-install && (cd ios && pod install); }
   local u; u=$(ios_udid)
-  (cd ios && EXPO_PUBLIC_CAPTURE_TOUR="$1" xcodebuild -workspace FieldShift.xcworkspace -scheme FieldShift -configuration Release \
+  local ws; ws=$(cd ios && basename "$(ls -d *.xcworkspace | head -1)" .xcworkspace)  # IA (old prebuild) or IA
+  (cd ios && EXPO_PUBLIC_CAPTURE_TOUR="$1" xcodebuild -workspace "$ws.xcworkspace" -scheme "$ws" -configuration Release \
      -sdk iphonesimulator -destination "id=$u" -derivedDataPath build CODE_SIGNING_ALLOWED=NO -quiet)
   xcrun simctl uninstall "$u" org.fieldshift.app || true
-  xcrun simctl install "$u" ios/build/Build/Products/Release-iphonesimulator/FieldShift.app
+  xcrun simctl install "$u" ios/build/Build/Products/Release-iphonesimulator/"$ws".app
   echo "$u"
 }
 

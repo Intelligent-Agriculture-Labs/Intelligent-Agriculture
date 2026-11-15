@@ -130,7 +130,7 @@ def _plan_card(c: dict[str, Any], lang: str, state_key: str) -> dict[str, Any]:
         "due": None,
         "amount": None,
         "why": _why(
-            "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives "
+            "Between seasons is the time to decide what to grow next. IA simulates your current rotation and alternatives "
             "over the last 15 seasons of NASA POWER weather at this location.",
             ["Rotations are compared on water, income, soil health, erosion, pest cycles and climate risk."],
             ["tmax", "tmin"],
@@ -529,7 +529,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                     "due": None,
                     "amount": None,
                     "why": _why(
-                        "Between seasons is the time to decide what to grow next. FieldShift simulates your current rotation and alternatives "
+                        "Between seasons is the time to decide what to grow next. IA simulates your current rotation and alternatives "
                         "over the last 15 seasons of NASA POWER weather at this location.",
                         [
                             f"7-day mean temperature {np.nanmean((recent[0] + recent[1]) / 2):.1f} °C; {c['name']} grows very little below ~{c['t_base'] + 6} °C.",
@@ -1297,7 +1297,7 @@ def _planting_cards(
             "due": start.isoformat(),
             "amount": None,
             "why": _why(
-                "Sowing dates were simulated with the FieldShift season model over past seasons of NASA POWER weather.",
+                "Sowing dates were simulated with the IA season model over past seasons of NASA POWER weather.",
                 [
                     f"{p.strftime('%d %b')}: median {m:.1f} t/ha, bad-year (p10) {p10:.1f} t/ha"
                     for p, m, p10, _ in results
@@ -1430,7 +1430,7 @@ def simulate_api(req: dict[str, Any]) -> dict[str, Any]:
         "baseline": base,
         "daily_example": daily,
         "why": _why(
-            "What-if results from the FieldShift season model (FAO-56 water balance + FAO-33 yield response).",
+            "What-if results from the IA season model (FAO-56 water balance + FAO-33 yield response).",
             steps,
             ["kc", "soil_depletion"],
             "FAO-56 water balance + FAO-33 yield response + thermal-time phenology",
@@ -1685,7 +1685,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         "groundwater_note": gw_note,
         "vulnerable_periods": vuln,
         "sources": [source_ref(s, ctx.statuses.get(s, "live")) for s in ("nasa_power", "srtm", "soilgrids")],
-        "disclaimer": "FieldShift compares rotations under the last 15 seasons of NASA weather at your location. It supports, but does not replace, "
+        "disclaimer": "IA compares rotations under the last 15 seasons of NASA weather at your location. It supports, but does not replace, "
         "your judgement and local agronomic advice. Prices and costs are indicative and must be checked against your market.",
         "years_simulated": [years[0], years[-1]],
     }
@@ -1764,7 +1764,7 @@ def _benefits(mets: list[dict[str, Any]]) -> list[str]:
 
 def _gaps(tpl: dict[str, Any]) -> list[str]:
     gaps = [
-        "Prices and costs are national averages — local market access (hay buyers, elevators) is not known to FieldShift."
+        "Prices and costs are national averages — local market access (hay buyers, elevators) is not known to IA."
     ]
     if any(crop(s["crop"]).get("low_confidence") for s in tpl["slots"]):
         gaps.append(

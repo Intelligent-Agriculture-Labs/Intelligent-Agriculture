@@ -1,27 +1,27 @@
-# Space Apps 2026 submission kit: FieldShift
+# Space Apps 2026 submission kit: IA · Intelligent Agriculture
 
 Everything below is ready to paste into the project submission page. **Human steps** are marked ☐.
 
 ## ☐ Before you submit (checklist for the team owner)
 - ☐ Make the repository publicly reachable. The current source of truth is the private Gitea (`http://vps-home-node-1:3001/lino/fieldshift`). Push a mirror to GitHub: `git remote add github git@github.com:<you>/fieldshift.git && git push github main --tags`.
 - ☐ Build and publish the showcase page: `python3 scripts/build_site.py --repo https://github.com/<you>/fieldshift`, then publish `site/dist` with GitHub Pages. This also bakes the repository URL into the deck: `media/fieldshift-deck.pdf`.
-- ☐ Upload the 30-second video [`media/fieldshift-demo-30s.mp4`](media/fieldshift-demo-30s.mp4) to YouTube (unlisted is fine) or Google Drive (anyone with the link), and paste the link below. It has English on-screen text, an original synthesised score and no voice, so it meets the subtitle rule.
+- ☐ Upload the 30-second video [`media/ia-demo-30s.mp4`](media/ia-demo-30s.mp4) to YouTube (unlisted is fine) or Google Drive (anyone with the link), and paste the link below. It has English on-screen text, an original synthesised score and no voice, so it meets the subtitle rule.
 - ☐ (Optional) Host the app publicly; see `docs/DEPLOYMENT.md#public-hosting-human-step`. Without hosting, judges can run `docker compose up --build` or watch the video.
 - ☐ All team members are registered for the same Local Event, and appear on the team page.
 - ☐ Tick both checkboxes on the submission page: the requirements/terms box and the original-work/references box.
 - ☐ Submit before **Sun 15 Nov 2026, 23:59 local time**.
 
 ## Project name
-**FieldShift**: 40 years of NASA data, turned into this week's farm decisions
+**IA · Intelligent Agriculture**: 40 years of NASA data, turned into this week's farm decisions. *Better decisions. Better harvests.*
 
 ## Challenge
 Field Shift: Adapting Farms with NASA Data (https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/)
 
 ## High-level summary (short, ~100 words)
-FieldShift is a free web, iOS and Android app that turns 40 years of NASA Earth observations into simple farm decisions. A farmer taps their field on satellite imagery, and AI finds the boundary. FieldShift then gives at most three actions for this week, each with a one-tap "Why?" showing the NASA evidence. It also gives a multi-year, science-based rotation plan for every field. The plan is checked against 30 soil-borne diseases and pests, nitrogen, erosion, water and climate, and comes with an optimised alternative and its impact on water, fertiliser, CO₂e, soil and income. It works offline, syncs phone and PC, and fits each week into two SMS in six languages.
+IA is a free web, iOS and Android app that turns 40 years of NASA Earth observations into simple farm decisions. A farmer taps their field on satellite imagery, and AI finds the boundary. IA then gives at most three actions for this week, each with a one-tap "Why?" showing the NASA evidence. It also gives a multi-year, science-based rotation plan for every field. The plan is checked against 30 soil-borne diseases and pests, nitrogen, erosion, water and climate, and comes with an optimised alternative and its impact on water, fertiliser, CO₂e, soil and income. It works offline, syncs phone and PC, and fits each week into two SMS in six languages.
 
 ## Feature highlights (for judges)
-- **Map any field:** tap inside your field on sub-metre imagery; FieldShift detects the boundary (editable by hand). Many fields per farm. Accounts sync phone ↔ PC; sharing by code works without an account.
+- **Map any field:** tap inside your field on sub-metre imagery; IA detects the boundary (editable by hand). Many fields per farm. Accounts sync phone ↔ PC; sharing by code works without an account.
 - **This week:** at most 3 cards: irrigation (FAO-56 water balance on NASA POWER + satellite crop coefficient), drought (SPI/SPEI + SMAP + an **AI classifier** trained on U.S. Drought Monitor maps), disease, pests, frost and heat. Each has a plain-language "Why?".
 - **Field from space:** 10 m Sentinel-2 greenness history, detected cuttings and harvests, **AI management zones**, and terrain maps (RUSLE erosion risk and hotspots, wetness, frost hollows, slope) from NASA SRTM.
 - **Plan the next years:** a per-field rotation plan over 54 crops, checked year by year against a cited knowledge base (30 pathogens, 22 rules). It says what to change, offers a beam-search optimised plan, and states the **impact** (water, N fertiliser, CO₂e, topsoil, income) with trade-offs.
@@ -38,7 +38,7 @@ FieldShift is a free web, iOS and Android app that turns 40 years of NASA Earth 
   - **Honest negatives:** a worldwide AI drought model was trained and tested on 7 regions but not adopted, because the rules did better outside the U.S.
 
 ## High-level summary (long)
-**What it does.** Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. FieldShift turns that data into decisions for each field, in five simple tabs:
+**What it does.** Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. IA turns that data into decisions for each field, in five simple tabs:
 1. **Today.** At most three actions for this week, ranked by urgency.
 2. **Field.** Satellite and terrain maps of the field.
 3. **Plan.** This season, plus the rotation for the next years.
@@ -49,16 +49,16 @@ FieldShift is a free web, iOS and Android app that turns 40 years of NASA Earth 
 - **This week.** A daily FAO-56 root-zone water balance runs on NASA POWER weather (1984 → today), bridged with a 16-day forecast and fused with a Sentinel-2 crop coefficient. It tells irrigated farmers *when* and *how many millimetres* to irrigate, and warns rain-fed farmers before water stress.
 - **Disease and pests.** Disease models (Hutton late-blight criteria, stripe rust, white mould…) use hourly humidity. Degree-day models time pest scouting.
 - **Drought status** combines SPI/SPEI with SMAP soil moisture and MODIS vegetation health, refined by a gradient-boosting classifier trained on 80 U.S. counties.
-- **Rotation plan.** The planner models disease carry-over from each pathogen's survival in soil, legume nitrogen credits, bare-soil erosion (RUSLE with NASA rain erosivity and SRTM slopes), and water need and yield. Water and yield are simulated with NASA weather at that field. An optimiser searches the region's cropping system for a better plan, and FieldShift reports its impact on the field: water, fertiliser N, CO₂e (IPCC EF1), topsoil and indicative margin.
+- **Rotation plan.** The planner models disease carry-over from each pathogen's survival in soil, legume nitrogen credits, bare-soil erosion (RUSLE with NASA rain erosivity and SRTM slopes), and water need and yield. Water and yield are simulated with NASA weather at that field. An optimiser searches the region's cropping system for a better plan, and IA reports its impact on the field: water, fertiliser N, CO₂e (IPCC EF1), topsoil and indicative margin.
 
 **Benefits.** On the demo fields, the suggested plans would:
 - cut irrigation by about 15,500 m³ a year on a 5.5 ha Nevada alfalfa field (at a lower margin, which the app states);
 - keep about 480 t of topsoil over four years on a 48 ha Iowa field;
 - save about 105 kg N/ha (≈ 450 kg CO₂e/ha) over four years on a Kenyan smallholder field.
 
-These are model estimates, not yet measured on farms. FieldShift runs anywhere on Earth because its backbone data is global. It works on cheap phones, offline and by SMS.
+These are model estimates, not yet measured on farms. IA runs anywhere on Earth because its backbone data is global. It works on cheap phones, offline and by SMS.
 
-**Validation.** FieldShift is validated against independent data:
+**Validation.** IA is validated against independent data:
 - ET₀ vs. ERA5: monthly r up to 0.997;
 - soil-water dynamics vs. ERA5-Land;
 - drought status vs. the U.S. Drought Monitor: ρ = 0.74 in Iowa; the AI classifier is within ±1 category in 89 % of weeks on held-out counties;
@@ -74,7 +74,7 @@ Its weak spots are reported openly. It is designed to support, never replace, fa
 **Story used in the demo.** Irrigated alfalfa in Nevada's Lahontan Valley (Fallon), the setting of the challenge's own photo. NASA POWER shows days ≥ 35 °C there doubling since 1984 (26 → 50 a year) while warm-season rain fell (95 → 55 mm). The same app serves a rain-fed maize smallholder in Machakos, Kenya, in Swahili.
 
 ## How it addresses the challenge
-| Challenge ask | FieldShift |
+| Challenge ask | IA |
 |---|---|
 | Combine NASA EO with local information | POWER, GPM IMERG, GRACE-FO, SMAP, MODIS, SRTM, GIBS + SoilGrids, farmer inputs (crop, sowing date, irrigation method, water allocation, priorities) |
 | Compare ≥ 3 rotation strategies incl. existing | Current + 3–4 ranked alternatives per location, 8 metrics each |
@@ -128,17 +128,17 @@ A motion-designed film with an original score. Both are made entirely in code; s
 
 | t (s) | Scene | On-screen text |
 |---|---|---|
-| 0–2 | A lit 3D Earth from orbit (NASA Blue Marble) | "Team FieldShift · NASA Space Apps Challenge 2026" |
+| 0–2 | A lit 3D Earth from orbit (NASA Blue Marble) | "Team IA · NASA Space Apps Challenge 2026" |
 | 2–5 | Continuous dive from orbit to the Fallon alfalfa field; the NASA POWER heat-day bars grow | "The challenge · Field Shift. Hotter summers. Less water. Days above 35 °C: 26 → 50 a year" |
-| 5–10 | Flash on the hit; the field outline draws itself; title resolves; the welcome screen rises on a phone | "FieldShift: 40 years of NASA Earth data. This week's farm decisions." |
+| 5–10 | Flash on the hit; the field outline draws itself; the IA logo builds up (satellite, swath, horizon, crop rows); the welcome screen rises on a phone | "IA · Intelligent Agriculture. Better decisions. Better harvests." |
 | 10–13.4 | Satellite card with the AI outline tracing its corners; phone with Sentinel-2 AI zones | "Tap your field. AI finds it." (Sentinel-2 · NASA SRTM · AI zones) |
 | 13.4–16.8 | This week and "Why?" on overlapping 3D phones | "Three actions. Every one explained." (NASA POWER · SMAP · MODIS · ECOSTRESS) |
 | 16.8–20 | Rotation plan phone; impact counters | "A rotation plan built on soil biology." 19,618 m³ · 652 t · −105 kg N/ha |
 | 20–25 | 3D carousel of nine real screens; the six languages cycle | "Every farm on Earth. Web · iOS · Android · Offline · Fits in 2 SMS · 6 languages" |
-| 25–30 | Climax: the Earth turns and pins light up over Nevada, Iowa, Andalusia and Kenya; end card | "FieldShift: Adapting every field with NASA data. Next: field trials with farmers and extension services" |
+| 25–30 | Climax: the Earth turns and pins light up over Nevada, Iowa, Andalusia and Kenya; end card with the IA logo | "IA · Intelligent Agriculture. Better decisions. Better harvests. Adapting every field with NASA data. Next: field trials with farmers and extension services" |
 
 ## Slide deck outline (alternative format, 7 slides max)
-1. **Title.** FieldShift: 40 years of NASA data, turned into this week's farm decisions (team, challenge name).
+1. **Title.** IA · Intelligent Agriculture (Better decisions. Better harvests.): 40 years of NASA data, turned into this week's farm decisions (team, challenge name).
 2. **Problem.** Nevada farmer photo context. Hotter, drier seasons (POWER: heat days 26 → 50 a year). Farmers can't use raw satellite data, and rotation choices are high-stakes.
 3. **Solution.** Four views of one engine (This week · Why? · Field Shift · What if?), with phone screenshots.
 4. **NASA data → decisions.** A diagram: POWER, SMAP, MODIS, SRTM → FAO-56 water balance, SPI/SPEI, disease and pest models, rotation simulator → cards.

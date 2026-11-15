@@ -1,7 +1,7 @@
 [project]
 name = "fieldshift"
 version = "1.0.0"
-description = "FieldShift API: NASA Earth observations -> farm decisions (water, drought, pests, disease, rotations)"
+description = "IA (Intelligent Agriculture) API: NASA Earth observations -> farm decisions (water, drought, pests, disease, rotations)"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 dependencies = [

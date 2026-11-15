@@ -25,7 +25,7 @@ const LAYERS: { id: MapLayer; icon: "planet" | "map" | "earth" | "leaf" | "image
 ];
 
 /**
- * Add or edit a field. Default for a field without an outline: tap the field on high-res imagery and FieldShift detects
+ * Add or edit a field. Default for a field without an outline: tap the field on high-res imagery and IA detects
  * its boundary (POST /api/fields/detect); the farmer then fixes it by hand (drag / insert / delete corners) or draws it.
  */
 export default function FieldEditor() {

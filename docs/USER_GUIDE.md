@@ -1,6 +1,6 @@
-# FieldShift user guide
+# IA (Intelligent Agriculture) user guide
 
-FieldShift tells you what to do on your farm this week, and helps you plan next season's rotation. It uses NASA satellite and weather data for your exact location. No account is needed.
+IA tells you what to do on your farm this week, and helps you plan next season's rotation. It uses NASA satellite and weather data for your exact location. No account is needed.
 
 ## 1. Set up your field (under a minute)
 <img src="../media/web-onboarding-mobile.png" width="260" align="right" alt="Onboarding screen">
@@ -15,7 +15,7 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 
 ## 1b. Your fields, on every device
 - **Add a field:** open the field switcher at the top → **Add field**.
-- **Detect field automatically:** zoom in on the high-resolution satellite image and **tap inside your field**. FieldShift finds the boundary in a second or two and shows its area and a confidence badge.
+- **Detect field automatically:** zoom in on the high-resolution satellite image and **tap inside your field**. IA finds the boundary in a second or two and shows its area and a confidence badge.
 - **Fix it by hand:** drag a corner, tap the small handle in the middle of an edge to add a corner, or remove a corner. You can also draw the outline yourself, corner by corner.
 - **Many fields:** switch fields at the top of every screen. Each field has its own crop, sowing date, irrigation and water allocation.
 - **Phone and computer in sync:** Settings → **Sync across devices** → **Enable sync** shows a farm code (e.g. `K7QF-2M9X`) and a QR code. On the other device, choose **Join a farm** and enter the code or scan the QR. Fields, irrigation logs and settings then stay in sync. No account or e-mail is needed; keep the code private.
@@ -32,7 +32,7 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 <br clear="right">
 
 ### New cards for every farm
-- **Heat stress (people and animals).** For example: "Very high heat stress Tue–Thu 11:00–16:00: field work only before 11:00, shade and water for animals". FieldShift computes the wet-bulb globe temperature (WBGT) each hour from the forecast temperature, humidity, wind and sunshine. It compares the result with the NIOSH/ISO limit for moderate field work, and the card tells you how long to rest each hour.
+- **Heat stress (people and animals).** For example: "Very high heat stress Tue–Thu 11:00–16:00: field work only before 11:00, shade and water for animals". IA computes the wet-bulb globe temperature (WBGT) each hour from the forecast temperature, humidity, wind and sunshine. It compares the result with the NIOSH/ISO limit for moderate field work, and the card tells you how long to rest each hour.
   - For livestock, it uses the temperature–humidity index for cattle, poultry, and sheep and goats.
   - The values are for full sun. Shade lowers them; heavy or protective clothing raises them.
   - Workers in their first 1–2 weeks of hot weather need more rest.
@@ -47,7 +47,7 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 - **In short:** a plain-language explanation.
 - **How we got there:** each step with the actual numbers.
 - **Charts:** the data behind the advice. Dashed lines show the normal for this time of year, and shading marks forecast days.
-- **Confidence:** how sure FieldShift is, and why.
+- **Confidence:** how sure IA is, and why.
 - **Keep in mind:** limits of the data. For example, satellite pixels can be larger than your field.
 - **Data sources:** which NASA or partner dataset was used, its resolution, latency and last date.
 <br clear="right">
@@ -64,7 +64,7 @@ The **Map** tab shows your field on a satellite or NDVI background (NASA GIBS), 
 Below the map, **Planning advice for your field** lists each zone, how much of your field it covers, and what to do about it. Example: "Erosion risk, 64 %: keep the soil covered, plant along the contour" and "Erosion hotspot, 36 %: start here with grass strips or contour bunds". Draw your field outline during setup for exact numbers.
 
 ## 3b-2. Your field from space (Map → Satellite)
-FieldShift reads every clear **Sentinel-2** image of your field from the past year (10 m pixels) and shows:
+IA reads every clear **Sentinel-2** image of your field from the past year (10 m pixels) and shows:
 - the **latest true-colour and greenness (NDVI) image** of your field;
 - a **greenness curve** across the season, with green-up, peak, ripening, bare-soil periods and **cuttings/harvests seen from space**;
 - **AI management zones**: parts of the field that consistently grow better or worse, with what to check in each (waterlogging, slope, soil sampling, variable seeding);
@@ -84,7 +84,7 @@ The **Plan** tab is your season planner:
 
 1. Check **Your current rotation**, and press **Change** to edit it (one crop per year).
 2. Use the sliders to say **what matters most**: saving water, soil health, income, breaking pest cycles, lower climate risk.
-3. Press **Update comparison**. FieldShift simulates your rotation and alternatives over the last 15 seasons of NASA weather at your field.
+3. Press **Update comparison**. IA simulates your rotation and alternatives over the last 15 seasons of NASA weather at your field.
 4. For each strategy you see:
    - a score;
    - bars comparing it with your current rotation;
@@ -112,7 +112,7 @@ Tap **Why?** to see the onset dates of past years, the season length, and how bo
 The card uses rain on a ~50 km grid: a storm on your farm may not show, and the reverse. Your own rain gauge is the best check. The card shows the *agronomic* start of the rains (enough water to sow), not the monsoon onset that weather services announce. These can differ by weeks, for example in Kerala.
 
 ## 6. Climate
-See how your local season has changed since 1984 in NASA POWER data: heat days, frost-free season, rain, crop water demand and dry spells. Each trend shows its rate per decade, and FieldShift only calls a trend "clear" when it is statistically significant.
+See how your local season has changed since 1984 in NASA POWER data: heat days, frost-free season, rain, crop water demand and dry spells. Each trend shows its rate per decade, and IA only calls a trend "clear" when it is statistically significant.
 
 ## 7. Settings
 - **Language:** English, Español, Français, Kiswahili, हिन्दी, Deutsch.
@@ -120,6 +120,6 @@ See how your local season has changed since 1984 in NASA POWER data: heat days, 
 - **Expert mode:** raw data tables, CSV and GeoJSON export, methodology links.
 
 ## Good to know
-- FieldShift supports your decisions. It does not replace your experience or your local adviser.
+- IA supports your decisions. It does not replace your experience or your local adviser.
 - Weather data covers about 50 km. Frost hollows, hills and lakes can make your field differ.
 - If you enter your last irrigation date and amount, the water advice becomes more precise.

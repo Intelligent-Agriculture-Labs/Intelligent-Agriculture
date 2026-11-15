@@ -221,7 +221,7 @@ def rice_blast(x: RiskInput) -> RiskResult:
 def tropical_late_blight(x: RiskInput) -> RiskResult:
     """Late blight in the tropics: Wallin (1962) severity values as used by BLITECAST (Krause et al. 1975).
     In the Toluca highlands (Grünwald, Rubio-Covarrubias & Fry 2000) BLITECAST's cumulative-SV spray trigger came
-    too late; FieldShift therefore alerts on each day's SV, not on the cumulative trigger.
+    too late; IA therefore alerts on each day's SV, not on the cumulative trigger.
     Per day: the longest RH ≥ 90 % period and its mean temperature give a severity value 0–4:
       7.2–11.6 °C: 16–18 h → 1, 19–21 → 2, 22–24 → 3, ≥ 25 → 4
       11.7–15.0 °C: 13–15 h → 1, 16–18 → 2, 19–21 → 3, ≥ 22 → 4

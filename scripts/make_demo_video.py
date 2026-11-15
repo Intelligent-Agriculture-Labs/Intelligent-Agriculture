@@ -36,9 +36,9 @@ BG = "0x1d3b24"  # brand dark green
 # (images shown side by side, caption, seconds). Follows the official Space Apps 30 s template:
 # 0:00 team · 0:02 challenge / inspiration · 0:05 title + tagline · 0:10 how it works + NASA data · 0:20 future vision
 SHOTS: list[tuple[list[str], str, float]] = [
-    ([], "Team FieldShift|NASA Space Apps Challenge 2026", 2.0),
+    ([], "Team IA|NASA Space Apps Challenge 2026", 2.0),
     (["web-climate-mobile.png"], "Challenge: Field Shift. In Fallon, Nevada, days above 35 °C doubled since 1984", 3.0),
-    (["web-welcome-mobile.png", "web-home.png"], "FieldShift: 40 years of NASA data, turned into this week's farm decisions", 5.0),
+    (["web-welcome-mobile.png", "web-home.png"], "IA: 40 years of NASA data, turned into this week's farm decisions", 5.0),
     (["web-detect-mobile.png", "web-satellite-mobile.png", "web-map-mobile.png"], "Tap your field: AI finds it. Sentinel-2 zones, SRTM erosion and frost maps", 3.5),
     (["web-home.png", "web-replay-why-mobile.png"], "3 actions a week, each one tap from its NASA POWER, SMAP and MODIS evidence", 3.5),
     (["web-plan-years-mobile.png", "web-plan-years-check-mobile.png"], "Rotation plan per field: disease, nitrogen, soil, water, and its impact", 3.0),
