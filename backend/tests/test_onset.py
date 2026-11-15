@@ -343,3 +343,13 @@ def test_all_onset_messages_have_six_languages():
 
 def test_criteria_from_config_matches_defaults():
     assert on.Criteria.from_config() == dataclasses.replace(CRIT)
+
+
+def test_mid_season_dry_spell_does_not_end_the_season():
+    # store fills, runs dry in a 3-week dry spell, then good rains return: the season continues
+    r = np.zeros(120)
+    r[0:3] = 40.0
+    r[35:38] = 30.0  # refill 13 days after the store ran dry (within end_confirm_days)
+    et = np.full(120, 5.0)
+    k, censored = on.cessation_index(r, et, 0, 5, 119, CRIT)
+    assert k > 38 and not censored

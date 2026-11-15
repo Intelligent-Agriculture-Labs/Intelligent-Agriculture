@@ -15,6 +15,8 @@ criteria:
   min_season_days: 20      # cessation is not searched before onset + this ...
   earliest_end_before_clim_end: 21  # ... nor earlier than 3 weeks before the climatological end of the rains
                                     # (Stern/Instat practice: a fixed 'earliest end' date shortly before the usual end)
+  end_confirm_days: 21     # an empty store only ends the season if no onset-sized rain (onset_mm in onset_days)
+                           # refills it within this many days: mid-season dry spells are not the end (Stern et al. 1981)
 # Climatological seasons (Liebmann et al. 2012 anomalous accumulation; Dunning et al. 2016 harmonic test):
 seasons:
   smooth_days: 31          # moving average of the daily climatology

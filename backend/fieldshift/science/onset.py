@@ -48,6 +48,7 @@ class Criteria:
     awc_mm: float = 100.0
     min_season_days: int = 20
     earliest_end_before_clim_end: int = 21
+    end_confirm_days: int = 21
 
     @classmethod
     def from_config(cls) -> Criteria:
@@ -87,14 +88,22 @@ def dry_spell_failure(rain: np.ndarray, i: int, crit: Criteria, last: int | None
 def cessation_index(
     rain: np.ndarray, et0: np.ndarray, onset: int, earliest: int, limit: int, crit: Criteria
 ) -> tuple[int, bool]:
-    """Water-balance end of season: first day ≥ ``earliest`` with an empty store. Returns (index, censored)."""
+    """Water-balance end of season: first day ≥ ``earliest`` with an empty store that is not followed by a
+    renewed onset-sized rain (``onset_mm`` in ``onset_days``) within ``end_confirm_days``. A store that runs
+    dry in a mid-season dry spell and is refilled afterwards does not end the season (Stern et al. 1981
+    practice; FAO length-of-growing-period logic). Returns (index, censored)."""
     s = 0.0
     limit = min(limit, len(rain) - 1)
     for k in range(onset, limit + 1):
         e = et0[k] if np.isfinite(et0[k]) else 5.0  # Stern et al. used a fixed 5 mm/day where E is unknown
         s = min(crit.awc_mm, max(0.0, s + float(rain[k]) - float(e)))
         if k >= earliest and s <= 0.0:
-            return k, False
+            ahead = rain[k + 1 : min(limit + 1, k + 1 + crit.end_confirm_days)]  # never look past ``limit``
+            refill = len(ahead) >= crit.onset_days and bool(
+                np.any(np.convolve(np.nan_to_num(ahead), np.ones(crit.onset_days), "valid") >= crit.onset_mm)
+            )
+            if not refill:
+                return k, False
     return limit, True
 
 

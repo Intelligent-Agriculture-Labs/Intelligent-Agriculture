@@ -138,7 +138,7 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
   - IMD 2020 normal onsets of 9 Indian cities: MAE 3.6 days.
   - Machakos OND onset: +2 days vs. Omoyo et al. (2015).
   - Darwin: +1 day vs. BoM.
-  - Season length at 17 Sahel stations vs. Sivakumar: MAE 12.7 days, r = 0.95.
+  - Season length at 17 Sahel stations vs. Sivakumar: MAE 12.5 days, r = 0.96 (after requiring a confirmed end: no onset-sized refill within 21 days).
   - Weak spots, reported as they are:
     - In Kerala the agronomic onset falls ~5 weeks before IMD's monsoon onset (pre-monsoon showers already satisfy the criterion).
     - Niamey is +15 days, against a 1904–1984 reference.

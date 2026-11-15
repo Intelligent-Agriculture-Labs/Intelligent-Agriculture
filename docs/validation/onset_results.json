@@ -1,5 +1,5 @@
 {
- "run": "2026-11-15T00:29:45+00:00",
+ "run": "2026-11-15T00:41:33+00:00",
  "criteria": {
   "onset_mm": 20.0,
   "onset_days": 3,
@@ -8,7 +8,8 @@
   "check_days": 30,
   "awc_mm": 100.0,
   "min_season_days": 20,
-  "earliest_end_before_clim_end": 21
+  "earliest_end_before_clim_end": 21,
+  "end_confirm_days": 21
  },
  "refs": {
   "imd_mok": "IMD onset over Kerala: Pai & Rajeevan (2009) J. Earth Syst. Sci. 118:123–135, Table 1 ('new' 2006 criteria, 1984–2007); IMD press releases 24 May 2025 (Annexure 2, 2009–2025) and 15 May 2020; 2008 from a secondary copy of the IMD table.",
@@ -687,7 +688,7 @@
     "false_start_pct": 24.3,
     "lgp_ref": 94,
     "lgp_ours_sivakumar_end": 106.3,
-    "lgp_ours_water_balance": 91.0,
+    "lgp_ours_water_balance": 92.4,
     "onset_ref": "12 Jun",
     "onset_error_days": 14.7
    },
@@ -702,7 +703,7 @@
     "false_start_pct": 15.0,
     "lgp_ref": 67,
     "lgp_ours_sivakumar_end": 90.6,
-    "lgp_ours_water_balance": 67.7
+    "lgp_ours_water_balance": 68.4
    },
    "Birni N'Konni": {
     "lat": 13.8,
@@ -715,7 +716,7 @@
     "false_start_pct": 24.4,
     "lgp_ref": 93,
     "lgp_ours_sivakumar_end": 95.4,
-    "lgp_ours_water_balance": 82.9
+    "lgp_ours_water_balance": 83.9
    },
    "Dosso": {
     "lat": 13.05,
@@ -741,7 +742,7 @@
     "false_start_pct": 15.0,
     "lgp_ref": 86,
     "lgp_ours_sivakumar_end": 99.3,
-    "lgp_ours_water_balance": 94.1
+    "lgp_ours_water_balance": 95.0
    },
    "Tahoua": {
     "lat": 14.89,
@@ -754,7 +755,7 @@
     "false_start_pct": 21.1,
     "lgp_ref": 76,
     "lgp_ours_sivakumar_end": 88.5,
-    "lgp_ours_water_balance": 74.2
+    "lgp_ours_water_balance": 75.2
    },
    "Zinder": {
     "lat": 13.8,
@@ -767,7 +768,7 @@
     "false_start_pct": 14.6,
     "lgp_ref": 80,
     "lgp_ours_sivakumar_end": 85.1,
-    "lgp_ours_water_balance": 68.9
+    "lgp_ours_water_balance": 71.4
    },
    "Tillabery": {
     "lat": 14.21,
@@ -780,7 +781,7 @@
     "false_start_pct": 18.4,
     "lgp_ref": 81,
     "lgp_ours_sivakumar_end": 101.8,
-    "lgp_ours_water_balance": 79.9
+    "lgp_ours_water_balance": 80.5
    },
    "Say": {
     "lat": 13.1,
@@ -793,7 +794,7 @@
     "false_start_pct": 16.2,
     "lgp_ref": 98,
     "lgp_ours_sivakumar_end": 110.0,
-    "lgp_ours_water_balance": 100.3
+    "lgp_ours_water_balance": 101.1
    },
    "Djibo": {
     "lat": 14.1,
@@ -806,7 +807,7 @@
     "false_start_pct": 20.0,
     "lgp_ref": 83,
     "lgp_ours_sivakumar_end": 113.4,
-    "lgp_ours_water_balance": 99.9
+    "lgp_ours_water_balance": 101.0
    },
    "Dori": {
     "lat": 14.03,
@@ -819,7 +820,7 @@
     "false_start_pct": 17.1,
     "lgp_ref": 85,
     "lgp_ours_sivakumar_end": 101.6,
-    "lgp_ours_water_balance": 81.8
+    "lgp_ours_water_balance": 84.2
    },
    "Markoye": {
     "lat": 14.65,
@@ -832,7 +833,7 @@
     "false_start_pct": 17.9,
     "lgp_ref": 76,
     "lgp_ours_sivakumar_end": 91.6,
-    "lgp_ours_water_balance": 71.5
+    "lgp_ours_water_balance": 74.5
    },
    "Ouagadougou": {
     "lat": 12.37,
@@ -845,7 +846,7 @@
     "false_start_pct": 15.0,
     "lgp_ref": 117,
     "lgp_ours_sivakumar_end": 134.8,
-    "lgp_ours_water_balance": 134.2
+    "lgp_ours_water_balance": 135.1
    },
    "Fada N'Gourma": {
     "lat": 12.06,
@@ -858,7 +859,7 @@
     "false_start_pct": 5.1,
     "lgp_ref": 120,
     "lgp_ours_sivakumar_end": 142.4,
-    "lgp_ours_water_balance": 140.7
+    "lgp_ours_water_balance": 141.7
    },
    "Kaya": {
     "lat": 13.09,
@@ -871,7 +872,7 @@
     "false_start_pct": 9.8,
     "lgp_ref": 107,
     "lgp_ours_sivakumar_end": 132.2,
-    "lgp_ours_water_balance": 129.0
+    "lgp_ours_water_balance": 129.9
    },
    "Po": {
     "lat": 11.17,
@@ -884,7 +885,7 @@
     "false_start_pct": 5.0,
     "lgp_ref": 125,
     "lgp_ours_sivakumar_end": 165.7,
-    "lgp_ours_water_balance": 173.7
+    "lgp_ours_water_balance": 174.2
    },
    "Leo": {
     "lat": 11.1,
@@ -897,7 +898,7 @@
     "false_start_pct": 7.5,
     "lgp_ref": 129,
     "lgp_ours_sivakumar_end": 163.3,
-    "lgp_ours_water_balance": 169.5
+    "lgp_ours_water_balance": 170.0
    }
   },
   "lgp_sivakumar_end": {
@@ -911,11 +912,11 @@
   },
   "lgp_water_balance": {
    "n": 17,
-   "bias_days": 8.6,
-   "mae_days": 12.7,
-   "median_abs_err_days": 8.1,
-   "within_10d_pct": 53,
-   "r": 0.95,
+   "bias_days": 9.8,
+   "mae_days": 12.5,
+   "median_abs_err_days": 8.6,
+   "within_10d_pct": 65,
+   "r": 0.96,
    "p": 0.0
   }
  },

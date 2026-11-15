@@ -216,7 +216,7 @@ The detector settings are the production defaults in `config/onset.yaml`: Sivaku
 | Omoyo et al. 2015 | Machakos, Kenya: MAM long rains | mean onset, same years | −19.9 (−8.8 with the study's thresholds) |
 | BoM northern rainfall onset | Darwin, Australia | median onset vs. "late Oct – early Nov" (taken as 1 Nov) | **+1** |
 | Sivakumar 1988 | Niamey, Niger | mean onset 1984–2025 vs. 1904–1984 | +15 |
-| Sivakumar 1988, Tables I–II | 17 stations, Niger + Burkina Faso | mean season length | bias +8.6, **MAE 12.7**, r = 0.95 |
+| Sivakumar 1988, Tables I–II | 17 stations, Niger + Burkina Faso | mean season length | bias +9.8, **MAE 12.5**, r = 0.96 |
 | IMD onset over Kerala, per year | 3 Kerala sites | per-year onset, 1984–2025 | bias −33 to −41, r ≈ 0 (definition mismatch, see below) |
 
 _run: 2026-11-15T00:29:45+00:00 · NASA POWER daily 1984–2025 · production criteria (config/onset.yaml)_
@@ -269,7 +269,7 @@ Niamey mean onset: FieldShift 27 Jun (1984–2025) vs. Sivakumar 12 Jun (1904–
 | Po | 10 May | 20.0 | 5 % | 2 % | 125 | 173.7 | 165.7 |
 | Leo | 13 May | 23.3 | 8 % | 2 % | 129 | 169.5 | 163.3 |
 
-Season length over 17 stations: water balance (used in the app) bias +8.6 days, **MAE 12.7 days**, r = 0.95; Sivakumar's end rule on POWER rain: bias +18.6, MAE 18.6 days, r = 0.94.
+Season length over 17 stations: water balance (used in the app) bias +9.8 days, **MAE 12.5 days**, r = 0.96; Sivakumar's end rule on POWER rain: bias +18.6, MAE 18.6 days, r = 0.94.
 
 **(d) Kenya, Machakos (bimodal) vs. Omoyo et al. (2015), Machakos station 1979–2009; FieldShift 1984–2009**
 
