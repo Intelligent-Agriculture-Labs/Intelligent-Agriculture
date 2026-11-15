@@ -52,11 +52,11 @@ def test_rh90_and_rain_wetness():
 def test_dew_point_and_dpd_hysteresis():
     assert leafwet.dew_point(np.array([20.0]), np.array([100.0]))[0] == pytest.approx(20.0, abs=0.05)
     assert leafwet.dew_point(np.array([20.0]), np.array([50.0]))[0] == pytest.approx(9.3, abs=0.2)
-    # DPD: 1 °C (wet on) -> 3 °C (stays wet, < 3.8) -> 5 °C (dries off)
+    # DPD: 1.5 °C (wet on) -> 2.0 °C (stays wet, < 2.2) -> 3 °C (dries off) -> 2.0 °C (no restart, > 1.8)
     t = np.array([20.0, 20.0, 20.0, 20.0])
-    dew = np.array([19.0, 17.0, 15.0, 17.0])
+    dew = np.array([18.5, 18.0, 17.0, 18.0])
     wet = leafwet.wet_mask(t, np.full(4, 80.0), dew=dew, method="dpd")
-    assert wet.tolist() == [True, True, False, False]  # 3 °C after dry-off does not restart wetness
+    assert wet.tolist() == [True, True, False, False]
 
 
 def test_wet_periods_with_gap():
@@ -85,13 +85,11 @@ def _night_wet(hours, t_wet, t_dry=None):
 @pytest.mark.parametrize(
     "mid,t_wet,hours",
     [
-        ("rice_blast", 24.0, 14),
-        ("wheat_leaf_rust", 18.0, 10),
-        ("wheat_stem_rust", 22.0, 12),
-        ("coffee_leaf_rust", 22.0, 14),
-        ("black_sigatoka", 26.0, 16),
-        ("gray_leaf_spot", 26.0, 16),
-        ("northern_leaf_blight", 20.0, 12),
+        ("rice_blast", 22.0, 14),
+        ("wheat_leaf_rust", 22.0, 10),
+        ("wheat_stem_rust", 18.0, 12),
+        ("coffee_leaf_rust", 23.0, 14),
+        ("black_sigatoka", 26.5, 18),
     ],
 )
 def test_infection_models_wet_vs_dry(mid, t_wet, hours):
@@ -105,15 +103,39 @@ def test_infection_models_wet_vs_dry(mid, t_wet, hours):
 
 def test_infection_models_too_cold():
     t, rh = _night_wet(16, 3.0)
-    for mid in ("rice_blast", "coffee_leaf_rust", "black_sigatoka", "gray_leaf_spot"):
+    # (rice blast excluded: BLASTAM classes any >= 10 h wet period as quasi-favourable, pattern 3)
+    for mid in ("coffee_leaf_rust", "black_sigatoka", "wheat_stem_rust", "wheat_leaf_rust"):
         assert max(gr.MODELS[mid].fn(_input(_hourly(2, t, rh), tmean=22)).scores.values()) == 0.0
 
 
-def test_rice_blast_needs_susceptible_preceding_week():
+def test_rice_blast_blastam():
+    assert gr.blastam_required(15.2) == 17
+    assert gr.blastam_required(23.0) == 10
+    assert math.isinf(gr.blastam_required(27.0))
     t, rh = _night_wet(14, 22.0)
-    warm = gr.rice_blast(_input(_hourly(2, t, rh), tmean=22.0))
-    hot = gr.rice_blast(_input(_hourly(2, t, rh), tmean=30.0))
-    assert max(warm.scores.values()) > max(hot.scores.values())
+    assert max(gr.rice_blast(_input(_hourly(2, t, rh), tmean=22.0)).scores.values()) == 1.0
+    # 5-day mean 30 °C: BLASTAM quasi-favourable pattern 2 -> 0.5
+    assert max(gr.rice_blast(_input(_hourly(2, t, rh), tmean=30.0)).scores.values()) == 0.5
+    # 8 wet hours at 22 °C (needs 10): pattern 4 scaled
+    t8, rh8 = _night_wet(8, 22.0)
+    assert max(gr.rice_blast(_input(_hourly(2, t8, rh8), tmean=22.0)).scores.values()) == pytest.approx(0.4)
+
+
+def test_gray_leaf_spot_index():
+    # warm humid nights: 12 h at RH >= 90 % from 20:00, 26 °C all day -> both predictors at the epidemic level
+    rh = [95] * 8 + [60] * 12 + [95] * 4
+    hot_humid = gr.gray_leaf_spot(_input(_hourly(16, 26.0, rh)))
+    cool_dry = gr.gray_leaf_spot(_input(_hourly(16, 15.0, 60.0)))
+    assert max(hot_humid.scores.values()) == 1.0
+    assert max(cool_dry.scores.values()) == 0.0
+    assert len(hot_humid.scores) >= 6  # needs >= 10 days of hourly history
+
+
+def test_coffee_rust_amplitude_band():
+    t, rh = _night_wet(14, 23.0)
+    inside = gr.coffee_leaf_rust(_input(_hourly(2, t, rh), tmean=22.0))  # Tmax 27
+    outside = gr.coffee_leaf_rust(_input(_hourly(2, t, rh), tmean=26.0))  # Tmax 31
+    assert max(inside.scores.values()) == 2 * max(outside.scores.values())
 
 
 def test_wallin_severity_values():
@@ -143,10 +165,15 @@ def test_tropical_late_blight_cool_highland_nights_count():
     assert "sv7" in trop.extra
 
 
-def test_cassava_whitefly_warm_dry_vs_wet():
+def test_cassava_whitefly_katono_bands():
     h = _hourly(1, 25.0, 60.0)
-    assert gr.cassava_whitefly(_input(h, tmean=26, rain=0.0)).scores[h.dates[0]] == pytest.approx(1.0)
-    assert gr.cassava_whitefly(_input(h, tmean=26, rain=10.0)).scores[h.dates[0]] == 0.0  # 140 mm / 14 d
+    d = h.dates[0]
+    assert gr.cassava_whitefly(_input(h, tmean=29, rain=3.0)).scores[d] == pytest.approx(1.0)  # 90 mm / 30 d
+    assert gr.cassava_whitefly(_input(h, tmean=29, rain=10.0)).scores[d] == 0.0  # 300 mm / 30 d washes out
+    assert gr.cassava_whitefly(_input(h, tmean=22, rain=3.0)).scores[d] == 0.0  # too cool
+    x = _input(h, tmean=29, rain=3.0)
+    x.rh = np.full(len(x.dates), 92.0)  # very humid: outside 55–70 % (taper 15 %) -> 0
+    assert gr.cassava_whitefly(x).scores[d] == 0.0
 
 
 def test_desert_locust_rain_trigger():

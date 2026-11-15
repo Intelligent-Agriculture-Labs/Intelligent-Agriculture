@@ -37,6 +37,7 @@ class RiskInput:
     hourly: lw.Hourly | None = None
     elevation_m: float | None = None
     planting: dt.date | None = None
+    rh: np.ndarray | None = None  # daily mean RH (%), aligned with dates
 
     def di(self, d: dt.date) -> int:
         return (d - self.dates[0]).days
@@ -137,42 +138,81 @@ def _infection_model(
 
 
 # --------------------------------------------------------------------------- pathogen parameters
-# (tmin, topt, tmax in °C for the infection process; wmin/wmax = wetness hours at optimum / upper cap)
-P_RICE_BLAST = {"tmin": 8.0, "topt": 28.0, "tmax": 35.0, "wmin": 8.0, "wmax": 24.0}
-P_LEAF_RUST = {"tmin": 2.0, "topt": 20.0, "tmax": 30.0, "wmin": 4.0, "wmax": 16.0}
-P_STEM_RUST = {"tmin": 2.0, "topt": 20.0, "tmax": 35.0, "wmin": 6.0, "wmax": 16.0}
-P_COFFEE_RUST = {"tmin": 15.0, "topt": 22.0, "tmax": 28.0, "wmin": 6.0, "wmax": 48.0}
-P_SIGATOKA = {"tmin": 12.0, "topt": 27.0, "tmax": 36.0, "wmin": 6.0, "wmax": 48.0}
-P_GLS = {"tmin": 14.0, "topt": 27.0, "tmax": 35.0, "wmin": 11.0, "wmax": 24.0}
-P_NLB = {"tmin": 10.0, "topt": 20.0, "tmax": 30.0, "wmin": 6.0, "wmax": 18.0}
+# Magarey et al. (2005) form: tmin/topt/tmax (°C) of infection, wmin = wetness hours at Topt, wmax = upper cap.
+# Wheat leaf rust: Magarey et al. 2005, Table 2 row "Puccinia recondita" (2.6 / 25 / 30 °C, 5 / 16 h); dry-interruption
+#   class "sensitive" (D50 1–2 h) -> gap 1 h.
+P_LEAF_RUST = {"tmin": 2.6, "topt": 25.0, "tmax": 30.0, "wmin": 5.0, "wmax": 16.0}
+# Wheat stem rust (not in Magarey Table 2): Roelfs, Singh & Saari 1992 — germination 2 / 15–24 / 30 °C (Table 2),
+#   6–8 h dew needed, maximum infection with 8–12 h dew at 18 °C (text) -> Topt 18, Wmin 6; Wmax from Magarey's
+#   regression Wmax ≈ 3.8 + 3.0·Wmin = 21.8 h.
+P_STEM_RUST = {"tmin": 2.0, "topt": 18.0, "tmax": 30.0, "wmin": 6.0, "wmax": 21.8}
+# Coffee leaf rust: cardinal temperatures of the Kushalappa & Eskes (1989) infection curve (12.5 / 32.5 °C), optimum
+#   at the centre of the 21–25 °C germination optimum (Avelino et al. 2015, citing Waller 1982); infection needs free
+#   water and ≈ 6 h wetness (zero point of Kushalappa & Eskes' wetness curve); Wmax by Magarey's regression.
+P_COFFEE_RUST = {"tmin": 12.5, "topt": 23.0, "tmax": 32.5, "wmin": 6.0, "wmax": 21.8}
+# Black Sigatoka: germination 20–35 °C, optimum 26.5 °C (Jacome & Schuh 1991); conidia infect with 0–18 h wetness,
+#   symptom development fastest after 18 h (Jacome & Schuh 1992). Wmin 12 h is OUR choice inside that range (not a
+#   published constant) — documented in docs/MODELS.md as an assumption.
+P_SIGATOKA = {"tmin": 20.0, "topt": 26.5, "tmax": 35.0, "wmin": 12.0, "wmax": 48.0}
+
+# BLASTAM (Japanese prefectural plant-protection offices; wetness table after Yokouchi, Higuchi & Munakata):
+# wet hours required at the mean temperature of the wet period (°C, rounded).
+BLASTAM_HOURS = {15: 17, 16: 15, 17: 14, 18: 13, 19: 12, 20: 11, 21: 11, 22: 10, 23: 10, 24: 10, 25: 10}
+
+
+def blastam_required(t: float) -> float:
+    k = int(round(t))
+    return float(BLASTAM_HOURS[k]) if k in BLASTAM_HOURS else math.inf
 
 
 def rice_blast(x: RiskInput) -> RiskResult:
-    """Leaf/neck blast (Magnaporthe oryzae). Infection when a wet period of mean temperature 15–25 °C (BLASTAM
-    window) meets the Magarey W(T) requirement, and only when the preceding 5-day mean temperature is
-    20–25 °C (BLASTAM susceptibility condition; Koshimizu 1988, Hashimoto et al. 1984)."""
-    r = _infection_model(P_RICE_BLAST, t_lo=15.0, t_hi=25.0)(x)
+    """Rice blast (Magnaporthe oryzae), BLASTAM criteria. A day is *favourable* (score 1) when a wet period starting
+    that day has a mean temperature of 15–25 °C, lasts at least the BLASTAM hours for that temperature (17 h at
+    15 °C … 10 h at 22–25 °C), and the mean daily temperature of the 5 days up to that day is 20–25 °C.
+    *Quasi-favourable* (score 0.5): ≥ 10 wet hours but one temperature condition missed (BLASTAM patterns 1–3), or
+    the temperatures fit but wetness is short (pattern 4, scaled by hours/required). Symptoms follow 7–10 days later.
+    Wetness: RH ≥ 90 % or rain (BLASTAM itself estimates wetness from AMeDAS rain, wind and sunshine)."""
+    r = RiskResult()
+    h = x.hourly
+    if h is None or not len(h.t):
+        return r
+    ok = _complete_days(h)
     tmean = (np.asarray(x.tmax) + np.asarray(x.tmin)) / 2
-    for d in list(r.scores):
+    best: dict[dt.date, tuple[float, str]] = {}
+    for wp in lw.wet_periods(h, h.wet("rh90"), 0):
+        d = wp.start.date()
         i = x.di(d)
-        prev = tmean[max(0, i - 5) : i] if i > 0 else np.array([])
-        m5 = float(np.nanmean(prev)) if len(prev) else float("nan")
-        if not (np.isfinite(m5) and 20.0 <= m5 <= 25.0):
-            if r.scores[d] > 0:
-                r.evidence.setdefault(d, []).append(
-                    f"Previous 5-day mean temperature {m5:.1f} °C is outside 20–25 °C: plants are less susceptible (BLASTAM)."
-                )
-            r.scores[d] = round(r.scores[d] * 0.3, 3)
-        elif r.scores[d] > 0:
-            r.evidence.setdefault(d, []).append(
-                f"Previous 5-day mean temperature {m5:.1f} °C (BLASTAM 20–25 °C: susceptible)."
+        m5 = float(np.nanmean(tmean[max(0, i - 4) : i + 1])) if 0 <= i < len(tmean) else float("nan")
+        need = blastam_required(wp.t_mean)
+        t_ok = 15.0 <= wp.t_mean <= 25.0
+        m_ok = np.isfinite(m5) and 20.0 <= m5 <= 25.0
+        if t_ok and m_ok and wp.hours >= need:
+            s, why = 1.0, "favourable"
+        elif wp.hours >= 10 and (t_ok or m_ok) and not (t_ok and m_ok and wp.hours >= need):
+            s, why = 0.5, "quasi-favourable (one temperature condition missed)"
+        elif t_ok and m_ok:
+            s, why = 0.5 * wp.hours / need, "wet period too short"
+        else:
+            s, why = 0.0, "unfavourable"
+        if s > best.get(d, (-1.0, ""))[0]:
+            need_s = f"{need:.0f} h" if math.isfinite(need) else "outside 15–25 °C"
+            best[d] = (
+                s,
+                f"Wet period from {wp.start:%d %b %H:00}: {wp.hours} h at a mean {wp.t_mean:.1f} °C (BLASTAM needs "
+                f"{need_s}); 5-day mean temperature {m5:.1f} °C (needs 20–25 °C) → {why}.",
             )
+    for d in sorted(ok):
+        s, why = best.get(d, (0.0, ""))
+        r.scores[d] = round(s, 3)
+        if why:
+            r.evidence[d] = [why]
     return r
 
 
 def tropical_late_blight(x: RiskInput) -> RiskResult:
-    """Late blight in the tropics: Wallin (1962) severity values as used by BLITECAST (Krause et al. 1975)
-    and SimCast (Grünwald et al. 2002, validated in the Toluca highlands, Mexico).
+    """Late blight in the tropics: Wallin (1962) severity values as used by BLITECAST (Krause et al. 1975).
+    In the Toluca highlands (Grünwald, Rubio-Covarrubias & Fry 2000) BLITECAST's cumulative-SV spray trigger came
+    too late; FieldShift therefore alerts on each day's SV, not on the cumulative trigger.
     Per day: the longest RH ≥ 90 % period and its mean temperature give a severity value 0–4:
       7.2–11.6 °C: 16–18 h → 1, 19–21 → 2, 22–24 → 3, ≥ 25 → 4
       11.7–15.0 °C: 13–15 h → 1, 16–18 → 2, 19–21 → 3, ≥ 22 → 4
@@ -217,70 +257,116 @@ def wallin_sv(hours: int, t: float) -> int:
 
 
 def gray_leaf_spot(x: RiskInput) -> RiskResult:
-    """Maize gray leaf spot (Cercospora zeae-maydis): long humid periods (RH ≥ 90 %) at warm temperatures;
-    infection needs ≥ 11–13 h of high humidity near 22–30 °C (Rupe, Siegel & Hartman 1982; Beckman & Payne 1982),
-    expressed with the Magarey W(T) curve (Wmin 11 h at Topt 27 °C). Dry gaps of ≤ 2 h tolerated (spores survive
-    short dry spells; Magarey et al. 2005)."""
-    return _infection_model(P_GLS, gap=2)(x)
-
-
-def northern_leaf_blight(x: RiskInput) -> RiskResult:
-    """Northern corn leaf blight (Exserohilum turcicum): moderate temperatures 18–27 °C with ≥ 6 h dew
-    (Levy & Cohen 1983)."""
-    return _infection_model(P_NLB)(x)
+    """Maize gray leaf spot (Cercospora zeae-maydis) after Paul & Munkvold (2005, Phytopathology 95:388–396): the
+    best weather predictors of severity (V4–V12, Iowa 1998–2002) were the hours at 22–30 °C (observed 85.5–230.5 h)
+    and the night hours with RH ≥ 90 % (122–330 h). Here both are accumulated over the trailing 14 days and expressed
+    as a fraction of the upper end of the observed range, pro-rated to the window length (V4–V12 ≈ 30 days):
+    score = ½ (warm_h / (230.5·14/30) + wet_night_h / (330·14/30)), capped at 1. A risk *index*, not the authors'
+    fitted regression (whose coefficients need field inoculum data)."""
+    r = RiskResult()
+    h = x.hourly
+    if h is None or not len(h.t):
+        return r
+    ok = sorted(_complete_days(h))
+    warm = (h.t >= 22) & (h.t <= 30)
+    night = np.array([t.hour >= 20 or t.hour < 8 for t in h.time])
+    wetn = (h.rh >= 90) & night
+    days = np.array(h.dates)
+    win = 14
+    ref_w, ref_n = 230.5 * win / 30, 330.0 * win / 30
+    for d in ok:
+        m = (days > d - dt.timedelta(days=win)) & (days <= d)
+        n_days = len({e for e in days[m]})
+        if n_days < 10:
+            continue
+        a, b = float(warm[m].sum()) * win / n_days, float(wetn[m].sum()) * win / n_days
+        r.scores[d] = round(min(1.0, 0.5 * (min(1.0, a / ref_w) + min(1.0, b / ref_n))), 3)
+        r.evidence[d] = [
+            f"Last {win} days: {a:.0f} h at 22–30 °C (epidemic-level ≈ {ref_w:.0f} h) and {b:.0f} humid night hours "
+            f"at RH ≥ 90 % (≈ {ref_n:.0f} h), from Paul & Munkvold 2005."
+        ]
+    return r
 
 
 def wheat_leaf_rust(x: RiskInput) -> RiskResult:
-    """Wheat leaf rust (Puccinia triticina): urediniospores need free water; infection with ≥ 3–4 h dew near
-    15–20 °C, more at cooler/warmer temperatures (Roelfs, Singh & Saari 1992, Table 2; Magarey et al. 2005)."""
-    return _infection_model(P_LEAF_RUST, method="dpd")(x)
+    """Wheat leaf rust (Puccinia triticina): Magarey et al. 2005 Table 2 (P. recondita: 2.6 / 25 / 30 °C, Wmin 5 h,
+    Wmax 16 h; dry interruptions of > 1 h end a wet period). Roelfs et al. 1992: ≤ 3 h dew at ~20 °C, 12 h at 10 °C."""
+    return _infection_model(P_LEAF_RUST, gap=1)(x)
 
 
 def wheat_stem_rust(x: RiskInput) -> RiskResult:
-    """Wheat stem rust (Puccinia graminis f. sp. tritici): ≥ 6–8 h dew at 15–24 °C, followed by light
-    (Roelfs, Singh & Saari 1992). Warmer than leaf/stripe rust."""
-    return _infection_model(P_STEM_RUST, method="dpd")(x)
+    """Wheat stem rust (Puccinia graminis f. sp. tritici): Roelfs, Singh & Saari 1992 — 6–8 h dew, maximum infection
+    with 8–12 h dew at 18 °C (followed by light, not modelled). Parameters: see P_STEM_RUST."""
+    return _infection_model(P_STEM_RUST, gap=1)(x)
 
 
 def coffee_leaf_rust(x: RiskInput) -> RiskResult:
-    """Coffee leaf rust (Hemileia vastatrix): germination needs liquid water and ~21–25 °C; infection needs
-    ≥ 6 h wetness at the optimum (Kushalappa & Eskes 1989; Nutman, Roberts & Clarke 1963)."""
-    return _infection_model(P_COFFEE_RUST, gap=2)(x)
+    """Coffee leaf rust (Hemileia vastatrix). Infection: a wet period meeting W(T) with P_COFFEE_RUST (free water;
+    Kushalappa & Eskes 1989). Development: Avelino et al. (2015) link the 2008–2013 epidemics to a narrower daily
+    temperature range — more days with Tmax 22–28 °C (optimal latent period); on days outside that band the score is
+    halved."""
+    r = _infection_model(P_COFFEE_RUST, gap=2)(x)
+    for d in list(r.scores):
+        i = x.di(d)
+        if not (0 <= i < len(x.tmax)):
+            continue
+        tx = float(x.tmax[i])
+        if not (22.0 <= tx <= 28.0):
+            r.scores[d] = round(r.scores[d] * 0.5, 3)
+        if r.scores[d] > 0:
+            r.evidence.setdefault(d, []).append(
+                f"Daily maximum {tx:.1f} °C ({'inside' if 22 <= tx <= 28 else 'outside'} the 22–28 °C band that "
+                "shortens the latent period; Avelino et al. 2015)."
+            )
+    return r
 
 
 def black_sigatoka(x: RiskInput) -> RiskResult:
-    """Banana black Sigatoka (Pseudocercospora/Mycosphaerella fijiensis): ascospore infection with long wet
-    periods at 20–30 °C (Jacome & Schuh 1992; Jacome, Schuh & Stevenson 1991)."""
+    """Banana black Sigatoka (Pseudocercospora fijiensis): germination 20–35 °C, optimum 26.5 °C (Jacome & Schuh
+    1991); infection with long wet periods (0–18 h, fastest symptoms after 18 h; Jacome & Schuh 1992)."""
     return _infection_model(P_SIGATOKA, gap=2)(x)
 
 
 # --------------------------------------------------------------------------- insect / locust (daily data)
+def _band(v: float, lo: float, hi: float, taper: float) -> float:
+    """1 inside [lo, hi], falling linearly to 0 at `taper` outside."""
+    if lo <= v <= hi:
+        return 1.0
+    dist = lo - v if v < lo else v - hi
+    return max(0.0, 1.0 - dist / taper)
+
+
 def cassava_whitefly(x: RiskInput) -> RiskResult:
-    """Bemisia tabaci on cassava (vector of cassava mosaic disease). Populations build when it is warm and fairly
-    dry; heavy rain knocks adults down. Score for each day: warm-and-dry index over the preceding 14 days —
-    mean temperature within 20–32 °C (fast development; lower threshold ~10–11 °C) and ≤ 30 mm rain
-    (Legg 1995; Fishpool & Burban 1994; Sseruwagi et al. 2003)."""
+    """Bemisia tabaci on cassava (vector of cassava mosaic disease). Katono et al. (2021, Insects 12:604; Uganda
+    2016–17): counts were highest at 28–30 °C, 30–150 mm rain per month and RH 55–70 %; rain and heat above that
+    reduced them. Score = product of the three band memberships over the trailing 30 days (linear taper: 4 °C,
+    100 mm, 15 % RH). RH is skipped when not available."""
     r = RiskResult()
     tmean = (np.asarray(x.tmax) + np.asarray(x.tmin)) / 2
     for k, d in enumerate(x.dates):
-        if k < 14:
+        if k < 30:
             continue
-        tm = float(np.nanmean(tmean[k - 14 : k]))
-        rn = float(np.nansum(x.rain[k - 14 : k]))
+        tm = float(np.nanmean(tmean[k - 30 : k]))
+        rn = float(np.nansum(x.rain[k - 30 : k]))
         if not np.isfinite(tm):
             continue
-        warm = 1.0 if 20 <= tm <= 32 else max(0.0, 1 - min(abs(tm - 20), abs(tm - 32)) / 6)
-        dry = 1.0 if rn <= 30 else max(0.0, 1 - (rn - 30) / 70)
-        r.scores[d] = round(warm * dry, 3)
-        r.evidence[d] = [f"Last 14 days: mean temperature {tm:.1f} °C, rain {rn:.0f} mm."]
+        s = _band(tm, 28.0, 30.0, 4.0) * _band(rn, 30.0, 150.0, 100.0)
+        txt = f"Last 30 days: mean temperature {tm:.1f} °C (best 28–30), rain {rn:.0f} mm (best 30–150)"
+        if x.rh is not None:
+            rh = float(np.nanmean(x.rh[k - 30 : k]))
+            if np.isfinite(rh):
+                s *= _band(rh, 55.0, 70.0, 15.0)
+                txt += f", RH {rh:.0f} % (best 55–70)"
+        r.scores[d] = round(s, 3)
+        r.evidence[d] = [txt + " — Katono et al. 2021."]
     return r
 
 
 def desert_locust(x: RiskInput) -> RiskResult:
-    """Desert locust breeding conditions in recession areas (FAO Desert Locust Guidelines, Cressman & Elliott;
-    Symmons & Cressman 2001): ≥ 25 mm rain in a month moistens the sand to 10–15 cm for egg-laying and greens
-    annual vegetation; eggs develop and hoppers appear ~2–6 weeks later if temperatures are warm (mean ≥ 20 °C).
-    Score: 30-day rain/25 mm (capped 1) × warm factor."""
+    """Desert locust breeding conditions in recession areas (FAO: breeding usually needs at least 25–50 mm of rain,
+    which moistens sandy soil to 5–10 cm for egg-laying and greens annual vegetation; Symmons & Cressman 2001, FAO
+    Desert Locust Guidelines). Eggs and hoppers develop only when warm; we require a 30-day mean ≥ 20 °C (full) with
+    a linear taper from 15 °C (our assumption). Score: 30-day rain / 25 mm (capped 1) × warm factor; < 10 mm → 0."""
     r = RiskResult()
     tmean = (np.asarray(x.tmax) + np.asarray(x.tmin)) / 2
     for k, d in enumerate(x.dates):
@@ -292,14 +378,15 @@ def desert_locust(x: RiskInput) -> RiskResult:
         s = min(1.0, rn / 25.0) * warm
         r.scores[d] = round(s if rn >= 10 else 0.0, 3)
         r.evidence[d] = [
-            f"Rain in the last 30 days: {rn:.0f} mm (FAO breeding guide: ≥ 25 mm); mean temperature {tm:.1f} °C."
+            f"Rain in the last 30 days: {rn:.0f} mm (FAO: breeding usually needs ≥ 25 mm); mean temperature {tm:.1f} °C."
         ]
     return r
 
 
 # --------------------------------------------------------------------------- geography
-# Fields wetter than this (10-year mean annual rain) are outside the arid/semi-arid breeding habitat.
-LOCUST_MAX_ANNUAL_RAIN_MM = 500.0
+# Recession areas get < 200 mm/yr (FAO); summer breeding extends into the drier Sahel. Fields wetter than this
+# (10-year mean annual rain) are treated as outside the breeding habitat.
+LOCUST_MAX_ANNUAL_RAIN_MM = 400.0
 
 # Desert locust recession area (FAO): Sahara–Sahel, Arabian Peninsula, Iran–Pakistan–NW India.
 LOCUST_BOXES = [
@@ -353,14 +440,14 @@ MODELS: dict[str, Model] = {
             "disease",
             ["rice"],
             rice_blast,
-            "BLASTAM criteria (Koshimizu 1988) with the Magarey et al. 2005 wetness–temperature curve",
+            "BLASTAM criteria (Japanese prefectural forecasting; Yokouchi, Higuchi & Munakata wetness table)",
         ),
         Model(
             "wheat_leaf_rust",
             "disease",
             ["winter_wheat", "spring_wheat", "durum_wheat", "triticale_forage", "spelt"],
             wheat_leaf_rust,
-            "Roelfs, Singh & Saari 1992; Magarey et al. 2005",
+            "Magarey et al. 2005 Table 2 (P. recondita); Roelfs, Singh & Saari 1992",
         ),
         Model(
             "wheat_stem_rust",
@@ -374,7 +461,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["potato", "tomato"],
             tropical_late_blight,
-            "Wallin 1962 severity values (BLITECAST, Krause et al. 1975; SimCast, Grünwald et al. 2002)",
+            "Wallin 1962 severity values (BLITECAST, Krause et al. 1975)",
             tropics_only=True,
         ),
         Model(
@@ -382,23 +469,15 @@ MODELS: dict[str, Model] = {
             "disease",
             ["maize", "maize_silage", "sweet_corn"],
             gray_leaf_spot,
-            "Rupe et al. 1982; Magarey et al. 2005",
+            "Paul & Munkvold 2005 weather predictors",
             season=(30, 120),
-        ),
-        Model(
-            "northern_leaf_blight",
-            "disease",
-            ["maize", "maize_silage", "sweet_corn", "sorghum"],
-            northern_leaf_blight,
-            "Levy & Cohen 1983; Magarey et al. 2005",
-            season=(20, 120),
         ),
         Model(
             "coffee_leaf_rust",
             "disease",
             ["coffee"],
             coffee_leaf_rust,
-            "Kushalappa & Eskes 1989; Magarey et al. 2005",
+            "Kushalappa & Eskes 1989; Avelino et al. 2015; Magarey et al. 2005",
             tropics_only=True,
         ),
         Model(
@@ -406,7 +485,7 @@ MODELS: dict[str, Model] = {
             "disease",
             ["banana", "plantain"],
             black_sigatoka,
-            "Jacome & Schuh 1992; Magarey et al. 2005",
+            "Jacome & Schuh 1991, 1992; Magarey et al. 2005",
             tropics_only=True,
         ),
         Model(
@@ -414,7 +493,7 @@ MODELS: dict[str, Model] = {
             "pest",
             ["cassava"],
             cassava_whitefly,
-            "Legg 1995; Sseruwagi et al. 2003",
+            "Katono et al. 2021",
             hourly=False,
             regions=["africa", "asia"],
             season=(0, 120),

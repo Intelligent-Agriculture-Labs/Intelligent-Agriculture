@@ -64,6 +64,7 @@ def risk_input(ctx: Any, planting: dt.date | None) -> gr.RiskInput:
         hourly=lw.from_dict(ctx.hourly) if ctx.hourly else None,
         elevation_m=ctx.elevation_m,
         planting=planting,
+        rh=np.asarray(ctx.rh, dtype=float) if getattr(ctx, "rh", None) is not None else None,
     )
 
 

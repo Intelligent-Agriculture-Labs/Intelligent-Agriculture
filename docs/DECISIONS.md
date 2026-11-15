@@ -121,3 +121,15 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - **Consequences:**
   - The serving code is now region-gated by model metadata (`model_regions`, `feature_set`, `served_key`), so a future model can be switched on per validated region without code changes.
   - The cache writer uses a per-process temporary file. Parallel training workers had raced on it.
+
+## ADR-021 Global pest & disease risk models (2026-11-15)
+- **Context:** pest and disease advice covered mainly U.S./European examples (Hutton late blight, stripe rust, North American degree-day insects). The goal was scientifically sound advice for the world's major crops and farming regions.
+- **Decision:** a separate, modular layer (`science/leafwet.py`, `science/globalrisk.py`, `engine/risk_cards.py`, texts in `config/pest_disease.yaml`). `service.py` has a one-line hook, so the change stays out of the files other work streams edit.
+  - **One generic infection equation** for the fungal leaf diseases: the Magarey, Sutton & Thayer (2005) temperature–wetness model, W(T) = Wmin / f(T). Each pathogen gets its own Tmin/Topt/Tmax/Wmin/Wmax from the cited literature. The alternative, a separate ad-hoc rule per disease, is harder to audit and to validate.
+  - **One shared leaf-wetness estimator** (RH ≥ 90 % or dew-point depression with hysteresis, with rain hours wet), so every model uses the same, cited wetness definition.
+  - **Late blight:** the Hutton rule is UK-derived and needs Tmin ≥ 10 °C. Between the tropics it is replaced by Wallin severity values (BLITECAST/SimCast), which were field-tested in the Toluca highlands. Validation V9 shows Hutton finds 0 favourable days in the Ecuador highlands, where blight pressure is among the world's highest.
+  - **Insects:** desert locust breeding is an *awareness* card that points to FAO Locust Watch and the national locust unit. FieldShift never gives control advice for locusts. Cassava whitefly is a qualitative warm-and-dry rule.
+  - **No product or brand advice:** actions are scouting and cultural control, with treatment decisions referred to local thresholds and extension services. A unit test checks the texts.
+- **Gating:** a card needs host crop, geographic range (continent, tropics or the FAO recession area), crop stage window and score threshold. Out-of-range or out-of-season fields never see the card.
+- **Not done:** coffee and banana are not FieldShift crops yet. Adding them needs perennial crop-model parameters, which belong to the yield work stream. Their models are implemented, validated and ready, but no card appears until those crops exist.
+- **Consequences:** validation results are reported per model in VALIDATION.md V9, including misses.

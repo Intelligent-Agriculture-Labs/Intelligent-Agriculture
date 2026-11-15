@@ -29,7 +29,7 @@ legacy_disease_names:
 models:
   rice_blast:
     name: {en: Rice blast, es: piricularia del arroz, fr: pyriculariose du riz, sw: ugonjwa wa blast wa mpunga, hi: धान का झोंका (ब्लास्ट) रोग, de: Reisbräune (Blast)}
-    model: "BLASTAM wet-period criteria (Koshimizu 1988) with the generic infection curve of Magarey et al. (2005)"
+    model: "BLASTAM criteria: wet period at 15–25 °C lasting 10–17 h (temperature-dependent) after a 5-day mean of 20–25 °C"
     summary: "Long periods of wet leaves at mild temperatures, after a warm and humid spell, let rice blast spores infect."
     action:
       en: "Scout leaves (and panicle necks at heading) for diamond-shaped grey lesions. Avoid extra nitrogen now, keep flooding even, and follow local advice on resistant varieties and protective treatment."
@@ -39,13 +39,13 @@ models:
       hi: "पत्तियों (और बाली निकलते समय बाली की गर्दन) पर हीरे के आकार के धूसर धब्बे देखें। अभी अतिरिक्त नाइट्रोजन न दें, पानी समान रूप से भरा रखें, और प्रतिरोधी किस्मों व सुरक्षात्मक उपचार पर स्थानीय सलाह मानें।"
       de: "Blätter (und zur Rispenbildung die Rispenhälse) auf rautenförmige graue Flecken prüfen. Jetzt keinen zusätzlichen Stickstoff geben, gleichmäßig fluten und lokale Beratung zu resistenten Sorten und Schutzbehandlung befolgen."
     references:
-      - "Koshimizu Y. 1988, BLASTAM, Res. Bull. Tohoku Natl Agric. Exp. Stn."
-      - "Magarey R.D., Sutton T.B., Thayer C.L. 2005, Phytopathology 95:92–100, doi:10.1094/PHYTO-95-0092"
+      - "BLASTAM leaf-blast forecast, as published by the Ibaraki and Hiroshima prefectural plant protection offices (wetness table after Yokouchi, Higuchi & Munakata)"
+      - "Symptoms appear about 7–10 days after a favourable day"
     caveats:
       - "Gridded humidity under-estimates wetness inside a flooded rice canopy."
   wheat_leaf_rust:
     name: {en: Wheat leaf rust, es: roya de la hoja del trigo, fr: rouille brune du blé, sw: kutu ya majani ya ngano, hi: गेहूं का भूरा रतुआ, de: Braunrost (Weizen)}
-    model: "Dew-period × temperature infection requirement (Roelfs, Singh & Saari 1992) via the Magarey et al. (2005) curve"
+    model: "Magarey et al. (2005) infection model, Table 2 parameters for Puccinia recondita (2.6/25/30 °C, 5–16 h wetness)"
     summary: "Leaf rust spores infect when leaves stay wet with dew for several hours at mild to warm temperatures."
     action:
       en: "Scout the upper leaves for small orange-brown pustules. If they spread before heading on a susceptible variety, follow local thresholds on protective treatment; choose resistant varieties next season."
@@ -55,11 +55,11 @@ models:
       hi: "ऊपरी पत्तियों पर छोटे नारंगी-भूरे फफोले देखें। यदि संवेदनशील किस्म में बाली से पहले फैलें, तो उपचार के लिए स्थानीय सीमा मानें; अगले मौसम प्रतिरोधी किस्में चुनें।"
       de: "Obere Blätter auf kleine orangebraune Pusteln prüfen. Breiten sie sich vor dem Ährenschieben in einer anfälligen Sorte aus, lokale Schadschwellen beachten; nächste Saison resistente Sorten wählen."
     references:
-      - "Roelfs A.P., Singh R.P., Saari E.E. 1992, Rust Diseases of Wheat, CIMMYT"
-      - "Magarey et al. 2005, Phytopathology 95:92–100"
+      - "Magarey R.D., Sutton T.B., Thayer C.L. 2005, Phytopathology 95:92–100, doi:10.1094/PHYTO-95-0092"
+      - "Roelfs A.P., Singh R.P., Saari E.E. 1992, Rust Diseases of Wheat, CIMMYT, hdl:10883/1153"
   wheat_stem_rust:
     name: {en: Wheat stem rust, es: roya del tallo del trigo, fr: rouille noire du blé, sw: kutu ya shina ya ngano, hi: गेहूं का काला (तना) रतुआ, de: Schwarzrost (Weizen)}
-    model: "Dew-period × temperature infection requirement (Roelfs, Singh & Saari 1992) via the Magarey et al. (2005) curve"
+    model: "Magarey et al. (2005) infection model with stem-rust cardinal values from Roelfs et al. 1992 (2/18/30 °C, ≥ 6 h dew)"
     summary: "Stem rust needs a long dew period on warm nights; it is the most destructive wheat rust (e.g. the Ug99 lineage)."
     action:
       en: "Scout stems and leaf sheaths for elongated brick-red pustules. Stem rust can destroy a crop within weeks: report suspected outbreaks to your extension service and follow local thresholds."
@@ -73,7 +73,7 @@ models:
       - "Magarey et al. 2005, Phytopathology 95:92–100"
   late_blight_tropical:
     name: {en: Late blight (tropical model), es: tizón tardío (modelo tropical), fr: mildiou (modèle tropical), sw: baka jani chelewa (modeli ya tropiki), hi: पछेता झुलसा (उष्णकटिबंधीय मॉडल), de: Kraut- und Knollenfäule (Tropenmodell)}
-    model: "Wallin (1962) severity values as used by BLITECAST (Krause et al. 1975) and SimCast (Grünwald et al. 2002, Toluca highlands)"
+    model: "Wallin (1962) severity values (hours at RH ≥ 90 % × temperature, 7–27 °C), as used by BLITECAST (Krause et al. 1975)"
     summary: "Many hours of very humid air at cool to mild temperatures let late blight spread fast; in the tropics this happens in any month."
     action:
       en: "Scout the lower leaves for dark water-soaked spots with white mould underneath. Remove infected plants and volunteers, hill up tubers, and follow local advice on protective treatment intervals for your variety's resistance."
@@ -85,12 +85,12 @@ models:
     references:
       - "Wallin J.R. 1962, Summary of recent progress in predicting late blight epidemics, Am. Potato J. 39:306–312"
       - "Krause R.A., Massie L.B., Hyre R.A. 1975, BLITECAST, Plant Dis. Rep. 59:95–98"
-      - "Grünwald N.J. et al. 2002, Plant Disease 86:1163–1168"
+      - "Grünwald N.J., Rubio-Covarrubias O.A., Fry W.E. 2000, Plant Disease 84:410–416, doi:10.1094/PDIS.2000.84.4.410"
     caveats:
       - "Replaces the Hutton criteria between the tropics: Hutton's Tmin ≥ 10 °C rule misses cool highland nights."
   gray_leaf_spot:
     name: {en: Maize gray leaf spot, es: mancha gris del maíz, fr: cercosporiose du maïs, sw: madoa kijivu ya mahindi, hi: मक्का का धूसर पर्ण धब्बा, de: Graufleckenkrankheit (Mais)}
-    model: "Hours of high humidity × temperature (Rupe et al. 1982) via the Magarey et al. (2005) curve"
+    model: "Index of the two weather predictors of Paul & Munkvold (2005): hours at 22–30 °C and humid night hours (RH ≥ 90 %)"
     summary: "Gray leaf spot infects during long, warm, very humid periods, mostly from mid-season on."
     action:
       en: "Scout the leaves below the ear for long, narrow, rectangular grey lesions. Risk is highest where maize follows maize with residue on the surface; rotate, manage residue and choose tolerant hybrids, and use local thresholds before any treatment."
@@ -100,25 +100,10 @@ models:
       hi: "भुट्टे के नीचे की पत्तियों पर लंबे, संकरे, आयताकार धूसर धब्बे देखें। मक्का के बाद मक्का और सतह पर अवशेष होने पर जोखिम सबसे अधिक है; फसल चक्र अपनाएं, अवशेष प्रबंधन करें, सहनशील संकर चुनें और उपचार से पहले स्थानीय सीमा मानें।"
       de: "Blätter unterhalb des Kolbens auf lange, schmale, rechteckige graue Flecken prüfen. Am höchsten ist das Risiko bei Mais nach Mais mit Ernteresten an der Oberfläche; Fruchtwechsel, Rotte fördern, tolerante Sorten wählen und lokale Schwellen beachten."
     references:
-      - "Rupe J.C., Siegel M.R., Hartman J.R. 1982, Phytopathology 72:1587–1591"
-      - "Magarey et al. 2005, Phytopathology 95:92–100"
-  northern_leaf_blight:
-    name: {en: Northern leaf blight, es: tizón foliar del maíz (turcicum), fr: helminthosporiose du maïs, sw: baka jani la kaskazini (mahindi), hi: मक्का का टर्सिकम पर्ण झुलसा, de: Turcicum-Blattdürre}
-    model: "Dew-period × temperature requirement (Levy & Cohen 1983) via the Magarey et al. (2005) curve"
-    summary: "Northern leaf blight infects when leaves stay wet for 6 hours or more at moderate temperatures."
-    action:
-      en: "Scout lower leaves for long grey-green cigar-shaped lesions. Act only if lesions reach the ear leaf around silking on a susceptible hybrid; rotate crops and choose resistant hybrids next season."
-      es: "Revise las hojas bajas en busca de lesiones largas gris verdosas en forma de cigarro. Actúe solo si llegan a la hoja de la mazorca hacia la floración en un híbrido susceptible; rote y elija híbridos resistentes."
-      fr: "Inspectez les feuilles basses : longues lésions gris-vert en forme de cigare. N'agissez que si elles atteignent la feuille de l'épi vers la floraison sur un hybride sensible ; alternez et choisissez des hybrides résistants."
-      sw: "Kagua majani ya chini kwa madoa marefu ya kijivu-kijani yenye umbo la sigara. Chukua hatua tu madoa yakifika jani la gunzi wakati wa kuchanua kwenye mbegu isiyostahimili; badilisha mazao na chagua mbegu zinazostahimili."
-      hi: "निचली पत्तियों पर लंबे, धूसर-हरे, सिगार आकार के धब्बे देखें। संवेदनशील संकर में रेशमी अवस्था के आसपास धब्बे भुट्टे वाली पत्ती तक पहुंचें तभी कार्रवाई करें; फसल चक्र अपनाएं और प्रतिरोधी संकर चुनें।"
-      de: "Untere Blätter auf lange graugrüne, zigarrenförmige Flecken prüfen. Nur handeln, wenn sie zur Blüte das Kolbenblatt einer anfälligen Sorte erreichen; Fruchtwechsel und resistente Sorten wählen."
-    references:
-      - "Levy Y., Cohen Y. 1983, Phytopathology 73:722–725"
-      - "Magarey et al. 2005, Phytopathology 95:92–100"
+      - "Paul P.A., Munkvold G.P. 2005, Phytopathology 95:388–396, doi:10.1094/PHYTO-95-0388"
   coffee_leaf_rust:
     name: {en: Coffee leaf rust, es: roya del café, fr: rouille orangée du caféier, sw: kutu ya majani ya kahawa, hi: कॉफी पत्ती रतुआ, de: Kaffeerost}
-    model: "Wetness × temperature infection requirement (Nutman et al. 1963; Kushalappa & Eskes 1989) via the Magarey et al. (2005) curve"
+    model: "Magarey et al. (2005) wetness × temperature curve with Kushalappa & Eskes (1989) cardinal temperatures, halved on days with Tmax outside 22–28 °C (Avelino et al. 2015)"
     summary: "Coffee rust spores need liquid water on the leaf for several hours at about 21–25 °C."
     action:
       en: "Check the undersides of leaves on 10 trees per plot for orange powder. Keep shade and nutrition balanced, remove heavily infected leaves, and follow your coffee board's advice on timing protective treatment before the rains."
@@ -129,10 +114,10 @@ models:
       de: "Blattunterseiten von 10 Bäumen je Parzelle auf orangefarbenes Pulver prüfen. Beschattung und Ernährung ausgewogen halten, stark befallene Blätter entfernen und die Beratung zum Schutz vor der Regenzeit befolgen."
     references:
       - "Kushalappa A.C., Eskes A.B. (eds.) 1989, Coffee Rust: Epidemiology, Resistance and Management, CRC Press"
-      - "Nutman F.J., Roberts F.M., Clarke R.T. 1963, Trans. Br. Mycol. Soc. 46:27–44"
+      - "Avelino J. et al. 2015, Food Security 7:303–321, doi:10.1007/s12571-015-0446-9"
   black_sigatoka:
     name: {en: Black Sigatoka, es: Sigatoka negra, fr: cercosporiose noire, sw: Sigatoka nyeusi, hi: काला सिगाटोका, de: Schwarze Sigatoka}
-    model: "Wetness × temperature requirement for ascospore infection (Jacome & Schuh 1992) via the Magarey et al. (2005) curve"
+    model: "Magarey et al. (2005) curve with germination 20/26.5/35 °C (Jacome & Schuh 1991) and 12 h wetness at the optimum (assumption within the 0–18 h range of Jacome & Schuh 1992)"
     summary: "Black Sigatoka spores infect young banana leaves during long wet periods at warm temperatures."
     action:
       en: "Check the youngest open leaves for brown streaks. Cut out infected leaf parts (deleafing), improve drainage and plant spacing, and follow local advice on protective treatment intervals."
@@ -142,12 +127,13 @@ models:
       hi: "सबसे नई खुली पत्तियों पर भूरी धारियां देखें। संक्रमित पत्ती भाग काट दें, जल निकास व पौधों की दूरी सुधारें, और सुरक्षा अंतराल पर स्थानीय सलाह मानें।"
       de: "Jüngste offene Blätter auf braune Streifen prüfen. Befallene Blattteile herausschneiden (Entblättern), Drainage und Pflanzabstand verbessern und lokale Beratung zu Behandlungsabständen befolgen."
     references:
-      - "Jacome L.H., Schuh W. 1992, Phytopathology 82:515–520"
+      - "Jacome L.H., Schuh W., Stevenson R.E. 1991, Phytopathology 81:1480, doi:10.1094/Phyto-81-1480"
+      - "Jacome L.H., Schuh W. 1992, Phytopathology 82:515, doi:10.1094/Phyto-82-515"
       - "Magarey et al. 2005, Phytopathology 95:92–100"
   cassava_whitefly:
     name: {en: Whitefly (cassava mosaic vector), es: mosca blanca (vector del mosaico de la yuca), fr: aleurode (vecteur de la mosaïque du manioc), sw: inzi weupe (waenezaji wa batobato ya muhogo), hi: सफेद मक्खी (कसावा मोज़ेक वाहक), de: Weiße Fliege (Maniok-Mosaik-Überträger)}
-    model: "Warm, dry spells favour Bemisia tabaci build-up; heavy rain suppresses adults (Fishpool & Burban 1994; Sseruwagi et al. 2003)"
-    summary: "Whitefly numbers rise in warm, fairly dry weather; young cassava infected with mosaic virus loses the most yield."
+    model: "Bemisia tabaci counts peak at 28–30 °C, 30–150 mm rain per month and RH 55–70 % (Katono et al. 2021, Uganda)"
+    summary: "Whitefly numbers rise in hot weather with moderate rain; young cassava infected with mosaic virus loses the most yield."
     action:
       en: "Count adult whiteflies on the top 5 leaves of 30 plants. Pull out plants with mosaic symptoms early, plant only clean cuttings of resistant varieties, and protect natural enemies."
       es: "Cuente las moscas blancas adultas en las 5 hojas superiores de 30 plantas. Arranque pronto las plantas con mosaico, siembre solo estacas sanas de variedades resistentes y proteja a los enemigos naturales."
@@ -156,25 +142,23 @@ models:
       hi: "30 पौधों की ऊपरी 5 पत्तियों पर वयस्क सफेद मक्खियां गिनें। मोज़ेक लक्षण वाले पौधे जल्दी उखाड़ें, केवल प्रतिरोधी किस्मों की स्वस्थ कलमें लगाएं, और प्राकृतिक शत्रुओं को बचाएं।"
       de: "Adulte Weiße Fliegen auf den obersten 5 Blättern von 30 Pflanzen zählen. Pflanzen mit Mosaik früh entfernen, nur gesunde Stecklinge resistenter Sorten pflanzen und Nützlinge schonen."
     references:
-      - "Fishpool L.D.C., Burban C. 1994, Tropical Science 34:55–72"
-      - "Sseruwagi P. et al. 2003, Crop Protection 22:1301–1311"
-      - "Legg J.P. 1995, PhD thesis / Legg & Fauquet 2004, Plant Mol. Biol. 56:585–599"
+      - "Katono K. et al. 2021, Insects 12:604, doi:10.3390/insects12070604"
     confidence: 0.35
     confidence_note: "Qualitative weather rule; whitefly numbers also depend on variety, crop age and natural enemies."
   desert_locust:
     name: {en: Desert locust breeding, es: reproducción de langosta del desierto, fr: reproduction du criquet pèlerin, sw: kuzaliana kwa nzige wa jangwani, hi: रेगिस्तानी टिड्डी प्रजनन, de: Brut der Wüstenheuschrecke}
-    model: "FAO Desert Locust Guidelines breeding criteria: ≥ 25 mm rain in a month on warm desert soils (Symmons & Cressman 2001)"
+    model: "FAO breeding criterion: usually ≥ 25–50 mm of rain moistens sandy soil 5–10 cm deep for egg-laying (Symmons & Cressman 2001); 30-day rain at the field, warm months only"
     summary: "In desert-locust areas, enough rain on warm sandy soil lets locusts lay eggs; hoppers can appear a few weeks later."
     action:
-      en: "Rain may let desert locusts breed nearby. Check FAO Locust Watch (fao.org/ag/locusts) and report hoppers or swarms to your national locust control unit; do not treat without their advice."
-      es: "La lluvia puede permitir la reproducción de langosta cerca. Consulte FAO Locust Watch (fao.org/ag/locusts) e informe saltones o enjambres a la unidad nacional de control; no trate sin su consejo."
-      fr: "La pluie peut permettre la reproduction du criquet pèlerin à proximité. Consultez FAO Locust Watch (fao.org/ag/locusts) et signalez larves ou essaims à l'unité nationale de lutte ; ne traitez pas sans son avis."
-      sw: "Mvua inaweza kuwezesha nzige wa jangwani kuzaliana karibu. Angalia FAO Locust Watch (fao.org/ag/locusts) na ripoti tunutu au makundi ya nzige kwa kitengo cha taifa cha kudhibiti nzige; usinyunyize bila ushauri wao."
-      hi: "बारिश से आसपास रेगिस्तानी टिड्डी प्रजनन कर सकती है। FAO Locust Watch (fao.org/ag/locusts) देखें और फुदकों या झुंडों की सूचना राष्ट्रीय टिड्डी नियंत्रण इकाई को दें; उनकी सलाह के बिना उपचार न करें।"
-      de: "Regen kann Wüstenheuschrecken in der Nähe die Brut ermöglichen. FAO Locust Watch (fao.org/ag/locusts) prüfen und Larven oder Schwärme der nationalen Heuschreckenbekämpfung melden; nicht ohne deren Rat behandeln."
+      en: "Rain may let desert locusts breed nearby. Check FAO Locust Watch (fao.org/locust-watch) and report hoppers or swarms to your national locust control unit; do not treat without their advice."
+      es: "La lluvia puede permitir la reproducción de langosta cerca. Consulte FAO Locust Watch (fao.org/locust-watch) e informe saltones o enjambres a la unidad nacional de control; no trate sin su consejo."
+      fr: "La pluie peut permettre la reproduction du criquet pèlerin à proximité. Consultez FAO Locust Watch (fao.org/locust-watch) et signalez larves ou essaims à l'unité nationale de lutte ; ne traitez pas sans son avis."
+      sw: "Mvua inaweza kuwezesha nzige wa jangwani kuzaliana karibu. Angalia FAO Locust Watch (fao.org/locust-watch) na ripoti tunutu au makundi ya nzige kwa kitengo cha taifa cha kudhibiti nzige; usinyunyize bila ushauri wao."
+      hi: "बारिश से आसपास रेगिस्तानी टिड्डी प्रजनन कर सकती है। FAO Locust Watch (fao.org/locust-watch) देखें और फुदकों या झुंडों की सूचना राष्ट्रीय टिड्डी नियंत्रण इकाई को दें; उनकी सलाह के बिना उपचार न करें।"
+      de: "Regen kann Wüstenheuschrecken in der Nähe die Brut ermöglichen. FAO Locust Watch (fao.org/locust-watch) prüfen und Larven oder Schwärme der nationalen Heuschreckenbekämpfung melden; nicht ohne deren Rat behandeln."
     references:
       - "Symmons P.M., Cressman K. 2001, Desert Locust Guidelines 1: Biology and behaviour, FAO Rome"
-      - "FAO Locust Watch, https://www.fao.org/ag/locusts"
+      - "FAO Locust Watch, https://www.fao.org/locust-watch/"
     confidence: 0.35
     confidence_note: "Uses rain at the field's grid cell only; breeding happens in nearby desert areas the model does not see."
     caveats:

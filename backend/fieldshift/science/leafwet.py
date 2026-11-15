@@ -5,8 +5,10 @@ Brazil, Canada, Italy and the U.S.):
 
 * ``rh90`` — an hour is wet when relative humidity ≥ 90 % (constant RH threshold; Sentelhas et al. 2008,
   Agric. For. Meteorol. 148:392–400, https://doi.org/10.1016/j.agrformet.2007.09.011).
-* ``dpd`` — dew-point depression with hysteresis (Gillespie, Srivastava & Pitblado 1993, J. Appl. Meteorol.
-  32:567–573): wetness starts when T − Td < 2.0 °C and ends when T − Td > 3.8 °C.
+* ``dpd`` — dew-point depression with hysteresis, as tested by Sentelhas et al. (2008) after Rao et al. (1998):
+  wetness starts when T − Td ≤ 1.8 °C and ends when T − Td ≥ 2.2 °C. (Lulu et al. 2008 quote 2.0 / 3.8 °C for the
+  same method; we use the values of the primary comparison study.) RH ≥ 90 % performed best overall in Sentelhas
+  et al. (fraction correct 0.87–0.92), so ``rh90`` is the default for every model.
 
 With either method an hour with measurable rain (≥ 0.1 mm) counts as wet, because foliage is wet during rain
 whatever the humidity. Hourly rain is present in the forecast feed and absent from NASA POWER hourly
@@ -26,8 +28,8 @@ from typing import Any
 import numpy as np
 
 RH_WET = 90.0
-DPD_ON = 2.0
-DPD_OFF = 3.8
+DPD_ON = 1.8
+DPD_OFF = 2.2
 RAIN_WET_MM = 0.1
 
 
@@ -59,9 +61,9 @@ def wet_mask(
             if not np.isfinite(x):
                 state = False
             elif state:
-                state = x <= DPD_OFF
+                state = x < DPD_OFF
             else:
-                state = x < DPD_ON
+                state = x <= DPD_ON
             wet[i] = state
     else:
         raise ValueError(f"unknown leaf-wetness method {method!r}")
