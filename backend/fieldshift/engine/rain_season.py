@@ -72,6 +72,13 @@ def _crop_advice(
     others = [r for r in sow["crops"] if r["crop"] != mine["crop"]]
     alt = max(others, key=lambda r: (r["fit_pct"], -r["cycle_days"])) if others else mine
     if (mine["max_variety_days_half"] or 0) < 45:
+        if alt["fit_pct"] < 50:  # even the best short crop fails in most years: say so plainly
+            late = t("onset_too_late_all", lang, crop=_short(mine["name"]), fit=alt["fit_pct"])
+            # a "sow now" from the onset alone would contradict this: the crop advice wins
+            detail = (
+                late if detail.startswith(t("onset_advice_sow_now", lang, n=0)[:12]) else f"{detail} {late}"
+            )
+            return detail, "high" if risk in ("low", "moderate") else risk
         detail += " " + t(
             "onset_too_late",
             lang,
@@ -169,7 +176,7 @@ def rain_season_api(
     ctx = build(lat, lon, today)
     site = _site(ctx, today)
     split = int(on.params()["advice"]["trend_split_year"])
-    st = _status(ctx, today, site) if site.seasons else None
+    st = _status(ctx, today, site) if (site.seasons and site.applicable) else None
     sowing = None
     if st is not None and st.phase not in ("ended",):
         sowing = on.sowing_windows(
@@ -181,7 +188,7 @@ def rain_season_api(
         )
     crit = on.Criteria.from_config()
     card = None
-    if site.seasons:
+    if site.seasons and site.applicable:
         cards = _cards_from(ctx, site, st, crop, today, lang, None)
         card = cards[0] if cards else None
     return {
@@ -475,7 +482,7 @@ def planner_season(
             + (
                 f" To finish grain fill before the rains end in {round(100 * rel)} % of years, sow by {latest.strftime('%d %b')}."
                 if latest
-                else f" The season is too short for this crop in {round(100 * (1 - rel))} % of years: use a variety of ≤ {row['max_variety_days'] if row else '?'} days."
+                else f" A full-length variety finishes before the rains end in fewer than {round(10 * rel)} of 10 years: use an early variety (≤ {row['max_variety_days'] if row else '?'} days to maturity)."
             )
         ),
     }

@@ -121,3 +121,33 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - **Consequences:**
   - The serving code is now region-gated by model metadata (`model_regions`, `feature_set`, `served_key`), so a future model can be switched on per validated region without code changes.
   - The cache writer uses a per-process temporary file. Parallel training workers had raced on it.
+
+## ADR-021 Rain-season onset, false-start and sowing advisor (2026-11-15)
+- **Context:** rain-fed farmers in the tropics lose seed, labour and weeks of season to false starts and late or short rains. FieldShift had no notion of a rainy season, and its sowing scan simulated calendar dates only.
+- **Decision:**
+  - **Published agroclimatic criteria, not a fitted model.**
+    - Onset: Sivakumar (1988) / Stern et al. (1981), ≥ 20 mm in 3 days with no dry spell > 7 days in the next 30.
+    - Cessation: a 100 mm water balance with ET₀ (Stern; FAO).
+    - Seasons: Liebmann et al. (2012) anomalous accumulation, with the Dunning et al. (2016) harmonic test for bimodal regimes.
+    - All thresholds are in `config/onset.yaml`, and the production defaults were fixed before validation.
+  - **False-start risk is empirical and conditional:** the share of the site's historical apparent onsets, near the same date, that were followed by a damaging dry spell, given the days already checked by observations and the 16-day forecast.
+  - **Sowing windows use FAO-56 stage lengths.** The crop must finish grain fill before the water-balance end in 8 of 10 seasons. If it can't, the card advises an early variety (≤ N days) or a shorter crop.
+  - **Gating:** only for rain-fed fields with |lat| ≤ 35°, at least one rainy season and ≥ 60 dry days (P < ½ ET₀). Elsewhere there is no card, and the API answers `applicable: false` with the reason.
+  - **Self-contained:** new modules `science/onset.py` and `engine/rain_season.py`; one registration line in `service.py`; an `onset_ok` filter in the planner scan; a new endpoint `GET /api/rain-season`. Contract fields are optional, so existing clients keep working.
+- **Validation (V9):** 31 sites on 3 continents.
+  - IMD 2020 normal onsets of 9 Indian cities: MAE 3.6 days.
+  - Machakos OND onset: +2 days vs. Omoyo et al. (2015).
+  - Darwin: +1 day vs. BoM.
+  - Season length at 17 Sahel stations vs. Sivakumar: MAE 12.7 days, r = 0.95.
+  - Weak spots, reported as they are:
+    - In Kerala the agronomic onset falls ~5 weeks before IMD's monsoon onset (pre-monsoon showers already satisfy the criterion).
+    - Niamey is +15 days, against a 1904–1984 reference.
+    - Machakos MAM is −20 days (−9 with the study's own thresholds).
+- **Rejected:**
+  - Location-tuned thresholds: they would overfit 40 years of one grid cell.
+  - Liebmann per-year onset as the advice trigger: it needs the whole season's rain, so it cannot be computed in real time.
+  - The IMD circulation criteria: they need winds and OLR, which do not exist for a single point.
+- **Consequences:**
+  - The card says "agronomic start of the rains" and asks for a farmer's own rain gauge as the best check.
+  - Cessation is bounded below by "3 weeks before the climatological end". This creates a small pile-up at that date in dry years, which shows in the p10/p20 of season length.
+

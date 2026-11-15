@@ -66,7 +66,7 @@ export interface WhyBlock {
 }
 
 export interface ActionCard {
-  id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat"
+  id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat", "rain_onset"
   category: "water" | "drought" | "disease" | "pest" | "planning" | "weather";
   priority: number; // 1 = most urgent
   risk: Risk;
@@ -366,6 +366,7 @@ export interface PlannerResponse {
     frost_risk_pct: number;
     heat_days_median: number;
     score: number;
+    onset_ok?: boolean; // rain-fed tropics only: rains have started by then in ≥ half of years and the crop still fits the season
   }[]; // empty for perennials
   window: { start: string; end: string; best: string } | null;
   stages: { label: string; date: string; spread_days: number }[]; // perennials: cutting dates
@@ -380,8 +381,87 @@ export interface PlannerResponse {
     note: string | null;
   };
   risk_calendar: { month: number; frost_pct: number; heat_pct: number }[];
+  rain_season?: PlannerRainSeason | null; // rain-fed tropical fields: the onset limits the sowing scan respects
   why: string;
   sources: string[];
+}
+export interface PlannerRainSeason {
+  season: string; // month initials, e.g. "OND"
+  onset_p20: string; // ISO dates for this season
+  onset_median: string;
+  onset_p80: string;
+  latest_sowing: string | null; // crop still finishes grain fill before the rains end in 8 of 10 years
+  end_of_season: string | null;
+  false_start_pct: number | null;
+  max_variety_days: number | null;
+  note: string;
+}
+
+/* ---------- Rainy season (GET /api/rain-season?lat&lon&crop&as_of&lang) ----------
+ * Onset/cessation climatology (Sivakumar 1988 / Stern et al. 1981 criteria on NASA POWER rain), false starts,
+ * trends since 1984, this season's live status and sowing windows per crop. docs/MODELS.md#rain-onset */
+export interface RainSeasonDist {
+  p10: string; p20: string; p50: string; p80: string; p90: string; // "dd Mon" (onset/cessation)
+}
+export interface RainSeasonSummary {
+  key: string; // "s1" | "s2"
+  label: string; // "MAM", "OND", "JJAS" …
+  climatological_onset: string;
+  climatological_length_days: number;
+  rain_share: number; // share of annual rain
+  n_years: number;
+  onset: RainSeasonDist | null;
+  cessation: RainSeasonDist | null;
+  length_days: { p10: number; p20: number; p50: number; p80: number; p90: number } | null;
+  false_start_pct: number | null; // first apparent onset followed by a dry spell > 7 days within 30 days
+  failed_pct: number | null; // no valid onset at all
+  trend: {
+    onset_days_per_decade: number; onset_p: number;
+    cessation_days_per_decade: number; cessation_p: number;
+    length_days_per_decade: number; length_p: number;
+    split_year: number;
+    false_start_pct_before: number | null; false_start_pct_since: number | null;
+    median_onset_before: string | null; median_onset_since: string | null;
+  };
+  years: {
+    year: number; onset: string | null; cessation: string | null; length_days: number | null;
+    first_apparent_onset: string | null; false_start: boolean | null; false_starts: number;
+  }[];
+}
+export type RainPhase =
+  | "before" | "not_started" | "forecast" | "started" | "false_start" | "established" | "ended" | "failed";
+export interface RainSeasonResponse {
+  lat: number;
+  lon: number;
+  as_of: string;
+  applicable: boolean; // advice is offered (tropics/subtropics with a real dry season)
+  reason: string;
+  regime: "unimodal" | "bimodal" | "none";
+  harmonic_ratio: number;
+  dry_season_days: number;
+  criteria: { onset: string; dry_day_mm: number; cessation: string; false_start: string };
+  seasons: RainSeasonSummary[];
+  status: {
+    season: string; label: string; year: number; phase: RainPhase;
+    window_start: string; window_end: string;
+    onset: string | null; onset_in_forecast: boolean;
+    false_start_pct: number | null; false_start_events: number; days_checked: number;
+    last_false_start: string | null; cessation: string | null; rain_since_window_mm: number;
+    advice: "sow_now" | "sow_with_care" | "wait" | "prepare" | "none";
+  } | null;
+  sowing: {
+    end_of_season: string | null; reliability: number; max_cycle_days: number | null;
+    crops: {
+      crop: string; name: string; cycle_days: number; need_days: number;
+      sow_from: string; sow_until: string | null; fits: boolean; fit_pct: number;
+      max_variety_days: number | null; max_variety_days_half: number | null;
+    }[];
+  } | null;
+  card: ActionCard | null; // same card as in /api/advice (id "rain_onset")
+  insights: string[];
+  method: string;
+  model_doc: string;
+  source: SourceRef;
 }
 
 /* ---------- Farm & multi-field sync (phone <-> PC), no account ----------

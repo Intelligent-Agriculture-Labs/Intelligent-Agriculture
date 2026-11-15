@@ -330,3 +330,10 @@ onset_why_summary:
   sw: "Kupanda mwanzoni halisi mwa mvua za {season}, si kwenye manyunyu ya kwanza, huzuia kupoteza mbegu na miche kwa ukame."
   hi: "{season} की असली शुरुआत पर बुवाई, पहली बौछार पर नहीं, सूखे में बीज और पौध खोने से बचाती है।"
   de: "Wer zum echten Beginn der {season}-Regenzeit sät statt beim ersten Schauer, verliert Saat und Keimlinge nicht an eine Trockenphase."
+onset_too_late_all:
+  en: "Sowing {crop} now is very risky: even the shortest crops finish before the rains end in only {fit}% of years."
+  es: "Sembrar {crop} ahora es muy arriesgado: incluso los cultivos más cortos terminan antes del fin de las lluvias solo en el {fit}% de los años."
+  fr: "Semer {crop} maintenant est très risqué : même les cultures les plus courtes ne terminent avant la fin des pluies que {fit}% des années."
+  sw: "Kupanda {crop} sasa ni hatari sana: hata mazao mafupi zaidi hukomaa kabla mvua kuisha katika {fit}% tu ya miaka."
+  hi: "अभी {crop} बोना बहुत जोखिम भरा है: सबसे छोटी फसलें भी केवल {fit}% वर्षों में बारिश खत्म होने से पहले पकती हैं।"
+  de: "{crop} jetzt zu säen ist sehr riskant: Selbst die kürzesten Kulturen werden nur in {fit}% der Jahre vor Ende der Regenzeit fertig."
