@@ -1,0 +1,1091 @@
+{
+ "locust": {
+  "expect": "2018 ranks 1st at the Empty Quarter point; 2003 ranks in the top 3 at the NW Mauritania/W Sahara point",
+  "empty_quarter": {
+   "lat": 18.5,
+   "lon": 51.5,
+   "per_year": {
+    "2001": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 10.0
+    },
+    "2002": {
+     "high_days": 61,
+     "max": 0.83,
+     "annual_rain_mm": 50.0
+    },
+    "2003": {
+     "high_days": 28,
+     "max": 0.77,
+     "annual_rain_mm": 30.0
+    },
+    "2004": {
+     "high_days": 0,
+     "max": 0.51,
+     "annual_rain_mm": 24.0
+    },
+    "2005": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 9.0
+    },
+    "2006": {
+     "high_days": 13,
+     "max": 0.71,
+     "annual_rain_mm": 24.0
+    },
+    "2007": {
+     "high_days": 30,
+     "max": 0.84,
+     "annual_rain_mm": 55.0
+    },
+    "2008": {
+     "high_days": 0,
+     "max": 0.53,
+     "annual_rain_mm": 18.0
+    },
+    "2009": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 11.0
+    },
+    "2010": {
+     "high_days": 7,
+     "max": 0.7,
+     "annual_rain_mm": 29.0
+    },
+    "2011": {
+     "high_days": 0,
+     "max": 0.52,
+     "annual_rain_mm": 28.0
+    },
+    "2012": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 12.0
+    },
+    "2013": {
+     "high_days": 0,
+     "max": 0.4,
+     "annual_rain_mm": 21.0
+    },
+    "2014": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 7.0
+    },
+    "2015": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 12.0
+    },
+    "2016": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 21.0
+    },
+    "2017": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 14.0
+    },
+    "2018": {
+     "high_days": 133,
+     "max": 1.0,
+     "annual_rain_mm": 144.0
+    },
+    "2019": {
+     "high_days": 0,
+     "max": 0.41,
+     "annual_rain_mm": 28.0
+    },
+    "2020": {
+     "high_days": 114,
+     "max": 1.0,
+     "annual_rain_mm": 133.0
+    },
+    "2021": {
+     "high_days": 31,
+     "max": 0.83,
+     "annual_rain_mm": 39.0
+    },
+    "2022": {
+     "high_days": 41,
+     "max": 1.0,
+     "annual_rain_mm": 65.0
+    }
+   },
+   "event_year": 2018,
+   "rank_event_year": 1,
+   "n_years": 22,
+   "first_favourable_day": "2018-05-26"
+  },
+  "nw_africa": {
+   "lat": 21.5,
+   "lon": -13.0,
+   "per_year": {
+    "2001": {
+     "high_days": 20,
+     "max": 0.76,
+     "annual_rain_mm": 26.0
+    },
+    "2002": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 23.0
+    },
+    "2003": {
+     "high_days": 63,
+     "max": 1.0,
+     "annual_rain_mm": 89.0
+    },
+    "2004": {
+     "high_days": 0,
+     "max": 0.43,
+     "annual_rain_mm": 15.0
+    },
+    "2005": {
+     "high_days": 34,
+     "max": 0.86,
+     "annual_rain_mm": 40.0
+    },
+    "2006": {
+     "high_days": 31,
+     "max": 0.91,
+     "annual_rain_mm": 43.0
+    },
+    "2007": {
+     "high_days": 30,
+     "max": 0.59,
+     "annual_rain_mm": 18.0
+    },
+    "2008": {
+     "high_days": 44,
+     "max": 0.78,
+     "annual_rain_mm": 46.0
+    },
+    "2009": {
+     "high_days": 24,
+     "max": 0.68,
+     "annual_rain_mm": 37.0
+    },
+    "2010": {
+     "high_days": 66,
+     "max": 1.0,
+     "annual_rain_mm": 120.0
+    },
+    "2011": {
+     "high_days": 30,
+     "max": 0.92,
+     "annual_rain_mm": 48.0
+    },
+    "2012": {
+     "high_days": 0,
+     "max": 0.51,
+     "annual_rain_mm": 29.0
+    },
+    "2013": {
+     "high_days": 31,
+     "max": 0.88,
+     "annual_rain_mm": 30.0
+    },
+    "2014": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 6.0
+    },
+    "2015": {
+     "high_days": 89,
+     "max": 1.0,
+     "annual_rain_mm": 150.0
+    },
+    "2016": {
+     "high_days": 32,
+     "max": 1.0,
+     "annual_rain_mm": 63.0
+    },
+    "2017": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 14.0
+    },
+    "2018": {
+     "high_days": 32,
+     "max": 1.0,
+     "annual_rain_mm": 66.0
+    },
+    "2019": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 13.0
+    },
+    "2020": {
+     "high_days": 32,
+     "max": 1.0,
+     "annual_rain_mm": 279.0
+    },
+    "2021": {
+     "high_days": 10,
+     "max": 0.64,
+     "annual_rain_mm": 22.0
+    },
+    "2022": {
+     "high_days": 10,
+     "max": 0.6,
+     "annual_rain_mm": 27.0
+    }
+   },
+   "event_year": 2003,
+   "rank_event_year": 3,
+   "n_years": 22,
+   "first_favourable_day": "2003-08-16"
+  },
+  "w_sahara": {
+   "lat": 24.5,
+   "lon": -11.5,
+   "per_year": {
+    "2001": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 2.0
+    },
+    "2002": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 16.0
+    },
+    "2003": {
+     "high_days": 58,
+     "max": 0.62,
+     "annual_rain_mm": 43.0
+    },
+    "2004": {
+     "high_days": 31,
+     "max": 0.96,
+     "annual_rain_mm": 38.0
+    },
+    "2005": {
+     "high_days": 40,
+     "max": 1.0,
+     "annual_rain_mm": 64.0
+    },
+    "2006": {
+     "high_days": 0,
+     "max": 0.15,
+     "annual_rain_mm": 48.0
+    },
+    "2007": {
+     "high_days": 0,
+     "max": 0.26,
+     "annual_rain_mm": 22.0
+    },
+    "2008": {
+     "high_days": 46,
+     "max": 1.0,
+     "annual_rain_mm": 43.0
+    },
+    "2009": {
+     "high_days": 66,
+     "max": 1.0,
+     "annual_rain_mm": 86.0
+    },
+    "2010": {
+     "high_days": 32,
+     "max": 1.0,
+     "annual_rain_mm": 69.0
+    },
+    "2011": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 12.0
+    },
+    "2012": {
+     "high_days": 31,
+     "max": 1.0,
+     "annual_rain_mm": 42.0
+    },
+    "2013": {
+     "high_days": 5,
+     "max": 0.61,
+     "annual_rain_mm": 28.0
+    },
+    "2014": {
+     "high_days": 23,
+     "max": 1.0,
+     "annual_rain_mm": 32.0
+    },
+    "2015": {
+     "high_days": 90,
+     "max": 1.0,
+     "annual_rain_mm": 246.0
+    },
+    "2016": {
+     "high_days": 32,
+     "max": 1.0,
+     "annual_rain_mm": 40.0
+    },
+    "2017": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 10.0
+    },
+    "2018": {
+     "high_days": 67,
+     "max": 1.0,
+     "annual_rain_mm": 153.0
+    },
+    "2019": {
+     "high_days": 0,
+     "max": 0.0,
+     "annual_rain_mm": 21.0
+    },
+    "2020": {
+     "high_days": 31,
+     "max": 0.85,
+     "annual_rain_mm": 37.0
+    },
+    "2021": {
+     "high_days": 31,
+     "max": 0.66,
+     "annual_rain_mm": 47.0
+    },
+    "2022": {
+     "high_days": 15,
+     "max": 0.91,
+     "annual_rain_mm": 47.0
+    }
+   },
+   "event_year": 2003,
+   "rank_event_year": 4,
+   "n_years": 22,
+   "first_favourable_day": "2003-08-12"
+  },
+  "run_at": "2026-11-15T00:30:42+00:00"
+ },
+ "coffee_rust": {
+  "expect": "mean infection-favourable days in 2008\u20132011 above the 2003\u20132007 and 2012\u20132016 means",
+  "site": "Chinchin\u00e1, Caldas, Colombia",
+  "elev_m": 1360.0,
+  "per_year": {
+   "2003": {
+    "days": 365,
+    "high_days": 352,
+    "severe_days": 351,
+    "moderate_days": 365,
+    "mean_score": 0.982
+   },
+   "2004": {
+    "days": 366,
+    "high_days": 353,
+    "severe_days": 353,
+    "moderate_days": 366,
+    "mean_score": 0.982
+   },
+   "2005": {
+    "days": 365,
+    "high_days": 356,
+    "severe_days": 356,
+    "moderate_days": 365,
+    "mean_score": 0.988
+   },
+   "2006": {
+    "days": 365,
+    "high_days": 358,
+    "severe_days": 358,
+    "moderate_days": 365,
+    "mean_score": 0.99
+   },
+   "2007": {
+    "days": 365,
+    "high_days": 349,
+    "severe_days": 348,
+    "moderate_days": 362,
+    "mean_score": 0.974
+   },
+   "2008": {
+    "days": 366,
+    "high_days": 345,
+    "severe_days": 343,
+    "moderate_days": 366,
+    "mean_score": 0.97
+   },
+   "2009": {
+    "days": 365,
+    "high_days": 362,
+    "severe_days": 361,
+    "moderate_days": 365,
+    "mean_score": 0.995
+   },
+   "2010": {
+    "days": 365,
+    "high_days": 322,
+    "severe_days": 321,
+    "moderate_days": 364,
+    "mean_score": 0.939
+   },
+   "2011": {
+    "days": 365,
+    "high_days": 358,
+    "severe_days": 358,
+    "moderate_days": 365,
+    "mean_score": 0.99
+   },
+   "2012": {
+    "days": 366,
+    "high_days": 363,
+    "severe_days": 363,
+    "moderate_days": 366,
+    "mean_score": 0.996
+   },
+   "2013": {
+    "days": 365,
+    "high_days": 360,
+    "severe_days": 360,
+    "moderate_days": 365,
+    "mean_score": 0.993
+   },
+   "2014": {
+    "days": 365,
+    "high_days": 358,
+    "severe_days": 357,
+    "moderate_days": 365,
+    "mean_score": 0.99
+   },
+   "2015": {
+    "days": 365,
+    "high_days": 338,
+    "severe_days": 334,
+    "moderate_days": 363,
+    "mean_score": 0.955
+   },
+   "2016": {
+    "days": 366,
+    "high_days": 300,
+    "severe_days": 298,
+    "moderate_days": 366,
+    "mean_score": 0.909
+   }
+  },
+  "mean_epidemic": 346.8,
+  "mean_other": 348.7,
+  "rank_2010": 13,
+  "n_years": 14,
+  "run_at": "2026-11-15T00:33:56+00:00"
+ },
+ "blight_tropical": {
+  "expect": "tropical model: rainy season \u2265 2\u00d7 the dry-season favourable days at Toluca; Hutton finds few/no days because highland nights are < 10 \u00b0C",
+  "toluca_mx": {
+   "lat": 19.29,
+   "lon": -99.66,
+   "elev_m": 2600.0,
+   "per_year": {
+    "2010": {
+     "rainy": {
+      "tropical_sv_ge2_days": 86,
+      "tropical_high_days": 78,
+      "hutton_full_days": 46,
+      "hutton_any_days": 60
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 15,
+      "tropical_high_days": 14,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2011": {
+     "rainy": {
+      "tropical_sv_ge2_days": 76,
+      "tropical_high_days": 67,
+      "hutton_full_days": 34,
+      "hutton_any_days": 45
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 0,
+      "tropical_high_days": 0,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2012": {
+     "rainy": {
+      "tropical_sv_ge2_days": 84,
+      "tropical_high_days": 68,
+      "hutton_full_days": 24,
+      "hutton_any_days": 41
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 10,
+      "tropical_high_days": 6,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2013": {
+     "rainy": {
+      "tropical_sv_ge2_days": 84,
+      "tropical_high_days": 77,
+      "hutton_full_days": 38,
+      "hutton_any_days": 52
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 0,
+      "tropical_high_days": 0,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2014": {
+     "rainy": {
+      "tropical_sv_ge2_days": 85,
+      "tropical_high_days": 67,
+      "hutton_full_days": 29,
+      "hutton_any_days": 45
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 0,
+      "tropical_high_days": 0,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2015": {
+     "rainy": {
+      "tropical_sv_ge2_days": 78,
+      "tropical_high_days": 58,
+      "hutton_full_days": 44,
+      "hutton_any_days": 55
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 14,
+      "tropical_high_days": 9,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2016": {
+     "rainy": {
+      "tropical_sv_ge2_days": 84,
+      "tropical_high_days": 74,
+      "hutton_full_days": 56,
+      "hutton_any_days": 69
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 5,
+      "tropical_high_days": 5,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2017": {
+     "rainy": {
+      "tropical_sv_ge2_days": 76,
+      "tropical_high_days": 64,
+      "hutton_full_days": 50,
+      "hutton_any_days": 65
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 5,
+      "tropical_high_days": 2,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2018": {
+     "rainy": {
+      "tropical_sv_ge2_days": 79,
+      "tropical_high_days": 62,
+      "hutton_full_days": 45,
+      "hutton_any_days": 59
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 4,
+      "tropical_high_days": 0,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2019": {
+     "rainy": {
+      "tropical_sv_ge2_days": 75,
+      "tropical_high_days": 67,
+      "hutton_full_days": 41,
+      "hutton_any_days": 57
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 2,
+      "tropical_high_days": 0,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    }
+   },
+   "rainy_mean_sv_ge2": 80.7,
+   "dry_mean_sv_ge2": 5.5,
+   "rainy_mean_hutton_full": 40.7
+  },
+  "santa_catalina_ec": {
+   "lat": -0.37,
+   "lon": -78.55,
+   "elev_m": 3050.0,
+   "per_year": {
+    "2010": {
+     "rainy": {
+      "tropical_sv_ge2_days": 94,
+      "tropical_high_days": 80,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 35,
+      "tropical_high_days": 12,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2011": {
+     "rainy": {
+      "tropical_sv_ge2_days": 100,
+      "tropical_high_days": 79,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 34,
+      "tropical_high_days": 19,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2012": {
+     "rainy": {
+      "tropical_sv_ge2_days": 112,
+      "tropical_high_days": 99,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 15,
+      "tropical_high_days": 7,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2013": {
+     "rainy": {
+      "tropical_sv_ge2_days": 110,
+      "tropical_high_days": 92,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 22,
+      "tropical_high_days": 9,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2014": {
+     "rainy": {
+      "tropical_sv_ge2_days": 73,
+      "tropical_high_days": 63,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 29,
+      "tropical_high_days": 7,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2015": {
+     "rainy": {
+      "tropical_sv_ge2_days": 103,
+      "tropical_high_days": 72,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 20,
+      "tropical_high_days": 9,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2016": {
+     "rainy": {
+      "tropical_sv_ge2_days": 104,
+      "tropical_high_days": 89,
+      "hutton_full_days": 0,
+      "hutton_any_days": 1
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 28,
+      "tropical_high_days": 17,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2017": {
+     "rainy": {
+      "tropical_sv_ge2_days": 108,
+      "tropical_high_days": 92,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 31,
+      "tropical_high_days": 19,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2018": {
+     "rainy": {
+      "tropical_sv_ge2_days": 106,
+      "tropical_high_days": 81,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 23,
+      "tropical_high_days": 14,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    },
+    "2019": {
+     "rainy": {
+      "tropical_sv_ge2_days": 109,
+      "tropical_high_days": 81,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     },
+     "dry": {
+      "tropical_sv_ge2_days": 23,
+      "tropical_high_days": 16,
+      "hutton_full_days": 0,
+      "hutton_any_days": 0
+     }
+    }
+   },
+   "rainy_mean_sv_ge2": 101.9,
+   "dry_mean_sv_ge2": 26.0,
+   "rainy_mean_hutton_full": 0.0
+  },
+  "run_at": "2026-11-15T00:33:56+00:00"
+ },
+ "coffee_tmax_band": {
+  "expect": "share of days with Tmax 22\u201328 \u00b0C higher in 2008\u20132011 than in 1991\u20131994 (paper: 78 % vs 67 %)",
+  "lapse_shift_c": 4.6,
+  "1991_1994": {
+   "share_tmax_22_28": 0.981,
+   "mean_tmax": 24.73,
+   "mean_dtr": 7.76
+  },
+  "2008_2011": {
+   "share_tmax_22_28": 0.956,
+   "mean_tmax": 25.17,
+   "mean_dtr": 8.05
+  },
+  "run_at": "2026-11-15T00:30:40+00:00"
+ },
+ "gls_predictors": {
+  "expect": "both predictor totals fall inside the published ranges in 2001 and 2002",
+  "2001": {
+   "hours_22_30": 327,
+   "night_hours_rh90": 174
+  },
+  "2002": {
+   "hours_22_30": 403,
+   "night_hours_rh90": 82
+  },
+  "run_at": "2026-11-15T00:30:42+00:00"
+ },
+ "rice_blast": {
+  "expect": "2003 ranks in the top 3 of 15 summers by BLASTAM favourable days; 2010 in the bottom half",
+  "site": "Osaki, Miyagi, Japan",
+  "per_year": {
+   "2001": {
+    "days": 62,
+    "high_days": 39,
+    "severe_days": 39,
+    "moderate_days": 52,
+    "mean_score": 0.72
+   },
+   "2002": {
+    "days": 62,
+    "high_days": 35,
+    "severe_days": 35,
+    "moderate_days": 57,
+    "mean_score": 0.742
+   },
+   "2003": {
+    "days": 62,
+    "high_days": 27,
+    "severe_days": 27,
+    "moderate_days": 61,
+    "mean_score": 0.71
+   },
+   "2004": {
+    "days": 62,
+    "high_days": 38,
+    "severe_days": 38,
+    "moderate_days": 53,
+    "mean_score": 0.741
+   },
+   "2005": {
+    "days": 62,
+    "high_days": 41,
+    "severe_days": 41,
+    "moderate_days": 61,
+    "mean_score": 0.819
+   },
+   "2006": {
+    "days": 62,
+    "high_days": 46,
+    "severe_days": 46,
+    "moderate_days": 61,
+    "mean_score": 0.859
+   },
+   "2007": {
+    "days": 62,
+    "high_days": 31,
+    "severe_days": 31,
+    "moderate_days": 58,
+    "mean_score": 0.707
+   },
+   "2008": {
+    "days": 62,
+    "high_days": 45,
+    "severe_days": 45,
+    "moderate_days": 55,
+    "mean_score": 0.806
+   },
+   "2009": {
+    "days": 62,
+    "high_days": 54,
+    "severe_days": 54,
+    "moderate_days": 57,
+    "mean_score": 0.907
+   },
+   "2010": {
+    "days": 62,
+    "high_days": 18,
+    "severe_days": 18,
+    "moderate_days": 45,
+    "mean_score": 0.508
+   },
+   "2011": {
+    "days": 62,
+    "high_days": 30,
+    "severe_days": 30,
+    "moderate_days": 53,
+    "mean_score": 0.664
+   },
+   "2012": {
+    "days": 62,
+    "high_days": 23,
+    "severe_days": 23,
+    "moderate_days": 57,
+    "mean_score": 0.637
+   },
+   "2013": {
+    "days": 62,
+    "high_days": 32,
+    "severe_days": 32,
+    "moderate_days": 61,
+    "mean_score": 0.748
+   },
+   "2014": {
+    "days": 62,
+    "high_days": 31,
+    "severe_days": 31,
+    "moderate_days": 51,
+    "mean_score": 0.646
+   },
+   "2015": {
+    "days": 62,
+    "high_days": 14,
+    "severe_days": 14,
+    "moderate_days": 44,
+    "mean_score": 0.47
+   }
+  },
+  "rank_2003_favourable": 12,
+  "rank_2003_quasi_or_better": 1,
+  "rank_2010_favourable": 14,
+  "n_years": 15,
+  "run_at": "2026-11-15T00:33:56+00:00"
+ },
+ "sigatoka_season": {
+  "expect": "mean daily score in Apr\u2013Nov above Jan\u2013Mar in most years",
+  "per_year": {
+   "2010": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 90,
+     "severe_days": 81,
+     "moderate_days": 90,
+     "mean_score": 0.964
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 244,
+     "moderate_days": 244,
+     "mean_score": 1.0
+    }
+   },
+   "2011": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 90,
+     "severe_days": 86,
+     "moderate_days": 90,
+     "mean_score": 0.983
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 243,
+     "moderate_days": 244,
+     "mean_score": 0.997
+    }
+   },
+   "2012": {
+    "dry_jan_mar": {
+     "days": 91,
+     "high_days": 91,
+     "severe_days": 84,
+     "moderate_days": 91,
+     "mean_score": 0.965
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 244,
+     "moderate_days": 244,
+     "mean_score": 0.999
+    }
+   },
+   "2013": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 90,
+     "severe_days": 85,
+     "moderate_days": 90,
+     "mean_score": 0.975
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 244,
+     "moderate_days": 244,
+     "mean_score": 1.0
+    }
+   },
+   "2014": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 88,
+     "severe_days": 75,
+     "moderate_days": 90,
+     "mean_score": 0.938
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 243,
+     "severe_days": 234,
+     "moderate_days": 244,
+     "mean_score": 0.986
+    }
+   },
+   "2015": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 72,
+     "severe_days": 59,
+     "moderate_days": 82,
+     "mean_score": 0.817
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 243,
+     "moderate_days": 244,
+     "mean_score": 0.998
+    }
+   },
+   "2016": {
+    "dry_jan_mar": {
+     "days": 91,
+     "high_days": 81,
+     "severe_days": 52,
+     "moderate_days": 87,
+     "mean_score": 0.822
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 235,
+     "severe_days": 233,
+     "moderate_days": 238,
+     "mean_score": 0.969
+    }
+   },
+   "2017": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 90,
+     "severe_days": 85,
+     "moderate_days": 90,
+     "mean_score": 0.975
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 244,
+     "moderate_days": 244,
+     "mean_score": 1.0
+    }
+   },
+   "2018": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 90,
+     "severe_days": 76,
+     "moderate_days": 90,
+     "mean_score": 0.957
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 243,
+     "moderate_days": 244,
+     "mean_score": 0.998
+    }
+   },
+   "2019": {
+    "dry_jan_mar": {
+     "days": 90,
+     "high_days": 77,
+     "severe_days": 52,
+     "moderate_days": 87,
+     "mean_score": 0.817
+    },
+    "rainy_apr_nov": {
+     "days": 244,
+     "high_days": 244,
+     "severe_days": 243,
+     "moderate_days": 244,
+     "mean_score": 0.998
+    }
+   }
+  },
+  "years_rainy_gt_dry": 10,
+  "n_years": 10,
+  "run_at": "2026-11-15T00:33:56+00:00"
+ }
+}

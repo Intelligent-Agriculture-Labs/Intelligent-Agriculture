@@ -51,6 +51,19 @@ def legacy_name(did: str, lang: str, default: str) -> str:
     return str(m.get(lang) or m.get("en") or default)
 
 
+def legacy_pest(pid: str, lang: str, default: str) -> str:
+    m = texts().get("legacy_pest_names", {}).get(pid)
+    return str((m.get(lang) or m.get("en")) if m else default)
+
+
+def legacy_event(label: str, lang: str) -> str:
+    """Life-stage label in `lang`, lower-case (titles embed it mid-sentence); English fallback."""
+    if lang == "en":
+        return label.lower()
+    m = texts().get("legacy_pest_events", {}).get(label)
+    return str(m.get(lang) if m and m.get(lang) else label.lower())
+
+
 def risk_input(ctx: Any, planting: dt.date | None) -> gr.RiskInput:
     w = ctx.weather
     return gr.RiskInput(

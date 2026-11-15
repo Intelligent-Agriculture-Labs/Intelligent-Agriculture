@@ -224,6 +224,13 @@ def test_texts_complete_in_six_languages():
         assert "Y" in title and "Z" in title
     for did in disease.DISEASES:
         assert risk_cards.legacy_name(did, "sw", "") != ""
+    from fieldshift.science import pests
+
+    for pid, p in pests.PESTS.items():
+        for lang in ("es", "fr", "sw", "hi", "de"):
+            assert risk_cards.legacy_pest(pid, lang, "") not in ("", p["name"]), (pid, lang)
+            for ev in p["events"]:
+                assert risk_cards.legacy_event(ev[1], lang) != ev[1].lower(), (ev[1], lang)
 
 
 def test_no_brand_or_product_advice():
@@ -234,3 +241,65 @@ def test_no_brand_or_product_advice():
     for word in ("mancozeb", "tebuconazole", "azoxystrobin", "chlorpyrifos", "®", "™"):
         assert word not in blob
     assert not re.search(r"\bspray (with|using)\b", blob)
+
+
+# ---------------------------------------------------------------- end-to-end through the advice endpoint
+def _advice(lat, lon, crop, days_since_planting=60, lang="en"):
+    from fastapi.testclient import TestClient
+
+    from fieldshift.main import app
+
+    planting = (dt.date.today() - dt.timedelta(days=days_since_planting)).isoformat()
+    r = TestClient(app).post(
+        "/api/advice",
+        json={
+            "lat": lat,
+            "lon": lon,
+            "crop": crop,
+            "planting_date": planting,
+            "irrigation": "none",
+            "lang": lang,
+        },
+    )
+    assert r.status_code == 200
+    return r.json()
+
+
+CARD_KEYS = {"id", "category", "risk", "icon", "title", "detail", "due", "amount", "why", "priority"}
+WHY_KEYS = {
+    "summary",
+    "steps",
+    "series",
+    "model",
+    "model_doc",
+    "confidence",
+    "confidence_note",
+    "caveats",
+    "sources",
+}
+
+
+def test_advice_stem_rust_card_schema_and_translation():
+    # synthetic forecast: 8 humid hours at 14 °C every night -> stem rust W(14 °C) ≈ 6.6 h is met
+    a = _advice(9.0, 39.0, "winter_wheat", lang="sw")
+    cards = {c["id"]: c for c in a["cards"]}
+    c = cards["disease_wheat_stem_rust"]
+    assert set(c) == CARD_KEYS and set(c["why"]) == WHY_KEYS
+    assert "kutu ya shina ya ngano" in c["title"]
+    assert any(s["id"] == "risk_wheat_stem_rust" and s["points"] for s in a["series"])
+    assert "disease_late_blight_tropical" not in cards  # wheat is not a host
+
+
+def test_advice_hutton_outside_tropics_only():
+    temperate = {c["id"] for c in _advice(45.0, 10.0, "potato")["cards"]}
+    tropical = {c["id"] for c in _advice(0.5, 36.0, "potato")["cards"]}
+    assert "disease_late_blight" in temperate and "disease_late_blight_tropical" not in temperate
+    assert "disease_late_blight" not in tropical  # 8 h at 14 °C: Wallin SV 0 -> no tropical card either
+    assert "disease_late_blight_tropical" not in tropical
+
+
+def test_advice_no_global_card_out_of_season():
+    # maize planted 5 days ago: gray-leaf-spot window starts 30 days after planting
+    ids = {c["id"] for c in _advice(-1.5, 37.3, "maize", days_since_planting=5)["cards"]}
+    assert "disease_gray_leaf_spot" not in ids
+    assert "pest_desert_locust" not in ids  # Machakos is outside the recession area

@@ -141,6 +141,7 @@ def season_stats(res: gr.RiskResult, start: dt.date, end: dt.date) -> dict[str, 
         "days": len(v),
         "high_days": int(sum(s >= 0.55 for s in v)),
         "severe_days": int(sum(s >= 0.85 for s in v)),
+        "moderate_days": int(sum(s >= 0.25 for s in v)),
         "mean_score": round(float(np.mean(v)), 3) if v else float("nan"),
     }
 
@@ -199,7 +200,10 @@ def locust() -> dict[str, Any]:
                 "high_days": int(sum(s >= 0.55 for s in v)),
                 "max": round(max(v), 2),
                 "annual_rain_mm": round(
-                    float(np.nansum([r for d, r in zip(dates, a["PRECTOTCORR"], strict=True) if d.year == y])), 0
+                    float(
+                        np.nansum([r for d, r in zip(dates, a["PRECTOTCORR"], strict=True) if d.year == y])
+                    ),
+                    0,
                 ),
             }
         first = sorted(d for d, s in res.scores.items() if d.year == yr and s >= 0.55)
@@ -289,6 +293,81 @@ def blight_tropical() -> dict[str, Any]:
             "rainy_mean_hutton_full": round(
                 float(np.mean([rows[y]["rainy"]["hutton_full_days"] for y in rows])), 1
             ),
+        }
+    return out
+
+
+@case
+def rice_blast() -> dict[str, Any]:
+    """BLASTAM in Tohoku (Osaki, Miyagi), Jul–Aug 2001–2015. 2003 was a cool, wet 'yamase' summer — the first
+    cool-weather damage in Tohoku for ten years (NARO Tohoku), with conditions favouring panicle blast in northern Japan
+    (Open Agric. J. 10:28, 2016, doi:10.2174/1874331501610010028). 2010 was Japan's record-hot summer."""
+    EXPECT = "2003 ranks in the top 3 of 15 summers by BLASTAM favourable days; 2010 in the bottom half"
+    lat, lon, elev = 38.58, 140.95, 40.0
+    per = yearly("rice_blast", lat, lon, range(2001, 2016), (7, 1), (8, 31), elev)
+    return {
+        "expect": EXPECT,
+        "site": "Osaki, Miyagi, Japan",
+        "per_year": per,
+        "rank_2003_favourable": rank_of(per, 2003, "severe_days"),
+        "rank_2003_quasi_or_better": rank_of(per, 2003, "moderate_days"),
+        "rank_2010_favourable": rank_of(per, 2010, "severe_days"),
+        "n_years": len(per),
+    }
+
+
+@case
+def coffee_tmax_band() -> dict[str, Any]:
+    """Avelino et al. 2015 reference numbers for Chinchiná (1430 m): 78 % of days with Tmax 22–28 °C in 2008–2011 vs
+    67 % in 1991–1994. Reproduced from NASA POWER daily Tmax, lapse-corrected from the grid cell to 1430 m."""
+    EXPECT = "share of days with Tmax 22–28 °C higher in 2008–2011 than in 1991–1994 (paper: 78 % vs 67 %)"
+    lat, lon, elev = 4.98, -75.60, 1430.0
+    dates, a = power_daily(lat, lon, dt.date(1991, 1, 1), dt.date(2011, 12, 31))
+    dT = LAPSE * (elev - grid_elevation(lat, lon))
+    tx = a["T2M_MAX"] + dT
+    out: dict[str, Any] = {"expect": EXPECT, "lapse_shift_c": round(dT, 2)}
+    for lab, (y0, y1) in (("1991_1994", (1991, 1994)), ("2008_2011", (2008, 2011))):
+        m = np.array([y0 <= d.year <= y1 for d in dates]) & np.isfinite(tx)
+        out[lab] = {
+            "share_tmax_22_28": round(float(np.mean((tx[m] >= 22) & (tx[m] <= 28))), 3),
+            "mean_tmax": round(float(np.mean(tx[m])), 2),
+            "mean_dtr": round(float(np.mean(a["T2M_MAX"][m] - a["T2M_MIN"][m])), 2),
+        }
+    return out
+
+
+@case
+def sigatoka_season() -> dict[str, Any]:
+    """Black Sigatoka in Urabá, Colombia (Apartadó, 7.88 N, 76.63 W, 30 m): disease pressure is highest in the rainy
+    season (Apr–Nov) and lowest in the Dec–Mar dry season."""
+    EXPECT = "mean daily score in Apr–Nov above Jan–Mar in most years"
+    lat, lon, elev = 7.88, -76.63, 30.0
+    rows = {}
+    for y in range(2010, 2020):
+        r = {}
+        for lab, (m0, m1) in (("dry_jan_mar", ((1, 1), (3, 31))), ("rainy_apr_nov", ((4, 1), (11, 30)))):
+            a, b = dt.date(y, *m0), dt.date(y, *m1)
+            r[lab] = season_stats(gr.black_sigatoka(risk_input(lat, lon, a, b, elev=elev)), a, b)
+        rows[y] = r
+        print("sigatoka", y, r, flush=True)
+    hits = sum(rows[y]["rainy_apr_nov"]["mean_score"] > rows[y]["dry_jan_mar"]["mean_score"] for y in rows)
+    return {"expect": EXPECT, "per_year": rows, "years_rainy_gt_dry": hits, "n_years": len(rows)}
+
+
+@case
+def gls_predictors() -> dict[str, Any]:
+    """Paul & Munkvold 2005 observed, V4–V12 in Iowa 1998–2002: 85.5–230.5 h at 22–30 °C and 122–330 humid night
+    hours (RH ≥ 90 %). POWER hourly exists from 2001: does POWER reproduce values inside those ranges at Ames for
+    2001–2002 (V4–V12 ≈ 1 Jun – 5 Jul for early-May planting)?"""
+    EXPECT = "both predictor totals fall inside the published ranges in 2001 and 2002"
+    lat, lon = 42.03, -93.62
+    out: dict[str, Any] = {"expect": EXPECT}
+    for y in (2001, 2002):
+        h = leafwet.from_dict(power_hourly(lat, lon, dt.date(y, 6, 1), dt.date(y, 7, 5)))
+        night = np.array([t.hour >= 20 or t.hour < 8 for t in h.time])
+        out[str(y)] = {
+            "hours_22_30": int(((h.t >= 22) & (h.t <= 30)).sum()),
+            "night_hours_rh90": int(((h.rh >= 90) & night).sum()),
         }
     return out
 

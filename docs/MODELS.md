@@ -61,6 +61,7 @@ Hourly T and RH come from the forecast (validation uses POWER hourly). RH ≥ 90
 - **Powdery mildew:** ≥ 6 consecutive hours at 21–30 °C (Gubler et al., 1999, simplified).
 - **White mould, alfalfa leaf diseases, millet downy mildew:** wet hours within a temperature window.
 - Score → risk: ≥ 0.85 severe, ≥ 0.55 high, ≥ 0.25 moderate.
+- Hutton is applied only outside the tropics (|lat| ≥ 23.44°). Between the tropics the Wallin-based tropical model (§5b) replaces it.
 
 ## <a id="pests"></a>5. Insect phenology (`pests.py`)
 Degree-days = max(0, (min(Tmax, T_up) + Tmin)/2 − T_low), accumulated from a biofix of 1 January (northern hemisphere) or 1 July (southern).
@@ -73,7 +74,69 @@ Degree-days = max(0, (min(Tmax, T_up) + Tmin)/2 − T_low), accumulated from a b
 | Corn earworm | 12.6 / 33.3 | 420 larvae | UC IPM |
 | Colorado potato beetle | 10 / 30 | 105 adults, 300 larvae | Ferro et al., 1985 |
 | Cereal aphids | 5 / 30 | 250 build-up | CSU Ext. (indicative) |
-| Fall armyworm | 10.9 / 35 | 350 per generation | Hogg et al., 1982 |
+| Fall armyworm | 12.6 / 35 | 391 per generation (recurring) | Du Plessis et al., 2020 (see §5b) |
+
+## <a id="global-pest-disease"></a>5b. Global pest and disease risk (`science/leafwet.py`, `science/globalrisk.py`, `engine/risk_cards.py`)
+These models extend the advice to the world's major crops and farming regions. Every model gives a daily score from 0 to 1: the share of the published infection or development criteria that the weather met. Score bands: ≥ 0.85 severe, ≥ 0.55 high, ≥ 0.25 moderate. A card needs all four of:
+- a host crop;
+- a field inside the model's geographic range;
+- a crop in its at-risk stage window;
+- a score at or above the model's threshold within the next 7 days.
+
+Texts are in `config/pest_disease.yaml` in six languages. Actions are scouting and cultural control; treatment decisions are referred to local thresholds and extension services, and no product is ever named. Validation is in [VALIDATION.md V9](VALIDATION.md).
+
+**Leaf wetness (shared).**
+- **Default:** an hour is wet when RH ≥ 90 %, or when rain ≥ 0.1 mm falls in that hour. RH ≥ 90 % performed best overall against sensors in Brazil, Canada, Italy and the U.S. (fraction correct 0.87–0.92; Sentelhas et al. 2008).
+- **Alternative:** dew-point depression with hysteresis: wet from T − Td ≤ 1.8 °C until T − Td ≥ 2.2 °C (Rao et al. 1998, as tested by Sentelhas et al. 2008).
+- **Missing dew point:** derived from T and RH with the Magnus formula (Alduchov & Eskridge 1996).
+- **Wet periods:** runs of wet hours. Dry gaps up to a pathogen-specific length (Magarey's D50 classes) do not end a period.
+
+**Generic infection equation** (Magarey, Sutton & Thayer 2005, eqs. 1–2), used for the fungal leaf diseases:
+
+  f(T) = ((Tmax − T)/(Tmax − Topt)) · ((T − Tmin)/(Topt − Tmin))^((Topt − Tmin)/(Tmax − Topt)), with T the mean temperature of the wet period
+  W(T) = Wmin / f(T), with no infection if W(T) > Wmax
+  score = min(1, wet hours / W(T)), taking the best wet period that starts on each day
+
+| Model | Hosts in FieldShift | Range | Criteria / parameters | Source |
+|---|---|---|---|---|
+| Rice blast (*Magnaporthe oryzae*) | rice | everywhere rice grows | **BLASTAM:** wet period mean 15–25 °C; wet hours ≥ 17/15/14/13/12/11/11/10 h at 15/16/17/18/19/20/21/22–25 °C; mean of the 5 daily means up to that day 20–25 °C → favourable (1.0). ≥ 10 h with one temperature condition missed → quasi-favourable (0.5). Temperatures fine but too short → 0.5·h/required. Symptoms follow 7–10 d later. | BLASTAM sheets of the Ibaraki and Hiroshima prefectural plant protection offices (table after Yokouchi, Higuchi & Munakata) |
+| Wheat leaf rust (*Puccinia triticina*) | winter/spring/durum wheat, triticale, spelt | worldwide | Magarey: Tmin 2.6, Topt 25, Tmax 30 °C; Wmin 5 h, Wmax 16 h; dry gaps > 1 h end a period (D50 "sensitive") | Magarey et al. 2005, Table 2 (*P. recondita*); Roelfs et al. 1992 |
+| Wheat stem rust (*P. graminis* f. sp. *tritici*) | wheats, triticale, spelt, barley | worldwide | Magarey: Tmin 2, Topt 18, Tmax 30 °C (germination 2/15–24/30 °C; maximum infection at 18 °C); Wmin 6 h (6–8 h dew needed); Wmax = 3.8 + 3.0·Wmin = 21.8 h (Magarey's regression). The light requirement after dew is not modelled. | Roelfs, Singh & Saari 1992 (CIMMYT), Table 2 and text |
+| Late blight, tropical (*Phytophthora infestans*) | potato, tomato | \|lat\| < 23.44° (Hutton is used outside the tropics) | **Wallin severity value** per day, from the longest RH ≥ 90 % period and its mean T. 7.2–11.6 °C: 16/19/22/25 h → SV 1/2/3/4. 11.7–15.0 °C: 13/16/19/22 h. 15.1–26.6 °C: 10/13/16/19 h. Outside 7.2–26.6 °C → 0. Score = SV/4. The 7-day SV sum is shown as evidence. | Wallin 1962; BLITECAST (Krause et al. 1975); Grünwald et al. 2000 for Toluca |
+| Maize gray leaf spot (*Cercospora zeae-maydis*) | maize, silage maize, sweet corn | worldwide; 30–120 days after planting | Index of the two best weather predictors over V4–V12: hours at 22–30 °C (observed 85.5–230.5 h) and night hours (20–08 h) with RH ≥ 90 % (122–330 h). Trailing 14-day totals are scaled to the upper end of each range, pro-rated from 30 days: score = ½ (warm/107.6 h + humid nights/154 h), each capped at 1. This is a risk *index*, not the authors' fitted regression. | Paul & Munkvold 2005 |
+| Coffee leaf rust (*Hemileia vastatrix*) | coffee *(not yet a FieldShift crop)* | tropics | Magarey: Tmin 12.5, Topt 23, Tmax 32.5 °C (cardinal temperatures of the Kushalappa & Eskes curve; optimum within the 21–25 °C germination optimum); Wmin 6 h (wetness curve zero point); Wmax 21.8 h; dry gap ≤ 2 h. Score ×0.5 on days with Tmax outside 22–28 °C, the band linked to the 2008–2013 epidemics. | Kushalappa & Eskes 1989; Avelino et al. 2015 |
+| Black Sigatoka (*Pseudocercospora fijiensis*) | banana *(not yet a FieldShift crop)* | tropics | Magarey: Tmin 20, Topt 26.5, Tmax 35 °C (germination); Wmin 12 h (**assumption** within the 0–18 h range reported); Wmax 48 h; dry gap ≤ 2 h. | Jacome, Schuh & Stevenson 1991; Jacome & Schuh 1992 |
+| Whitefly / cassava mosaic vector (*Bemisia tabaci*) | cassava | Africa, Asia (where CMD occurs); 0–120 days after planting | Trailing 30 days. Product of band memberships: mean T 28–30 °C (taper 4 °C), rain 30–150 mm (taper 100 mm), RH 55–70 % (taper 15 %). Card at ≥ 0.55. | Katono et al. 2021 (Uganda) |
+| Desert locust breeding (*Schistocerca gregaria*) | all crops | FAO recession area boxes (Sahara–Sahel, Horn of Africa and Red Sea, Arabia, SE Iran–Pakistan–Rajasthan) and 10-year mean rain ≤ 400 mm | score = min(1, 30-day rain / 25 mm) × warm factor (1 at a 30-day mean ≥ 20 °C, 0 at ≤ 15 °C — the warm factor is our assumption); 0 below 10 mm. Card at ≥ 0.55. Awareness only: it links to FAO Locust Watch and the national locust unit. | Symmons & Cressman 2001 (FAO Desert Locust Guidelines); FAO Locust Watch |
+| Fall armyworm (*Spodoptera frugiperda*), refined in `pests.py` | maize, sorghum, pearl millet, teff | Americas, Africa, Asia, Oceania | Degree-days above 12.6 °C (upper cut-off 35 °C); 391 °C·d per egg-to-adult generation; recurring generations in the tropics | Du Plessis, Schlemmer & Van den Berg 2020 |
+
+**Considered and not implemented.**
+- *Northern corn leaf blight:* the dew and temperature requirements (Levy & Cohen 1983) could not be verified from the paper.
+- *EPIRICE:* a full SEIR epidemic model needing crop-age and inoculum state. BLASTAM's day-level criteria fit a 7-day advice card better.
+- *Kushalappa & Eskes' coffee rust wetness and temperature equations:* the constants available were OCR'd from a scan and could not be checked.
+- *SimCast blight units* (Fry et al. 1983): the table could not be verified within the build.
+
+**Temperature in mountains.**
+- Live advice uses the Open-Meteo hourly forecast, which is downscaled to the terrain.
+- Validation uses NASA POWER hourly, shifted by the standard lapse rate (−6.5 °C/km) from the POWER cell's mean elevation to the site (dew point shifted equally, RH unchanged). Without this, a ~50 km cell in the Andes can be 5 °C too cold (Chinchiná: cell 2138 m, town 1360 m).
+
+**References (section 5b).**
+- Alduchov, O.A., Eskridge, R.E. (1996) *J. Appl. Meteorol.* 35: 601–609.
+- Avelino, J. et al. (2015) The coffee rust crises in Colombia and Central America (2008–2013). *Food Security* 7: 303–321. doi:10.1007/s12571-015-0446-9
+- Du Plessis, H., Schlemmer, M.-L., Van den Berg, J. (2020) The effect of temperature on the development of *Spodoptera frugiperda*. *Insects* 11: 228. doi:10.3390/insects11040228
+- Grünwald, N.J., Rubio-Covarrubias, O.A., Fry, W.E. (2000) Potato late-blight management in the Toluca Valley: forecasts and resistant cultivars. *Plant Disease* 84: 410–416. doi:10.1094/PDIS.2000.84.4.410
+- Jacome, L.H., Schuh, W., Stevenson, R.E. (1991) *Phytopathology* 81: 1480. doi:10.1094/Phyto-81-1480
+- Jacome, L.H., Schuh, W. (1992) *Phytopathology* 82: 515. doi:10.1094/Phyto-82-515
+- Katono, K. et al. (2021) *Insects* 12: 604. doi:10.3390/insects12070604
+- Krause, R.A., Massie, L.B., Hyre, R.A. (1975) BLITECAST. *Plant Disease Reporter* 59: 95–98.
+- Kushalappa, A.C., Eskes, A.B. (1989) Advances in coffee rust research. *Annu. Rev. Phytopathol.* 27: 503–531.
+- Magarey, R.D., Sutton, T.B., Thayer, C.L. (2005) A simple generic infection model for foliar fungal plant pathogens. *Phytopathology* 95: 92–100. doi:10.1094/PHYTO-95-0092
+- Paul, P.A., Munkvold, G.P. (2005) Regression and artificial neural network modeling for the prediction of gray leaf spot of maize. *Phytopathology* 95: 388–396. doi:10.1094/PHYTO-95-0388
+- Rao, P.S., Gillespie, T.J., Schaafsma, A.W. (1998) Estimating wetness duration on maize ears from meteorological observations. *Can. J. Soil Sci.* 78: 149–154.
+- Roelfs, A.P., Singh, R.P., Saari, E.E. (1992) *Rust Diseases of Wheat: Concepts and Methods of Disease Management.* CIMMYT, Mexico. hdl:10883/1153
+- Sentelhas, P.C. et al. (2008) Suitability of relative humidity as an estimator of leaf wetness duration. *Agric. For. Meteorol.* 148: 392–400. doi:10.1016/j.agrformet.2007.09.011
+- Symmons, P.M., Cressman, K. (2001) *Desert Locust Guidelines 1: Biology and behaviour.* FAO, Rome. FAO Locust Watch: https://www.fao.org/locust-watch/
+- Wallin, J.R. (1962) Summary of recent progress in predicting late blight epidemics in United States and Canada. *Am. Potato J.* 39: 306–312.
 
 ## <a id="planting"></a>6. Planting-window optimisation
 The season model runs for candidate dates (intended date ±35 days, weekly) over 15 past seasons. Score = median − 0.5 × (median − p10), which penalises bad-year downside. The recommended window is every date within 3 % of the best score.

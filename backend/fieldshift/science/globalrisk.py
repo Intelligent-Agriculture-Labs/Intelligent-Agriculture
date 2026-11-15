@@ -91,11 +91,18 @@ def _wet_period_scores(
             continue
         need = magarey_w(wp.t_mean, p)
         s = 0.0 if not math.isfinite(need) else min(1.0, wp.hours / need)
-        d = wp.start.date()
-        if s > best.get(d, 0.0):
-            best[d] = s
-            per[d] = wp
+        for d in _days_covered(h, wp):
+            if s > best.get(d, 0.0):
+                best[d] = s
+                per[d] = wp
     return best, per
+
+
+def _days_covered(h: lw.Hourly, wp: lw.WetPeriod) -> list[dt.date]:
+    """Every calendar day a wet period touches: a multi-day wet spell counts on each of its days, not only the
+    day it started (found during validation V9 — continuous rainy-season wetness was otherwise under-counted)."""
+    d0, d1 = h.time[wp.i0].date(), h.time[wp.i1].date()
+    return [d0 + dt.timedelta(days=k) for k in range((d1 - d0).days + 1)]
 
 
 def _complete_days(h: lw.Hourly, min_hours: int = 18) -> set[dt.date]:
@@ -194,9 +201,11 @@ def rice_blast(x: RiskInput) -> RiskResult:
             s, why = 0.5 * wp.hours / need, "wet period too short"
         else:
             s, why = 0.0, "unfavourable"
-        if s > best.get(d, (-1.0, ""))[0]:
-            need_s = f"{need:.0f} h" if math.isfinite(need) else "outside 15–25 °C"
-            best[d] = (
+        need_s = f"{need:.0f} h" if math.isfinite(need) else "outside 15–25 °C"
+        for dd in _days_covered(h, wp):
+            if s <= best.get(dd, (-1.0, ""))[0]:
+                continue
+            best[dd] = (
                 s,
                 f"Wet period from {wp.start:%d %b %H:00}: {wp.hours} h at a mean {wp.t_mean:.1f} °C (BLASTAM needs "
                 f"{need_s}); 5-day mean temperature {m5:.1f} °C (needs 20–25 °C) → {why}.",
@@ -228,9 +237,9 @@ def tropical_late_blight(x: RiskInput) -> RiskResult:
     best: dict[dt.date, tuple[int, lw.WetPeriod]] = {}
     for wp in lw.wet_periods(h, wet, 0):
         sv = wallin_sv(wp.hours, wp.t_mean)
-        d = wp.start.date()
-        if d not in best or sv > best[d][0] or (sv == best[d][0] and wp.hours > best[d][1].hours):
-            best[d] = (sv, wp)
+        for d in _days_covered(h, wp):
+            if d not in best or sv > best[d][0] or (sv == best[d][0] and wp.hours > best[d][1].hours):
+                best[d] = (sv, wp)
     for d in sorted(ok):
         sv, wp = best.get(d, (0, None))  # type: ignore[assignment]
         r.scores[d] = sv / 4

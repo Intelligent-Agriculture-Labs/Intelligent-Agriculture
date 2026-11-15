@@ -163,3 +163,26 @@ models:
     confidence_note: "Uses rain at the field's grid cell only; breeding happens in nearby desert areas the model does not see."
     caveats:
       - "Awareness only: locust surveys and control are the job of national locust units coordinated by FAO."
+
+# Translated names and life-stage labels of the degree-day pests (science/pests.py), used in their card titles.
+legacy_pest_names:
+  alfalfa_weevil: {en: Alfalfa weevil, es: gorgojo de la alfalfa, fr: phytonome de la luzerne, sw: fukusi wa alfalfa, hi: अल्फाल्फा घुन, de: Luzernerüssler}
+  western_corn_rootworm: {en: Western corn rootworm, es: gusano de la raíz del maíz, fr: chrysomèle des racines du maïs, sw: funza wa mizizi ya mahindi, hi: मक्का जड़ कीट, de: Westlicher Maiswurzelbohrer}
+  european_corn_borer: {en: European corn borer, es: taladro del maíz, fr: pyrale du maïs, sw: kipekecha mahindi wa Ulaya, hi: यूरोपीय मक्का छेदक, de: Maiszünsler}
+  corn_earworm: {en: Corn earworm, es: gusano elotero, fr: noctuelle de la tomate, sw: funza wa gunzi, hi: मक्का भुट्टा इल्ली, de: Baumwollkapselwurm}
+  colorado_potato_beetle: {en: Colorado potato beetle, es: escarabajo de la patata, fr: doryphore, sw: mbawakavu wa viazi, hi: कोलोराडो आलू भृंग, de: Kartoffelkäfer}
+  cereal_aphids: {en: Cereal aphids, es: pulgones de los cereales, fr: pucerons des céréales, sw: vidukari wa nafaka, hi: अनाज के माहू, de: Getreideblattläuse}
+  fall_armyworm: {en: Fall armyworm, es: gusano cogollero, fr: chenille légionnaire d'automne, sw: viwavijeshi vamizi, hi: फॉल आर्मीवर्म, de: Herbst-Heerwurm}
+legacy_pest_events:
+  Egg hatch begins: {es: comienza la eclosión, fr: début de l'éclosion, sw: mayai yanaanza kuanguliwa, hi: अंडों से निकलना शुरू, de: Schlupfbeginn}
+  Peak larval feeding: {es: máximo de alimentación larval, fr: pic d'alimentation des larves, sw: kilele cha ulaji wa viwavi, hi: लार्वा भक्षण चरम पर, de: Höhepunkt des Larvenfraßes}
+  Larval feeding declining: {es: la alimentación larval disminuye, fr: alimentation des larves en baisse, sw: ulaji wa viwavi unapungua, hi: लार्वा भक्षण घट रहा, de: Larvenfraß lässt nach}
+  Peak larval injury: {es: máximo daño larval, fr: pic de dégâts larvaires, sw: kilele cha uharibifu wa funza, hi: लार्वा क्षति चरम पर, de: Höhepunkt der Larvenschäden}
+  Adult emergence: {es: emergencia de adultos, fr: émergence des adultes, sw: wadudu wakubwa wanaibuka, hi: वयस्कों का निकलना, de: Schlupf der Käfer}
+  First-generation moth flight: {es: vuelo de la primera generación, fr: vol de première génération, sw: kuruka kwa nondo wa kizazi cha kwanza, hi: पहली पीढ़ी के पतंगों की उड़ान, de: Falterflug 1. Generation}
+  Second-generation moth flight: {es: vuelo de la segunda generación, fr: vol de deuxième génération, sw: kuruka kwa nondo wa kizazi cha pili, hi: दूसरी पीढ़ी के पतंगों की उड़ान, de: Falterflug 2. Generation}
+  Larvae on silks/fruit: {es: larvas en estigmas/frutos, fr: larves sur soies/fruits, sw: viwavi kwenye nywele za gunzi/matunda, hi: रेशों/फलों पर लार्वा, de: Larven an Narbenfäden/Früchten}
+  Overwintered adults emerge: {es: salen los adultos invernantes, fr: sortie des adultes hivernants, sw: wadudu waliokaa msimu wa baridi wanaibuka, hi: शीतनिद्रा से वयस्क निकल रहे, de: überwinterte Käfer erscheinen}
+  First-generation larvae: {es: larvas de primera generación, fr: larves de première génération, sw: viwavi wa kizazi cha kwanza, hi: पहली पीढ़ी के लार्वा, de: Larven der 1. Generation}
+  Spring population build-up: {es: aumento primaveral de la población, fr: montée des populations au printemps, sw: ongezeko la idadi msimu wa kuchipua, hi: वसंत में आबादी बढ़ना, de: Populationsaufbau im Frühjahr}
+  New generation of moths: {es: nueva generación de polillas, fr: nouvelle génération de papillons, sw: kizazi kipya cha nondo, hi: पतंगों की नई पीढ़ी, de: neue Faltergeneration}

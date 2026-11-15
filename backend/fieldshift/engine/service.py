@@ -1056,7 +1056,13 @@ def _pest_cards(
             recent = (len(cum) - 1 - k) <= rules()["pests"]["show_recent_days"]
         if ev and days_until is not None and days_until <= rules()["pests"]["window_days"]:
             key = "pest_soon_title" if days_until <= 1 else "pest_title"
-            title = t(key, lang, pest=p["name"], event=ev["label"].lower(), days=days_until)
+            title = t(
+                key,
+                lang,
+                pest=risk_cards.legacy_pest(pid, lang, p["name"]),
+                event=risk_cards.legacy_event(ev["label"], lang),
+                days=days_until,
+            )
             due = (today + dt.timedelta(days=days_until)).isoformat()
             action = ev["action"]
             risk = "moderate" if days_until > 3 else "high"
@@ -1067,7 +1073,12 @@ def _pest_cards(
             action = "Young plants are most vulnerable in the whorl stage; scout 20 plants in 5 spots weekly (FAO FAW guidance)."
             risk = "moderate"
         elif recent and lastev:
-            title = t("pest_now_title", lang, pest=p["name"], event=lastev["label"].lower())
+            title = t(
+                "pest_now_title",
+                lang,
+                pest=risk_cards.legacy_pest(pid, lang, p["name"]),
+                event=risk_cards.legacy_event(lastev["label"], lang),
+            )
             due = today.isoformat()
             action = lastev["action"]
             risk = "high"
