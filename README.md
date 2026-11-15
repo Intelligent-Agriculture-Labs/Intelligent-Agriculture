@@ -101,7 +101,9 @@ Mobile builds and development setup: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md),
 
 ## Links
 - Live demo: not publicly hosted (owner's decision); run it with one command as above.
-- Demo video (30 s) and slides: [`SUBMISSION.md`](SUBMISSION.md)
+- Showcase: https://intelligent-agriculture-labs.github.io/
+- Demo video (30 s): [watch online](https://intelligent-agriculture-labs.github.io/assets/ia-demo-30s.mp4) · [source file](media/ia-demo-30s.mp4)
+- Slides: [view online](https://intelligent-agriculture-labs.github.io/deck.html) · [PDF](media/fieldshift-deck.pdf)
 
 ## Honest limitations
 - Weather grids are coarse (~50 km).

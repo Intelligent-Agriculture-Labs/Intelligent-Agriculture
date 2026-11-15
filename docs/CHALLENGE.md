@@ -62,5 +62,5 @@ Global awards include Best Use of Science, Best Use of Data, Best Use of Technol
 | Support, not replace, local expertise | Disclaimers, "needs local review" lists, confidence on every card | Validity |
 | Weekly decisions (build-prompt scope) | **This week**: ≤ 3 ranked action cards for water, drought, disease, pests, frost/heat | Impact |
 | Low-connectivity smallholders | Kenya preset, small gzip payloads, offline last-advice cache, six languages incl. Swahili and Hindi | Impact, Global Connection |
-| SI disclosure | README §SI use, SUBMISSION.md | Rules |
-| 30 s video / 7 slides | SUBMISSION.md storyboard + slide outline; media/ captures | Presentation |
+| SI disclosure | README §SI use; film end card | Rules |
+| 30 s video / 7 slides | video/README.md storyboard; media/ video, slides and captures | Presentation |

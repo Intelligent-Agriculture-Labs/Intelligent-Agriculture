@@ -1,5 +1,8 @@
 # PROGRESS
 
+## Submission cleanup (2026-11-15)
+Removed `SUBMISSION.md` at the owner’s request after they entered the submission fields. Updated README and challenge evidence links to the published presentation and retained source assets.
+
 ## Live NASA Earthdata feeds (2026-11-15 afternoon, branch `earthdata-live-feeds`, ADR-027)
 - **GES DISC unlocked** (EULA approved): IMERG **Late/Early** fill the ~2 months IMERG Final lacks (V13b: beats the old bridge at 8/12 gauges on daily r, 9/12 on KGE); **GRACE-DA** weekly groundwater percentile next to the GRACE trend (+ card for irrigated fields at ≤ 10th percentile).
 - **SMAP L4 and ECOSTRESS** read directly (NSIDC cloud OPeNDAP, LP DAAC COGs) after the AppEEARS jobs sat queued > 24 h; live for any field with an Earthdata Login on the server, demo fields offline.
@@ -44,7 +47,7 @@ Six validated work streams, each adopted only if it beat the previous version on
 - `app/`: Expo client, plus native capture scripts in `app/scripts/`.
 - `docs/`: all documentation (VALIDATION, EXPERIMENTS, SELF_REVIEW, …).
 - `media/`: web/iOS/Android screenshots, flow videos, the 30 s demo video, BUILDS.md.
-- `SUBMISSION.md`: texts to paste.
+- Submission text has been entered on the competition website; `SUBMISSION.md` was removed at the owner’s request.
 - Git source of truth: Gitea `http://vps-home-node-1:3001/lino/fieldshift`.
 
 **How to run:**
@@ -52,12 +55,13 @@ Six validated work streams, each adopted only if it beat the previous version on
 - `FIELDSHIFT_OFFLINE=1 docker compose up --build` for the fully offline demo.
 - Mobile: `media/BUILDS.md`.
 
-**What the human must still do** (see SUBMISSION.md checklist):
-1. Push the repo to a public host (e.g. GitHub mirror) and paste the link.
-2. Upload `media/fieldshift-demo-30s.mp4` (YouTube unlisted or Drive) and paste the link. Build the showcase page with `python3 scripts/build_site.py --repo <public URL>` and publish `site/dist`; this also puts the URL into the deck.
-3. Check team registration, tick both boxes, and submit before Sun 23:59 local time.
-4. Optional: public hosting (owner chose private, ADR-014).
-5. Optional: rotate or revoke the Gitea tokens created for this build (`fieldshift-mac-*`, `fieldshift-sale-readonly-*`) and the Earthdata password stored on the VPS (`~/.config/fieldshift/earthdata`).
+**Final submission steps** (updated 2026-11-15):
+- Public source: https://github.com/Intelligent-Agriculture-Labs/Intelligent-Agriculture
+- Published showcase: https://intelligent-agriculture-labs.github.io/
+- Final video: `media/ia-demo-30s.mp4`; published showcase copy at `/assets/ia-demo-30s.mp4`.
+- Owner reports the competition website fields are filled. Submission status and any YouTube/Drive upload have not been independently verified.
+- Confirm the submitted video link opens without signing in, team registration is complete, references and SI disclosure are included, both required boxes are ticked, and final submission is confirmed before 23:59 local time.
+- Remaining device check: login, live-data banner and coloured zones on the owner’s physical iPhone.
 
 **Known limitations:** `docs/LIMITATIONS.md`. In short:
 - coarse weather grids;
