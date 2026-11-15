@@ -23,6 +23,7 @@ from ..science import drought_ml
 from ..science import pests as pst
 from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
+from . import risk_cards
 from .context import FieldContext, build, enrichment
 from .messages import day_label, risk_word, t
 
@@ -736,6 +737,8 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     # ---------- pests
     if in_season:
         cards.extend(_pest_cards(ctx, cid, today, lang, lat, planting))
+        # global weather-driven pest & disease models (rice blast, rusts, tropical late blight, ...)
+        cards.extend(risk_cards.cards(ctx, cid, c["type"], today, lang, planting, series))
     # ---------- frost / heat
     cards.extend(_temp_cards(ctx, cid, today, lang, planting))
     # ---------- rainy-season onset / false start / sowing window (rain-fed, tropics; engine/rain_season.py)
@@ -966,7 +969,7 @@ def _disease_cards(
     out = []
     win = rules()["disease"]["window_days"]
     for did, meta in dis.DISEASES.items():
-        if cid not in meta["crops"]:
+        if cid not in meta["crops"] or not dis.in_range(did, ctx.lat):
             continue
         s = scores[did]
         fut = {d: v for d, v in s.items() if today <= d <= today + dt.timedelta(days=win)}
@@ -1002,7 +1005,7 @@ def _disease_cards(
                     "disease_title",
                     lang,
                     risk=risk_word(risk, lang),
-                    disease=meta["name"],
+                    disease=risk_cards.legacy_name(did, lang, meta["name"]),
                     day=day_label(first, today, lang),
                 ),
                 "detail": t("disease_detail", lang),
@@ -1058,7 +1061,13 @@ def _pest_cards(
             recent = (len(cum) - 1 - k) <= rules()["pests"]["show_recent_days"]
         if ev and days_until is not None and days_until <= rules()["pests"]["window_days"]:
             key = "pest_soon_title" if days_until <= 1 else "pest_title"
-            title = t(key, lang, pest=p["name"], event=ev["label"].lower(), days=days_until)
+            title = t(
+                key,
+                lang,
+                pest=risk_cards.legacy_pest(pid, lang, p["name"]),
+                event=risk_cards.legacy_event(ev["label"], lang),
+                days=days_until,
+            )
             due = (today + dt.timedelta(days=days_until)).isoformat()
             action = ev["action"]
             risk = "moderate" if days_until > 3 else "high"
@@ -1069,7 +1078,12 @@ def _pest_cards(
             action = "Young plants are most vulnerable in the whorl stage; scout 20 plants in 5 spots weekly (FAO FAW guidance)."
             risk = "moderate"
         elif recent and lastev:
-            title = t("pest_now_title", lang, pest=p["name"], event=lastev["label"].lower())
+            title = t(
+                "pest_now_title",
+                lang,
+                pest=risk_cards.legacy_pest(pid, lang, p["name"]),
+                event=risk_cards.legacy_event(lastev["label"], lang),
+            )
             due = today.isoformat()
             action = lastev["action"]
             risk = "high"

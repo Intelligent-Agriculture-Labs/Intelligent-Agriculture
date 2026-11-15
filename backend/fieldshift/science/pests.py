@@ -90,11 +90,15 @@ PESTS: dict[str, dict[str, Any]] = {
         "range": ["north_america", "south_america", "africa", "asia", "oceania"],
         "name": "Fall armyworm",
         "crops": ["maize", "sorghum", "pearl_millet", "teff"],
-        "t_low": 10.9,
+        # Du Plessis, Schlemmer & Van den Berg 2020 (Insects 11:228): egg-to-adult lower threshold 12.57 °C,
+        # ~391 °C·d per generation (constant-temperature rearing 18–32 °C on maize).
+        "t_low": 12.6,
         "t_high": 35.0,
-        "events": [(350, "New generation of moths", "Scout whorls for windowpane damage")],
+        "events": [
+            (391, "New generation of moths", "Scout whorls for egg masses, windowpane damage and fresh frass")
+        ],
         "recurring": True,  # continuous generations where it does not overwinter (tropics)
-        "ref": "Hogg et al. 1982; FAO FAW guidance",
+        "ref": "Du Plessis et al. 2020 (12.6 °C, 391 °C·d/generation); FAO FAW guidance",
     },
 }
 

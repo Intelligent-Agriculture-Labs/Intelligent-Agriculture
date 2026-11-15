@@ -413,6 +413,32 @@ _run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation
   - Sugarcane, cassava, potato and rice: the yield-gap structure explains little for these crops.
 - **Not adopted:** a Köppen-zone factor. It made held-out errors worse once the region was known: 0.518 vs. 0.512 (EXP-12).
 
+### V11 · Global pest and disease models against documented outbreaks (NASA POWER only)
+_run: 2026-11-15, `scripts/validate_pest_disease.py` → `docs/validation/pest_disease.json`_
+
+**Method.**
+- Weather is NASA POWER only: hourly T2M, RH2M, T2MDEW and PRECTOTCORR (available from 2001), and daily data from 1984.
+- At mountain sites, temperature and dew point are shifted by −6.5 °C/km from the POWER cell's mean elevation to the site (MODELS §5b).
+- Each case's expectation was written into the script before the case was first run.
+- **Post-hoc change, disclosed:** the first Sigatoka run showed that a wet period lasting several days counted only on the day it started. Every infection model was fixed to count all days a wet period covers, and all hourly cases were re-run. Parameters were not tuned to the results.
+
+| # | Model | Case and reference | Expectation (set before the run) | Result | Verdict |
+|---|---|---|---|---|---|
+| 1 | Desert locust breeding | Cyclone Mekunu (landfall 26 May 2018) and Cyclone Luban (Oct 2018) rains in the southern Empty Quarter, which started the 2019–20 upsurge (FAO Locust Watch). Point 18.5 N, 51.5 E, 2001–2022. | 2018 ranks 1st | 2018 ranks **1st of 22** (133 favourable days; next highest 2020 with 114, and 2002 with 61). The first favourable day is **2018-05-26**, the day of Mekunu's landfall. | **hit** |
+| 1b | Desert locust breeding | 2003 rains in NW Africa that started the 2003–05 upsurge. Points 21.5 N 13.0 W (NW Mauritania) and 24.5 N 11.5 W (Western Sahara). | 2003 in the top 3 | 2003 ranks **3rd** and **4th of 22**. 2015 ranks 1st at both points, and 2010 and 2018 also rank high. The model sees summer rains (first favourable day 12–16 Aug 2003). | **hit / partial** |
+| 2 | Late blight, tropical (Wallin) vs Hutton | Toluca Valley, Mexico, 2600 m: some of the world's highest late-blight pressure, in the Jul–Sep rainy season (Grünwald et al. 2000). 2010–2019. | rainy season ≥ 2× dry-season days | Days with SV ≥ 2: **80.7 rainy vs 5.5 dry** (Jan–Mar); the ratio is ≥ 5.6 in every year. Hutton: 40.7 full days in the rainy season. | **hit** (Hutton also works here) |
+| 2b | Late blight, tropical vs Hutton | Ecuadorian highlands, Santa Catalina, 3050 m, where blight occurs all year (Andrade-Piedra et al. 2005). Feb–May vs Jul–Sep. | tropical model flags the season; Hutton finds few or no days | Tropical model: **101.9** days with SV ≥ 2 in Feb–May and 26.0 in Jul–Sep. **Hutton: 0 days in every year**, because nights are below 10 °C. | **hit**: the reason the tropical model replaces Hutton |
+| 3 | Rice blast (BLASTAM) | Osaki, Miyagi (Tohoku), Jul–Aug 2001–2015. 2003 was a cool, wet *yamase* summer with conditions favouring panicle blast in northern Japan; 2010 was Japan's record-hot summer. | 2003 in the top 3; 2010 in the bottom half | 2003: **12th of 15** on fully favourable days (27), but **tied 1st** on favourable-or-quasi days (61, with 2005, 2006 and 2013). 2010 ranks **14th** (18 days). | **miss** for 2003 (fully favourable); hit for 2010 |
+| 4 | Coffee leaf rust | Chinchiná, Caldas, Colombia, 1360 m: the 2008–2011 epidemic, with incidence 53.7 % against 5.8 % in 1991–94 (Avelino et al. 2015). Years 2003–2016. | 2008–11 mean above the other years | Favourable days per year: **346.8 in 2008–11 vs 348.7 in other years**. The model is saturated (300–363 days a year), and 2010 ranks 13th of 14. | **miss** |
+| 4b | Coffee rust driver | Avelino et al. 2015: at Chinchiná, the share of days with Tmax 22–28 °C rose from 67 % (1991–94) to 78 % (2008–11). | share higher in 2008–11 | POWER, lapse-corrected by +4.6 °C: **98.1 % → 95.6 %**. The mean daily range *rose* (7.76 → 8.05 °C) instead of narrowing. | **miss**: POWER does not resolve the station-scale signal |
+| 5 | Black Sigatoka | Urabá, Colombia (Apartadó, 30 m): pressure is higher in the Apr–Nov rainy season than in the Dec–Mar dry season. 2010–2019. | rainy-season mean score above dry season in most years | Rainy above dry in **10 of 10** years, but both are near saturation (rainy 0.97–1.00, dry 0.82–0.98). | **hit, weak**: little contrast |
+| 6 | Gray leaf spot predictors | Paul & Munkvold 2005, Iowa 1998–2002, V4–V12: 85.5–230.5 h at 22–30 °C and 122–330 humid night hours. POWER at Ames, 1 Jun – 5 Jul 2001 and 2002 (POWER hourly starts in 2001). | both inside the published ranges | 2001: **327 h** warm (above the range) and **174 h** humid nights (inside). 2002: **403 h** (above) and **82 h** (below). | **partial / miss**: gridded 2 m air is warmer and drier than in-canopy sensors |
+
+**Not validated:**
+- *Wheat leaf and stem rust:* no open, year-resolved outbreak record matched to a POWER cell was found in time. The parameters are the published ones (Magarey Table 2 and Roelfs et al.), not fitted.
+- *Cassava whitefly:* the Katono et al. 2021 counts are not public as a series.
+- *Fall armyworm generations:* there was no year-resolved field record to compare against.
+
 ## Interpretation
 
 ### Where the models are strong
@@ -452,6 +478,13 @@ _run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation
   - 2009 is among the higher-risk seasons on POWER's grid, but not the top.
   - Hutton criteria were designed for station humidity. The 2009 epidemic was also driven by infected transplants, which weather cannot see.
   - The card therefore says "weather favourable for infection — scout", never "disease present".
+- **Global pest and disease models (V11).**
+  - They are strongest where the signal is large-scale weather. Cyclone rains in locust recession areas are found to the day. The seasonal and highland behaviour of late blight is right, and in the Ecuadorian highlands the tropical model is the only one that responds: Hutton finds 0 days.
+  - They are weakest for coffee rust, black Sigatoka and maize gray leaf spot in the humid tropics. RH ≥ 90 % on a ~50 km grid is met almost every night, so the infection models saturate and cannot separate epidemic years (coffee rust 2008–11 is a clear miss). Avelino's station-scale driver, the narrower daily temperature range, does not appear in POWER at all.
+  - BLASTAM ranked the cool 2003 Tohoku summer low on fully favourable days. Its 5-day-mean rule (20–25 °C) treats the coldest spells as non-susceptible; 2003 was top-ranked only when quasi-favourable days are counted.
+  - Consequences for the product:
+    - Coffee rust and Sigatoka are not shown, because coffee and banana are not FieldShift crops yet. They should get station or in-canopy wetness, or a calibrated threshold, before they are switched on.
+    - Gray leaf spot and rice blast cards keep "scout first" wording at moderate confidence.
 - **MOD16 (V6).**
   - MOD16 has no irrigation input and is known to underestimate ET over irrigated fields in arid regions.
   - A large gap to the model is *expected* there. It is shown for transparency, not as a calibration target.
