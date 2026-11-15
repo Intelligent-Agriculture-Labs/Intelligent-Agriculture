@@ -353,7 +353,8 @@ Each module emits zero or more cards, each with risk, due date and a Why block (
 **Confidence** is a documented heuristic, not a calibrated probability:
 - water balance 0.55, or 0.70 if the farmer entered their last irrigation;
 - drought 0.6 with ≥ 3 indicators, else 0.45;
-- disease 0.5; pests 0.55; NDVI 0.45; frost/heat 0.6.
+- disease 0.5; pests 0.55; NDVI 0.45; frost/heat 0.6;
+- heat stress (people/livestock) 0.6, or 0.45 on the climatology fallback; solar pump 0.5; nearby fires 0.7 (0.5 on demo data); residue burning 0.55.
 
 ## <a id="rain-onset"></a>18. Rain-season onset, false starts and sowing windows (`science/onset.py`, `engine/rain_season.py`)
 For rain-fed farmers in the tropics and monsoon regions, *when* to sow matters more than almost anything else. Sowing at the first shower risks losing seed and seedlings to a dry spell (a **false start**); sowing late shortens the season. Parameters live in `config/onset.yaml`; ADR-021 records the choices.
@@ -389,6 +390,83 @@ For rain-fed farmers in the tropics and monsoon regions, *when* to sow matters m
 
 **Validation.** See [VALIDATION.md, V9](VALIDATION.md#v9).
 
+## <a id="heat-stress"></a>19. Heat stress for people and livestock (`science/heatstress.py`, `engine/heat_cards.py`)
+Card `heat_stress` (category `weather`). Applies to every field, whatever the crop or season, because people and animals work there every day.
+
+**Hourly inputs** (`data/heatwx.py`): air temperature, relative humidity, 2 m wind and global horizontal irradiance (GHI). The chain degrades gracefully:
+1. Forecast mode uses the Open-Meteo hourly forecast (T, RH, 10 m wind, GHI, direct radiation). The 10 m wind is converted to 2 m with FAO-56 eq. 47 (× 0.748).
+2. Replay (as-of) mode uses NASA POWER hourly (`T2M`, `RH2M`, `WS2M`, `ALLSKY_SFC_SW_DWN`; MJ m⁻² h⁻¹ × 277.8 → W m⁻²).
+3. Otherwise it uses the T/RH hours already in the field context, plus NASA POWER daily climatology (±7 days of year, last 10 years) for `WS2M` and `ALLSKY_SFC_SW_DWN`. The daily irradiation is spread over the day in proportion to cos θz. Confidence drops from 0.6 to 0.45, and a caveat says so.
+
+**Outdoor WBGT** (ISO 7243:2017): WBGT = 0.7·T_nwb + 0.2·T_g + 0.1·T_a. The natural wet bulb T_nwb and the 150 mm black globe T_g are solved by fixed-point iteration from their steady-state energy balances, after **Liljegren et al. (2008)**:
+- Globe: T_g⁴ = ½(ε_a T_a⁴ + ε_s T_s⁴) − h/(σ ε_g)(T_g − T_a) + S/(2σ ε_g)(1 − α_g)[f_dir(1/(2 cos θz) − 1) + 1 + α_s]. The convective coefficient h comes from the sphere Nusselt number Nu = 2 + 0.6 Re^½ Pr^⅓.
+- Wick: T_nwb = T_a − (ΔH_vap/(c_p M_a/M_w))·(e_w − e_a)/(P − e_w)·(Pr/Sc)^0.56 + F_atm/h. Here F_atm is the long-wave and short-wave radiation absorbed by the wick, and h uses the cylinder correlation Nu = 0.281 Re^0.6 Pr^0.44.
+- Supporting terms:
+  - Saturation vapour pressure: Buck (1981).
+  - Atmospheric emissivity: 0.575·e^0.143.
+  - Direct-beam fraction: f_dir = exp(3 − 1.34 S* − 1.65/S*), where S* = GHI/TOA ≤ 0.85. When the forecast gives direct radiation, f_dir is taken from it instead.
+  - Surface pressure: from elevation (FAO-56 eq. 7).
+- Solar position: Spencer (1971) declination and equation of time. The hour-mean irradiance is evaluated at mid-hour.
+- Wind floor: 0.5 m/s at 2 m. This follows KNMI/ECMWF operational practice (0.62 m/s at 10 m), because grid winds cannot resolve calm hours and the globe balance is ill-conditioned near calm (see VALIDATION V12).
+
+**Work–rest limits:** NIOSH (2016) recommended limits, which equal the ISO 7243 Annex A reference values.
+- Acclimatized: REL = 56.7 − 11.5·log₁₀M.
+- Unacclimatized: RAL = 59.9 − 14.1·log₁₀M.
+- M (W) follows ISO 8996: rest 115 W, moderate field work 300 W (REL 28.2 °C), heavy work 415 W (26.6 °C).
+- The allowed work fraction f per hour is the largest f with WBGT ≤ REL(f·M_work + (1 − f)·M_rest), found by bisection.
+- Risk levels: low if f = 1; moderate if f ≥ 0.75; high if 0.25 ≤ f < 0.75; severe if f < 0.25 (≈ the limit for near-rest).
+
+**Card text:**
+- **Days:** the first run of consecutive days with any restricted hour between 06:00 and 21:00.
+- **Hours:** clock hours restricted at the run's worst level on at least half of those days.
+- **Rest minutes:** (1 − f)·60 at the peak hour.
+- **When f < 0.25:** the advice is to stop heavy work during those hours.
+
+**Livestock THI**
+- **Cattle and poultry:** THI = 0.8·T + RH·(T − 14.4) + 46.4. This is NRC (1971) in the °C form of Mader et al. (2006), with RH as a fraction.
+  - Thresholds (St-Pierre et al. 2003): dairy cow 70, beef cow 75, laying hen 70, broiler 78.
+  - Classes above the threshold (Hahn et al. 2009): alert +1…4, danger +5…9, emergency ≥ +10.
+- **Sheep and goats:** THI = T − (0.31 − 0.31·RH)(T − 14.4) (Marai et al. 2007). Below 22.2 is no stress; 22.2–23.3 moderate; 23.3–25.6 severe; 25.6 and above extreme.
+- **Card rule:** livestock alone raises a card only at *danger* or above (Marai's extreme class only). Mild alert is shown in the reasoning, not as a card. Card risk is danger → moderate, emergency → high.
+
+## <a id="solar-pump"></a>20. Solar irrigation pump advisor (`science/solarpump.py`, `engine/solar_service.py`, `POST /api/solar-pump`)
+- **Water need.** The FAO-56 Kc curve is piecewise linear over the crop's stages (ini, dev, mid, late). For perennials, the per-cutting curve is averaged over `season_days`. The curve is laid on a typical year from the planting date.
+  - ETc = Kc × ET₀ uses the monthly mean FAO-56 PM ET₀ from NASA POWER for the last 20 complete years (observed days only).
+  - Effective rain uses the USDA-SCS method from FAO CROPWAT (Smith 1992): P_eff = P(125 − 0.2P)/125 for P ≤ 250 mm/month, else 125 + 0.1P.
+  - Net = ETc − P_eff. Gross = net / application efficiency (drip 0.90 … furrow 0.60). Daily volume V = gross (mm) × 10 × area (ha) per day.
+- **Head.** H = (static lift [default 15 m] + operating pressure [drip 10, sprinkler 30, pivot 25, surface 1 m]) × 1.10 for pipe friction.
+- **Hydraulic energy.** E_h = ρgHV/3.6·10⁶ = 0.002725·H·V kWh.
+- **PV size** for each month: P_pv = E_h / (G · η_mp · PR).
+  - G is the NASA POWER `ALLSKY_SFC_SW_DWN` monthly mean in kWh m⁻² d⁻¹ (= peak-sun hours).
+  - η_mp = 0.45 is the motor-pump (wire-to-water) efficiency.
+  - PR = [1 − 0.004 (T_cell − 25)] × 0.88, with T_cell = mean Tmax + 0.03·800 (Ross coefficient; Skoplaki & Palyvos 2009). The 0.88 covers soiling, wiring, mismatch and controller losses.
+  - The **design month** is the month needing the largest array. This is normally the peak-need month, unless that month is unusually cloudy. Both months are reported.
+  - Pump flow ≈ V / G (m³/h).
+- **Economics** (indicative, `config/solar_pump.yaml`, all editable):
+  - Solar: 1,000 USD/kWp installed, annualised with CRF(8 %, 20 y) plus 2 %/yr O&M, divided by the season's pumped volume.
+  - Diesel: L/m³ = 0.002725·H / (0.15 × 9.96 kWh/L), at 1.10 USD/L plus 25 % maintenance. The pump-set purchase is excluded, so the comparison is conservative for solar.
+  - CO₂: 2.68 kg/L (IPCC 2006).
+- **Card** `solar_pump`: category `planning`, risk `low`. It is shown only for irrigated fields.
+- References: FAO & GIZ (2018); GIZ/FAO SPIS Toolbox; Kelley et al. (2010); IRENA (2016); Smith (1992).
+
+## <a id="fires"></a>21. Active fires and residue burning (`data/firms.py`, `engine/fire_cards.py`)
+**`fire_nearby`.** Uses NASA FIRMS active-fire detections within 50 km over the last 48 h (VIIRS 375 m, Schroeder et al. 2014; MODIS 1 km, Giglio et al. 2016). Low-confidence detections are dropped.
+- Distance (haversine) and bearing (8-point compass) are given to the nearest fire.
+- Risk: high if the nearest fire is ≤ 2 km; moderate if any fire is ≤ 10 km or there are ≥ 20 fires within 50 km (smoke); otherwise low.
+
+**`residue_no_burn`.** Shown when all of these hold:
+- the field is in a residue-burning region (`config/residue_burning.yaml`): NW and E Indo-Gangetic Plain, mainland South-East Asia, NE China plain;
+- the crop is one that is burnt there;
+- the date is in, or one month before, the burning months. Fires within 10 km also trigger it.
+
+Quantities per hectare:
+- residue = typical yield × residue-to-grain ratio (rice 1.2, wheat 1.3, maize 1.0; Jain et al. 2014);
+- nutrient loss = residue × content × burn loss (N 90 %, P 25 %, K 20 %, S 50 %; Dobermann & Fairhurst 2002);
+- C = residue × 0.40–0.43, of which 90 % is released (CO₂ = C × 44/12);
+- soil-carbon gain when retained = 12 % of residue C in the first year (Powlson et al. 2008).
+
+Recommended practice: Happy Seeder / Super Seeder direct sowing into the residue (Sidhu et al. 2015; most profitable option per Shyamsundar et al. 2019, *Science*), or chop-and-spread and incorporation.
+
 ## Optional LLM phrasing layer
 Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is not implemented in v1; see ROADMAP.md. All texts are template-generated from computed numbers, so nothing is invented.
 
@@ -412,3 +490,24 @@ Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is n
 - Liebmann, B. et al. (2012) Seasonality of African precipitation from 1996 to 2009. *J. Climate* 25: 4304–4322.
 - Dunning, C.M., Black, E.C.L., Allan, R.P. (2016) The onset and cessation of seasonal rainfall over Africa. *J. Geophys. Res. Atmos.* 121: 11405–11424.
 - FAO (1978) Report on the Agro-ecological Zones Project, Vol. 1: Methodology and results for Africa. World Soil Resources Report 48.
+
+- Liljegren, J.C., Carhart, R.A., Lawday, P., Tschopp, S., Sharp, R. (2008) Modeling the wet bulb globe temperature using standard meteorological measurements. *J. Occup. Environ. Hyg.* 5: 645–655. doi:10.1080/15459620802310770.
+- ISO 7243:2017 Ergonomics of the thermal environment — Assessment of heat stress using the WBGT index. ISO 8996:2021 Determination of metabolic rate.
+- NIOSH (2016) Criteria for a recommended standard: occupational exposure to heat and hot environments. DHHS (NIOSH) Pub. 2016-106.
+- Stull, R. (2011) Wet-bulb temperature from relative humidity and air temperature. *J. Appl. Meteor. Climatol.* 50: 2267–2269.
+- Buck, A.L. (1981) New equations for computing vapor pressure and enhancement factor. *J. Appl. Meteor.* 20: 1527–1532.
+- Mader, T.L., Davis, M.S., Brown-Brandl, T. (2006) Environmental factors influencing heat stress in feedlot cattle. *J. Anim. Sci.* 84: 712–719.
+- St-Pierre, N.R., Cobanov, B., Schnitkey, G. (2003) Economic losses from heat stress by US livestock industries. *J. Dairy Sci.* 86 (E. Suppl.): E52–E77.
+- Hahn, G.L., Gaughan, J.B., Mader, T.L., Eigenberg, R.A. (2009) Thermal indices and their applications for livestock environments. In: *Livestock Energetics and Thermal Environmental Management*, ASABE, 113–130.
+- Marai, I.F.M., El-Darawany, A.A., Fadiel, A., Abdel-Hafez, M.A.M. (2007) Physiological traits as affected by heat stress in sheep — a review. *Small Rumin. Res.* 71: 1–12.
+- FAO & GIZ (2018) *The benefits and risks of solar-powered irrigation — a global overview*. Rome.
+- Kelley, L.C., Gilbertson, E., Sheikh, A., Eppinger, S.D., Dubowsky, S. (2010) On the feasibility of solar-powered irrigation. *Renew. Sustain. Energy Rev.* 14: 2669–2682.
+- Skoplaki, E., Palyvos, J.A. (2009) Operating temperature of photovoltaic modules: a survey of pertinent correlations. *Solar Energy* 83: 614–624.
+- Smith, M. (1992) CROPWAT, FAO Irrigation and Drainage Paper 46.
+- Schroeder, W., Oliva, P., Giglio, L., Csiszar, I.A. (2014) The New VIIRS 375 m active fire detection data product. *Remote Sens. Environ.* 143: 85–96.
+- Giglio, L., Schroeder, W., Justice, C.O. (2016) The collection 6 MODIS active fire detection algorithm and fire products. *Remote Sens. Environ.* 178: 31–41.
+- Dobermann, A., Fairhurst, T.H. (2002) Rice straw management. *Better Crops International* 16 (Special Suppl.): 7–11.
+- Jain, N., Bhatia, A., Pathak, H. (2014) Emission of air pollutants from crop residue burning in India. *Aerosol Air Qual. Res.* 14: 422–430.
+- Powlson, D.S. et al. (2008) Carbon sequestration in European soils through straw incorporation: limitations and alternatives. *Waste Manag.* 28: 741–746.
+- Sidhu, H.S. et al. (2015) Development and evaluation of the Turbo Happy Seeder for sowing wheat into heavy rice residues in NW India. *Field Crops Res.* 184: 201–212.
+- Shyamsundar, P. et al. (2019) Fields on fire: alternatives to crop residue burning in India. *Science* 365: 536–538.

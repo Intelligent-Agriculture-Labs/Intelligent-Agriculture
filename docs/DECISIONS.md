@@ -156,7 +156,7 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
   - The season model's yield level came from `typical_yield_t_ha`: well-managed, mostly U.S./European yields. It had been checked only at the demo sites.
   - A Kenyan smallholder was shown 6.4 t/ha of maize at Machakos, where the national FAOSTAT mean is 1.6 t/ha.
 - **Decision:**
-  - Benchmark the model against FAOSTAT national yields worldwide (VALIDATION V9) and calibrate the level with a small set of documented multiplicative factors:
+  - Benchmark the model against FAOSTAT national yields worldwide (VALIDATION V12) and calibrate the level with a small set of documented multiplicative factors:
     - Y = Y_model × f_crop × f_region^s_crop
     - f_crop: potential-yield factor per crop (15), fitted where crops.yaml typical yields come from (Northern America, Western and Southern Europe), so f_region = 1 there;
     - f_region: yield-gap factor per UN M49 macro region (8);
@@ -187,3 +187,23 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - **Gating:** a card needs host crop, geographic range (continent, tropics or the FAO recession area), crop stage window and score threshold. Out-of-range or out-of-season fields never see the card.
 - **Not done:** coffee and banana are not FieldShift crops yet. Adding them needs perennial crop-model parameters, which belong to the yield work stream. Their models are implemented, validated and ready, but no card appears until those crops exist.
 - **Consequences:** validation results are reported per model in VALIDATION.md V11, including misses.
+
+## ADR-024 Heat stress, solar pump and FIRMS fire advice as modular cards (2026-11-15)
+- **Context.** The challenge asks for NASA-data advice that helps farmers anywhere. Three gaps were missing:
+  - heat risk to the *people and animals* on the farm (the existing `heat` card covers crops only);
+  - an energy option for irrigation;
+  - fire and residue-burning advice for regions such as South Asia.
+- **Decisions.**
+  - **WBGT, not heat index.** ISO 7243 and NIOSH define work–rest limits in WBGT, and WBGT includes sun and wind, which matter outdoors. We implemented the physically based Liljegren et al. (2008) model rather than a regression (e.g. Bernard or the simplified "ABM" WBGT), because it uses exactly the variables we have (T, RH, wind, irradiance) and is the reference method. It is checked against ECMWF thermofeel to < 0.02 °C (VALIDATION V12).
+  - **NIOSH time-weighted limits.** Work–rest fractions come from the NIOSH REL equation with a time-weighted metabolic rate, instead of a hard-coded ACGIH table. This keeps the advice continuous and citable.
+  - **Livestock THI with cited species thresholds**: St-Pierre 2003 classes (Hahn 2009) and Marai 2007 for sheep and goats. Mild "alert" stress does not raise a card on its own. In live runs it fired on ordinary warm days in the tropics.
+  - **Hourly inputs degrade gracefully**: forecast (Open-Meteo) → NASA POWER hourly in replays → context T/RH + NASA POWER climatology. The existing forecast request was *not* changed, so the committed demo-cache keys stay valid. Extra variables come from a separate request that may fail.
+  - **Solar pump in its own module and endpoint** (`/api/solar-pump`), plus one low-priority `planning` card for irrigated fields. Sizing uses the design-month method (FAO/GIZ SPIS). Costs live in `config/solar_pump.yaml` because they vary by country. The diesel comparison excludes pump-set purchase, which is conservative for solar.
+  - **FIRMS without a mandatory key.** The area API needs a free MAP_KEY. Without one, the public keyless 24 h global VIIRS files are used, then recorded demo detections (Punjab/Haryana, 7–14 Nov 2026), then nothing. The key never enters the cache key, logs or responses. `FIELDSHIFT_FIRMS=off|demo|auto` controls the mode (DATA.md).
+  - **Residue-burning regions** are a small cited table of boxes, crops and months, not a model. The card is advice with quantified nutrient and carbon losses (Dobermann & Fairhurst 2002; Powlson et al. 2008), and Happy Seeder as the recommended alternative (Shyamsundar et al. 2019).
+  - **Minimal coupling.** `service.py` gains three `cards.extend(...)` lines, one background FIRMS future and `firms` in the source list. `FieldContext` gains one field (`power`, the raw POWER daily record) so climatologies need no extra request.
+- **Consequences.**
+  - The heat card can show for any crop and season. It is the most broadly useful of the three for smallholders in hot climates.
+  - In calm deserts the offline fallback under-estimates WBGT (−1.5 °C at Fallon in July). That case is flagged with lower confidence.
+  - The keyless FIRMS mode downloads ~14 MB per 3 h per server. Deployments with traffic should set a MAP_KEY.
+

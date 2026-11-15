@@ -10,6 +10,7 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | POST | `/api/advice` | Weekly action cards + drought + water state + time series + sources |
 | POST | `/api/simulate` | What-if: N past seasons for a scenario vs. baseline |
 | POST | `/api/rotations` | Current rotation + ≥ 3 alternatives with metrics, calendar, texts |
+| POST | `/api/solar-pump` | Solar PV irrigation pump sizing: NASA POWER irradiance + FAO-56 peak water need → kWp, pump flow, kWh/m³, USD/m³ vs diesel, CO₂ avoided (`SolarPumpRequest` → `SolarPumpResponse` in `contracts/api.ts`) |
 | GET | `/api/climate?lat=&lon=` | 1984→ yearly indicators, trends, normals, insights |
 | POST | `/api/terrain` | Computed terrain maps around the field (PNG overlays + legends + field stats + management zones) |
 | GET | `/api/terrain/png/{key}/{layer}.png` | Map overlay image (web-mercator aligned with `bounds`) |

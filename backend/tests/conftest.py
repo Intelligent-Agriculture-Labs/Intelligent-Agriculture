@@ -75,6 +75,16 @@ def offline_synthetic(monkeypatch):
         },
     )
     monkeypatch.setattr(context, "enrichment", lambda lat, lon, today: {})
+    # optional layers never touch the network in tests: hourly heat weather falls back to the
+    # context hours + POWER climatology; FIRMS uses recorded demo data only
+    from fieldshift.data import heatwx
+
+    def _no_net(*a, **k):
+        raise sources.DataUnavailable("network disabled in tests")
+
+    monkeypatch.setattr(heatwx, "forecast_hourly", _no_net)
+    monkeypatch.setattr(heatwx, "power_hourly", _no_net)
+    monkeypatch.setenv("FIELDSHIFT_FIRMS", "demo")
     from fieldshift.engine import service
 
     monkeypatch.setattr(service, "enrichment", lambda lat, lon, today: {})

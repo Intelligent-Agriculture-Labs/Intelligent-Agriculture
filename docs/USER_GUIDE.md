@@ -31,6 +31,16 @@ FieldShift tells you what to do on your farm this week, and helps you plan next 
 - Pull down to refresh. Without internet, the last advice is shown with an "Offline" note.
 <br clear="right">
 
+### New cards for every farm
+- **Heat stress (people and animals).** For example: "Very high heat stress Tue–Thu 11:00–16:00: field work only before 11:00, shade and water for animals". FieldShift computes the wet-bulb globe temperature (WBGT) each hour from the forecast temperature, humidity, wind and sunshine. It compares the result with the NIOSH/ISO limit for moderate field work, and the card tells you how long to rest each hour.
+  - For livestock, it uses the temperature–humidity index for cattle, poultry, and sheep and goats.
+  - The values are for full sun. Shade lowers them; heavy or protective clothing raises them.
+  - Workers in their first 1–2 weeks of hot weather need more rest.
+- **Solar pump option** (irrigated fields only, low priority). It shows the size of a solar pump, in kWp, that covers your crop's water need in its thirstiest month, based on NASA sunshine records for your field. It also gives the water cost per m³ against a diesel pump and the CO₂ you would save.
+  - The card assumes 15 m from the water level to the field. For your own well depth, area, diesel price or system price, call `POST /api/solar-pump` (see API.md).
+- **Fires nearby.** NASA satellites (VIIRS, MODIS) detect active fires several times a day. If fires burned within 50 km in the last 48 hours, you see how many there were and how far and in which direction the nearest one is. Keep firebreaks around the field and stored hay, and protect workers from smoke.
+- **Don't burn crop residue.** This card appears in regions where straw is commonly burnt (e.g. Punjab and Haryana after the rice harvest) at the burning season. It shows how much nitrogen and carbon burning would destroy on your field, and suggests sowing into the mulch (Happy Seeder) or incorporating the straw instead.
+
 ## 3. Why? (tap any card)
 <img src="../media/web-why-mobile.png" width="260" align="right" alt="Why screen">
 

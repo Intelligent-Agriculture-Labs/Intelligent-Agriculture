@@ -128,6 +128,44 @@ def rotations_ep(req: RotationRequest) -> dict[str, Any]:
     return service.rotations_api(req.model_dump())
 
 
+class SolarPumpRequest(BaseModel):
+    lat: float = Field(ge=-60, le=75)
+    lon: float = Field(ge=-180, le=180)
+    crop: str
+    planting_date: str
+    irrigation: Irr = "drip"
+    area_ha: float | None = Field(None, gt=0, le=10000)
+    polygon: list[list[float]] | None = None
+    static_head_m: float | None = Field(None, ge=0, le=300)
+    diesel_price_usd_l: float | None = Field(None, gt=0, le=10)
+    capex_usd_kwp: float | None = Field(None, gt=0, le=10000)
+    as_of: str | None = None
+
+
+@app.post("/api/solar-pump")
+def solar_pump_ep(req: SolarPumpRequest) -> dict[str, Any]:
+    """Size a solar PV irrigation pump from NASA POWER irradiance and the crop's FAO-56 peak water need."""
+    from .engine.solar_service import solar_pump
+
+    _check_crop(req.crop)
+    try:
+        return solar_pump(
+            req.lat,
+            req.lon,
+            req.crop,
+            req.planting_date,
+            req.irrigation,
+            area_ha=req.area_ha,
+            polygon=req.polygon,
+            static_head_m=req.static_head_m,
+            diesel_price_usd_l=req.diesel_price_usd_l,
+            capex_usd_kwp=req.capex_usd_kwp,
+            as_of=req.as_of,
+        )
+    except ValueError as e:
+        raise HTTPException(422, str(e)) from e
+
+
 @app.get("/api/climate")
 def climate_ep(
     lat: float = Query(ge=-60, le=75), lon: float = Query(ge=-180, le=180), as_of: str | None = None

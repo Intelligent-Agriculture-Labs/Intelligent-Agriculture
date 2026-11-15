@@ -14,7 +14,7 @@ from typing import Any
 import numpy as np
 import yaml
 
-from ..data import sources
+from ..data import firms, sources
 from ..data.sources import source_ref
 from ..science import climate as climmod
 from ..science import disease as dis
@@ -25,7 +25,10 @@ from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
 from . import risk_cards
 from .context import FieldContext, build, enrichment
+from .fire_cards import fire_cards
+from .heat_cards import heat_stress_cards
 from .messages import day_label, risk_word, t
+from .solar_service import solar_pump_cards
 
 log = logging.getLogger("fieldshift.service")
 
@@ -179,6 +182,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     lang = inp.get("lang") or "en"
     today = dt.date.fromisoformat(inp["as_of"]) if inp.get("as_of") else dt.date.today()
     enr_future = _pool.submit(enrichment, lat, lon, today)
+    fire_future = _pool.submit(firms.nearby_fires, lat, lon, today, 50.0)
     ctx = build(lat, lon, today)
     try:
         ctx.enrich = enr_future.result(timeout=float(inp.get("enrich_timeout_s", 8)))
@@ -746,6 +750,14 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         from .rain_season import onset_cards
 
         cards.extend(onset_cards(ctx, cid, today, lang, series))
+    # ---------- heat stress for people and livestock, solar pump option, fires / residue burning
+    cards.extend(heat_stress_cards(ctx, today, lang, series, _why))
+    cards.extend(solar_pump_cards(ctx, inp, planting, lang, _why))
+    try:
+        fire_res = fire_future.result(timeout=float(inp.get("enrich_timeout_s", 8)) + 12)
+    except Exception:  # FIRMS is optional
+        fire_res = None
+    cards.extend(fire_cards(lat, lon, cid, today, lang, _why, fire_res, ctx.statuses))
 
     # rank: risk desc, then due date asc
     def sort_key(cd: dict[str, Any]) -> tuple[int, str]:
@@ -767,8 +779,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "smap_l4",
             "mod16",
             "ecostress",
+            "firms",
         )
-        if sid != "ecostress" or ctx.statuses.get("ecostress")
+        if sid not in ("ecostress", "firms") or ctx.statuses.get(sid)
     ]
     offline = any(s["status"] == "demo" for s in srcs)
     area = _polygon_area_ha(inp.get("polygon"))

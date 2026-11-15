@@ -1,0 +1,42 @@
+{
+  "run": "2026-11-15T00:42:14+00:00",
+  "thermofeel": {
+    "version": "2.3.0",
+    "n": 1800,
+    "bias": -0.0004,
+    "mae": 0.0007,
+    "max_abs": 0.0154
+  },
+  "psychrometric": {
+    "vs_assmann_min": -0.667,
+    "vs_assmann_max": -0.045,
+    "vs_stull_mae": 0.374,
+    "stull_20C_50pct": 13.7
+  },
+  "fallback_vs_power_hourly": [
+    {
+      "site": "Ludhiana, India (hot, dry pre-monsoon)",
+      "days": 28,
+      "full_mean_daily_max": 32.33,
+      "bias": 0.27,
+      "mae": 0.97,
+      "level_agreement": 0.89
+    },
+    {
+      "site": "Fallon, Nevada (desert summer)",
+      "days": 31,
+      "full_mean_daily_max": 28.99,
+      "bias": -1.5,
+      "mae": 2.09,
+      "level_agreement": 0.48
+    },
+    {
+      "site": "Machakos, Kenya (tropical highland)",
+      "days": 28,
+      "full_mean_daily_max": 26.72,
+      "bias": 0.84,
+      "mae": 0.84,
+      "level_agreement": 0.96
+    }
+  ]
+}

@@ -28,7 +28,7 @@ export interface FieldInput {
 }
 
 export interface SourceRef {
-  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm"
+  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm", "firms"
   name: string;
   provider: string; // "NASA LaRC", "NASA/ORNL DAAC", ...
   url: string;
@@ -66,7 +66,8 @@ export interface WhyBlock {
 }
 
 export interface ActionCard {
-  id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat", "rain_onset"
+  id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat", "rain_onset",
+  //             "heat_stress" (people + livestock), "solar_pump", "fire_nearby", "residue_no_burn"
   category: "water" | "drought" | "disease" | "pest" | "planning" | "weather";
   priority: number; // 1 = most urgent
   risk: Risk;
@@ -684,4 +685,63 @@ export interface AdviceText {
   text: string; // <= max_chars, header + top actions + rain, in FieldInput.lang
   chars: number;
   sms_parts: number;
+}
+
+/* ---------- Solar irrigation pump advisor (POST /api/solar-pump) ----------
+ * Sizes a solar PV pump from NASA POWER all-sky irradiance (ALLSKY_SFC_SW_DWN) and the crop's FAO-56
+ * peak-month water need. Also appears in /api/advice as the low-priority card id "solar_pump"
+ * (irrigated fields only). Costs are indicative USD; see docs/MODELS.md#solar-pump. */
+export interface SolarPumpRequest {
+  lat: number;
+  lon: number;
+  crop: string;
+  planting_date: string; // ISO date; the season calendar is repeated on the climatology
+  irrigation?: IrrigationMethod; // sets the operating pressure head and application efficiency
+  area_ha?: number | null; // default: polygon area, else 1 ha
+  polygon?: [number, number][] | null;
+  static_head_m?: number | null; // water level to field surface, default 15 m
+  diesel_price_usd_l?: number | null; // default 1.10
+  capex_usd_kwp?: number | null; // installed PV + pump per kWp, default 1000
+  as_of?: string | null;
+}
+export interface SolarPumpMonth {
+  month: number; // 1..12
+  et0_mm_day: number;
+  kc: number; // mean daily Kc in the month (0 outside the season)
+  rain_mm: number;
+  effective_rain_mm: number;
+  net_irrigation_mm: number;
+  volume_m3_day: number;
+  hydraulic_kwh_day: number;
+  irradiance_kwh_m2_day: number; // NASA POWER = peak-sun hours
+  performance_ratio: number;
+  kwp_needed: number;
+}
+export interface SolarPumpResponse {
+  lat: number;
+  lon: number;
+  crop: string;
+  irrigation: IrrigationMethod;
+  area_ha: number;
+  needs_irrigation: boolean;
+  design_month: number; // month needing the largest array
+  peak_need_month: number;
+  head_m: number; // total dynamic head
+  peak_volume_m3_day: number;
+  pv_kwp: number;
+  pump_flow_m3_h: number;
+  hydraulic_kwh_per_m3: number;
+  pv_kwh_per_m3: number;
+  season_volume_m3: number;
+  season_pv_kwh: number;
+  solar_capex_usd: number;
+  solar_usd_per_m3: number; // annualised capex + O&M
+  diesel_l_per_m3: number;
+  diesel_usd_per_m3: number; // fuel + maintenance (pump-set purchase excluded)
+  diesel_l_per_season: number;
+  co2_avoided_t_per_season: number;
+  monthly: SolarPumpMonth[];
+  assumptions: Record<string, number>;
+  steps: string[];
+  sources: string[];
 }

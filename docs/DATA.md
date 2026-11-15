@@ -10,6 +10,10 @@ All sources were verified reachable on 2026-11-14 from both the Mac and the VPS.
 |---|---|---|---|---|---|---|---|
 | Tmax, Tmin, T2M, RH, dew point, wind 2 m, all-sky shortwave, **precipitation** (`PRECTOTCORR`, MERRA-2 bias-corrected) | **NASA POWER** daily point API, community AG | NASA LaRC (public domain) | 0.5° × 0.625° meteorology; 1° solar | ~2–5 days (solar can lag) | `power.larc.nasa.gov/api/temporal/daily/point`, no auth | ET₀, water balance, GDD, pests, SPI/SPEI, climate trends, rotations, What-if | Hargreaves ET₀ when radiation is missing; forecast bridges the latency gap |
 | Hourly T, RH | NASA POWER hourly API | NASA LaRC | as above | ~days | no auth | Disease validation (2009 late blight) | — |
+| Hourly `T2M`, `RH2M`, `WS2M` (2 m wind), `ALLSKY_SFC_SW_DWN` (MJ m⁻² h⁻¹) | NASA POWER hourly API, `time-standard=UTC` | NASA LaRC | as above | ~days | no auth | Heat stress (WBGT/THI) in replay / as-of mode; WBGT validation (V12) | Context T/RH + POWER daily climatology |
+| Daily `WS2M`, `ALLSKY_SFC_SW_DWN` climatology (±7 days of year, 10 y; monthly means over 20 y) | NASA POWER daily (same request as the weather record, no extra call) | NASA LaRC | 0.5° × 0.625° / 1° solar | — | — | Heat-stress fallback (wind, sunshine); **solar pump sizing** (peak-sun hours = `ALLSKY_SFC_SW_DWN` / 3.6); PV module temperature from `T2M_MAX` | — |
+| Hourly forecast T, RH, 10 m wind, GHI, direct radiation (7 days) | Open-Meteo forecast (extra request, 3 h cache) | Open-Meteo (CC BY 4.0) | ~9–25 km | hourly | no key | Heat-stress card (forecast mode) | Context T/RH + POWER climatology |
+| Active fires (lat/lon, time, FRP, confidence) | **NASA FIRMS** — VIIRS NOAA-20/NOAA-21/S-NPP 375 m and MODIS 1 km NRT (standard processing for old dates) | NASA LANCE / FIRMS (open; cite NASA FIRMS) | 375 m / 1 km, several overpasses a day | < 3 h | Area API `firms.modaps.eosdis.nasa.gov/api/area/csv/{MAP_KEY}/…` (free key); keyless global 24 h VIIRS text files | Nearby-fire and residue-burning cards | Recorded demo detections (Punjab/Haryana, 7–14 Nov 2026), else no card |
 | Vegetation greenness NDVI | **MODIS Terra MOD13Q1 v061** | NASA LP DAAC via ORNL DAAC subsets (public domain) | 250 m, 16-day | ~2–4 weeks | `modis.ornl.gov/rst/api/v1`, no auth | NDVI anomaly → scouting card; vegetation condition index in drought status; Why charts | Card omitted when unavailable |
 | Actual ET | **MODIS MOD16A2GF v061** | NASA LP DAAC via ORNL | 500 m, 8-day | yearly (gap-filled) | ORNL subsets | ET validation | — |
 | Land-surface temperature | **MODIS MOD11A2** | NASA LP DAAC via ORNL | 1 km, 8-day | ~2 weeks | ORNL subsets | Expert layer | — |
@@ -56,6 +60,23 @@ NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`
   - GDO Risk of Drought Impact for Agriculture. It mixes in exposure and vulnerability, which is not hazard severity.
   - So the weak global label is GDO's modelled soil-moisture anomaly. It is independent of NASA POWER rain, but it is still a single indicator, and we say so wherever it is used.
 - **CDL, SSURGO, PRISM:** US-only. FieldShift's backbone is global so smallholders outside the US get the same product; these are planned as US-only enrichments.
+
+## NASA FIRMS: modes and how to enable the full API
+`backend/fieldshift/data/firms.py` chooses a mode from the environment.
+
+| Setting | Behaviour |
+|---|---|
+| `FIELDSHIFT_FIRMS=auto` (default) **with** `FIELDSHIFT_FIRMS_MAP_KEY` (or `FIRMS_MAP_KEY`) | Area API for a 50 km box around the field. Sources: VIIRS NOAA-20, NOAA-21, S-NPP and MODIS NRT, last 2 days (`*_SP` standard processing when the as-of date is > 60 days old). 3 h cache. |
+| `auto` **without** a key | Public keyless files `J1_VIIRS_C2_Global_24h.csv` and `J2_VIIRS_C2_Global_24h.csv` (~7 MB each, 3 h cache), filtered to 50 km. Recent dates only. |
+| `FIELDSHIFT_FIRMS=demo` | Recorded detections only: `backend/fieldshift/data/firms_demo/*.json.gz`, recorded with `scripts/record_firms_demo.py` from the public 7-day feeds. |
+| `FIELDSHIFT_FIRMS=off` | No FIRMS requests and no fire cards. The residue card still appears in burning regions and seasons. |
+
+If live access fails, or `FIELDSHIFT_OFFLINE=1`, the module falls back to any cached file, then to the demo recording. The demo recording is used only if the field and dates are inside it. Otherwise the source is listed as `unavailable` and no fire card is shown.
+
+To enable the full API:
+1. Request a free MAP_KEY at https://firms.modaps.eosdis.nasa.gov/api/map_key/ (e-mail only; 5,000 transactions per 10 minutes).
+2. Put `FIELDSHIFT_FIRMS_MAP_KEY=<key>` in `.env` or the service environment. Never commit it.
+3. The key is used only in the request URL. Cache keys, logs and responses never contain it, and failed requests log only the HTTP status.
 
 ## Harmonisation
 Everything is reduced to daily point time series at the field location. Coarser grids (POWER ~50 km, SMAP 9 km) are used as they are, and their footprint is stated in each card's caveats. Composites (MODIS 8- and 16-day) stay at their native time step and are compared with same-period climatology (2001→). No resampling invents detail that isn't there.
