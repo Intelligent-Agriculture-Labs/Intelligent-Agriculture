@@ -31,18 +31,13 @@ SMAP_MAX_AGE_DAYS = 10
 ET_RECENT_DAYS = 30
 GW_LOW_PCT = 10.0
 
-SMAP_CAVEATS = [
-    "SMAP L4 is a 9 km cell: it mixes your field with its surroundings and does not see irrigation on a single field.",
-    "SMAP L4 merges the satellite's surface measurement with a land model (NASA GMAO); the root zone is modelled, not measured directly.",
-]
-ET_CAVEATS = [
-    "ECOSTRESS flies on the Space Station: overpasses are irregular and clouds block many of them.",
-    "One overpass is an instantaneous snapshot scaled to a daily total; single days are noisy (±1–2 mm/day).",
-]
-GRACE_DA_CAVEATS = [
-    "GRACE-DA is a land model (Catchment) that assimilates GRACE/GRACE-FO; it covers ~25 km cells, not your well.",
-    "Percentiles compare with the model's own 1948–2012 climatology; the data arrive ~2–3 months late.",
-]
+
+def _caveats(prefix: str, lang: str) -> list[str]:
+    return [t(f"{prefix}_{i}", lang) for i in (1, 2)]
+
+
+def pct_label(p: float, lang: str) -> str:
+    return t(f"sw_pct_{pct_class(p)}", lang)
 
 
 def pct_class(p: float) -> str:
@@ -85,55 +80,31 @@ def smap_check(
             agreement = "agree"
     d = (rz or pc or sf)[0]  # type: ignore[index]
     steps = [
-        f"NASA SMAP L4 ({d.isoformat()}, 9 km): root-zone soil moisture "
-        + (f"{rz[1]:.3f} m³/m³" if rz else "n/a")
-        + (f", surface {sf[1]:.3f} m³/m³" if sf else "")
-        + (
-            f"; wetter than {pctl:.0f} % of days in SMAP's record for this place and season ({pct_class(pctl).replace('_', ' ')})."
-            if pctl is not None
-            else "."
-        ),
+        t("sw_smap_step_obs", lang, date=d.isoformat())
+        + (t("sw_smap_rz_val", lang, v=rz[1]) if rz else t("sw_na", lang))
+        + (t("sw_smap_sf_val", lang, v=sf[1]) if sf else "")
+        + (t("sw_smap_pctl", lang, pct=pctl, cls=pct_label(pctl, lang)) if pctl is not None else "."),
     ]
     if model_pct_left is not None:
-        steps.append(
-            f"FieldShift's water balance for your crop: {model_pct_left:.0f} % of available root-zone water left."
-        )
-    steps.append(
-        "Check against SMAP L4 over 9 growing seasons (VALIDATION V3): the model's rain-fed root-zone water moved with "
-        "SMAP's root zone with a median per-season correlation of 0.92 in Iowa, 0.66 in Córdoba and 0.64 in Machakos. "
-        "SMAP is independent of the NASA POWER rain that drives the model."
-    )
+        steps.append(t("sw_smap_model", lang, pct=model_pct_left))
+    steps.append(t("sw_smap_validation", lang))
     if agreement == "satellite_drier":
-        steps.append(
-            "The satellite sees drier soil than the model: rain may have missed your area (the model's rain is a ~50 km grid "
-            "average) or the soil holds less water than assumed. Check the soil by hand before relying on the model."
-        )
+        steps.append(t("sw_smap_step_drier", lang))
     elif agreement == "satellite_wetter":
-        steps.append(
-            "The satellite sees wetter soil than the model: local rain the weather grid missed, or a shallow water table. "
-            "Check the soil before irrigating or replanting."
-        )
+        steps.append(t("sw_smap_step_wetter", lang))
     elif agreement == "agree":
-        steps.append("Satellite and model tell the same story; this raises confidence in the water advice.")
+        steps.append(t("sw_smap_step_agree", lang))
     if irrigated:
-        steps.append(
-            "On an irrigated field the 9 km SMAP cell mostly reflects the surrounding land, so it is shown for context only."
-        )
+        steps.append(t("sw_smap_step_irrigated", lang))
     why = _why(
-        "NASA SMAP soil moisture compared with the model's root zone"
-        + {
-            "satellite_drier": ": the satellite sees drier soil.",
-            "satellite_wetter": ": the satellite sees wetter soil.",
-            "agree": ": they agree.",
-            "unknown": ".",
-        }[agreement],
+        t(f"sw_smap_summary_{agreement}", lang),
         steps,
         ["smap_rootzone", "smap_sm", "soil_depletion"],
-        "SMAP L4 percentile vs. FAO-56 root-zone water balance",
+        t("sw_smap_model_name", lang),
         "soil-moisture",
         0.55 if agreement == "agree" else 0.45,
-        "Two independent estimates; SMAP's 9 km cell is coarse for one field.",
-        SMAP_CAVEATS,
+        t("sw_smap_note", lang),
+        _caveats("sw_smap_caveat", lang),
         ["smap_l4", "nasa_power", "soilgrids"],
     )
     block = {
@@ -185,33 +156,22 @@ def et_check(
     recent = [(d, v, m) for d, v, m in pairs if (today - d).days <= ET_RECENT_DAYS and m >= 1.5]
     ratio = float(np.mean([v for _, v, _ in recent]) / np.mean([m for _, _, m in recent])) if recent else None
     steps = [
-        f"NASA ECOSTRESS (70 m, sees this field) measured {last_v:.1f} mm/day of evapotranspiration on {last_d.isoformat()}"
-        + (f"; the model had {model_eta[last_d]:.1f} mm/day." if last_d in model_eta else "."),
+        t("sw_et_step_obs", lang, et=last_v, date=last_d.isoformat())
+        + (t("sw_et_model_val", lang, et=model_eta[last_d]) if last_d in model_eta else "."),
     ]
     if recent:
-        steps.append(
-            f"Clear overpasses in the last {ET_RECENT_DAYS} days: {len(recent)}; satellite / model ET = {ratio:.2f}."
-        )
-    steps.append(
-        "Check at the Fallon alfalfa field (VALIDATION V6): on 110 clear summer overpasses 2018–2024 ECOSTRESS averaged "
-        "2.3 mm/day and the model 6.2 mm/day, with no day-to-day agreement. The model assumes a well-watered crop without "
-        "cutting cycles; ECOSTRESS's daily total is scaled from one instant. Which is closer on your field cannot be told "
-        "from one check, so this comparison is shown but does not trigger advice."
-    )
+        steps.append(t("sw_et_step_recent", lang, days=ET_RECENT_DAYS, n=len(recent), ratio=ratio))
+    steps.append(t("sw_et_validation", lang))
     why = _why(
-        f"NASA ECOSTRESS measured field ET {last_v:.1f} mm/day on {last_d.isoformat()}"
-        + (
-            f" ({ratio:.0%} of the model's estimate in the last {ET_RECENT_DAYS} days)."
-            if ratio is not None
-            else "."
-        ),
+        t("sw_et_summary", lang, et=last_v, date=last_d.isoformat())
+        + (t("sw_et_summary_ratio", lang, ratio=ratio, days=ET_RECENT_DAYS) if ratio is not None else "."),
         steps,
         ["ecostress_et", "eta_model"],
-        "ECOSTRESS L3T JET ensemble ET vs. FAO-56 crop ET",
+        t("sw_et_model_name", lang),
         "evapotranspiration",
         0.35,
-        "Field-scale satellite measurement, but on clear overpass days only and in large disagreement with the model at the validation field.",
-        ET_CAVEATS,
+        t("sw_et_note", lang),
+        _caveats("sw_et_caveat", lang),
         ["ecostress", "nasa_power"],
     )
     block = {
@@ -243,7 +203,7 @@ def grace_da(
     series.append(
         _series(
             "grace_da_gws",
-            "Groundwater percentile (GRACE-DA, weekly)",
+            t("sw_series_grace_gws", lang),
             "%",
             [x for x, _ in gws],
             [v for _, v in gws],
@@ -255,7 +215,7 @@ def grace_da(
         series.append(
             _series(
                 "grace_da_rtzsm",
-                "Root-zone soil moisture percentile (GRACE-DA)",
+                t("sw_series_grace_rtzsm", lang),
                 "%",
                 [x for x, _ in rtz],
                 [v for _, v in rtz],
@@ -264,28 +224,24 @@ def grace_da(
             )
         )
     steps = [
-        f"NASA GRACE-FO data assimilation (week of {d.isoformat()}, ~25 km): groundwater is wetter than {g:.0f} % of "
-        f"the same weeks in 1948–2012 ({pct_class(g).replace('_', ' ')})."
-        + (f" Root-zone soil moisture: {r:.0f}th percentile." if r is not None else "")
-        + (f" Surface soil moisture: {s:.0f}th percentile." if s is not None else ""),
-        f"Latency: the latest week is {(today - d).days} days old.",
-        "These are the maps behind the U.S. Drought Monitor's groundwater input, now worldwide (GRACEDADM_CLSM025GL_7D).",
+        t("sw_gda_step_obs", lang, date=d.isoformat(), pct=g, cls=pct_label(g, lang))
+        + (t("sw_gda_rz", lang, pct=r) if r is not None else "")
+        + (t("sw_gda_sf", lang, pct=s) if s is not None else ""),
+        t("sw_gda_latency", lang, days=(today - d).days),
+        t("sw_gda_usdm", lang),
     ]
     low = irrigated and g <= GW_LOW_PCT
     if low:
-        steps.append(
-            "On an irrigated farm, severely low groundwater means wells may yield less and pumping costs rise; plan water "
-            "use for the season and check your well level."
-        )
+        steps.append(t("sw_gda_step_low", lang))
     why = _why(
-        f"Groundwater here is at the {g:.0f}th percentile for the time of year (GRACE-DA, week of {d.isoformat()}).",
+        t("sw_gda_summary", lang, pct=g, date=d.isoformat()),
         steps,
         ["grace_da_gws", "grace_da_rtzsm", "grace_tws"],
-        "GRACE/GRACE-FO data assimilation into the Catchment land model (NASA GSFC)",
+        t("sw_gda_model_name", lang),
         "groundwater",
         0.5,
-        "Model + satellite gravity; regional, and 2–3 months late.",
-        GRACE_DA_CAVEATS,
+        t("sw_gda_note", lang),
+        _caveats("sw_gda_caveat", lang),
         ["grace_da"],
     )
     block = {

@@ -105,7 +105,9 @@
     "allClearTitle": "इस हफ़्ते कुछ भी ज़रूरी नहीं",
     "allClearText": "आपका खेत ठीक दिख रहा है। कुछ दिनों बाद फिर देखें — FieldShift हर नए पूर्वानुमान के साथ अपडेट होता है।",
     "waterUsed": "{{total}} में से {{used}} इस्तेमाल",
-    "noIrrigationNeededShort": "ज़रूरत नहीं"
+    "noIrrigationNeededShort": "ज़रूरत नहीं",
+    "expertGraceDa": "GRACE-DA भूजल P{{p}}",
+    "expertEcostress": "ECOSTRESS {{v}} मिमी/दिन"
   },
   "why": {
     "title": "यह सलाह क्यों?",

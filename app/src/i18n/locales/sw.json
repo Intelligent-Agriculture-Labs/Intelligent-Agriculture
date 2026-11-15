@@ -105,7 +105,9 @@
     "allClearTitle": "Hakuna jambo la haraka wiki hii",
     "allClearText": "Shamba lako liko vizuri. Rudi baada ya siku chache — FieldShift husasishwa kila utabiri mpya unapotoka.",
     "waterUsed": "{{used}} kati ya {{total}} yametumika",
-    "noIrrigationNeededShort": "Haihitajiki"
+    "noIrrigationNeededShort": "Haihitajiki",
+    "expertGraceDa": "GRACE-DA maji ya ardhini P{{p}}",
+    "expertEcostress": "ECOSTRESS {{v}} mm/siku"
   },
   "why": {
     "title": "Kwa nini ushauri huu?",

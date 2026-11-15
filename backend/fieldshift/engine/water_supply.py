@@ -29,12 +29,13 @@ def rain_step(ctx: FieldContext, lang: str = "en") -> str | None:
     """One sentence on where the rain numbers come from (for every rain-driven Why)."""
     m = ctx.rain_meta
     if m.get("imerg_used") and m.get("imerg_nrt_last"):
-        return (
-            f"Rain: NASA POWER (MERRA-2) and NASA GPM IMERG satellite rain averaged day by day — IMERG Final "
-            f"(gauge-calibrated) to {m['imerg_final_last']}, then IMERG {'/'.join(r.capitalize() for r in m.get('imerg_nrt_runs', []))} "
-            f"near-real-time runs from NASA GES DISC to {m['imerg_nrt_last']} ({m['imerg_nrt_days']} days). Against 18 rain "
-            f"gauges on 6 continents the Final blend beat POWER alone at 16 (VALIDATION V13); the near-real-time runs are "
-            f"not gauge-calibrated and are checked against Final in VALIDATION V13b."
+        return t(
+            "rain_step_imerg_nrt",
+            lang,
+            final=m["imerg_final_last"],
+            runs="/".join(r.capitalize() for r in m.get("imerg_nrt_runs", [])),
+            last=m["imerg_nrt_last"],
+            days=m["imerg_nrt_days"],
         )
     if m.get("imerg_used"):
         return t("rain_step_imerg", lang, last=m["imerg_last"])

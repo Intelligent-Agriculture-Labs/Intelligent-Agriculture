@@ -683,7 +683,7 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         series.append(
             _series(
                 "eta_model",
-                "Crop ET (model)",
+                t("sw_series_eta_model", lang),
                 "mm/day",
                 md,
                 [wmodel["eta"][d_] for d_ in md],
@@ -741,14 +741,13 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     gda_block, gda_card = satellite_water.grace_da(ctx, irrigated, lang, series, today)
     if gda_block is not None:
         dsteps.append(
-            f"Groundwater now (NASA GRACE-FO data assimilation, week of {gda_block['week']}, ~25 km): "
-            f"{gda_block['groundwater_pct']:.0f}th percentile"
+            t("dr_step_grace_da", lang, date=gda_block["week"], pct=gda_block["groundwater_pct"])
             + (
-                f"; root-zone soil moisture {gda_block['rootzone_pct']:.0f}th"
+                t("dr_step_grace_da_rz", lang, pct=gda_block["rootzone_pct"])
                 if gda_block["rootzone_pct"] is not None
                 else ""
             )
-            + ". Context only; not part of the level."
+            + t("dr_step_grace_da_end", lang)
         )
     if (rs := wsup.rain_step(ctx, lang)) is not None:
         dsteps.insert(1, rs)
@@ -1113,7 +1112,7 @@ def _smap_block(ctx: FieldContext, series: list[dict[str, Any]], lang: str = "en
             series.append(
                 _series(
                     "smap_sm",
-                    "Surface soil moisture (SMAP L4, 0–5 cm, 9 km)",
+                    t("sw_series_smap_sf", lang),
                     "m³/m³",
                     sd,
                     [sf[d] for d in sd],
@@ -1124,7 +1123,7 @@ def _smap_block(ctx: FieldContext, series: list[dict[str, Any]], lang: str = "en
         series.append(
             _series(
                 "smap_rootzone",
-                "Root-zone soil moisture (SMAP L4, 0–100 cm, 9 km)",
+                t("sw_series_smap_rz", lang),
                 "m³/m³",
                 kd,
                 [rz[d] for d in kd],

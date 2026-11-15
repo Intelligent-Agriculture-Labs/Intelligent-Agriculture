@@ -105,7 +105,9 @@
     "allClearTitle": "Diese Woche ist nichts dringend",
     "allClearText": "Ihr Feld sieht gut aus. Schauen Sie in ein paar Tagen wieder vorbei — FieldShift aktualisiert sich mit jeder neuen Vorhersage.",
     "waterUsed": "{{used}} von {{total}} verbraucht",
-    "noIrrigationNeededShort": "Nicht nötig"
+    "noIrrigationNeededShort": "Nicht nötig",
+    "expertGraceDa": "GRACE-DA Grundwasser P{{p}}",
+    "expertEcostress": "ECOSTRESS {{v}} mm/Tag"
   },
   "why": {
     "title": "Warum diese Empfehlung?",
