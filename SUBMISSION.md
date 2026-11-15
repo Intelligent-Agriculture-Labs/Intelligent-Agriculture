@@ -131,12 +131,12 @@ A motion-designed film with an original score. Both are made entirely in code; s
 | t (s) | Scene | On-screen text |
 |---|---|---|
 | 0–2 | A lit 3D Earth from orbit (NASA Blue Marble) | "Team IA · NASA Space Apps Challenge 2026" |
-| 2–5 | Continuous dive from orbit to the Fallon alfalfa field; the NASA POWER heat-day bars grow | "The challenge · Field Shift. Hotter summers. Less water. Days above 35 °C: 26 → 50 a year" |
+| 2–5 | Continuous dive from orbit to the Fallon alfalfa field; the NASA POWER heat-day bars grow | "The challenge · Hotter summers. Less water. Farms must adapt, field by field. Days above 35 °C: 26 → 50 a year" |
 | 5–10 | Flash on the hit; the field outline draws itself; the IA logo builds up (satellite, swath, horizon, crop rows); the welcome screen rises on a phone | "IA · Intelligent Agriculture. Better decisions. Better harvests." |
-| 10–13.4 | Satellite card with the AI outline tracing its corners; phone with Sentinel-2 AI zones | "Tap your field. AI finds it." (Sentinel-2 · NASA SRTM · AI zones) |
-| 13.4–16.8 | This week and "Why?" on overlapping 3D phones | "Three actions. Every one explained." (NASA POWER · SMAP · MODIS · ECOSTRESS) |
-| 16.8–20 | Rotation plan phone; impact counters | "A rotation plan built on soil biology." 19,618 m³ · 652 t · −105 kg N/ha |
-| 20–25 | 3D carousel of nine real screens; the six languages cycle | "Every farm on Earth. Web · iOS · Android · Offline · Fits in 2 SMS · 6 languages" |
+| 10–13.4 | Satellite card with the AI outline tracing its corners; phone with Sentinel-2 AI zones | "Tap your field. AI draws it." Callouts: "Boundary in one tap" · "AI management zones" |
+| 13.4–16.8 | This week and "Why?" on overlapping 3D phones | "Three clear actions, every week." (NASA POWER · IMERG · SMAP · ECOSTRESS) Callouts: "High heat stress Wed–Thu" · "WBGT 30.1 °C" |
+| 16.8–20 | Rotation plan phone; impact card | "Plan the next years with soil biology." Callouts: "Plan score 78 / 100" · "8,544 m³ less irrigation water a year · this field" (the app's impact card for the Fallon plan) |
+| 20–25 | 3D carousel of nine real screens; "This week" cycles through English, Swahili, Hindi and Spanish | "Built for every farm on Earth. iPhone · Android · Web · works offline · weekly advice by SMS" |
 | 25–30 | Climax: the Earth turns and pins light up over Nevada, Iowa, Andalusia and Kenya; end card with the IA logo | "IA · Intelligent Agriculture. Better decisions. Better harvests. Adapting every field with NASA data. Next: field trials with farmers and extension services" |
 
 ## Slide deck outline (alternative format, 7 slides max)
