@@ -1,10 +1,10 @@
-"""Build FieldShift's offline country tables from official open data (ADR-027, docs/DATA.md "Country data").
+"""Build IA's offline country tables from official open data (ADR-027, docs/DATA.md "Country data").
 
 Runs on the data box (VPS); the outputs are small and committed:
 
     backend/fieldshift/config/country_grid_5mn.npz   offline lat/lon → ISO 3166 country (5 arc-min, Natural Earth)
     backend/fieldshift/config/country_data.json      per country: currency + exchange rate, price level, diesel,
-                                                       FAOSTAT producer prices and yields per FieldShift crop,
+                                                       FAOSTAT producer prices and yields per IA crop,
                                                        Sacks et al. (2010) sowing day per crop; sub-region and
                                                        world medians
     backend/fieldshift/config/crop_calendar_30mn.npz  Sacks et al. (2010) 0.5° sowing day of year per calendar
@@ -66,7 +66,7 @@ PINK_URL = "https://thedocs.worldbank.org/en/doc/18675f1d1639c7a34d463f59263ba0a
 
 RES_DEG = 1.0 / 12.0  # 5 arc-minutes
 
-# FieldShift crop -> Sacks et al. 2010 calendars, in order of preference
+# IA crop -> Sacks et al. 2010 calendars, in order of preference
 SACKS_MAP: dict[str, list[str]] = {
     "maize": ["Maize"],
     "maize_silage": ["Maize"],
@@ -733,7 +733,7 @@ def build(raw: Path, qcl_raw: Path, sacks_raw: Path) -> None:
 
 # ------------------------------------------------------------------------------------- country yield factors
 
-# UN M49 sub-region → FieldShift macro region of the yield calibration (same table as scripts/yield_benchmark.py)
+# UN M49 sub-region → IA macro region of the yield calibration (same table as scripts/yield_benchmark.py)
 M49_REGION = {
     "Northern America": "northern_america",
     "Latin America and the Caribbean": "latin_america",
@@ -824,7 +824,7 @@ def yield_factors() -> None:
         "method": yield_factors.__doc__.strip().replace("\n    ", "\n"),
         "sources": [
             "FAOSTAT QCL national yields 2019→latest (FAO, CC BY 4.0)",
-            "FieldShift global yield benchmark, docs/validation/yield_benchmark/results.json (V10, ADR-022)",
+            "IA global yield benchmark, docs/validation/yield_benchmark/results.json (V10, ADR-022)",
         ],
         "countries": dict(sorted(out.items())),
     }
