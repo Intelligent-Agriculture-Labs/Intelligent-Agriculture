@@ -1,0 +1,14 @@
+{
+ "granule": "GRCTellus.JPL.200204_202609.GLO.RL06.3M.MSCNv04CRI.nc",
+ "short_name": "TELLUS_GRAC-GRFO_MASCON_CRI_GRID_RL06.3_V4",
+ "title": "JPL GRACE and GRACE-FO MASCON RL06.3Mv04 CRI",
+ "time_coverage_start": "2002-04-16T00:00:00Z",
+ "time_coverage_end": "2026-09-16T23:59:59Z",
+ "time_mean_removed": "2004.000 to 2009.999",
+ "native_resolution": "3\u00b0 equal-area mascons (~300 km), sampled on a 0.5\u00b0 grid",
+ "months": 261,
+ "land_cells": 85912,
+ "distinct_series": 1706,
+ "licence": "NASA Earth science data policy (open, no restrictions); cite Watkins et al. 2015, Wiese et al. 2016",
+ "doi": "10.5067/TEMSC-3JC63"
+}

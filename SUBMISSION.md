@@ -27,7 +27,7 @@ FieldShift is a free web, iOS and Android app that turns 40 years of NASA Earth 
 - **Plan the next years:** a per-field rotation plan over 52 crops, checked year by year against a cited knowledge base (30 pathogens, 22 rules). It says what to change, offers a beam-search optimised plan, and states the **impact** (water, N fertiliser, CO₂e, topsoil, income) with trade-offs.
 - **Insights:** 40-year climate trends at the field, What-if scenarios, rotation comparison on 15 simulated seasons.
 - **For every farmer:** offline mode, six languages incl. Swahili and Hindi, a plain-language glossary, a first-run guide, and **weekly advice as text that fits two SMS**.
-- **NASA data everywhere:** POWER (1984→), SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, SRTM, GIBS. Partner data: Sentinel-2 and ERA5.
+- **NASA data everywhere:** POWER (1984→), **GPM IMERG** rain (blended with POWER; beat POWER alone at 16 of 18 rain gauges), **GRACE/GRACE-FO** regional water-storage trends, SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, SRTM, GIBS. Partner data: Sentinel-2 and ERA5.
 
 ## High-level summary (long)
 **What it does.** Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. FieldShift turns that data into decisions for each field, in five simple tabs:
@@ -68,7 +68,7 @@ Its weak spots are reported openly. It is designed to support, never replace, fa
 ## How it addresses the challenge
 | Challenge ask | FieldShift |
 |---|---|
-| Combine NASA EO with local information | POWER, SMAP, MODIS, SRTM, GIBS + SoilGrids, farmer inputs (crop, sowing date, irrigation method, water allocation, priorities) |
+| Combine NASA EO with local information | POWER, GPM IMERG, GRACE-FO, SMAP, MODIS, SRTM, GIBS + SoilGrids, farmer inputs (crop, sowing date, irrigation method, water allocation, priorities) |
 | Compare ≥ 3 rotation strategies incl. existing | Current + 3–4 ranked alternatives per location, 8 metrics each |
 | Why suggested / evidence / benefits / gaps / risks for local review | Five explicit sections per strategy, generated from computed numbers |
 | Bare-field periods, vulnerable seasons | Ground-cover calendar; vulnerable months from 1991–2020 NASA normals |
@@ -78,6 +78,8 @@ Its weak spots are reported openly. It is designed to support, never replace, fa
 
 ## NASA data used (with links)
 - NASA POWER: https://power.larc.nasa.gov/
+- NASA GPM IMERG Final daily precipitation (V07, via the NASA POWER API `IMERG_PRECTOT`): https://gpm.nasa.gov/data/imerg · https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_07/summary
+- NASA GRACE / GRACE-FO JPL RL06.3 mascon water storage (PO.DAAC, DOI 10.5067/TEMSC-3JC63): https://podaac.jpl.nasa.gov/dataset/TELLUS_GRAC-GRFO_MASCON_CRI_GRID_RL06.3_V4 · https://grace.jpl.nasa.gov/
 - SMAP Enhanced L3 soil moisture (SPL3SMP_E): https://nsidc.org/data/spl3smp_e (accessed via ORNL DAAC subsets: https://modis.ornl.gov/)
 - MODIS MOD13Q1 NDVI: https://lpdaac.usgs.gov/products/mod13q1v061/ · MOD16A2GF ET: https://lpdaac.usgs.gov/products/mod16a2gfv061/ · MOD11A2 LST: https://lpdaac.usgs.gov/products/mod11a2v061/
 - SRTM: https://www.earthdata.nasa.gov/data/instruments/srtm (via OpenTopoData)

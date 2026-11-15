@@ -53,6 +53,8 @@ ET₀ = [0.408 Δ (Rₙ − G) + γ (900 / (T + 273)) u₂ (eₛ − eₐ)] / [�
 - **Status:** a weighted blend of indicator levels, following the USDM-style convergence of evidence.
   - SPI thresholds: D0 ≤ −0.5, D1 ≤ −0.8, D2 ≤ −1.3, D3 ≤ −1.6, D4 ≤ −2.0.
   - Weights: SPI-90 0.30, SPEI-90 0.25, SPI-30 0.15, soil-moisture percentile 0.20, VHI 0.10, plus the long-term SPEI-12 at 0.30 (EXP-03).
+- **Rain input:** SPI/SPEI use the POWER + GPM IMERG blend where it is adopted (§18). The AI classifier (§13) and the climate trends (§7) keep POWER-only rain: the classifier was trained on POWER features, and trends since 1984 need one homogeneous record (IMERG starts in 1998).
+- **Long-term water supply:** the GRACE/GRACE-FO storage trend (§19) is reported in the status and its Why, but has **no weight in the level**: it lags 2–3 months, covers ~300 km, and was not validated against drought-monitor labels.
 
 ## <a id="disease"></a>4. Disease risk (`disease.py`)
 Hourly T and RH come from the forecast (validation uses POWER hourly). RH ≥ 90 % is the leaf-wetness proxy (Sentelhas et al., 2008).
@@ -269,12 +271,34 @@ An account-free farm document (SQLite) is addressed by a random 128-bit id, whic
 - Each account owns one farm document (fields, history, plans, settings), merged per field by `updated_at`.
 - The account-free sync code remains for sharing a farm.
 
+## <a id="rain-blend"></a>18. Rain: NASA POWER + GPM IMERG blend (`science/rainblend.py`, `engine/context.py`)
+- **Inputs:** POWER `PRECTOTCORR` (MERRA-2, bias-corrected with gauges, ~50 km, local solar time) and GPM IMERG Final `IMERG_PRECTOT` (0.1°, UTC days, 1998 → ~2 months ago), both from the POWER point API.
+- **Served rain** (only for |lat| ≤ 45°, the band covered by the gauge validation):
+  - days with IMERG: R = 0.5·P + 0.5·I;
+  - other days (before 1998, IMERG's ~2-month latency, the forecast bridge excluded): R = P · (0.5 + 0.5·r_m), where r_m = Σ I / Σ P for calendar month m over the overlap (capped 0.25–4). This "bridge" has the same long-run mean as the blend, so SPI/SPEI (which compare a window with the same window in every year since 1984) see one climatology and no jump at the 1998 or latency seams.
+  - Poleward of 45° or when IMERG is unavailable: R = P (the card's Why says which).
+- **Why a plain 50/50 mean?** The weight was fixed before the validation; 30 % and 70 % give similar results (V-IMERG), so it is not fitted to the 18 gauges. Averaging two partly independent estimates (reanalysis vs. satellite) cancels part of each one's random daily error: daily correlation with gauges rose at 16 of 18 sites. IMERG's gauge-calibrated monthly amounts pull POWER's bias down (mean |bias| 23.6 % → 17.9 %).
+- **Used by:** the water balance (irrigation timing, rain-fed stress), SPI/SPEI, rotations and planner (climate normals, erosive rain). The Why steps and the source list credit GPM IMERG wherever it is used; `drought.rain_source` in the API reports the method and IMERG's last day.
+
+## <a id="groundwater"></a>19. Regional water-storage trend from GRACE/GRACE-FO (`science/groundwater.py`, `data/grace.py`, `engine/water_supply.py`)
+- **Input:** monthly JPL RL06.3 CRI mascon water-storage anomalies (cm of water) at the field's 0.5° cell, times the JPL land-hydrology scale factor; the nearest land cell within ~110 km for coastal fields.
+- **Model:** y(t) = a + b·(t − t₀) + Σₖ₌₁,₂ [cₖ sin 2πkt + dₖ cos 2πkt] + e(t), fitted by least squares over all months up to the advice date (the GRACE → GRACE-FO gap is simply missing).
+- **Significance:** monthly residuals are strongly autocorrelated (multi-year wet and dry spells), so the slope's standard error is inflated by √(n/n_eff) with n_eff = n(1 − ρ)/(1 + ρ), ρ the lag-1 residual autocorrelation (Santer et al., 2000); p from a t distribution with n_eff − 6 degrees of freedom. Typical n_eff is 8–25 for 261 months, which makes the test conservative.
+- **Classes:** declining (b ≤ −0.3 cm/yr, p < 0.05), likely declining (p < 0.20), stable, likely rising, rising. 0.3 cm/yr (~1 cm in 3 years) is about the trend error from leakage and glacial-isostatic-adjustment models in mascon solutions, so smaller trends are never called a change.
+- **Reported:** slope ± 95 % range, p, fitted change since 2003, the last 3 months' deseasonalised anomaly and its percentile, the last-5-years slope for context, and a chart of the monthly series with the fitted trend.
+- **Decisions it drives:**
+  - **Card** (irrigated fields, declining or likely declining): "Regional water reserves falling: −X cm since 2003" — prefer water-saving rotations and efficient irrigation, check the well. Risk moderate (significant) or low (likely). It is a planning card, not an irrigation instruction.
+  - **Rotations:** for irrigated fields where storage is falling, the "water" priority in the ranking is multiplied by 1.5 (declining) or 1.25 (likely declining), and the response carries a `groundwater_note`.
+  - **Drought status:** context only (see §3).
+- **Caveats in every Why:** ~300 km footprint; total storage, not only groundwater; 2–3 month latency; a local well can disagree (V-GRACE found exactly this at Fallon).
+
 ## 17. Recommendation engine (`engine/service.py`, `config/rules.yaml`)
 Each module emits zero or more cards, each with risk, due date and a Why block (summary, steps with numbers, series, model, confidence, caveats, sources). Cards are ranked by risk, then due date. Thresholds are versioned in `rules.yaml`, and texts in six languages are in `messages.yaml`.
 
 **Confidence** is a documented heuristic, not a calibrated probability:
 - water balance 0.55, or 0.70 if the farmer entered their last irrigation;
 - drought 0.6 with ≥ 3 indicators, else 0.45;
+- regional water-storage trend 0.6 when significant (p < 0.05), else 0.45;
 - disease 0.5; pests 0.55; NDVI 0.45; frost/heat 0.6.
 
 ## Optional LLM phrasing layer
@@ -294,3 +318,10 @@ Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is n
 - McMaster, G.S., Wilhelm, W.W. (1997) Growing degree-days: one equation, two interpretations. *Agric. For. Meteorol.* 87: 291–300.
 - Sen, P.K. (1968) Estimates of the regression coefficient based on Kendall's tau. *JASA* 63: 1379–1389.
 - Fry, W.E. et al. (2013) The 2009 late blight pandemic in the eastern United States. *Plant Disease* 97: 296–306.
+- Huffman, G.J. et al. (2023) NASA Global Precipitation Measurement (GPM) Integrated Multi-satellitE Retrievals for GPM (IMERG), Algorithm Theoretical Basis Document, Version 07. NASA GSFC.
+- Gupta, H.V. et al. (2009) Decomposition of the mean squared error and NSE performance criteria (KGE). *J. Hydrology* 377: 80–91.
+- Watkins, M.M. et al. (2015) Improved methods for observing Earth's time variable mass distribution with GRACE using spherical cap mascons. *JGR Solid Earth* 120: 2648–2671.
+- Wiese, D.N., Landerer, F.W., Watkins, M.M. (2016) Quantifying and reducing leakage errors in the JPL RL05M GRACE mascon solution. *Water Resources Research* 52: 7490–7502.
+- Santer, B.D. et al. (2000) Statistical significance of trends and trend differences in layer-average atmospheric temperature time series. *JGR* 105: 7337–7356.
+- Rodell, M., Velicogna, I., Famiglietti, J.S. (2009) Satellite-based estimates of groundwater depletion in India. *Nature* 460: 999–1002.
+- Rodell, M. et al. (2018) Emerging trends in global freshwater availability. *Nature* 557: 651–659.

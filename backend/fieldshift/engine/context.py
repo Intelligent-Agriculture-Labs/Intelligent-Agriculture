@@ -19,6 +19,7 @@ import numpy as np
 from ..data import sources
 from ..data.http import DataUnavailable
 from ..science import et0 as et0mod
+from ..science import rainblend
 from ..science.cropmodel import Weather
 
 log = logging.getLogger("fieldshift.context")
@@ -41,6 +42,9 @@ class FieldContext:
     statuses: dict[str, str] = field(default_factory=dict)
     enrich: dict[str, list[tuple[dt.date, float]]] = field(default_factory=dict)
     forecast_et0: np.ndarray | None = None
+    rain_meta: dict[str, Any] = field(default_factory=dict)  # POWER/IMERG blend provenance (science/rainblend.py)
+    # POWER-only rain on the same dates (models trained on POWER features, e.g. the AI drought classifier, need it)
+    rain_power: np.ndarray | None = None
 
     @property
     def taw_per_m(self) -> float:
@@ -86,6 +90,7 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
     f_elev = _io_pool.submit(sources.elevation, lat, lon)
     f_soil = _io_pool.submit(sources.soil, lat, lon)
     f_fc = None if is_historic else _io_pool.submit(sources.forecast, lat, lon, 14, 16)
+    f_imerg = _io_pool.submit(sources.imerg_daily, lat, lon, HIST_START, power_end)
     power = sources.power_daily(lat, lon, HIST_START, power_end)
     elev, slope, st = f_elev.result()
     statuses["srtm"] = st
@@ -109,7 +114,7 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
     dates = list(power.dates)
     tmax = power["T2M_MAX"].copy()
     tmin = power["T2M_MIN"].copy()
-    rain = power["PRECTOTCORR"].copy()
+    rain, rain_meta = _blend_rain(lat, power.dates, power["PRECTOTCORR"], f_imerg, statuses)
     rh = power["RH2M"].copy()
     prov = np.zeros(len(dates), dtype=np.int8)
     hourly: dict[str, Any] = {}
@@ -163,14 +168,35 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
 
     # extend with climatology for long simulations beyond the forecast horizon (marked provenance 3)
     w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0)
+    rain_power = w.rain.copy()
+    n_p = len(power.dates)
+    own = prov[:n_p] == 0  # days still from POWER (not overwritten by the forecast bridge)
+    rain_power[:n_p][own] = np.nan_to_num(power["PRECTOTCORR"][own], nan=0.0)
     ctx = FieldContext(
-        lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0
+        lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0,
+        rain_meta=rain_meta,
+        rain_power=rain_power,
     )
     if enrich:
         ctx.enrich = enrichment(lat, lon, today)
         for sid in ("modis_ndvi", "mod16", "smap_l3e", "modis_lst"):
             ctx.statuses[sid] = "live" if ctx.enrich.get(sid) else "unavailable"
     return ctx
+
+
+def _blend_rain(
+    lat: float, dates: list[dt.date], power_rain: np.ndarray, f_imerg: Any, statuses: dict[str, str]
+) -> tuple[np.ndarray, dict[str, Any]]:
+    """POWER rain blended with GPM IMERG where validation showed it helps (V-IMERG); POWER alone otherwise."""
+    try:
+        got = f_imerg.result(timeout=150)
+    except Exception as e:  # IMERG is an enrichment: never let it break the weather record
+        log.warning("IMERG unavailable: %s", e)
+        got = None
+    statuses["gpm_imerg"] = got[1] if got else "unavailable"
+    imerg = got[0][: len(dates)] if got else None
+    rain, meta = rainblend.blend_for_location(lat, dates, power_rain.copy(), imerg)
+    return rain, meta
 
 
 def enrichment(lat: float, lon: float, today: dt.date) -> dict[str, list[tuple[dt.date, float]]]:

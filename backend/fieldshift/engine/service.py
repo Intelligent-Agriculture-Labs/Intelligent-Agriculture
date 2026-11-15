@@ -23,6 +23,7 @@ from ..science import drought_ml
 from ..science import pests as pst
 from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
+from . import water_supply as wsup
 from .context import FieldContext, build, enrichment
 from .messages import day_label, risk_word, t
 
@@ -631,6 +632,15 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         *[f"Indicator: {p}" for p in parts],
         "Levels follow the U.S. Drought Monitor scale (D0–D4); indicators are blended by a weighted 'convergence of evidence'.",
     ]
+    gw_block, gw_card = wsup.groundwater(ctx, irrigated, lang, series, today)
+    if (rs := wsup.rain_step(ctx)) is not None:
+        dsteps.insert(1, rs)
+    if gw_block is not None:
+        dsteps.append(
+            f"Long-term water supply (NASA GRACE/GRACE-FO, ~300 km): storage trend {gw_block['slope_cm_yr']:+.1f} cm/yr "
+            f"(p = {gw_block['p_value']:.2f}), {gw_block['change_cm']:+.0f} cm since 2003. Shown for context; it does not "
+            "change the drought level (multi-month latency, regional footprint)."
+        )
     # ---- AI drought classifier (gradient boosting on USDM labels) where it was validated
     ml_info = None
     model_name = "SPI/SPEI (McKee 1993; Vicente-Serrano 2010) + satellite indicators"
@@ -638,7 +648,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     if loaded_ml is not None and drought_ml.in_validated_domain(lat, lon, loaded_ml[1]):
         meta = loaded_ml[1]
         try:
-            Xf = drought_ml.features_for(meta)(pd_, w.rain[:obs_end], w.et0[:obs_end], w.tmax[:obs_end])
+            # the classifier was trained on POWER rain features: feed it POWER rain, not the IMERG blend
+            rain_ml = ctx.rain_power if ctx.rain_power is not None else w.rain
+            Xf = drought_ml.features_for(meta)(pd_, rain_ml[:obs_end], w.et0[:obs_end], w.tmax[:obs_end])
             pr = drought_ml.predict(Xf[-1])
         except (ValueError, IndexError):
             pr = None
@@ -697,8 +709,11 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
                 "SPI uses ~50 km NASA POWER rain; local storms can be missed.",
                 "SMAP soil moisture is a 9 km footprint and only the top ~5 cm.",
             ],
-            ["nasa_power", "smap_l3e", "smap_l4", "modis_ndvi"],
+            ["nasa_power", *wsup.rain_sources(ctx), "smap_l3e", "smap_l4", "modis_ndvi"]
+            + (["grace_fo"] if gw_block is not None else []),
         ),
+        "groundwater": gw_block,
+        "rain_source": wsup.rain_source_block(ctx),
     }
     if level >= rules()["drought"]["card_min_level"]:
         risk = RISKS[min(3, max(1, level - 1))]
@@ -726,6 +741,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         )
     if ndvi_card:
         cards.append(ndvi_card)
+    if gw_card:
+        cards.append(gw_card)
+    wsup.annotate_rain(ctx, cards, series)
 
     # ---------- disease (hourly forecast)
     in_season = planting <= today and (
@@ -759,8 +777,12 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
             "smap_l4",
             "mod16",
             "ecostress",
+            "gpm_imerg",
+            "grace_fo",
         )
-        if sid != "ecostress" or ctx.statuses.get("ecostress")
+        if (sid != "ecostress" or ctx.statuses.get("ecostress"))
+        and (sid != "gpm_imerg" or ctx.rain_meta.get("imerg_used"))
+        and (sid != "grace_fo" or ctx.statuses.get("grace_fo"))
     ]
     offline = any(s["status"] == "demo" for s in srcs)
     area = _polygon_area_ha(inp.get("polygon"))
@@ -803,6 +825,10 @@ def _last(ctx: FieldContext, sid: str) -> str | None:
         return ctx.power_last.isoformat() if ctx.power_last else None
     if sid == "openmeteo_forecast":
         return ctx.weather.dates[-1].isoformat()
+    if sid == "gpm_imerg":
+        return ctx.rain_meta.get("imerg_last")
+    if sid == "grace_fo":
+        return wsup.latest_month(ctx.lat, ctx.lon)
     s = ctx.enrich.get(sid)
     return s[-1][0].isoformat() if s else None
 
@@ -1403,6 +1429,8 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         "risk": 0.15,
         **(req.get("priorities") or {}),
     }
+    gw_factor, gw_note = wsup.rotation_water_weight(lat, lon, irrigated, today)
+    pr["water"] *= gw_factor
     last_full = today.year - 2  # leave room for fall-sown crops into the following year
     years = list(range(last_full - 14, last_full + 1))
     pd_ = w.dates[: ctx.idx(today) + 1]
@@ -1604,7 +1632,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                 "benefits": _benefits(mets) if tpl["id"] != "current" else [],
                 "info_gaps": _gaps(tpl),
                 "risks_local_review": _risks(tpl, notes),
-                "sources": ["nasa_power", "srtm", "soilgrids"],
+                "sources": ["nasa_power", "srtm", "soilgrids"] + (["grace_fo"] if gw_note else []),
             }
         )
 
@@ -1613,6 +1641,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
     return {
         "strategies": strategies,
         "climate_context": clim["insights"][:4],
+        "groundwater_note": gw_note,
         "vulnerable_periods": vuln,
         "sources": [source_ref(s, ctx.statuses.get(s, "live")) for s in ("nasa_power", "srtm", "soilgrids")],
         "disclaimer": "FieldShift compares rotations under the last 15 seasons of NASA weather at your location. It supports, but does not replace, "
@@ -1764,7 +1793,9 @@ def climate_api(lat: float, lon: float, today: dt.date | None = None) -> dict[st
     w = ctx.weather
     n = ctx.idx(today) + 1
     d = w.dates[:n]
-    ym = climmod.yearly_metrics(d, w.tmax[:n], w.tmin[:n], w.rain[:n], w.et0[:n], lat)
+    # trends since 1984 need one homogeneous rain record: POWER only (IMERG starts in 1998)
+    rain_h = ctx.rain_power if ctx.rain_power is not None else w.rain
+    ym = climmod.yearly_metrics(d, w.tmax[:n], w.tmin[:n], rain_h[:n], w.et0[:n], lat)
     labels = {
         "tmax_summer": ("Warm-season mean max temperature", "°C"),
         "tmin_winter": ("Winter mean min temperature", "°C"),
