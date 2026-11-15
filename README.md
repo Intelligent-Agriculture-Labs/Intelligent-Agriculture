@@ -94,7 +94,7 @@ Mobile builds and development setup: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md),
 ## Honest limitations
 - Weather grids are coarse (~50 km).
 - Field irrigation history is assumed unless the farmer logs it.
-- IMERG and GRACE-FO are not used yet.
+- GPM IMERG rain is blended in only between 45° S and 45° N, where gauges validated it. GRACE/GRACE-FO water storage is regional (~300 km) context, not the groundwater under one field.
 - Yields are water-limited potentials.
 - Terraced plots may need manual outline edits.
 - The Esri basemap is for this non-commercial demo.

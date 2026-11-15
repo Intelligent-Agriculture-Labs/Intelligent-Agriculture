@@ -45,7 +45,7 @@
 **Known limitations:** `docs/LIMITATIONS.md`. In short:
 - coarse weather grids;
 - assumed irrigation history;
-- no IMERG/GRACE yet;
+- IMERG blend only between 45° S and 45° N, and GRACE storage is regional (~300 km);
 - terraced plots need manual outline edits;
 - the Esri basemap is licensed for demo use only;
 - the ML model is U.S.-only.

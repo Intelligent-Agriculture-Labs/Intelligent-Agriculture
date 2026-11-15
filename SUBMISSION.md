@@ -60,7 +60,7 @@ Its weak spots are reported openly. It is designed to support, never replace, fa
 
 **Aims.** Next steps:
 - co-design with extension services and farmer groups;
-- add GPM IMERG rainfall and GRACE-FO groundwater;
+- add IMERG Late (near-real-time rain) and the weekly GRACE groundwater-drought percentiles;
 - run on-farm trials to measure the real impact.
 
 **Story used in the demo.** Irrigated alfalfa in Nevada's Lahontan Valley (Fallon), the setting of the challenge's own photo. NASA POWER shows days ≥ 35 °C there doubling since 1984 (26 → 50 a year) while warm-season rain fell (95 → 55 mm). The same app serves a rain-fed maize smallholder in Machakos, Kenya, in Swahili.
@@ -127,7 +127,7 @@ A motion-designed film with an original score. Both are made entirely in code; s
 | 13.4–16.8 | This week and "Why?" on overlapping 3D phones | "Three actions. Every one explained." (NASA POWER · SMAP · MODIS · ECOSTRESS) |
 | 16.8–20 | Rotation plan phone; impact counters | "A rotation plan built on soil biology." 19,618 m³ · 652 t · −105 kg N/ha |
 | 20–25 | 3D carousel of nine real screens; the six languages cycle | "Every farm on Earth. Web · iOS · Android · Offline · Fits in 2 SMS · 6 languages" |
-| 25–30 | Climax: the Earth turns and pins light up over Nevada, Iowa, Andalusia and Kenya; end card | "FieldShift: Adapting every field with NASA data. Next: co-design with farmers · GPM IMERG · GRACE-FO · on-farm trials" |
+| 25–30 | Climax: the Earth turns and pins light up over Nevada, Iowa, Andalusia and Kenya; end card | "FieldShift: Adapting every field with NASA data. Next: field trials with farmers and extension services" |
 
 ## Slide deck outline (alternative format, 7 slides max)
 1. **Title.** FieldShift: 40 years of NASA data, turned into this week's farm decisions (team, challenge name).
@@ -136,4 +136,4 @@ A motion-designed film with an original score. Both are made entirely in code; s
 4. **NASA data → decisions.** A diagram: POWER, SMAP, MODIS, SRTM → FAO-56 water balance, SPI/SPEI, disease and pest models, rotation simulator → cards.
 5. **Field Shift explorer.** The Fallon example: current alfalfa vs. split-season (−45 % water) vs. teff → wheat (pest-cycle break), calendar, "needs local review".
 6. **Does it work?** Validation numbers (ET₀ r = 0.97–0.99, USDM ρ = 0.74, 2012 = worst of 40 seasons) and honest limits.
-7. **Impact and next steps.** Smallholders (Kenya, Swahili, offline), global reach, roadmap (IMERG, GRACE-FO, field maps, extension partners). Call to action.
+7. **Impact and next steps.** Smallholders (Kenya, Swahili, offline), global reach, roadmap (IMERG Late, GRACE groundwater percentiles, on-farm trials, extension partners). Call to action.
