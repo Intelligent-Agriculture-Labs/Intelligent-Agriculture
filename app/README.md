@@ -14,7 +14,7 @@ npx expo run:android  # Android emulator; API defaults to http://10.0.2.2:8000
 
 | Env var                    | Default                                                       | Purpose                                |
 | -------------------------- | ------------------------------------------------------------- | -------------------------------------- |
-| `EXPO_PUBLIC_API_URL`      | same origin; `:8000` in local dev; `10.0.2.2:8000` on Android | IA API base URL                |
+| `EXPO_PUBLIC_API_URL`      | same origin; `:8000` in local dev; `10.0.2.2:8000` on Android | IA API base URL                        |
 | `EXPO_PUBLIC_DOCS_URL`     | GitHub `docs/MODELS.md`                                       | "Methodology" links                    |
 | `EXPO_PUBLIC_DISABLE_MOCK` | unset                                                         | `1` = never fall back to MOCK fixtures |
 

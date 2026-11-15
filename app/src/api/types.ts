@@ -106,14 +106,7 @@ export interface DroughtStatus {
   why: WhyBlock;
 }
 
-export type PercentileClass =
-  | "exceptionally_dry"
-  | "extremely_dry"
-  | "severely_dry"
-  | "moderately_dry"
-  | "abnormally_dry"
-  | "near_normal"
-  | "wet";
+export type PercentileClass = "exceptionally_dry" | "extremely_dry" | "severely_dry" | "moderately_dry" | "abnormally_dry" | "near_normal" | "wet";
 
 export interface GraceDaStatus {
   week: string; // ISO date of the latest weekly analysis (2–3 months latency)
@@ -778,7 +771,14 @@ export interface RotationPlanResponse {
       bare_days_fewer_per_yr: number;
     };
     field_area_ha: number | null;
-    field_total: { water_saved_m3_per_yr: number; n_fertiliser_saved_kg: number; co2e_avoided_kg: number; soil_kept_t: number; margin_gain_usd: number; margin_gain_local?: number } | null;
+    field_total: {
+      water_saved_m3_per_yr: number;
+      n_fertiliser_saved_kg: number;
+      co2e_avoided_kg: number;
+      soil_kept_t: number;
+      margin_gain_usd: number;
+      margin_gain_local?: number;
+    } | null;
     headline: string; // plain language incl. trade-offs
     currency?: string; // ISO 4217 code of the *_local fields
     method: string;

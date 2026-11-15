@@ -1,5 +1,8 @@
 # PROGRESS
 
+## Repository publishing audit (2026-11-15)
+Scanned all 1,654 tracked files and 3,163 historical blobs for common credential signatures; none found. No broken relative Markdown links found. Fixed the two formatting failures reported by GitHub CI and replaced the showcase builder’s default repository placeholder with the published URL. Local backend lint, formatting and type checks pass; all 233 backend tests and 60 app tests pass. App lint, TypeScript and formatting checks pass.
+
 ## Submission cleanup (2026-11-15)
 Removed `SUBMISSION.md` at the owner’s request after they entered the submission fields. Updated README and challenge evidence links to the published presentation and retained source assets.
 

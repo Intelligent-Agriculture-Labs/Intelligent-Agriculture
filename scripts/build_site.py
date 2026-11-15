@@ -1,6 +1,6 @@
 """Build the static showcase site (site/dist) from the template, real screenshots, the demo video and validation numbers.
 
-    python3 scripts/build_site.py [--repo https://github.com/<you>/fieldshift]
+    python3 scripts/build_site.py [--repo https://github.com/Intelligent-Agriculture-Labs/Intelligent-Agriculture]
 
 Publish site/dist with GitHub Pages (or any static host). No login is needed to view it (Space Apps rule).
 """
@@ -29,7 +29,7 @@ SHOTS = [  # (file, caption): first existing variant wins
 
 
 def main() -> None:
-    repo = sys.argv[sys.argv.index("--repo") + 1] if "--repo" in sys.argv else "https://github.com/YOUR-ACCOUNT/fieldshift"
+    repo = sys.argv[sys.argv.index("--repo") + 1] if "--repo" in sys.argv else "https://github.com/Intelligent-Agriculture-Labs/Intelligent-Agriculture"
     if OUT.exists():
         shutil.rmtree(OUT)
     (OUT / "assets").mkdir(parents=True)
