@@ -23,6 +23,7 @@ from ..science import drought_ml
 from ..science import pests as pst
 from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
+from . import risk_cards
 from .context import FieldContext, build, enrichment
 from .messages import day_label, risk_word, t
 
@@ -736,6 +737,8 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     # ---------- pests
     if in_season:
         cards.extend(_pest_cards(ctx, cid, today, lang, lat, planting))
+        # global weather-driven pest & disease models (rice blast, rusts, tropical late blight, ...)
+        cards.extend(risk_cards.cards(ctx, cid, c["type"], today, lang, planting, series))
     # ---------- frost / heat
     cards.extend(_temp_cards(ctx, cid, today, lang, planting))
 
@@ -961,7 +964,7 @@ def _disease_cards(
     out = []
     win = rules()["disease"]["window_days"]
     for did, meta in dis.DISEASES.items():
-        if cid not in meta["crops"]:
+        if cid not in meta["crops"] or not dis.in_range(did, ctx.lat):
             continue
         s = scores[did]
         fut = {d: v for d, v in s.items() if today <= d <= today + dt.timedelta(days=win)}
@@ -997,7 +1000,7 @@ def _disease_cards(
                     "disease_title",
                     lang,
                     risk=risk_word(risk, lang),
-                    disease=meta["name"],
+                    disease=risk_cards.legacy_name(did, lang, meta["name"]),
                     day=day_label(first, today, lang),
                 ),
                 "detail": t("disease_detail", lang),

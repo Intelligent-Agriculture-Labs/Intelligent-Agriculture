@@ -28,6 +28,8 @@ DISEASES: dict[str, dict[str, Any]] = {
         "name": "Late blight",
         "crops": ["potato", "tomato"],
         "ref": "Hutton criteria (AHDB 2017)",
+        # Hutton was derived for the UK; between the tropics the Wallin/SimCast model in globalrisk.py is used
+        "extratropical_only": True,
     },
     "stripe_rust": {
         "name": "Stripe rust",
@@ -55,6 +57,10 @@ DISEASES: dict[str, dict[str, Any]] = {
         "ref": "Wet-hours × temperature window",
     },
 }
+
+
+def in_range(did: str, lat: float) -> bool:
+    return not (DISEASES[did].get("extratropical_only") and abs(lat) < 23.44)
 
 
 def hourly_by_day(hourly: dict[str, list[Any]]) -> dict[dt.date, dict[str, np.ndarray]]:
