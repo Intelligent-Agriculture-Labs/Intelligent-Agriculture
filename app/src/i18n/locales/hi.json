@@ -356,6 +356,7 @@
       "water": "पानी",
       "nitrogen": "बची नाइट्रोजन",
       "expert": "मार्जिन ≈ {{margin}} USD/ha · खाली मिट्टी {{bare}} दिन · चक्र प्रभाव {{effect}} % · कटाव {{erosion}} t/ha",
+      "expertMoney": "मार्जिन ≈ {{margin}}/ha · खाली मिट्टी {{bare}} दिन · चक्र प्रभाव {{effect}} % · कटाव {{erosion}} t/ha",
       "tapYear": "क्या अच्छा है और क्या बदलना है, देखने के लिए किसी साल पर टैप करें।",
       "diseaseTitle": "रोग और कीटों का बढ़ना",
       "diseaseSubtitle": "मिट्टी की कौन सी समस्याएँ सालों में बढ़ती हैं",
@@ -759,5 +760,10 @@
     "fDecade": "°F/दशक",
     "mmDecade": "मिमी/दशक",
     "inDecade": "इंच/दशक"
+  },
+  "economics": {
+    "source": "{{country}} के मूल्य और लागत (FAOSTAT उत्पादक मूल्य, अनुमानित लागत) {{currency}} में · 1 USD = {{rate}} {{currency}} (विश्व बैंक {{year}})",
+    "sourceUsd": "{{country}} के मूल्य और लागत (FAOSTAT उत्पादक मूल्य, अनुमानित लागत) USD में",
+    "fallback": "देश की पहचान नहीं हुई — संदर्भ मूल्य और लागत USD में"
   }
 }

@@ -356,6 +356,7 @@
       "water": "Maji",
       "nitrogen": "Naitrojeni iliyobaki",
       "expert": "Faida ≈ {{margin}} USD/ha · udongo mtupu siku {{bare}} · athari ya mzunguko {{effect}} % · mmomonyoko {{erosion}} t/ha",
+      "expertMoney": "Faida ≈ {{margin}}/ha · udongo mtupu siku {{bare}} · athari ya mzunguko {{effect}} % · mmomonyoko {{erosion}} t/ha",
       "tapYear": "Gusa mwaka kuona kilicho kizuri na cha kubadilisha.",
       "diseaseTitle": "Kuongezeka kwa magonjwa na wadudu",
       "diseaseSubtitle": "Matatizo gani ya udongoni huongezeka kwa miaka",
@@ -759,5 +760,10 @@
     "fDecade": "°F/muongo",
     "mmDecade": "mm/muongo",
     "inDecade": "in/muongo"
+  },
+  "economics": {
+    "source": "Bei na gharama za {{country}} (bei za wazalishaji FAOSTAT, gharama zilizokadiriwa) kwa {{currency}} · USD 1 = {{currency}} {{rate}} (Benki ya Dunia {{year}})",
+    "sourceUsd": "Bei na gharama za {{country}} (bei za wazalishaji FAOSTAT, gharama zilizokadiriwa) kwa USD",
+    "fallback": "Nchi haikutambuliwa — bei na gharama za marejeleo kwa USD"
   }
 }

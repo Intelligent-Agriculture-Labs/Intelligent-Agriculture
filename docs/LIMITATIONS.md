@@ -18,7 +18,15 @@
 - **Still without Earthdata-based products:** full ECOSTRESS and HLS 30 m NDVI (ROADMAP #1).
 - **The ORNL subset API is slow and was intermittently down** during the build. Satellite layers (NDVI, MOD16, SMAP) may be missing for new locations. The cards degrade gracefully, and the demo farms are pre-cached.
 - **SoilGrids is a 250 m estimate.** It is not a soil test. When it is unavailable, a loam default is used and labelled.
-- **Prices and costs are national indicative values.** Gross margins are for comparing rotations, not for budgeting.
+- **Prices and costs are national indicative values for the field's country (ADR-027).** Gross margins are for comparing rotations, not for budgeting.
+  - Producer prices are FAOSTAT national averages (latest 3 years); local market access and premiums are unknown. 88 of 252 countries/territories (mostly small islands and territories) have no FAOSTAT prices and use their sub-region's median; crops without a national price use the sub-region or world median; forages and cover crops (no FAOSTAT price anywhere) use the reference price scaled by the country's farm-price index. The API says which (`price_scope`).
+  - Production costs are **modelled** from a reference enterprise budget, the country's FAOSTAT yield level and World Bank price level — not a surveyed national budget.
+  - Fertiliser N is a world-market price (World Bank urea) with a fixed farm-gate mark-up: no open country series exists.
+  - Diesel pump prices are the World Bank's last reported country values (mostly 2016, WDI archive), brought forward with the change in crude-oil cost only; fuel taxes changed since (e.g. Germany's CO₂ price) are missed. Users can enter their own price.
+  - Solar-pump capex is a world small-system price with the installation share scaled by the country's price level; IRENA publishes country data only for utility-scale PV.
+  - Exchange rates are annual averages (World Bank, latest year), not today's rate.
+  - The country grid is 5 arc-min (~9 km): fields within a few km of a border can be assigned to the neighbour (e.g. Konstanz → Switzerland).
+  - Observed sowing calendars (Sacks et al. 2010) date from ~2000 and are partly national-level; in the tropics and Mediterranean climates FieldShift keeps its rainfall-derived sowing rules instead.
 
 ## Models
 - **Single-Kc water balance.** Evaporation and transpiration are not separated (FAO-56 dual Kc would be better for sparse canopies and drip). Salinity and capillary rise from shallow groundwater are not modelled. The latter matters in parts of the Lahontan Valley.

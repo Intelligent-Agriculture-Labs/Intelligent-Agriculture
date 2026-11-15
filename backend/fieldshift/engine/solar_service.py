@@ -13,6 +13,7 @@ import yaml
 
 from ..science import solarpump as sp
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop
+from ..science.economics import econ_for
 from .context import FieldContext, build
 from .messages import crop_name, t, word
 
@@ -200,6 +201,20 @@ def solar_pump(
     pressure = float(conf["pressure_head_m"][method])
     head = (static + pressure) * (1 + float(conf["friction_frac"]))
     eff = IRRIGATION_EFFICIENCY.get(method, 0.75) if method != "none" else 0.75
+    # the field's country diesel price and installed PV-pump cost (ADR-027); a user value overrides
+    econ = econ_for(lat, lon)
+    diesel_info: dict[str, Any] = (
+        econ.diesel()
+        if not diesel_price_usd_l
+        else {"usd_l": diesel_price_usd_l, "scope": "user", "source": t("price_user", lang)}
+    )
+    capex_info: dict[str, Any] = (
+        econ.solar_capex()
+        if not capex_usd_kwp
+        else {"usd_kwp": capex_usd_kwp, "scope": "user", "source": t("price_user", lang)}
+    )
+    cur = econ.currency
+    code = cur["code"]
     clim = monthly_climatology(ctx)
     kcm = season_month_kc(c, pd_)
     months = [
@@ -216,12 +231,12 @@ def solar_pump(
         eff,
         eta_mp=float(d["eta_mp"]),
         other_losses=float(d["other_losses"]),
-        capex_usd_kwp=float(capex_usd_kwp or d["capex_usd_kwp"]),
+        capex_usd_kwp=float(capex_info["usd_kwp"]),
         om_frac=float(d["om_frac"]),
         lifetime_y=int(d["lifetime_y"]),
         discount=float(d["discount"]),
         diesel_eta=float(d["diesel_eta"]),
-        diesel_price_usd_l=float(diesel_price_usd_l or d["diesel_price_usd_l"]),
+        diesel_price_usd_l=float(diesel_info["usd_l"]),
         diesel_om_frac=float(d["diesel_om_frac"]),
     )
     dm = next(r for r in des.months if r.month == des.design_month)
@@ -290,6 +305,27 @@ def solar_pump(
             litres=f"{des.diesel_l_year:,.0f}",
             co2=des.co2_t_year,
         ),
+        t(
+            "solar_step_prices",
+            lang,
+            country=econ.name or t("country_unknown", lang),
+            diesel=diesel_info["source"],
+            pv=capex_info["source"],
+        )
+        + (
+            t(
+                "solar_step_local",
+                lang,
+                cur=code,
+                solar=f"{econ.local(des.solar_usd_m3):,.2f}",
+                diesel=f"{econ.local(des.diesel_usd_m3):,.2f}",
+                capex=f"{econ.local(des.solar_capex_usd):,.0f}",
+                rate=f"{cur['per_usd']:,.2f}",
+                year=cur.get("year"),
+            )
+            if code != "USD"
+            else ""
+        ),
     ]
     monthly = [
         {
@@ -325,6 +361,12 @@ def solar_pump(
         "season_volume_m3": round(des.annual_m3),
         "season_pv_kwh": round(des.annual_pv_kwh),
         "solar_capex_usd": round(des.solar_capex_usd),
+        "currency": code,
+        "solar_capex_local": round(econ.local(des.solar_capex_usd)),
+        "solar_local_per_m3": round(econ.local(des.solar_usd_m3), 3),
+        "diesel_local_per_m3": round(econ.local(des.diesel_usd_m3), 3),
+        "diesel_price_usd_l": round(float(diesel_info["usd_l"]), 3),
+        "capex_usd_kwp": round(float(capex_info["usd_kwp"])),
         "solar_usd_per_m3": round(des.solar_usd_m3, 3),
         "diesel_l_per_m3": round(des.diesel_l_m3, 4),
         "diesel_usd_per_m3": round(des.diesel_usd_m3, 3),
@@ -333,12 +375,15 @@ def solar_pump(
         "monthly": monthly,
         "assumptions": {
             **d,
+            "capex_usd_kwp": round(float(capex_info["usd_kwp"])),
+            "diesel_price_usd_l": round(float(diesel_info["usd_l"]), 3),
             "static_head_m": static,
             "pressure_head_m": pressure,
             "friction_frac": conf["friction_frac"],
         },
         "steps": steps,
         "sources": conf["sources"],
+        "economics": {**econ.provenance(), "diesel": diesel_info, "solar_capex": capex_info},
     }
 
 
@@ -372,13 +417,14 @@ def solar_pump_cards(
             "icon": "sunny-outline",
             "title": t("solar_pump_title", lang, kwp=f"{r['pv_kwp']:.1f}"),
             "detail": t(
-                "solar_pump_detail",
+                "solar_pump_detail_cur",
                 lang,
                 m3=round(r["peak_volume_m3_day"]),
                 month=month,
                 head=round(r["head_m"]),
-                solar=f"{r['solar_usd_per_m3']:.2f}",
-                diesel=f"{r['diesel_usd_per_m3']:.2f}",
+                solar=f"{r['solar_local_per_m3']:,.2f}",
+                diesel=f"{r['diesel_local_per_m3']:,.2f}",
+                cur=r["currency"],
                 co2=f"{r['co2_avoided_t_per_season']:.1f}",
             ),
             "due": None,
@@ -399,7 +445,13 @@ def solar_pump_cards(
                 t("solar_note", lang),
                 [
                     t("solar_caveat_head", lang),
-                    t("solar_caveat_costs", lang),
+                    t(
+                        "solar_caveat_costs",
+                        lang,
+                        country=(r["economics"].get("country") or {}).get("name")
+                        or t("country_unknown", lang),
+                        cur=r["currency"],
+                    ),
                     t("solar_caveat_well", lang),
                     t("solar_caveat_rice", lang),
                 ],

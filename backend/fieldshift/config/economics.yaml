@@ -1,0 +1,106 @@
+# FieldShift country economics — hand-maintained mapping and model parameters (ADR-027, docs/DATA.md "Country data").
+# The numbers per country (prices, yields, exchange rates, price levels, diesel) are generated from official open data
+# by scripts/build_country_data.py into country_data.json; nothing here is a national average of one country.
+#
+# Lookup order for every value (the API reports which step was used, with source and year):
+#   1. the field's country (offline country grid from Natural Earth admin-0 → ISO 3166),
+#   2. the country's UN M49 sub-region (median of the countries in it that have data),
+#   3. the world (median over all countries with data),
+#   4. the crop table reference (crops.yaml price_usd_t / cost_usd_ha), scaled by the country's farm-price index
+#      where the country has one. Only step 4 without a country is flagged `fallback: true`.
+
+version: "1.0.0"
+
+# FieldShift crop -> FAOSTAT item (producer prices: domain PP, element 5532 "Producer Price (USD/tonne)";
+# yields: domain QCL). `price_factor` converts the FAOSTAT unit to the crop table's marketed product
+# (cotton: FAOSTAT prices seed cotton, FieldShift yields are lint → seed-cotton price / lint turnout 0.38).
+# `proxy: true` marks a close but not identical FAOSTAT item; the API says so.
+faostat_items:
+  maize: {item: 56, name: "Maize (corn)"}
+  sweet_corn: {item: 446, name: "Green corn (maize)"}
+  winter_wheat: {item: 15, name: "Wheat"}
+  spring_wheat: {item: 15, name: "Wheat"}
+  durum_wheat: {item: 15, name: "Wheat", proxy: true}
+  spelt: {item: 15, name: "Wheat", proxy: true}
+  barley: {item: 44, name: "Barley"}
+  winter_barley: {item: 44, name: "Barley"}
+  oats: {item: 75, name: "Oats"}
+  winter_rye: {item: 71, name: "Rye"}
+  rice: {item: 27, name: "Rice (paddy)"}
+  sorghum: {item: 83, name: "Sorghum"}
+  pearl_millet: {item: 79, name: "Millet"}
+  buckwheat: {item: 89, name: "Buckwheat"}
+  quinoa: {item: 92, name: "Quinoa"}
+  soybean: {item: 236, name: "Soya beans"}
+  dry_bean: {item: 176, name: "Beans, dry"}
+  mung_bean: {item: 176, name: "Beans, dry", proxy: true}
+  cowpea: {item: 195, name: "Cow peas, dry"}
+  field_pea: {item: 187, name: "Peas, dry"}
+  lentil: {item: 201, name: "Lentils, dry"}
+  chickpea: {item: 191, name: "Chick peas, dry"}
+  faba_bean: {item: 181, name: "Broad beans and horse beans, dry"}
+  pigeon_pea: {item: 197, name: "Pigeon peas, dry"}
+  groundnut: {item: 242, name: "Groundnuts, excluding shelled"}
+  sunflower: {item: 267, name: "Sunflower seed"}
+  safflower: {item: 280, name: "Safflower seed"}
+  winter_rapeseed: {item: 270, name: "Rape or colza seed"}
+  flax: {item: 333, name: "Linseed"}
+  hemp: {item: 336, name: "Hempseed"}
+  cotton: {item: 328, name: "Seed cotton, unginned", price_factor: 2.63, yield_item: 767}
+  potato: {item: 116, name: "Potatoes"}
+  sweet_potato: {item: 122, name: "Sweet potatoes"}
+  cassava: {item: 125, name: "Cassava, fresh"}
+  sugar_beet: {item: 157, name: "Sugar beet"}
+  sugarcane: {item: 156, name: "Sugar cane"}
+  tomato: {item: 388, name: "Tomatoes"}
+  onion: {item: 403, name: "Onions and shallots, dry"}
+  carrot: {item: 426, name: "Carrots and turnips"}
+  cabbage: {item: 358, name: "Cabbages"}
+  pepper: {item: 401, name: "Chillies and peppers, green"}
+  watermelon: {item: 567, name: "Watermelons"}
+  squash: {item: 394, name: "Pumpkins, squash and gourds"}
+  coffee: {item: 656, name: "Coffee, green"}
+  banana: {item: 486, name: "Bananas"}
+# Not in FAOSTAT producer prices (forages, cover crops, teff): reference price × the country's farm-price index.
+# alfalfa, maize_silage, triticale_forage, teff, sorghum_sudan, clover_grass_ley, cover_rye_vetch, mustard_cover, phacelia_cover
+
+prices:
+  min_year: 2017            # older FAOSTAT prices are not used
+  n_years: 3                # mean of the latest available years (USD/t, FAOSTAT converts with annual exchange rates)
+
+# Production cost per hectare. No open dataset gives per-crop costs by country, so costs are modelled from the
+# crop table's reference enterprise budget (written for `typical_yield_t_ha`, high-input systems) with the
+# country's own data:
+#   cost = cost_ref × intensity × (tradable_share + (1 − tradable_share) × price_level)
+#   intensity   = FAOSTAT national yield of the crop / typical_yield_t_ha (clipped), else the country's median
+#                 ratio over its crops — input use scales with the yield level a country achieves;
+#   price_level = World Bank price level ratio of PPP to market exchange rate (PA.NUS.PPP ÷ PA.NUS.FCRF, USA = 1) —
+#                 labour, services and land are cheaper where price levels are lower; fertiliser, seed, fuel and
+#                 machinery trade near world prices (tradable_share).
+costs:
+  tradable_share: 0.6
+  intensity_clip: [0.1, 1.3]
+
+# Nitrogen fertiliser (value of legume N credits and fertiliser saved).
+# World Bank Commodity Price Data (Pink Sheet), urea (Middle East) annual average, converted to N (46 % N) with a
+# farm-gate mark-up for transport and retail; no open source gives farm-gate N prices for all countries.
+nitrogen:
+  urea_usd_t: 338          # Pink Sheet 2024 annual average; build script overwrites with the downloaded value
+  urea_year: 2024
+  farm_gate_markup: 1.6     # FOB → farm gate (freight, handling, retail), typical 1.4–2.0 (IFDC/AfricaFertilizer price build-ups)
+  n_share: 0.46
+
+# Solar pump capex per kWp. Hardware (modules, pump, controller) trades near world prices; installation and
+# balance-of-system labour scale with the country's price level relative to the world median.
+#   capex = capex_world × (hardware_share + (1 − hardware_share) × price_level / world_median_price_level)
+solar:
+  capex_world_usd_kwp: 1000   # small solar pumping systems 2022–24 (IRENA 2016; FAO & GIZ 2018; PM-KUSUM ~650–900 USD/kWp)
+  hardware_share: 0.65
+
+# Diesel retail price. World Bank WDI EP.PMP.DESL.CD (pump price for diesel, USD/L, GIZ International Fuel Prices)
+# ends years ago, so the latest country value is brought to the current year by passing through the change in the
+# crude-oil cost per litre (Brent, World Bank Pink Sheet; 159 L per barrel). Taxes and margins stay as reported.
+diesel:
+  brent_usd_bbl: {2012: 111.97, 2014: 99.0, 2016: 43.67, 2024: 80.66}
+  target_year: 2024
+  world_default_usd_l: 1.10

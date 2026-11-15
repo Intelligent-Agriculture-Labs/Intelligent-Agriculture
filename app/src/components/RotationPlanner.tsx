@@ -11,7 +11,8 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/api/client";
 import { useQuery } from "@/lib/useQuery";
 import type { RotationPlanResponse, RotationYear, RotationYearCheck } from "@/api/types";
-import { cropName, useCrops } from "@/components/domain";
+import { EconomicsNote, cropName, useCrops } from "@/components/domain";
+import { formatMoney } from "@/lib/money";
 import { CropPicker, Disclosure, InfoButton, Stat, StatRow, cropIcon } from "@/components/kit";
 import { ImpactCard } from "@/components/ImpactCard";
 import { captureHooks } from "@/lib/captureHooks";
@@ -35,7 +36,7 @@ export function planKey(f: Field, history: RotationYear[], plan: RotationYear[])
 
 export function RotationPlanner({ field }: { field: Field }) {
   const t = useTheme();
-  const { t: tr } = useTranslation();
+  const { t: tr, i18n } = useTranslation();
   const { updateField, settings } = useStore();
   const crops = useCrops();
   const sys = settings.units;
@@ -234,8 +235,8 @@ export function RotationPlanner({ field }: { field: Field }) {
               </StatRow>
               {settings.expert ? (
                 <Txt v="small" muted style={{ marginTop: space.sm }}>
-                  {tr("plan.years.expert", {
-                    margin: Math.round(sel.sim.margin_usd_ha),
+                  {tr("plan.years.expertMoney", {
+                    margin: formatMoney(sel.sim.margin_local_ha ?? sel.sim.margin_usd_ha, result?.economics?.currency.code ?? "USD", i18n.language),
                     bare: sel.sim.bare_days,
                     effect: sel.sim.rotation_effect_pct,
                     erosion: sel.sim.erosion_t_ha ?? "–",
@@ -285,6 +286,7 @@ export function RotationPlanner({ field }: { field: Field }) {
                   collapsable={false}
                 >
                   <ImpactCard impact={result.impact} />
+                  <EconomicsNote e={result.economics} />
                 </View>
               ) : null}
               {result.optimized && result.optimized.score > result.summary.score + 0.5 ? (

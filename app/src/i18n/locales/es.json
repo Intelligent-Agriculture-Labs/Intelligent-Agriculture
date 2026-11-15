@@ -356,6 +356,7 @@
       "water": "Agua",
       "nitrogen": "Nitrógeno restante",
       "expert": "Margen ≈ {{margin}} USD/ha · suelo desnudo {{bare}} días · efecto de rotación {{effect}} % · erosión {{erosion}} t/ha",
+      "expertMoney": "Margen ≈ {{margin}}/ha · suelo desnudo {{bare}} días · efecto de rotación {{effect}} % · erosión {{erosion}} t/ha",
       "tapYear": "Toque un año para ver qué está bien y qué cambiar.",
       "diseaseTitle": "Acumulación de enfermedades y plagas",
       "diseaseSubtitle": "Qué problemas del suelo crecen con los años",
@@ -759,5 +760,10 @@
     "fDecade": "°F/década",
     "mmDecade": "mm/década",
     "inDecade": "in/década"
+  },
+  "economics": {
+    "source": "Precios y costes de {{country}} (precios al productor FAOSTAT, costes modelados) en {{currency}} · 1 USD = {{rate}} {{currency}} (Banco Mundial {{year}})",
+    "sourceUsd": "Precios y costes de {{country}} (precios al productor FAOSTAT, costes modelados) en USD",
+    "fallback": "País no reconocido: precios y costes de referencia en USD"
   }
 }

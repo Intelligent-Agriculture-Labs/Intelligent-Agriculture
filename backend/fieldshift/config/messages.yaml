@@ -490,3 +490,11 @@ smap_wetter_detail:
   sw: "NASA SMAP inapima udongo wenye unyevu eneo lako wakati hesabu yetu ya maji inasema ni {model}% tu ya maji yamebaki. Huenda kulikuwa na mvua ya eneo dogo: kagua udongo kabla ya kuchukua hatua."
   hi: "NASA SMAP आपके क्षेत्र में नम मिट्टी माप रहा है, जबकि हमारा जल संतुलन कहता है कि केवल {model}% पानी बचा है। स्थानीय बारिश छूट गई हो सकती है: कुछ करने से पहले मिट्टी जांचें।"
   de: "NASA SMAP misst in Ihrer Gegend feuchten Boden, unsere Wasserbilanz rechnet nur noch mit {model} % Wasser. Vielleicht gab es lokalen Regen: prüfen Sie den Boden, bevor Sie handeln."
+# ---- country economics (ADR-027): same as solar_pump_detail, in the field's local currency
+solar_pump_detail_cur:
+  en: "{m3} m³/day in {month} at {head} m head. Water costs ~{solar} {cur}/m³ vs ~{diesel} {cur} with diesel, and saves {co2} t CO₂ a year."
+  es: "{m3} m³/día en {month} con {head} m de altura. El agua cuesta ~{solar} {cur}/m³ frente a ~{diesel} {cur} con diésel y ahorra {co2} t de CO₂ al año."
+  fr: "{m3} m³/jour en {month} pour {head} m de hauteur. L'eau coûte ~{solar} {cur}/m³ contre ~{diesel} {cur} au diesel et évite {co2} t de CO₂ par an."
+  sw: "m³ {m3} kwa siku mwezi {month} kwa kimo cha m {head}. Maji yanagharimu ~{solar} {cur}/m³ dhidi ya ~{diesel} {cur} kwa dizeli, na huokoa t {co2} za CO₂ kwa mwaka."
+  hi: "{month} में {m3} m³/दिन, {head} मी हेड पर। पानी की लागत ~{solar} {cur}/m³, डीज़ल से ~{diesel} {cur}; हर साल {co2} t CO₂ की बचत।"
+  de: "{m3} m³/Tag im {month} bei {head} m Förderhöhe. Wasser kostet ~{solar} {cur}/m³ statt ~{diesel} {cur} mit Diesel und spart {co2} t CO₂ pro Jahr."

@@ -13,6 +13,8 @@ national yields at 40+ countries (`scripts/yield_benchmark.py`):
   same regional factor is raised to a crop-specific power).
 * f_zone: optional Köppen–Geiger main climate group factor (only when the benchmark justified it).
 * f_irrigated: optional factor for irrigated seasons (smaller yield gap under irrigation), if selected.
+* f_country: the field's country (ADR-027, config/yield_country_factors.yaml): the benchmark residual of the
+  41 benchmarked countries, else the country's FAOSTAT national yields relative to its macro region (half weight).
 
 Factors live in `config/yield_calibration.yaml` with their sources and fit statistics. Annual crops
 without a benchmark entry (vegetables, pulses other than dry bean, teff, …) get only the regional factor
@@ -123,7 +125,26 @@ def calibration() -> dict[str, Any]:
     return out
 
 
-def factor(crop_id: str, region: str | None, zone: str | None, irrigated: bool = False) -> float:
+@lru_cache
+def country_factors() -> dict[str, Any]:
+    """Per-country yield factors (ADR-027, config/yield_country_factors.yaml): benchmark residual for the 41
+    benchmarked countries, else the country's FAOSTAT national yields relative to its macro region (half weight)."""
+    path = CONFIG / "yield_country_factors.yaml"
+    if not path.exists():
+        return {}
+    with open(path) as f:
+        out: dict[str, Any] = (yaml.safe_load(f) or {}).get("countries") or {}
+    return out
+
+
+def country_factor(country: str | None) -> float:
+    e = country_factors().get(country or "") if country else None
+    return float(e["factor"]) if e else 1.0
+
+
+def factor(
+    crop_id: str, region: str | None, zone: str | None, irrigated: bool = False, country: str | None = None
+) -> float:
     """Multiplicative yield calibration for one crop at one location (1.0 = uncalibrated)."""
     if region is None:
         return 1.0
@@ -143,5 +164,6 @@ def factor(crop_id: str, region: str | None, zone: str | None, irrigated: bool =
         f *= float(cal["zones"].get(zone, {}).get("factor", 1.0))
     if irrigated:
         f *= float(cal.get("irrigated_factor", 1.0))
+    f *= country_factor(country)
     lo, hi = cal.get("bounds", [0.1, 2.0])
     return float(np.clip(f, lo, hi))

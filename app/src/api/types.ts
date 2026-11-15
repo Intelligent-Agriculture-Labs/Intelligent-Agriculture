@@ -285,6 +285,7 @@ export interface RotationSlot {
   season: "spring" | "summer" | "fall" | "winter" | "perennial" | "cover";
   start_month: number; // 1..12
   end_month: number;
+  sowing_source?: string; // "Sacks et al. 2010 crop calendar (…, 0.5° cell)" or the climate rule used
 }
 export interface RotationMetric {
   id: "water" | "soil" | "income" | "pests" | "risk" | "erosion" | "nitrogen" | "bare_days";
@@ -293,6 +294,8 @@ export interface RotationMetric {
   unit: string;
   score: number; // 0..100, higher = better for farmer
   vs_current: number; // delta of score vs current rotation
+  value_local?: number; // income only: value in the field's local currency
+  currency?: string; // ISO 4217 code of value_local
 }
 export interface RotationStrategy {
   id: string;
@@ -322,6 +325,8 @@ export interface RotationResponse {
   groundwater_note?: string | null;
   sources: SourceRef[];
   disclaimer: string;
+  years_simulated?: [number, number];
+  economics?: Economics; // country, currency and price provenance of the income metric
 }
 
 /* ---------- Climate trends ---------- */
@@ -725,7 +730,8 @@ export interface RotationYearCheck {
     irrigation_mm: number;
     water_use_mm: number;
     n_balance_kg_ha: number; // + surplus / − deficit to supply with fertiliser
-    margin_usd_ha: number; // indicative
+    margin_usd_ha: number; // indicative, with the field's country prices and costs
+    margin_local_ha?: number; // same in the local currency (RotationPlanResponse.economics.currency)
     bare_days: number;
     erosion_t_ha: number | null; // RUSLE for this field (needs polygon/terrain)
     rotation_effect_pct: number; // yield effect of predecessors (+/−)
@@ -750,6 +756,7 @@ export interface RotationPlanResponse {
     verdict: "good" | "caution" | "problem";
     headline: string; // plain language: "Good plan — one change would cut disease risk"
     total_margin_usd_ha: number;
+    total_margin_local_ha?: number;
     avg_irrigation_mm: number;
     n_balance_kg_ha: number; // over the plan
     disease_pressure: { pathogen: string; name: string; level: "low" | "medium" | "high"; years: number[] }[];
@@ -767,14 +774,17 @@ export interface RotationPlanResponse {
       co2e_avoided_kg_ha: number;
       soil_kept_t_ha: number;
       margin_gain_usd_ha: number;
+      margin_gain_local_ha?: number; // in `currency`
       bare_days_fewer_per_yr: number;
     };
     field_area_ha: number | null;
-    field_total: { water_saved_m3_per_yr: number; n_fertiliser_saved_kg: number; co2e_avoided_kg: number; soil_kept_t: number; margin_gain_usd: number } | null;
+    field_total: { water_saved_m3_per_yr: number; n_fertiliser_saved_kg: number; co2e_avoided_kg: number; soil_kept_t: number; margin_gain_usd: number; margin_gain_local?: number } | null;
     headline: string; // plain language incl. trade-offs
+    currency?: string; // ISO 4217 code of the *_local fields
     method: string;
   } | null;
   crops_available: string[]; // crops that fit this field's climate
+  economics?: Economics; // country, currency and price provenance of the margins
   sources: SourceRef[];
   disclaimer: string;
 }
@@ -798,7 +808,8 @@ export interface AdviceText {
 /* ---------- Solar irrigation pump advisor (POST /api/solar-pump) ----------
  * Sizes a solar PV pump from NASA POWER all-sky irradiance (ALLSKY_SFC_SW_DWN) and the crop's FAO-56
  * peak-month water need. Also appears in /api/advice as the low-priority card id "solar_pump"
- * (irrigated fields only). Costs are indicative USD; see docs/MODELS.md#solar-pump. */
+ * (irrigated fields only). Costs use the field's country diesel price and PV-pump cost (ADR-027), in USD
+ * plus `*_local` in the local currency; see docs/MODELS.md#solar-pump. */
 export interface SolarPumpRequest {
   lat: number;
   lon: number;
@@ -808,8 +819,8 @@ export interface SolarPumpRequest {
   area_ha?: number | null; // default: polygon area, else 1 ha
   polygon?: [number, number][] | null;
   static_head_m?: number | null; // water level to field surface, default 15 m
-  diesel_price_usd_l?: number | null; // default 1.10
-  capex_usd_kwp?: number | null; // installed PV + pump per kWp, default 1000
+  diesel_price_usd_l?: number | null; // default: the field's country (World Bank pump price), else 1.10
+  capex_usd_kwp?: number | null; // installed PV + pump per kWp; default: world 1000 scaled by the country's price level
   as_of?: string | null;
 }
 export interface SolarPumpMonth {
@@ -846,10 +857,46 @@ export interface SolarPumpResponse {
   solar_usd_per_m3: number; // annualised capex + O&M
   diesel_l_per_m3: number;
   diesel_usd_per_m3: number; // fuel + maintenance (pump-set purchase excluded)
+  currency?: string; // ISO 4217 code of the *_local fields
+  solar_capex_local?: number;
+  solar_local_per_m3?: number;
+  diesel_local_per_m3?: number;
+  diesel_price_usd_l?: number; // the diesel price used
+  capex_usd_kwp?: number; // the PV-pump cost used
   diesel_l_per_season: number;
   co2_avoided_t_per_season: number;
   monthly: SolarPumpMonth[];
   assumptions: Record<string, number>;
   steps: string[];
   sources: string[];
+  economics?: Economics;
+}
+
+/* ---------- Country economics (ADR-027): which country's prices, costs and currency were used ---------- */
+export type EconScope = "country" | "region" | "world" | "reference_scaled" | "reference" | "modelled" | "user";
+export interface EconomicsCrop {
+  crop: string;
+  price_usd_t: number;
+  price_local_t: number;
+  price_scope: EconScope; // country = FAOSTAT producer price of this country
+  price_years: number[] | null; // [first, last] year averaged
+  price_source: string;
+  cost_usd_ha: number;
+  cost_local_ha: number;
+  cost_scope: EconScope;
+  national_yield_t_ha: number | null; // FAOSTAT national mean yield (context)
+  national_yield_years: number[] | null;
+}
+export interface Economics {
+  country: { iso3: string; iso2: string | null; name: string; sub_region: string | null } | null; // null = unknown (fallback)
+  currency: { code: string; symbol: string; per_usd: number; year: number | null; source: string | null };
+  fallback: boolean; // true when the country is unknown and crop-table reference values (USD) were used
+  notes: string[];
+  crops?: EconomicsCrop[];
+  nitrogen: { usd_kg: number; scope: EconScope; year: number | null; source: string };
+  yield_calibration: { country_factor: number; method: string; n: number };
+  cost_method: string;
+  sources: Record<string, string>;
+  diesel?: { usd_l: number; scope: EconScope; year?: number | null; source: string };
+  solar_capex?: { usd_kwp: number; scope: EconScope; source: string };
 }

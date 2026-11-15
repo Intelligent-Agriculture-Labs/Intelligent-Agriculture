@@ -52,9 +52,11 @@ IA is a free web, iOS and Android app that turns 40 years of NASA Earth observat
 - **Rotation plan.** The planner models disease carry-over from each pathogen's survival in soil, legume nitrogen credits, bare-soil erosion (RUSLE with NASA rain erosivity and SRTM slopes), and water need and yield. Water and yield are simulated with NASA weather at that field. An optimiser searches the region's cropping system for a better plan, and IA reports its impact on the field: water, fertiliser N, CO₂e (IPCC EF1), topsoil and indicative margin.
 
 **Benefits.** On the demo fields, the suggested plans would:
-- cut irrigation by about 15,500 m³ a year on a 5.5 ha Nevada alfalfa field (at a lower margin, which the app states);
-- keep about 480 t of topsoil over four years on a 48 ha Iowa field;
-- save about 105 kg N/ha (≈ 450 kg CO₂e/ha) over four years on a Kenyan smallholder field.
+- cut irrigation by about 9,300 m³ a year on a 5.5 ha Nevada alfalfa field (at a lower margin, which the app states);
+- keep about 530 t of topsoil over four years on a 48 ha Iowa field;
+- save about 50 kg N/ha (≈ 214 kg CO₂e/ha) over four years on a Kenyan smallholder field.
+
+(Recomputed after ADR-027: each field now uses its own country's prices, costs, observed sowing calendar and yield level.)
 
 These are model estimates, not yet measured on farms. IA runs anywhere on Earth because its backbone data is global. It works on cheap phones, offline and by SMS.
 

@@ -28,6 +28,9 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI). Machine-readable sp
 | GET | `/api/export/advice.csv` | Tidy CSV of every series behind the advice |
 | GET | `/api/export/field.geojson` | Point feature with the advice summary |
 
+## Country economics (ADR-027)
+`/api/rotations`, `/api/rotations/plan` and `/api/solar-pump` compute money with the field's **country** (offline lookup) and return an `economics` block (`Economics` in `contracts/api.ts`): country (ISO 3166), currency (ISO 4217, World Bank exchange rate and year), per-crop producer price and modelled cost with `price_scope`/`cost_scope` (`country` · `region` · `world` · `reference_scaled` · `reference`), years and source, the N price, and the country yield factor. `fallback: true` means no country was found (at sea) and crop-table reference values in USD were used. All USD fields are unchanged; `*_local` fields (`margin_local_ha`, `total_margin_local_ha`, `margin_gain_local_ha`, `margin_gain_local`, income metric `value_local`, `solar_local_per_m3`, `diesel_local_per_m3`, `solar_capex_local`) carry the same amounts in the local currency. Rotation slots carry `sowing_source`.
+
 ## Example
 ```bash
 curl -s -X POST localhost:8000/api/advice -H 'content-type: application/json' -d '{

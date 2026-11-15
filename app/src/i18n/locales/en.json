@@ -356,6 +356,7 @@
       "water": "Water",
       "nitrogen": "Nitrogen left",
       "expert": "Margin ≈ {{margin}} USD/ha · bare soil {{bare}} days · rotation effect {{effect}} % · erosion {{erosion}} t/ha",
+      "expertMoney": "Margin ≈ {{margin}}/ha · bare soil {{bare}} days · rotation effect {{effect}} % · erosion {{erosion}} t/ha",
       "tapYear": "Tap a year to see what is good and what to change.",
       "diseaseTitle": "Disease and pest build-up",
       "diseaseSubtitle": "Which soil-borne problems grow over the years",
@@ -759,5 +760,10 @@
     "fDecade": "°F/decade",
     "mmDecade": "mm/decade",
     "inDecade": "in/decade"
+  },
+  "economics": {
+    "source": "Prices and costs for {{country}} (FAOSTAT producer prices, modelled costs) in {{currency}} · 1 USD = {{rate}} {{currency}} (World Bank {{year}})",
+    "sourceUsd": "Prices and costs for {{country}} (FAOSTAT producer prices, modelled costs) in USD",
+    "fallback": "Country not recognised — reference prices and costs in USD"
   }
 }

@@ -5,10 +5,11 @@ import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
 import i18n from "i18next";
 import { api } from "@/api/client";
-import type { ActionCard as ActionCardT, CropInfo, Lang, RotationMetric, RotationStrategy } from "@/api/types";
+import type { ActionCard as ActionCardT, CropInfo, Economics, Lang, RotationMetric, RotationStrategy } from "@/api/types";
 import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 import { fmt, type UnitSystem } from "@/lib/units";
 import { Txt } from "./ui";
+import { economicsParams, formatMoney } from "@/lib/money";
 
 type IonName = React.ComponentProps<typeof Ionicons>["name"];
 const ICON_FALLBACK: Record<ActionCardT["category"], IonName> = {
@@ -181,21 +182,23 @@ export function CoverCalendar({ strategy, crops }: { strategy: RotationStrategy;
 
 export function MetricBar({ m, system }: { m: RotationMetric; system: UnitSystem }) {
   const t = useTheme();
-  const { t: tr } = useTranslation();
+  const { t: tr, i18n } = useTranslation();
+  // income in the field's local currency (ADR-027)
+  const shown = m.value_local != null && m.currency ? `${formatMoney(m.value_local, m.currency, i18n.language)}/ha/yr` : fmt(m.value, m.unit, system);
   const col = m.score >= 66 ? t.risk.low.dot : m.score >= 40 ? t.risk.moderate.dot : t.risk.high.dot;
   const delta = Math.round(m.vs_current);
   return (
     <View
       style={{ marginTop: space.sm }}
       accessible
-      accessibilityLabel={`${m.label}: ${fmt(m.value, m.unit, system)}, ${Math.round(m.score)}/100, ${delta >= 0 ? "+" : ""}${delta} ${tr("rotations.vsCurrent")}`}
+      accessibilityLabel={`${m.label}: ${shown}, ${Math.round(m.score)}/100, ${delta >= 0 ? "+" : ""}${delta} ${tr("rotations.vsCurrent")}`}
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between", gap: space.sm }}>
         <Txt v="small" style={{ flex: 1 }}>
           {m.label}
         </Txt>
         <Txt v="small" muted>
-          {fmt(m.value, m.unit, system)}
+          {shown}
         </Txt>
         {delta !== 0 ? (
           <Txt v="small" color={delta > 0 ? t.risk.low.fg : t.risk.severe.fg} style={{ fontWeight: "700", minWidth: 36, textAlign: "right" }}>
@@ -223,5 +226,17 @@ export function ScoreRing({ score, label }: { score: number; label: string }) {
     >
       <Txt v="h3">{Math.round(score)}</Txt>
     </View>
+  );
+}
+
+/** Where the money numbers come from: country, currency and exchange rate (ADR-027). */
+export function EconomicsNote({ e }: { e: Economics | undefined | null }) {
+  const { t: tr } = useTranslation();
+  const p = economicsParams(e);
+  if (!e || !p) return null;
+  return (
+    <Txt v="small" muted style={{ marginTop: space.sm }} testID="economics-note">
+      {e.fallback ? tr("economics.fallback") : p.currency === "USD" ? tr("economics.sourceUsd", p) : tr("economics.source", p)}
+    </Txt>
   );
 }

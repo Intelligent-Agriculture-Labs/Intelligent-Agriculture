@@ -422,8 +422,12 @@ def check_year(
     effect = float(np.clip(effect, -0.30, 0.15))  # combined rotation effect capped (effects overlap)
     y_med = st["yield_median"] * (1 + effect)
     y_p10 = st["yield_p10"] * (1 + effect)
-    price, cost = float(c.get("price_usd_t", 0)), float(c.get("cost_usd_ha", 0))
-    margin = y_med * price - cost + max(0.0, n_credit) * 1.3
+    econ = field.get("econ")
+    if econ is not None:  # the field's country prices and costs (science/economics.py, ADR-027)
+        price, cost, n_price = econ.price_usd_t(cid), econ.cost_usd_ha(cid), econ.n_price_usd_kg()
+    else:
+        price, cost, n_price = float(c.get("price_usd_t", 0)), float(c.get("cost_usd_ha", 0)), 1.3
+    margin = y_med * price - cost + max(0.0, n_credit) * n_price
     if st["feasible_issue"]:
         issues.append(
             {
@@ -531,6 +535,7 @@ def check_year(
             "water_use_mm": round(st["et_mm"]),
             "n_balance_kg_ha": round(n_credit),
             "margin_usd_ha": round(margin),
+            "margin_local_ha": round(econ.local(margin)) if econ is not None else round(margin),
             "bare_days": int(bare),
             "erosion_t_ha": None if erosion is None else round(erosion, 2),
             "rotation_effect_pct": round(100 * effect, 1),
@@ -598,6 +603,9 @@ def evaluate_plan(
         "score": round(score, 1),
         "verdict": verdict,
         "total_margin_usd_ha": round(sum(y["sim"]["margin_usd_ha"] for y in out)),
+        "total_margin_local_ha": round(
+            sum(y["sim"].get("margin_local_ha", y["sim"]["margin_usd_ha"]) for y in out)
+        ),
         "avg_irrigation_mm": round(float(np.mean([y["sim"]["irrigation_mm"] for y in out])) if out else 0),
         "n_balance_kg_ha": round(sum(y["sim"]["n_balance_kg_ha"] for y in out)),
         "disease_pressure": sorted(dp, key=lambda d: {"high": 0, "medium": 1, "low": 2}[d["level"]]),

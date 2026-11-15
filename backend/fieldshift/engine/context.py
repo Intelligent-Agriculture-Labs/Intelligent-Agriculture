@@ -21,6 +21,7 @@ from ..data.http import DataUnavailable
 from ..science import et0 as et0mod
 from ..science import rainblend
 from ..science.cropmodel import Weather
+from ..science.economics import country_of
 from ..science.yieldcal import region_of
 
 log = logging.getLogger("fieldshift.context")
@@ -178,7 +179,15 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
             log.warning("POWER hourly unavailable: %s", e)
 
     # extend with climatology for long simulations beyond the forecast horizon (marked provenance 3)
-    w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0, region=region_of(lat, lon))
+    w = Weather(
+        dates,
+        tmax,
+        tmin,
+        np.where(np.isfinite(rain), rain, 0.0),
+        et0,
+        region=region_of(lat, lon),
+        country=country_of(lat, lon),
+    )
     rain_power = w.rain.copy()
     n_p = len(power.dates)
     own = prov[:n_p] == 0  # days still from POWER (not overwritten by the forecast bridge)

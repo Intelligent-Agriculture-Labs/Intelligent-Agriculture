@@ -252,12 +252,12 @@ rot_ben_similar:
   hi: "कुल मिलाकर आपके मौजूदा फसल-चक्र जैसा; अलग प्राथमिकताओं के लिए उपयुक्त हो सकता है।"
   de: "Insgesamt ähnlich wie Ihre jetzige Fruchtfolge; passt eventuell zu anderen Prioritäten."
 rot_gap_prices:
-  en: "Prices and costs are national averages — local market access (hay buyers, elevators) is not known to IA."
-  es: "Precios y costos son promedios nacionales; IA no conoce su acceso al mercado local (compradores de heno, acopios)."
-  fr: "Prix et coûts sont des moyennes nationales — IA ne connaît pas votre accès au marché local (acheteurs de foin, silos)."
-  sw: "Bei na gharama ni wastani wa kitaifa — IA haijui upatikanaji wa soko lako la karibu (wanunuzi wa nyasi, maghala)."
-  hi: "कीमतें और लागत राष्ट्रीय औसत हैं — स्थानीय बाज़ार (चारा खरीदार, गोदाम) तक पहुँच IA को ज्ञात नहीं।"
-  de: "Preise und Kosten sind Landesdurchschnitte – den Zugang zum lokalen Markt (Heukäufer, Landhandel) kennt IA nicht."
+  en: "Prices are national producer prices (FAOSTAT) for this field's country and costs are modelled from its yield and price level — local market access (hay buyers, elevators) is not known to IA."
+  es: "Los precios son precios nacionales al productor (FAOSTAT) del país de esta parcela y los costos se modelan a partir de su nivel de rendimiento y de precios; IA no conoce su acceso al mercado local (compradores de heno, acopios)."
+  fr: "Les prix sont les prix nationaux à la production (FAOSTAT) du pays de cette parcelle et les coûts sont modélisés à partir de son niveau de rendement et de prix — IA ne connaît pas votre accès au marché local (acheteurs de foin, silos)."
+  sw: "Bei ni bei za kitaifa za wazalishaji (FAOSTAT) za nchi ya shamba hili na gharama zimekadiriwa kutokana na kiwango chake cha mavuno na bei — IA haijui upatikanaji wa soko lako la karibu (wanunuzi wa nyasi, maghala)."
+  hi: "कीमतें इस खेत के देश की राष्ट्रीय उत्पादक कीमतें (FAOSTAT) हैं और लागत उसके उपज व मूल्य स्तर से अनुमानित है — स्थानीय बाज़ार (चारा खरीदार, गोदाम) तक पहुँच IA को ज्ञात नहीं।"
+  de: "Preise sind nationale Erzeugerpreise (FAOSTAT) des Landes dieses Feldes, Kosten sind aus dessen Ertrags- und Preisniveau modelliert – den Zugang zum lokalen Markt (Heukäufer, Landhandel) kennt IA nicht."
 rot_gap_lowconf:
   en: "Some crops here (e.g. teff, cover mixes) are not in FAO-56; their water parameters are literature estimates."
   es: "Algunos cultivos aquí (p. ej. tef, mezclas de cobertura) no están en FAO-56; sus parámetros de agua son estimaciones de la literatura."

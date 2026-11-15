@@ -70,6 +70,8 @@ class Weather:
     # location for the global yield calibration (science/yieldcal.py); None = uncalibrated
     region: str | None = None
     _zone: str | None = field(default=None, repr=False)
+    # ISO 3166 alpha-3 of the field's country (country yield factor, ADR-027); None = region only
+    country: str | None = None
 
     def index(self, d: dt.date) -> int:
         return (d - self.dates[0]).days
@@ -89,7 +91,7 @@ class Weather:
         from .yieldcal import calibration, factor
 
         zone = self.climate_zone() if calibration().get("zones") else None
-        return factor(crop_id, self.region, zone, irrigated)
+        return factor(crop_id, self.region, zone, irrigated, self.country)
 
     def perturbed(self, delta_t: float = 0.0, rain_factor: float = 1.0) -> Weather:
         """Simple delta-change climate scenario. ET0 scaled with the FAO-56 temperature sensitivity
@@ -106,6 +108,7 @@ class Weather:
             self.et0 * (1 + 0.03 * delta_t),
             self.region,
             zone,
+            self.country,
         )
 
 
@@ -172,8 +175,11 @@ class SeasonResult:
     final_stage: str = ""
 
 
-def gdd_requirement(c: dict[str, Any], w: Weather, planting: dt.date, years: list[int]) -> float:
-    """Location-calibrated thermal time to maturity: mean ΣGDD over the FAO-56 season length."""
+def gdd_requirement(
+    c: dict[str, Any], w: Weather, planting: dt.date, years: list[int], season_days: int | None = None
+) -> float:
+    """Location-calibrated thermal time to maturity: mean ΣGDD over the FAO-56 season length, or over the
+    observed local season (`season_days`, sowing → harvest from the Sacks et al. 2010 calendar, ADR-027)."""
     tot = []
     md = (planting.month, min(planting.day, 28))
     for y in years:
@@ -182,7 +188,7 @@ def gdd_requirement(c: dict[str, Any], w: Weather, planting: dt.date, years: lis
         except ValueError:
             continue
         i0 = w.index(s)
-        i1 = i0 + int(sum(c["stages"]))
+        i1 = i0 + int(season_days or sum(c["stages"]))
         if i0 < 0 or i1 > len(w.dates):
             continue
         g = gdd(w.tmax[i0:i1], w.tmin[i0:i1], c["t_base"])
