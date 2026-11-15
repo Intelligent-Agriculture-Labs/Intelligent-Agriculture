@@ -28,7 +28,7 @@ export interface FieldInput {
 }
 
 export interface SourceRef {
-  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm", "firms", "gpm_imerg", "grace_fo"
+  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm", "firms", "gpm_imerg", "gpm_imerg_nrt", "grace_fo", "grace_da", "smap_l4", "ecostress"
   name: string;
   provider: string; // "NASA LaRC", "NASA/ORNL DAAC", ...
   url: string;
@@ -67,7 +67,8 @@ export interface WhyBlock {
 
 export interface ActionCard {
   id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat", "rain_onset",
-  //             "heat_stress" (people + livestock), "solar_pump", "fire_nearby", "residue_no_burn", "groundwater_trend"
+  //             "heat_stress" (people + livestock), "solar_pump", "fire_nearby", "residue_no_burn", "groundwater_trend",
+  //             "groundwater_low" (GRACE-DA), "smap_check" (SMAP vs model, rain-fed), "et_low" (ECOSTRESS vs model, irrigated)
   category: "water" | "drought" | "disease" | "pest" | "planning" | "weather";
   priority: number; // 1 = most urgent
   risk: Risk;
@@ -101,7 +102,49 @@ export interface DroughtStatus {
   groundwater?: GroundwaterStatus | null;
   /** where the rain behind SPI/SPEI and the water balance comes from (NASA POWER, or POWER + GPM IMERG blend) */
   rain_source?: RainSource | null;
+  /** NASA GRACE-FO data-assimilation weekly drought percentiles (~25 km, GES DISC); context only */
+  grace_da?: GraceDaStatus | null;
   why: WhyBlock;
+}
+
+export type PercentileClass =
+  | "exceptionally_dry"
+  | "extremely_dry"
+  | "severely_dry"
+  | "moderately_dry"
+  | "abnormally_dry"
+  | "near_normal"
+  | "wet";
+
+export interface GraceDaStatus {
+  week: string; // ISO date of the latest weekly analysis (2–3 months latency)
+  groundwater_pct: number; // 0..100 vs. the same weeks 1948–2012
+  rootzone_pct: number | null;
+  surface_pct: number | null;
+  groundwater_class: PercentileClass;
+  why: WhyBlock;
+}
+
+/** Independent satellite checks of the modelled water balance (present when the layers were reachable) */
+export interface SatelliteWater {
+  smap: {
+    date: string;
+    rootzone_m3m3: number | null; // SMAP L4 0–100 cm, 9 km
+    surface_m3m3: number | null; // SMAP L4 0–5 cm
+    rootzone_pctl: number | null; // SMAP L4 climatological percentile 0..100
+    rootzone_class: PercentileClass | null;
+    model_pct_left: number | null; // model: % of available root-zone water left
+    agreement: "agree" | "satellite_drier" | "satellite_wetter" | "unknown";
+    why: WhyBlock;
+  } | null;
+  et: {
+    last_date: string;
+    last_et_mm: number; // ECOSTRESS daily ET, 70 m, mm/day
+    last_model_mm: number | null; // model crop ET on that day
+    recent_overpasses: number; // clear overpasses in the last 30 days with model ET >= 1.5 mm/day
+    recent_ratio: number | null; // satellite / model ET over those overpasses
+    why: WhyBlock;
+  } | null;
 }
 
 export interface GroundwaterStatus {
@@ -127,7 +170,10 @@ export interface GroundwaterStatus {
 export interface RainSource {
   method: "power" | "blend_50_50";
   imerg_used: boolean;
-  imerg_last: string | null; // last IMERG Final day used; later days use POWER × climatological ratio
+  imerg_last: string | null; // last IMERG day used (Final, then Late/Early near real time); later days use POWER × climatological ratio
+  imerg_final_last?: string | null; // last IMERG Final day (gauge-calibrated, via NASA POWER)
+  imerg_nrt_last?: string | null; // last IMERG Late/Early day (NASA GES DISC, Earthdata Login)
+  imerg_nrt_days?: number | null;
   annual_power_mm: number | null;
   annual_imerg_mm: number | null;
 }
@@ -171,6 +217,7 @@ export interface WaterState {
   season_irrigation_mm: number;
   forecast_rain_7d_mm: number;
   forecast_et0_7d_mm: number;
+  satellite?: SatelliteWater | null;
 }
 
 /* ---------- What-if simulator ---------- */
