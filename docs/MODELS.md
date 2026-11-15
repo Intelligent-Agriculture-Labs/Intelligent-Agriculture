@@ -277,6 +277,40 @@ Each module emits zero or more cards, each with risk, due date and a Why block (
 - drought 0.6 with ≥ 3 indicators, else 0.45;
 - disease 0.5; pests 0.55; NDVI 0.45; frost/heat 0.6.
 
+## <a id="rain-onset"></a>18. Rain-season onset, false starts and sowing windows (`science/onset.py`, `engine/rain_season.py`)
+For rain-fed farmers in the tropics and monsoon regions, *when* to sow matters more than almost anything else. Sowing at the first shower risks losing seed and seedlings to a dry spell (a **false start**); sowing late shortens the season. Parameters live in `config/onset.yaml`; ADR-021 records the choices.
+
+**Climatological seasons (both hemispheres, one or two per year).**
+- The daily rain climatology (complete years since 1984, 31-day circular smoothing) is scanned for runs above the annual mean. This is where the anomalous accumulation rises, i.e. the climatological onset and cessation of Liebmann et al. (2012).
+- Two rainy seasons are kept when the 2nd harmonic of the climatology is stronger than the 1st (Dunning, Black & Allan 2016), e.g. Machakos (ratio 1.5: MAM "long rains" and OND "short rains"). Otherwise the largest run is the one season.
+- Seasons that cross New Year (southern hemisphere, e.g. Darwin NDJFMA) need no special case: each season instance is anchored at its climatological onset date in a given year.
+
+**Per-year onset (Sivakumar 1988; Stern, Dennett & Garbutt 1981).** The first day of a 3-day period with ≥ 20 mm, starting with a wet day (≥ 1 mm), with no dry spell longer than 7 days in the following 30 days. The search runs from 45 days before to 60 days after the climatological onset (shorter when the season is short or the gap to the previous season is small). No valid onset in that window = a **failed season**.
+
+**False start.** An *apparent* onset (the rain part of the criterion) followed by a dry spell > 7 days within 30 days. The site's false-start probability is the share of seasons whose first apparent onset was false.
+
+**Cessation (Stern et al. 1981; Frère & Popov 1979, FAO).** A 100 mm soil store filled by rain and emptied by FAO-56 ET₀ (from NASA POWER). The season ends on the first day the store is empty, but not earlier than onset + 20 days or 3 weeks before the climatological end of the rains. This mirrors the fixed "earliest end date" of the Instat implementations. The 3-week offset was set on Machakos before any reference data were collected: an earliest end at mid-season piled the cessations onto that bound and gave median seasons of only 42–54 days. It was not fitted to the validation references.
+
+**Climatology product (`GET /api/rain-season`).** Per season:
+- onset and cessation dates (p10–p90) and season length;
+- false-start and failed-season percentages, and every year's onset, cessation and false starts;
+- trends since 1984: Theil–Sen slope with Mann–Kendall p for onset, cessation and length, and false-start shares before vs. since 2005. These feed the "Field Shift" climate story, e.g. at Machakos the MAM season shortened by 6 days per decade (p = 0.07), and false starts rose from 15 % of years before 2005 to 40 % since.
+
+**Live status ("this season" card, id `rain_onset`).** Observations, the Open-Meteo bridge and the 16-day forecast are scanned from the search window onwards. The phase is one of `before`, `not_started` (or late after the p80 onset), `forecast` (the rain criterion is met only in forecast days), `started`, `false_start`, `established` (30 days without a damaging spell), `ended` or `failed`.
+- For `started`, the false-start risk is **conditional**: among all historical apparent onsets within ±20 days of this date's place in the season, the share followed by a damaging dry spell, given that none occurred in the days already checked (observed + forecast).
+- The risk then sets the advice: below 20 %, sow now; 20–40 %, sow with care (moist to a hand's depth, keep seed to re-sow); 40 % or more, wait.
+
+**Sowing windows per crop.** A crop must reach the end of its mid-season (grain fill; FAO-56 stage lengths) before the water-balance end of the season. The late (ripening) stage can run on stored water.
+- `fit_pct`: share of past seasons in which sowing on the start date (onset, or expected median onset) would have achieved that.
+- `sow_until`: last date that still works in 8 of 10 seasons.
+- `max_variety_days`: the longest total cycle that fits in 8 of 10 seasons. When the field's crop does not fit, the card names an early variety (≤ N days) or a shorter crop.
+
+**Where it is offered.** Rain-fed fields with |latitude| ≤ 35°, at least one rainy season and a real dry season: ≥ 60 days with climatological rain < ½ ET₀, the FAO agro-ecological-zones growing-period rule. Fallon, Córdoba and Ames therefore get no card; the API still returns the climatology with `applicable: false` and the reason.
+
+**Planner.** For such fields, the planner's sowing-date scan is extended to cover the onset-based window. Every candidate gets `onset_ok`: on or after the median onset (rains have started in ≥ half of years) and no later than the latest sowing date. The recommended window is chosen only among `onset_ok` dates.
+
+**Validation.** See [VALIDATION.md, V9](VALIDATION.md#v9).
+
 ## Optional LLM phrasing layer
 Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is not implemented in v1; see ROADMAP.md. All texts are template-generated from computed numbers, so nothing is invented.
 
@@ -294,3 +328,9 @@ Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is n
 - McMaster, G.S., Wilhelm, W.W. (1997) Growing degree-days: one equation, two interpretations. *Agric. For. Meteorol.* 87: 291–300.
 - Sen, P.K. (1968) Estimates of the regression coefficient based on Kendall's tau. *JASA* 63: 1379–1389.
 - Fry, W.E. et al. (2013) The 2009 late blight pandemic in the eastern United States. *Plant Disease* 97: 296–306.
+- Sivakumar, M.V.K. (1988) Predicting rainy season potential from the onset of rains in Southern Sahelian and Sudanian climatic zones of West Africa. *Agric. For. Meteorol.* 42: 295–305.
+- Stern, R.D., Dennett, M.D., Garbutt, D.J. (1981) The start of the rains in West Africa. *J. Climatology* 1: 59–68.
+- Frère, M., Popov, G.F. (1979) *Agrometeorological crop monitoring and forecasting*. FAO Plant Production and Protection Paper 17.
+- Liebmann, B. et al. (2012) Seasonality of African precipitation from 1996 to 2009. *J. Climate* 25: 4304–4322.
+- Dunning, C.M., Black, E.C.L., Allan, R.P. (2016) The onset and cessation of seasonal rainfall over Africa. *J. Geophys. Res. Atmos.* 121: 11405–11424.
+- FAO (1978) Report on the Agro-ecological Zones Project, Vol. 1: Methodology and results for Africa. World Soil Resources Report 48.

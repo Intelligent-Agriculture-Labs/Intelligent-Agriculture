@@ -738,6 +738,11 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
         cards.extend(_pest_cards(ctx, cid, today, lang, lat, planting))
     # ---------- frost / heat
     cards.extend(_temp_cards(ctx, cid, today, lang, planting))
+    # ---------- rainy-season onset / false start / sowing window (rain-fed, tropics; engine/rain_season.py)
+    if not irrigated:
+        from .rain_season import onset_cards
+
+        cards.extend(onset_cards(ctx, cid, today, lang, series))
 
     # rank: risk desc, then due date asc
     def sort_key(cd: dict[str, Any]) -> tuple[int, str]:
