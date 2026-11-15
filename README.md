@@ -24,7 +24,7 @@ iPhone 17 simulator, native Release build, real data (`app/scripts/capture-film-
 More:
 - web: [terrain zones](media/web-map-mobile.png), [layers](media/web-layers-mobile.png), [field editor](media/web-fields-desktop.png), [insights](media/web-insights-mobile.png), [account](media/web-account-mobile.png), [share as text](media/web-share-text-mobile.png);
 - [iOS](media/) and [Android](media/) captures and [`media/BUILDS.md`](media/BUILDS.md);
-- the **30 s video** [`media/ia-demo-30s.mp4`](media/ia-demo-30s.mp4) (same file as `media/fieldshift-demo-30s.mp4`) and **7-slide deck** [`media/fieldshift-deck.pdf`](media/fieldshift-deck.pdf);
+- the **30 s video** [`media/ia-demo-30s.mp4`](media/ia-demo-30s.mp4) and **7-slide deck** [`media/ia-deck.pdf`](media/ia-deck.pdf);
 - a static showcase site with no login: `python3 scripts/build_site.py` → `site/dist/` (GitHub Pages-ready).
 
 ## The story: Lahontan Valley, Nevada
@@ -101,7 +101,7 @@ Mobile builds and development setup: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md),
 - App: run locally with Docker using the quickstart above. The public showcase contains the video and slides.
 - Showcase: https://intelligent-agriculture-labs.github.io/
 - Demo video (30 s): [watch online](https://intelligent-agriculture-labs.github.io/assets/ia-demo-30s.mp4) · [source file](media/ia-demo-30s.mp4)
-- Slides: [view online](https://intelligent-agriculture-labs.github.io/deck.html) · [PDF](media/fieldshift-deck.pdf)
+- Slides: [view online](https://intelligent-agriculture-labs.github.io/deck.html) · [PDF](media/ia-deck.pdf)
 
 ## Honest limitations
 - Weather grids are coarse (~50 km).

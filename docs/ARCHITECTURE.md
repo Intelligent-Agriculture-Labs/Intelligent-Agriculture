@@ -80,7 +80,8 @@ backend/            FastAPI app (fieldshift/), tests/, demo_cache/, Dockerfile
   fieldshift/config/    crops.yaml, rotations.yaml, rules.yaml, messages.yaml, presets.yaml
 app/                Expo client (src/app = routes, src/components, src/i18n, src/api), e2e/, Dockerfile
 contracts/api.ts    API contract shared by client and server
-scripts/            build_demo_cache.py, validate.py, validation_report.py, train_drought_ml.py, appeears_smap.py (SMAP/ECOSTRESS/MOD16), make_demo_video.py,
+video/              film.html, render.mjs, score.py, build.sh (IA demo film)
+scripts/            build_demo_cache.py, validate.py, validation_report.py, train_drought_ml.py, appeears_smap.py (SMAP/ECOSTRESS/MOD16),
                     field_benchmark.py (FTW field-boundary benchmark), fieldedge/ (edge-model + selector training)
 docs/               all documentation, validation figures, openapi.json
 media/              screenshots, screen recordings, build notes

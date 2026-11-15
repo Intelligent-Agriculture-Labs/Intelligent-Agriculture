@@ -41,8 +41,8 @@ def main() -> None:
         if f:
             shutil.copy(f, OUT / "assets" / f.name)
             figs.append(f'<figure><img src="assets/{f.name}" alt="{cap}" loading="lazy"><figcaption>{cap}</figcaption></figure>')
-    vid = next((MEDIA / v for v in ("ia-demo-30s.mp4", "fieldshift-demo-30s.mp4") if (MEDIA / v).exists()), None)
-    if vid:
+    vid = MEDIA / "ia-demo-30s.mp4"
+    if vid.exists():
         shutil.copy(vid, OUT / "assets" / "ia-demo-30s.mp4")
     poster = next((MEDIA / v for v in ("film-poster.jpg", "web-home-desktop.png", "web-home.png") if (MEDIA / v).exists()), None)
     if poster:
@@ -82,7 +82,7 @@ DECK_SHOTS = {
 
 
 def build_deck(repo: str, impact_items: list[str], val: list[str]) -> None:
-    """site/deck.html -> site/dist/deck.html and media/fieldshift-deck.pdf (7 slides, 16:9) via headless Chrome."""
+    """site/deck.html -> site/dist/deck.html and media/ia-deck.pdf (7 slides, 16:9) via headless Chrome."""
     import subprocess
 
     html = (SITE / "deck.html").read_text()
@@ -99,7 +99,7 @@ def build_deck(repo: str, impact_items: list[str], val: list[str]) -> None:
     if not chrome:
         print("no Chrome found; deck.html built, PDF skipped")
         return
-    pdf = MEDIA / "fieldshift-deck.pdf"
+    pdf = MEDIA / "ia-deck.pdf"
     import tempfile
 
     with tempfile.TemporaryDirectory() as prof:  # own profile: works while the user's Chrome is open

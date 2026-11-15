@@ -2,7 +2,7 @@
 
 A motion-designed film built entirely in code. Every frame is rendered from `film.html` by a deterministic `render(t)` function (Playwright, 30 fps, 1920 × 1080).
 
-`./video/build.sh` rebuilds it into `media/fieldshift-demo-30s.mp4` (same file as `media/ia-demo-30s.mp4`) and the poster `media/film-poster.jpg`. You need ffmpeg, Node with the app's Playwright, and the backend venv.
+`./video/build.sh` rebuilds it into `media/ia-demo-30s.mp4` (same file as `media/ia-demo-30s.mp4`) and the poster `media/film-poster.jpg`. You need ffmpeg, Node with the app's Playwright, and the backend venv.
 
 | File | What it does |
 |---|---|
