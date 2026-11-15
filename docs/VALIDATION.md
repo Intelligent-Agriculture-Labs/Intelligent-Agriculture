@@ -201,6 +201,39 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
 
 <!-- RESULTS:END -->
 
+### V9 · Outdoor WBGT (heat-stress card): implementation check and fallback error
+_run: 2026-11-15T00:42:14+00:00 · script: `scripts/validate_wbgt.py` → `docs/validation/wbgt.json`_
+
+**(a) Independent implementation.** FieldShift's Liljegren et al. (2008) solver was checked against ECMWF **thermofeel 2.3.0** (`thermofeel.liljegren.wbgt`, separate code) on a 1,800-case grid:
+- air temperature 15–45 °C, RH 10–90 %, 2 m wind 0.5–6 m/s, GHI 0–1000 W/m², cos θz 0.3–0.95;
+- identical radiation inputs.
+
+| n | bias (°C) | MAE (°C) | max abs (°C) |
+|---|---|---|---|
+| 1800 | -0.0004 | 0.0007 | 0.0154 |
+
+Six of these cases are frozen as unit tests (`tests/test_heat_solar_fire.py`). This checks the *implementation*, not the physics. For the physics, Liljegren's model is widely used as the reference WBGT approximation (e.g. Kong & Huber 2022, *Earth's Future*, doi:10.1029/2021EF002334, and KNMI operations). Liljegren et al. (2008) and later studies report agreement with measured WBGT of about 1 °C. We did not repeat that comparison (see "What was not validated").
+
+**(b) Psychrometric wet bulb (reference cases).**
+- Stull (2011) gives 13.7 °C at 20 °C / 50 %; our implementation of Stull's formula reproduces 13.7 °C.
+- Over 10–40 °C and 20–80 % RH, Liljegren's psychrometric wet bulb lies -0.67 to -0.04 °C from the Assmann psychrometer equation (γ = 6.62·10⁻⁴ K⁻¹). It is lowest in hot, dry air, and its MAE against Stull is 0.37 °C.
+- The natural wet bulb used in WBGT adds radiative heating of the wick on top of this.
+
+**(c) Offline fallback vs. full NASA POWER hourly inputs** (daily-max WBGT). When the hourly forecast with wind and radiation is unavailable, the card uses hourly T/RH with NASA POWER *climatological* wind and sunshine.
+
+| Site, period | days | mean daily-max WBGT, full (°C) | fallback bias (°C) | MAE (°C) | same risk level |
+|---|---|---|---|---|---|
+| Ludhiana, India (hot, dry pre-monsoon) | 28 | 32.3 | +0.27 | 0.97 | 89% |
+| Fallon, Nevada (desert summer) | 31 | 29.0 | -1.50 | 2.09 | 48% |
+| Machakos, Kenya (tropical highland) | 28 | 26.7 | +0.84 | 0.84 | 96% |
+
+- The fallback is good in humid and moderate-wind climates.
+- In the calm desert (Fallon) it *underestimates* WBGT. The real afternoon hours there have near-calm winds that a daily-mean wind cannot represent.
+- The card therefore lowers its confidence to 0.45 on the fallback and says so in the caveats.
+- A 0.5 m/s floor on the 2 m grid wind (KNMI/ECMWF operational practice) was added after this check. It removed single calm hours with WBGT jumps of +5 °C in POWER hourly data, which are not credible at a 50 km grid.
+
+
+
 ## Interpretation
 
 ### Where the models are strong
@@ -238,5 +271,8 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
 - Field-level irrigation timing: this needs farm irrigation logs.
 - Absolute yields against county statistics: the NASS API needs a key (ROADMAP #4).
 - Rotation scores against field trials: no open dataset fits.
+- WBGT against on-site globe/wet-bulb measurements: no open co-located dataset was reachable in time. The check in V9 is implementation plus literature.
+- Livestock THI thresholds and residue nutrient numbers are literature values, not validated locally.
+- Solar pump sizing is unit-tested against hand calculations (`test_size_system_hand_calculation`), not against installed systems. Costs are indicative.
 
 See also [`EXPERIMENTS.md`](EXPERIMENTS.md) for the experiments that changed the code, and [`LIMITATIONS.md`](LIMITATIONS.md).

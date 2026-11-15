@@ -192,7 +192,7 @@ def fire_cards(
                 steps,
                 [],
                 "Residue nutrient balance (residue-to-grain ratio × nutrient content × burning loss)",
-                "residue-burning",
+                "fires",
                 0.55,
                 "Residue amount scales with your actual yield; nutrient contents are literature averages.",
                 [

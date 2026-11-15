@@ -56,6 +56,9 @@ MIN_SPEED = 0.13  # m/s, instrument threshold
 CONVERGENCE = 0.02
 MAX_ITER = 500
 WICK_A = 0.56  # Bedingfield & Drew (1950) mass-transfer exponent
+# Operational floor for grid-model wind at 2 m: KNMI / ECMWF thermofeel apply 0.62 m/s at 10 m (≈ 0.5 m/s
+# at 2 m). ~50 km model winds cannot resolve calm hours and the globe balance is ill-conditioned there.
+GRID_WIND_FLOOR_2M = 0.5
 
 # ISO 8996 metabolic rates (W, average person 1.8 m²)
 MET_REST = 115.0
@@ -384,7 +387,7 @@ def assess_hours(
         tk, rk, wk, gk = t[k], rh[k], wind2[k], ghi[k]
         if tk is None or rk is None or not np.isfinite(tk) or not np.isfinite(rk):
             continue
-        wk = 1.0 if wk is None or not np.isfinite(wk) else float(wk)
+        wk = 1.0 if wk is None or not np.isfinite(wk) else max(float(wk), GRID_WIND_FLOOR_2M)
         gk = 0.0 if gk is None or not np.isfinite(gk) else float(gk)
         sh = solar_hour(tm.date(), tm.hour + tm.minute / 60.0 - 0.5, lon, utc_offset_h)
         cza = cos_zenith(lat, lon, tm.date(), sh)
