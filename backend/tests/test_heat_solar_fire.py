@@ -104,7 +104,9 @@ def test_solar_geometry():
     eq = dt.date(2024, 3, 20)
     assert hs.cos_zenith(0, 0, eq, 12.0) == pytest.approx(1.0, abs=0.01)
     assert hs.cos_zenith(0, 0, eq, 6.0) == pytest.approx(0.0, abs=0.03)
-    assert hs.cos_zenith(60, 0, dt.date(2024, 12, 21), 12.0) == pytest.approx(math.cos(math.radians(83.4)), abs=0.01)
+    assert hs.cos_zenith(60, 0, dt.date(2024, 12, 21), 12.0) == pytest.approx(
+        math.cos(math.radians(83.4)), abs=0.01
+    )
     assert hs.pressure_hpa(0) == pytest.approx(1013, abs=0.5) and hs.pressure_hpa(1500) < 860
 
 
@@ -274,7 +276,9 @@ def test_fire_and_residue_cards_punjab(monkeypatch):
 
 def test_residue_card_only_in_burning_regions_and_seasons(monkeypatch):
     monkeypatch.setenv("FIELDSHIFT_FIRMS", "off")
-    assert fc.fire_cards(42.0, -93.7, "maize", dt.date(2026, 10, 15), "en", _why) == []  # Iowa: not a burning region
+    assert (
+        fc.fire_cards(42.0, -93.7, "maize", dt.date(2026, 10, 15), "en", _why) == []
+    )  # Iowa: not a burning region
     assert fc.fire_cards(30.9, 75.85, "rice", dt.date(2026, 7, 1), "en", _why) == []  # Punjab rice, monsoon
     assert fc.fire_cards(30.9, 75.85, "potato", dt.date(2026, 11, 1), "en", _why) == []
     b = fc.residue_benefits("rice", 6.5)
@@ -292,7 +296,13 @@ def test_advice_registers_new_cards_and_firms_source(monkeypatch):
     monkeypatch.setattr(firms, "nearby_fires", fixed)
     a = client.post(
         "/api/advice",
-        json={"lat": 30.90, "lon": 75.85, "crop": "rice", "planting_date": "2026-06-20", "irrigation": "flood"},
+        json={
+            "lat": 30.90,
+            "lon": 75.85,
+            "crop": "rice",
+            "planting_date": "2026-06-20",
+            "irrigation": "flood",
+        },
     ).json()
     ids = {c["id"] for c in a["cards"]}
     assert {"fire_nearby", "solar_pump"} <= ids

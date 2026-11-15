@@ -457,6 +457,10 @@ MODELS: dict[str, Model] = {
             ["winter_wheat", "spring_wheat", "durum_wheat", "triticale_forage", "spelt"],
             wheat_leaf_rust,
             "Magarey et al. 2005 Table 2 (P. recondita); Roelfs, Singh & Saari 1992",
+            season=(
+                20,
+                240,
+            ),  # living leaves: emergence (~20 d after sowing) to maturity (winter or spring types)
         ),
         Model(
             "wheat_stem_rust",
@@ -464,6 +468,10 @@ MODELS: dict[str, Model] = {
             ["winter_wheat", "spring_wheat", "durum_wheat", "triticale_forage", "spelt", "barley"],
             wheat_stem_rust,
             "Roelfs, Singh & Saari 1992; Magarey et al. 2005",
+            season=(
+                20,
+                240,
+            ),  # living leaves: emergence (~20 d after sowing) to maturity (winter or spring types)
         ),
         Model(
             "late_blight_tropical",

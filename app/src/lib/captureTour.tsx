@@ -68,7 +68,7 @@ export function CaptureTour() {
         },
         22000,
       );
-      await shot("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "irrigate" } }), 7000);
+      await shot("why", () => router.push({ pathname: "/why/[cardId]", params: { cardId: "heat_stress" } }), 7000);
       await shot("satellite", () => router.replace({ pathname: "/map", params: { view: "satellite" } }), 20000);
       await shot("plan-years", () => router.replace({ pathname: "/plan", params: { tab: "years" } }), 32000);
       await scrollTo("impact");

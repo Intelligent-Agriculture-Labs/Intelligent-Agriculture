@@ -760,7 +760,9 @@ def advice(inp: dict[str, Any]) -> dict[str, Any]:
     in_season = planting <= today and (
         c["type"] == "perennial" or not any(cd["id"] == "plan_rotation" for cd in cards)
     )
-    if in_season:
+    # leaf diseases need leaves: annual crops only from emergence (~20 days after sowing)
+    leafy = c["type"] == "perennial" or (today - planting).days >= 20
+    if in_season and leafy:
         cards.extend(_disease_cards(ctx, cid, today, lang, series))
     # ---------- pests
     if in_season:

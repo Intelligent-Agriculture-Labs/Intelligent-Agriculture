@@ -19,6 +19,7 @@ from ..science import globalrisk as gr
 from ..science import leafwet as lw
 from .messages import CONFIG, day_label, risk_word
 
+SATURATING_IN_TROPICS = {"gray_leaf_spot", "coffee_leaf_rust", "black_sigatoka"}
 WINDOW_DAYS = 7
 
 
@@ -138,6 +139,11 @@ def cards(
         first = min(d for d, v in win.items() if v >= m.min_score)
         due = max(first, today)
         risk = gr.risk_label(smax)
+        # in the humid tropics gridded RH >= 90 % flags leaf wetness almost every night, so these models
+        # saturate and cannot separate bad from normal years (VALIDATION V11): never louder than "moderate"
+        capped = mid in SATURATING_IN_TROPICS and abs(ctx.lat) <= gr.TROPIC and risk in ("high", "severe")
+        if capped:
+            risk = "moderate"
         nm = name(mid, lang)
         title = tx(
             "risk_title_disease" if m.kind == "disease" else "risk_title_pest",
@@ -158,6 +164,11 @@ def cards(
             )
         if meta.get("references"):
             steps.append("References: " + "; ".join(meta["references"]) + ".")
+        if capped:
+            steps.append(
+                "Shown as moderate: in the humid tropics gridded humidity overstates leaf wetness, so this model "
+                "cannot tell a bad season from a normal one (VALIDATION V11)."
+            )
         steps.append(
             "Favourable weather is not detection: scout before you act."
             if m.kind == "disease"

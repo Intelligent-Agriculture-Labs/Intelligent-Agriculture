@@ -113,6 +113,7 @@ def test_summarise_counts_wins():
             "anom3_r": v,
             "monthly_bias_pct": 5,
         }
+
     rows = [
         {"site": "a", "zone": "tropics", "metrics": {"P_lst": m(0.4), "B50": m(0.5)}},
         {"site": "b", "zone": "extratropics", "metrics": {"P_lst": m(0.6), "B50": m(0.5)}},

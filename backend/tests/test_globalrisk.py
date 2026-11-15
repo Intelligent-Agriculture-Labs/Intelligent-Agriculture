@@ -303,3 +303,20 @@ def test_advice_no_global_card_out_of_season():
     ids = {c["id"] for c in _advice(-1.5, 37.3, "maize", days_since_planting=5)["cards"]}
     assert "disease_gray_leaf_spot" not in ids
     assert "pest_desert_locust" not in ids  # Machakos is outside the recession area
+
+
+def test_saturating_models_are_capped_in_the_tropics():
+    from fieldshift.engine import risk_cards
+
+    assert {"gray_leaf_spot", "coffee_leaf_rust", "black_sigatoka"} <= set(gr.MODELS)
+    assert set(gr.MODELS) >= risk_cards.SATURATING_IN_TROPICS
+
+
+def test_wheat_rusts_need_living_leaves():
+    import datetime as dt
+
+    for mid in ("wheat_leaf_rust", "wheat_stem_rust"):
+        m = gr.MODELS[mid]
+        sow = dt.date(2025, 11, 15)
+        assert not m.in_season(sow, sow, False)
+        assert m.in_season(sow + dt.timedelta(days=60), sow, False)
