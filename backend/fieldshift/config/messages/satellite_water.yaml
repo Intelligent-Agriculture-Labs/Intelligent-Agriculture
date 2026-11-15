@@ -40,12 +40,12 @@ sw_smap_pctl:
   hi: "; इस स्थान और मौसम के SMAP रिकॉर्ड के {pct:.0f} % दिनों से अधिक नम ({cls})।"
   de: "; feuchter als an {pct:.0f} % der Tage in SMAPs Aufzeichnung für diesen Ort und diese Jahreszeit ({cls})."
 sw_smap_model:
-  en: "FieldShift's water balance for your crop: {pct:.0f} % of available root-zone water left."
-  es: "Balance hídrico de FieldShift para su cultivo: queda el {pct:.0f} % del agua disponible en la zona de raíces."
-  fr: "Bilan hydrique FieldShift pour votre culture : il reste {pct:.0f} % de l'eau disponible de la zone racinaire."
-  sw: "Mizania ya maji ya FieldShift kwa zao lako: imebaki {pct:.0f} % ya maji yanayopatikana katika eneo la mizizi."
-  hi: "आपकी फसल के लिए FieldShift का जल संतुलन: जड़ क्षेत्र का {pct:.0f} % उपलब्ध पानी बचा है।"
-  de: "FieldShift-Wasserbilanz für Ihre Kultur: {pct:.0f} % des verfügbaren Wassers im Wurzelraum sind noch da."
+  en: "IA's water balance for your crop: {pct:.0f} % of available root-zone water left."
+  es: "Balance hídrico de IA para su cultivo: queda el {pct:.0f} % del agua disponible en la zona de raíces."
+  fr: "Bilan hydrique IA pour votre culture : il reste {pct:.0f} % de l'eau disponible de la zone racinaire."
+  sw: "Mizania ya maji ya IA kwa zao lako: imebaki {pct:.0f} % ya maji yanayopatikana katika eneo la mizizi."
+  hi: "आपकी फसल के लिए IA का जल संतुलन: जड़ क्षेत्र का {pct:.0f} % उपलब्ध पानी बचा है।"
+  de: "IA-Wasserbilanz für Ihre Kultur: {pct:.0f} % des verfügbaren Wassers im Wurzelraum sind noch da."
 sw_smap_validation:
   en: "Check against SMAP L4 over 9 growing seasons (VALIDATION V3): the model's rain-fed root-zone water moved with SMAP's root zone with a median per-season correlation of 0.92 in Iowa, 0.66 in Córdoba and 0.64 in Machakos. SMAP is independent of the NASA POWER rain that drives the model."
   es: "Comprobación con SMAP L4 en 9 temporadas (VALIDACIÓN V3): el agua de la zona de raíces del modelo en secano siguió a la de SMAP con una correlación mediana por temporada de 0,92 en Iowa, 0,66 en Córdoba y 0,64 en Machakos. SMAP es independiente de la lluvia NASA POWER que alimenta el modelo."
