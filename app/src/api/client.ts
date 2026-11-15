@@ -29,7 +29,7 @@ import type {
 
 /**
  * Data origin of every response the UI renders:
- *  - live:  fresh from the FieldShift API
+ *  - live:  fresh from the IA API
  *  - cache: last good response stored on device (offline mode)
  *  - mock:  bundled MOCK fixture — ONLY used when the API was never reachable; UI shows a red banner.
  */

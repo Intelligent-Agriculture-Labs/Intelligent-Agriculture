@@ -1,4 +1,4 @@
-"""FieldShift API (FastAPI). OpenAPI docs at /docs."""
+"""IA (Intelligent Agriculture) API (FastAPI). OpenAPI docs at /docs. The package keeps its code name `fieldshift`."""
 
 from __future__ import annotations
 
@@ -21,9 +21,9 @@ logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
 VERSION = "1.0.0"
 
 app = FastAPI(
-    title="FieldShift API",
+    title="IA · Intelligent Agriculture API",
     version=VERSION,
-    description="NASA Earth observations → simple farm decisions on water, drought, pests, disease and crop rotations. "
+    description="Better decisions. Better harvests. NASA Earth observations → simple farm decisions on water, drought, pests, disease and crop rotations. "
     "NASA Space Apps Challenge 2026 — 'Field Shift: Adapting Farms with NASA Data'.",
 )
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -532,12 +532,12 @@ def glossary_ep(lang: Lang = "en") -> list[dict[str, Any]]:
 
 
 TEXT_LABELS = {
-    "en": ("This week", "Rain next 7 days", "Details in the FieldShift app."),
-    "es": ("Esta semana", "Lluvia 7 días", "Detalles en la app FieldShift."),
-    "fr": ("Cette semaine", "Pluie 7 jours", "Détails dans l'appli FieldShift."),
-    "sw": ("Wiki hii", "Mvua siku 7", "Maelezo zaidi kwenye FieldShift."),
-    "hi": ("इस सप्ताह", "अगले 7 दिन वर्षा", "विवरण FieldShift ऐप में।"),
-    "de": ("Diese Woche", "Regen 7 Tage", "Details in der FieldShift-App."),
+    "en": ("This week", "Rain next 7 days", "Details in the IA app."),
+    "es": ("Esta semana", "Lluvia 7 días", "Detalles en la app IA."),
+    "fr": ("Cette semaine", "Pluie 7 jours", "Détails dans l'appli IA."),
+    "sw": ("Wiki hii", "Mvua siku 7", "Maelezo zaidi kwenye IA."),
+    "hi": ("इस सप्ताह", "अगले 7 दिन वर्षा", "विवरण IA ऐप में।"),
+    "de": ("Diese Woche", "Regen 7 Tage", "Details in der IA-App."),
 }
 
 
@@ -602,7 +602,7 @@ def advice_text_ep(
     _check_crop(inp.crop)
     a = service.advice(inp.model_dump())
     head, rain_l, tail = TEXT_LABELS.get(inp.lang, TEXT_LABELS["en"])
-    lines = [_to_gsm(f"FieldShift{(' - ' + name) if name else ''}: {head} ({a['as_of']})")]
+    lines = [_to_gsm(f"IA{(' - ' + name) if name else ''}: {head} ({a['as_of']})")]
     for k, c in enumerate(a["cards"][:3], 1):
         lines.append(_to_gsm(f"{k}) " + c["title"]))
     lines.append(_to_gsm(f"{rain_l}: {a['water'].get('forecast_rain_7d_mm', 0):.0f} mm. {tail}"))

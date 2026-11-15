@@ -4,12 +4,12 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 
 ## ADR-001 Settings not provided in the build prompt (2026-11-14 15:45)
 - **Deadline:** Sunday 2026-11-15 23:59 local time. This is the official Space Apps submission deadline from the Judging & Awards Guide; the team's local event is assumed to be in Europe/Berlin.
-- **Name:** *FieldShift*. It comes from the repo README and matches the challenge title "Field Shift".
+- **Name:** *IA*. It comes from the repo README and matches the challenge title "Field Shift".
 - **Demo region:** Lahontan Valley (Fallon), Nevada, with irrigated alfalfa. The challenge's hero photo shows a Nevada alfalfa farmer. The region has severe, well-documented drought and water-delivery cuts and good NASA data coverage, and alfalfa is the classic "rotation question" crop. Three secondary presets show global reach: Machakos, Kenya (rain-fed smallholder maize); Córdoba, Spain (rain-fed wheat/sunflower after the 2022–23 drought); Ames, Iowa (corn–soy).
 - **Alternatives:** California Central Valley (water story, but OpenET-heavy); Kenya as the main demo (less US partner data). Rejected because Nevada aligns with the challenge's own framing and with the USDA resources it lists.
 
 ## ADR-002 Challenge emphasis: rotations + weekly decisions (15:50)
-- The official 2026 challenge text centres on **crop-rotation strategies** that improve soil health and resilience, and suggests comparing at least three of them, including the existing rotation. The build prompt centres on weekly water/pest/disease decisions. FieldShift does both, in two views of one engine: **"This week"** (action cards) and **"Field Shift"** (rotation explorer), plus What-if and Climate. Both are driven by the same season model and the same NASA data.
+- The official 2026 challenge text centres on **crop-rotation strategies** that improve soil health and resilience, and suggests comparing at least three of them, including the existing rotation. The build prompt centres on weekly water/pest/disease decisions. IA does both, in two views of one engine: **"This week"** (action cards) and **"Field Shift"** (rotation explorer), plus What-if and Climate. Both are driven by the same season model and the same NASA data.
 
 ## ADR-003 Stack
 - **Backend:** Python 3.13 + FastAPI + numpy/scipy, with no pandas, to keep the image small. **Client:** Expo (React Native + expo-router + TypeScript) for web, iOS and Android from one codebase. **Storage:** gzip JSON response cache on disk, with a committed demo cache. **Deploy:** Docker / docker-compose.
@@ -126,7 +126,7 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
   - The cache writer uses a per-process temporary file. Parallel training workers had raced on it.
 
 ## ADR-021 Rain-season onset, false-start and sowing advisor (2026-11-15)
-- **Context:** rain-fed farmers in the tropics lose seed, labour and weeks of season to false starts and late or short rains. FieldShift had no notion of a rainy season, and its sowing scan simulated calendar dates only.
+- **Context:** rain-fed farmers in the tropics lose seed, labour and weeks of season to false starts and late or short rains. IA had no notion of a rainy season, and its sowing scan simulated calendar dates only.
 - **Decision:**
   - **Published agroclimatic criteria, not a fitted model.**
     - Onset: Sivakumar (1988) / Stern et al. (1981), ≥ 20 mm in 3 days with no dry spell > 7 days in the next 30.
@@ -185,10 +185,10 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
   - **One generic infection equation** for the fungal leaf diseases: the Magarey, Sutton & Thayer (2005) temperature–wetness model, W(T) = Wmin / f(T). Each pathogen gets its own Tmin/Topt/Tmax/Wmin/Wmax from the cited literature. The alternative, a separate ad-hoc rule per disease, is harder to audit and to validate.
   - **One shared leaf-wetness estimator** (RH ≥ 90 % or dew-point depression with hysteresis, with rain hours wet), so every model uses the same, cited wetness definition.
   - **Late blight:** the Hutton rule is UK-derived and needs Tmin ≥ 10 °C. Between the tropics it is replaced by Wallin severity values (BLITECAST/SimCast), which were field-tested in the Toluca highlands. Validation V11 shows Hutton finds 0 favourable days in the Ecuador highlands, where blight pressure is among the world's highest.
-  - **Insects:** desert locust breeding is an *awareness* card that points to FAO Locust Watch and the national locust unit. FieldShift never gives control advice for locusts. Cassava whitefly is a qualitative warm-and-dry rule.
+  - **Insects:** desert locust breeding is an *awareness* card that points to FAO Locust Watch and the national locust unit. IA never gives control advice for locusts. Cassava whitefly is a qualitative warm-and-dry rule.
   - **No product or brand advice:** actions are scouting and cultural control, with treatment decisions referred to local thresholds and extension services. A unit test checks the texts.
 - **Gating:** a card needs host crop, geographic range (continent, tropics or the FAO recession area), crop stage window and score threshold. Out-of-range or out-of-season fields never see the card.
-- **Not done:** coffee and banana are not FieldShift crops yet. Adding them needs perennial crop-model parameters, which belong to the yield work stream. Their models are implemented, validated and ready, but no card appears until those crops exist.
+- **Not done:** coffee and banana are not IA crops yet. Adding them needs perennial crop-model parameters, which belong to the yield work stream. Their models are implemented, validated and ready, but no card appears until those crops exist.
 - **Consequences:** validation results are reported per model in VALIDATION.md V11, including misses.
 
 ## ADR-024 Heat stress, solar pump and FIRMS fire advice as modular cards (2026-11-15)

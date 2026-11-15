@@ -1,4 +1,4 @@
-# FieldShift EXTRA crop parameter table — version 1.0.0
+# IA EXTRA crop parameter table — version 1.0.0
 # Same schema as crops.yaml (see header there). Each crop carries its own `sources:` list.
 #   kc_*, stages, root_m, p ... FAO-56 Tables 11, 12, 22 (Allen et al. 1998) — the table row is named in `sources`.
 #                              root_m = [initial, maximum]; maximum usually the midpoint of the Table 22 range.

@@ -337,12 +337,12 @@ plan_headline_pests:
   de: "Der verbesserte Plan senkt vor allem das Krankheits- und Schädlingsrisiko."
 plan_tradeoff: {en: " Trade-off: {costs}.", es: " A cambio: {costs}.", fr: " En contrepartie : {costs}.", sw: " Gharama yake: {costs}.", hi: " बदले में: {costs}।", de: " Dafür: {costs}."}
 plan_impact_method:
-  en: "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted."
-  es: "Diferencias entre los dos planes simuladas en este campo (modelo de temporada FieldShift, clima NASA POWER). El CO₂e cuenta solo las emisiones directas de N₂O del fertilizante no aplicado (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); no se cuentan las emisiones de fabricación."
-  fr: "Écarts entre les deux plans simulés sur cette parcelle (modèle de saison FieldShift, météo NASA POWER). Le CO₂e ne compte que les émissions directes de N₂O de l'engrais non apporté (GIEC 2019, EF1 = 1 %, PRG100 = 273, AR6) ; les émissions de fabrication ne sont pas comptées."
-  sw: "Tofauti kati ya mipango miwili kama ilivyoigwa shambani hapa (modeli ya msimu ya FieldShift, hali ya hewa ya NASA POWER). CO₂e inahesabu tu uzalishaji wa moja kwa moja wa N₂O kutoka mbolea isiyowekwa (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); uzalishaji wa viwandani hauhesabiwi."
-  hi: "इस खेत पर अनुकरणित दोनों योजनाओं का अंतर (FieldShift मौसम मॉडल, NASA POWER मौसम)। CO₂e में केवल न डाले गए उर्वरक का प्रत्यक्ष N₂O उत्सर्जन गिना गया है (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); निर्माण उत्सर्जन शामिल नहीं।"
-  de: "Unterschiede zwischen beiden Plänen, simuliert auf diesem Feld (FieldShift-Saisonmodell, NASA-POWER-Wetter). CO₂e zählt nur die direkten N₂O-Emissionen des eingesparten Düngers (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); Herstellungsemissionen sind nicht enthalten."
+  en: "Differences between the two plans as simulated at this field (IA season model, NASA POWER weather). CO₂e counts only the direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted."
+  es: "Diferencias entre los dos planes simuladas en este campo (modelo de temporada IA, clima NASA POWER). El CO₂e cuenta solo las emisiones directas de N₂O del fertilizante no aplicado (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); no se cuentan las emisiones de fabricación."
+  fr: "Écarts entre les deux plans simulés sur cette parcelle (modèle de saison IA, météo NASA POWER). Le CO₂e ne compte que les émissions directes de N₂O de l'engrais non apporté (GIEC 2019, EF1 = 1 %, PRG100 = 273, AR6) ; les émissions de fabrication ne sont pas comptées."
+  sw: "Tofauti kati ya mipango miwili kama ilivyoigwa shambani hapa (modeli ya msimu ya IA, hali ya hewa ya NASA POWER). CO₂e inahesabu tu uzalishaji wa moja kwa moja wa N₂O kutoka mbolea isiyowekwa (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); uzalishaji wa viwandani hauhesabiwi."
+  hi: "इस खेत पर अनुकरणित दोनों योजनाओं का अंतर (IA मौसम मॉडल, NASA POWER मौसम)। CO₂e में केवल न डाले गए उर्वरक का प्रत्यक्ष N₂O उत्सर्जन गिना गया है (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); निर्माण उत्सर्जन शामिल नहीं।"
+  de: "Unterschiede zwischen beiden Plänen, simuliert auf diesem Feld (IA-Saisonmodell, NASA-POWER-Wetter). CO₂e zählt nur die direkten N₂O-Emissionen des eingesparten Düngers (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); Herstellungsemissionen sind nicht enthalten."
 plan_sugg_swap_title:
   en: "{year}: grow {new} instead of {old}"
   es: "{year}: siembre {new} en vez de {old}"

@@ -18,7 +18,7 @@ Six validated work streams, each adopted only if it beat the previous version on
 - **Human step:** approve the NASA GES DISC licence on the Earthdata account to unlock IMERG Late and the weekly GRACE groundwater percentiles.
 
 ## FINAL SUMMARY (v1.0.0, 2026-11-15 ~00:30 CET; deadline Sun 2026-11-15 23:59)
-**What was built:** FieldShift, an app on web, iOS and Android, with a FastAPI backend, that turns NASA Earth observations into:
+**What was built:** IA, an app on web, iOS and Android, with a FastAPI backend, that turns NASA Earth observations into:
 - weekly farm actions (irrigation amount and date, drought, disease, pests, frost/heat) with a "Why?" for every number;
 - per-field maps: computed terrain layers (erosion, wetness, frost, slope, zones); Sentinel-2 analytics (NDVI history, phenology, cuttings, AI zones); satellite-model data fusion;
 - a season planner;

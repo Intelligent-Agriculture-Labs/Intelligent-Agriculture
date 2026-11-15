@@ -33,16 +33,17 @@ def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
     (OUT / "assets").mkdir(parents=True)
-    shutil.copy(ROOT / "assets" / "icon.svg", OUT / "assets" / "icon.svg")
+    for f in ("icon.svg", "logo.svg", "logo-light.svg", "logo-mark.svg"):
+        shutil.copy(ROOT / "assets" / f, OUT / "assets" / f)
     figs = []
     for variants, cap in SHOTS:
         f = next((MEDIA / v for v in variants if (MEDIA / v).exists()), None)
         if f:
             shutil.copy(f, OUT / "assets" / f.name)
             figs.append(f'<figure><img src="assets/{f.name}" alt="{cap}" loading="lazy"><figcaption>{cap}</figcaption></figure>')
-    vid = MEDIA / "fieldshift-demo-30s.mp4"
-    if vid.exists():
-        shutil.copy(vid, OUT / "assets" / vid.name)
+    vid = next((MEDIA / v for v in ("ia-demo-30s.mp4", "fieldshift-demo-30s.mp4") if (MEDIA / v).exists()), None)
+    if vid:
+        shutil.copy(vid, OUT / "assets" / "ia-demo-30s.mp4")
     poster = next((MEDIA / v for v in ("film-poster.jpg", "web-home-desktop.png", "web-home.png") if (MEDIA / v).exists()), None)
     if poster:
         shutil.copy(poster, OUT / "assets" / "poster.png")

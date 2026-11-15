@@ -1,13 +1,13 @@
 # Validation
 
-Every FieldShift output that drives advice is compared with an **independent** reference. Tables are generated from `docs/validation/results.json` by `scripts/validation_report.py`, after running `scripts/validate.py` on the data box. The numbers below therefore match the code at the time of the run. Figures (`docs/validation/*.png`) are produced by the same run.
+Every IA output that drives advice is compared with an **independent** reference. Tables are generated from `docs/validation/results.json` by `scripts/validation_report.py`, after running `scripts/validate.py` on the data box. The numbers below therefore match the code at the time of the run. Figures (`docs/validation/*.png`) are produced by the same run.
 
 How to read this page:
 - Good agreement means the inputs and physics are sound. It does **not** prove the advice is right on a given field: the references are themselves models or coarse data.
 - Weak results are kept and explained.
 
 <!-- RESULTS:BEGIN -->
-### V1 · Reference ET₀ (FieldShift FAO-56 PM from NASA POWER) vs. ERA5 FAO-56 ET₀, daily 2015–2024
+### V1 · Reference ET₀ (IA FAO-56 PM from NASA POWER) vs. ERA5 FAO-56 ET₀, daily 2015–2024
 _run: 2026-11-14T18:26:34+00:00_
 
 | Site | n days | daily r | daily RMSE (mm/d) | daily bias (mm/d) | monthly r | monthly bias (mm/mo) |
@@ -60,7 +60,7 @@ ECOSTRESS daily ET on 110 clear overpass days (May–Sep 2018–2024): r = -0.01
 
 | Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| FieldShift (mm/yr) | 1102 | 1198 | 1145 | 1133 | 1077 | 1151 | 1212 | 1170 | 1068 | 1218 |
+| IA (mm/yr) | 1102 | 1198 | 1145 | 1133 | 1077 | 1151 | 1212 | 1170 | 1068 | 1218 |
 | MOD16 (mm/yr) | 242 | 262 | 401 | 379 | 467 | 369 | 286 | 280 | 349 | 337 |
 
 ECOSTRESS (70 m) observes the field itself on clear ISS overpasses; MOD16 (500 m) mixes irrigated fields with desert and has no irrigation input, so it is expected to be far below an irrigated field's ET.
@@ -216,7 +216,7 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
 
 ### V3 and V6 · data route and how to read them
 - **Route.** The NASA AppEEARS point requests (submitted 14 Nov) were still `processing`/`pending` after more than 24 hours, so both checks now read the archives directly (`scripts/earthdata_points.py`, ADR-027): SMAP L4 `SPL4SMGP.008` root-zone moisture at the site's 9 km EASE-Grid 2.0 cell through NSIDC cloud OPeNDAP (one 10:30 UTC analysis every 2nd day, 2015-04 → 2026-11, 2,126 days per site); ECOSTRESS `ECO_L3T_JET.002` `ETdaily` at the field pixel (Cloud-Optimized GeoTIFFs at LP DAAC, 304 clear overpasses at Fallon 2018-07 → 2026-11); MODIS `MOD16A2GF.061` through LP DAAC cloud OPeNDAP (ORNL's subset service answered HTTP 503 on 15 Nov).
-- **V3 (SMAP) reading.** SMAP L4 root-zone moisture is an assimilation product (SMAP brightness temperatures into the GMAO Catchment model with its own precipitation forcing), so it is independent of the NASA POWER rain that drives FieldShift but not a direct measurement. The model's root-zone water moves with it closely in Iowa (median per-season r 0.92) and well in Córdoba and Machakos (0.66, 0.64). At Machakos SMAP agrees with the model much better than ERA5-Land did in V2 (pooled r 0.64 vs 0.30), which points at the reanalysis rather than the model as the main source of the weak V2 number there. Iowa 2015 (r 0.17) is the one poor season.
+- **V3 (SMAP) reading.** SMAP L4 root-zone moisture is an assimilation product (SMAP brightness temperatures into the GMAO Catchment model with its own precipitation forcing), so it is independent of the NASA POWER rain that drives IA but not a direct measurement. The model's root-zone water moves with it closely in Iowa (median per-season r 0.92) and well in Córdoba and Machakos (0.66, 0.64). At Machakos SMAP agrees with the model much better than ERA5-Land did in V2 (pooled r 0.64 vs 0.30), which points at the reanalysis rather than the model as the main source of the weak V2 number there. Iowa 2015 (r 0.17) is the one poor season.
 - **V6 (ECOSTRESS) reading: a large, unresolved disagreement.** On 110 clear May–Sep overpasses ECOSTRESS averaged 2.3 mm/day at the flood-irrigated alfalfa field, the model 6.2 mm/day, with no day-to-day correlation (r −0.01). Checks: the pixel is inside the field polygon, and the 7 × 7 pixel neighbourhood on 1 Jul 2025 reads 0.7–4.4 mm/day, so it is not a single bad pixel; restricting to midday overpasses (11–14 h local solar time, n = 50) gives 2.6 mm/day, so it is not the overpass time; Sentinel-2 shows the field green (NDVI 0.72 in July 2021 and 2025) with cutting cycles down to 0.13–0.33, which the model does not simulate (constant mid-season Kc, ~1,150 mm/yr). For western-Nevada irrigated alfalfa ~1 m/yr is commonly reported, which is closer to the model; but nothing in this check tells which estimate is closer on this field, and a flux tower or the OpenET ensemble (needs an API key) would be required. **Consequence:** ECOSTRESS is shown next to the model (`water.satellite.et`, Why chart) as evidence, but it never triggers advice; a planned "crop uses less water than expected" card was dropped because at this field it would fire on almost every overpass.
 - **V6 (MOD16) reading.** MOD16 at 500 m (no irrigation input, mixed with desert) gives 240–470 mm/yr against the model's 1,070–1,220 mm/yr, as expected (see below).
 
@@ -226,7 +226,7 @@ _Generated by `scripts/validate_onset.py` (results in `docs/validation/onset_res
 
 The detector settings are the production defaults in `config/onset.yaml`: Sivakumar (1988) onset and a 100 mm water-balance cessation. They were fixed before the references were collected. Every reference was read in the original source; see `REFS` in the script.
 
-**Summary (error = FieldShift − reference, in days)**
+**Summary (error = IA − reference, in days)**
 
 | Reference | Sites | What is compared | Error |
 |---|---|---|---|
@@ -242,7 +242,7 @@ _run: 2026-11-15T00:29:45+00:00 · NASA POWER daily 1984–2025 · production cr
 
 **(a) India, 9 cities: median onset vs. IMD new normal onset date (1961–2019)**
 
-| City | lat, lon | Season | FieldShift median onset | IMD normal | Error (days) | False starts |
+| City | lat, lon | Season | IA median onset | IMD normal | Error (days) | False starts |
 |---|---|---|---|---|---|---|
 | Mumbai | 19.08, 72.88 | JJAS | 05 Jun | 11 Jun | -6 | 17 % |
 | Pune | 18.52, 73.86 | JJASO | 05 Jun | 10 Jun | -5 | 15 % |
@@ -258,7 +258,7 @@ Bias -1.3 days, **MAE 3.6 days**, r = 0.92 across cities.
 
 **(b) Kerala: per-year onset vs. IMD monsoon onset over Kerala (1984–2025)**
 
-| Site | n years | FieldShift median | IMD median | Bias (days) | MAE (days) | within ±10 d | r |
+| Site | n years | IA median | IMD median | Bias (days) | MAE (days) | within ±10 d | r |
 |---|---|---|---|---|---|---|---|
 | Thiruvananthapuram | 41 | 22 Apr | 02 Jun | -37.8 | 39.2 | 20 % | -0.14 |
 | Kochi | 41 | 19 Apr | 02 Jun | -40.5 | 41.7 | 5 % | 0.0 |
@@ -266,9 +266,9 @@ Bias -1.3 days, **MAE 3.6 days**, r = 0.92 across cities.
 
 **(c) West African Sahel / Sudan zone vs. Sivakumar (1988), Niger and Burkina Faso**
 
-Niamey mean onset: FieldShift 27 Jun (1984–2025) vs. Sivakumar 12 Jun (1904–1984): **+15 days**.
+Niamey mean onset: IA 27 Jun (1984–2025) vs. Sivakumar 12 Jun (1904–1984): **+15 days**.
 
-| Station | Mean onset | SD (days) | False starts | Failed | Length, Sivakumar | Length, FieldShift (water balance) | Length, FieldShift (Sivakumar's end rule) |
+| Station | Mean onset | SD (days) | False starts | Failed | Length, Sivakumar | Length, IA (water balance) | Length, IA (Sivakumar's end rule) |
 |---|---|---|---|---|---|---|---|
 | Niamey | 27 Jun | 18.4 | 24 % | 12 % | 94 | 91.0 | 106.3 |
 | Ayorou | 11 Jul | 12.9 | 15 % | 5 % | 67 | 67.7 | 90.6 |
@@ -290,9 +290,9 @@ Niamey mean onset: FieldShift 27 Jun (1984–2025) vs. Sivakumar 12 Jun (1904–
 
 Season length over 17 stations: water balance (used in the app) bias +9.8 days, **MAE 12.5 days**, r = 0.96; Sivakumar's end rule on POWER rain: bias +18.6, MAE 18.6 days, r = 0.94.
 
-**(d) Kenya, Machakos (bimodal) vs. Omoyo et al. (2015), Machakos station 1979–2009; FieldShift 1984–2009**
+**(d) Kenya, Machakos (bimodal) vs. Omoyo et al. (2015), Machakos station 1979–2009; IA 1984–2009**
 
-| Season | Criteria | n | FieldShift mean onset | Reference mean onset | Error (days) | Failed seasons |
+| Season | Criteria | n | IA mean onset | Reference mean onset | Error (days) | Failed seasons |
 |---|---|---|---|---|---|---|
 | MAM | production | 22 | 18 Mar | 07 Apr | -19.9 | 15 % |
 | OND | production | 24 | 30 Oct | 28 Oct | +1.9 | 8 % |
@@ -301,7 +301,7 @@ Season length over 17 stations: water balance (used in the app) bias +9.8 days, 
 
 **(e) Australia, Darwin (southern hemisphere, season across New Year) vs. Bureau of Meteorology**
 
-FieldShift median onset 02 Nov (NDJFMA, n = 41); BoM's 50 mm rule computed on the same POWER rain: 22 Oct; BoM: the western Top End usually reaches onset by late October or early November. Error vs. 1 Nov: **+1 days**.
+IA median onset 02 Nov (NDJFMA, n = 41); BoM's 50 mm rule computed on the same POWER rain: 22 Oct; BoM: the western Top End usually reaches onset by late October or early November. Error vs. 1 Nov: **+1 days**.
 
 ### V10 · Global yield benchmark: simulated vs. FAOSTAT national yields, 41 countries, 2000–2024
 _run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation/yield_benchmark/`](validation/yield_benchmark/) · EXP-12, ADR-022_
@@ -316,7 +316,7 @@ _run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation
   - winter- vs. spring-type wheat/barley decided by a coldest-month rule on the site's POWER climate (< −10 °C → spring type): 39 sites;
   - MIRCA2000 condensed calendars: 2 sites;
   - sugarcane (Jan–Dec in MIRCA2000): rainy-season onset, or the month after the coldest month below 600 mm/yr: 42 sites.
-- **Simulation:** the FieldShift season model runs every season 2000–2024 with NASA POWER weather and the loam default soil, both rain-fed and with full irrigation. The two are mixed by the irrigated share and area-weighted to a national value. Alfalfa is not benchmarked: FAOSTAT publishes no forage yields.
+- **Simulation:** the IA season model runs every season 2000–2024 with NASA POWER weather and the loam default soil, both rain-fed and with full irrigation. The two are mixed by the irrigated share and area-weighted to a national value. Alfalfa is not benchmarked: FAOSTAT publishes no forage yields.
 - **Level metric:** RMSLE of the 2000–2024 mean (log of simulated/observed), the median ratio and the share of pairs within ±30 %.
 - **Calibration check:** **leave-one-country-out**. All factors are refitted without the country, then applied to it.
 - **Year-to-year metric:** Pearson r of the linearly detrended series. National trends are mostly technology, which the model does not have.
@@ -461,7 +461,7 @@ _run: 2026-11-15, `scripts/validate_pest_disease.py` → `docs/validation/pest_d
 ### V12 · Outdoor WBGT (heat-stress card): implementation check and fallback error
 _run: 2026-11-15T00:42:14+00:00 · script: `scripts/validate_wbgt.py` → `docs/validation/wbgt.json`_
 
-**(a) Independent implementation.** FieldShift's Liljegren et al. (2008) solver was checked against ECMWF **thermofeel 2.3.0** (`thermofeel.liljegren.wbgt`, separate code) on a 1,800-case grid:
+**(a) Independent implementation.** IA's Liljegren et al. (2008) solver was checked against ECMWF **thermofeel 2.3.0** (`thermofeel.liljegren.wbgt`, separate code) on a 1,800-case grid:
 - air temperature 15–45 °C, RH 10–90 %, 2 m wind 0.5–6 m/s, GHI 0–1000 W/m², cos θz 0.3–0.95;
 - identical radiation inputs.
 
@@ -492,7 +492,7 @@ Six of these cases are frozen as unit tests (`tests/test_heat_solar_fire.py`). T
 ### V13 · Rain: NASA POWER vs. GPM IMERG vs. their blend, against 18 rain gauges on 6 continents (2001–2025)
 _run: 2026-11-15 · `scripts/validate_imerg.py` → `docs/validation/imerg.json`_
 
-**Question.** Does GPM IMERG rain, or a POWER/IMERG blend, describe rain at the field better than the NASA POWER (MERRA-2) rain FieldShift used so far? Adopt it only where it helps.
+**Question.** Does GPM IMERG rain, or a POWER/IMERG blend, describe rain at the field better than the NASA POWER (MERRA-2) rain IA used so far? Adopt it only where it helps.
 
 **Design.**
 - Reference: GHCN-Daily station precipitation (NOAA NCEI), QC-flagged values dropped. 18 stations: the four demo regions (Fallon, Ames, Córdoba, Nairobi for Machakos), plus Jaén, West Africa (Niamey, Ouagadougou, Bamako, Dakar), India (Delhi, Pune, Hyderabad, Nagpur), Bangkok, Darwin, Wagga Wagga, San Juan and Bogotá. 12 are tropical (|lat| ≤ 23.5°).
@@ -596,14 +596,14 @@ Gauges with < 12 matched months are listed but not counted (KGE needs a year of 
 ### V14 · Regional water storage (GRACE/GRACE-FO) vs. USGS groundwater wells and published GRACE trends
 _run: 2026-11-15 · `scripts/validate_grace.py` → `docs/validation/grace.json`_
 
-**Question.** Does FieldShift's water-storage indicator (JPL RL06.3 mascons at the field's cell, harmonic trend model with AR(1)-adjusted significance) move with groundwater where wells exist, and does it reproduce published GRACE trends elsewhere?
+**Question.** Does IA's water-storage indicator (JPL RL06.3 mascons at the field's cell, harmonic trend model with AR(1)-adjusted significance) move with groundwater where wells exist, and does it reproduce published GRACE trends elsewhere?
 
 **Design.**
 - Wells: USGS groundwater-level field measurements (parameter 72019, depth to water), anonymous USGS Water Data OGC API, in a 2° × 2° box (≈ one mascon) around 12 U.S. aquifer regions incl. the Fallon and Ames demo fields. Wells with ≥ 12 years of data in 2003–2025 are kept; the regional index is the median of annual water-level anomalies across wells (≥ 5 wells per year).
 - Wells measure hydraulic head (m) and GRACE measures mass (cm of water); without the aquifer's specific yield only co-variation and trend direction are comparable, not magnitude.
-- Metrics: r of annual means; agreement of trend sign; agreement of FieldShift's class (declining/likely/stable/rising) with the wells' trend class (OLS on the annual index, same p-value thresholds).
+- Metrics: r of annual means; agreement of trend sign; agreement of IA's class (declining/likely/stable/rising) with the wells' trend class (OLS on the annual index, same p-value thresholds).
 
-| Region | USGS wells (≥ 12 yrs) | years | r (annual) | well level trend (head) | FieldShift GRACE storage trend | agrees: sign / class |
+| Region | USGS wells (≥ 12 yrs) | years | r (annual) | well level trend (head) | IA GRACE storage trend | agrees: sign / class |
 |---|---|---|---|---|---|---|
 | Fallon / Carson Desert, NV (demo field) | 257 | 21 | +0.56 | +0.00 m/yr (stable, p = 0.844) | -0.38 cm/yr (declining, p = 0.015) | no / no |
 | Ames, IA (demo field) | 3 | 0 | — | too few long well records | — | — |
@@ -618,7 +618,7 @@ _run: 2026-11-15 · `scripts/validate_grace.py` → `docs/validation/grace.json`
 | Central Florida (Floridan aquifer) | 64 | 21 | +0.75 | +0.01 m/yr (stable, p = 0.604) | +0.76 cm/yr (rising, p = 0.002) | yes / no |
 | Long Island, NY | 628 | 21 | +0.07 | -0.01 m/yr (declining, p = 0.164) | +0.29 cm/yr (stable, p = 0.000) | no / no |
 
-**Summary.** GRACE's annual storage co-varied positively with the regional well index in **11/11** usable regions (median r = **0.56**; 0.86–0.90 in the Central Valley and the Ogallala). The trend direction agreed in **8/11** and the FieldShift class in **7/11**. The declining Ogallala, Central Valley, Snake River Plain, Columbia Plateau and Phoenix basins are all called declining or likely declining. Ames had too few long well records in the USGS database.
+**Summary.** GRACE's annual storage co-varied positively with the regional well index in **11/11** usable regions (median r = **0.56**; 0.86–0.90 in the Central Valley and the Ogallala). The trend direction agreed in **8/11** and the IA class in **7/11**. The declining Ogallala, Central Valley, Snake River Plain, Columbia Plateau and Phoenix basins are all called declining or likely declining. Ames had too few long well records in the USGS database.
 
 **Disagreements, and what we changed because of them.**
 - **Fallon (demo field):** 257 wells are flat on median while GRACE's region is falling (−0.38 cm/yr, p = 0.015). The shallow aquifer under the Newlands Project is recharged by flood irrigation and canal seepage, while the ~300 km mascon also sees the drying Great Basin (soil, snow, lakes). We therefore renamed the card from "groundwater falling" to **"regional water reserves falling"**, added "check your well", and state the Fallon disagreement in every GRACE Why.
@@ -626,7 +626,7 @@ _run: 2026-11-15 · `scripts/validate_grace.py` → `docs/validation/grace.json`
 
 **Literature check outside the U.S.** (same period as each study, sign and order of magnitude only — the studies used other solutions and corrections):
 
-| Region | Published GRACE trend | Period | FieldShift, same period | FieldShift, 2002–2026 | Reference |
+| Region | Published GRACE trend | Period | IA, same period | IA, 2002–2026 | Reference |
 |---|---|---|---|---|---|
 | NW India (Punjab, Haryana, Rajasthan) | -4.0 cm/yr | 2002–2008 | -6.57 cm/yr | -5.48 cm/yr (declining) | Rodell et al. 2009, Nature |
 | North China Plain | -2.2 cm/yr | 2003–2010 | -2.81 cm/yr | -1.39 cm/yr (likely declining) | Feng et al. 2013, WRR (groundwater) |
@@ -790,7 +790,7 @@ Time per tap (imagery cached, one process): median 0.4 s → 0.2 s, 95th percent
   - They are weakest for coffee rust, black Sigatoka and maize gray leaf spot in the humid tropics. RH ≥ 90 % on a ~50 km grid is met almost every night, so the infection models saturate and cannot separate epidemic years (coffee rust 2008–11 is a clear miss). Avelino's station-scale driver, the narrower daily temperature range, does not appear in POWER at all.
   - BLASTAM ranked the cool 2003 Tohoku summer low on fully favourable days. Its 5-day-mean rule (20–25 °C) treats the coldest spells as non-susceptible; 2003 was top-ranked only when quasi-favourable days are counted.
   - Consequences for the product:
-    - Coffee rust and Sigatoka are not shown, because coffee and banana are not FieldShift crops yet. They should get station or in-canopy wetness, or a calibrated threshold, before they are switched on.
+    - Coffee rust and Sigatoka are not shown, because coffee and banana are not IA crops yet. They should get station or in-canopy wetness, or a calibrated threshold, before they are switched on.
     - Gray leaf spot and rice blast cards keep "scout first" wording at moderate confidence.
 - **MOD16 (V6).**
   - MOD16 has no irrigation input and is known to underestimate ET over irrigated fields in arid regions.

@@ -50,7 +50,7 @@ def _tile(src: str, z: int, x: int, y: int) -> np.ndarray:
     r = httpx.get(
         IMAGERY[src][0].format(z=z, x=x, y=y),
         timeout=30,
-        headers={"User-Agent": "FieldShift/1.0 (NASA Space Apps 2026)"},
+        headers={"User-Agent": "IA-Intelligent-Agriculture/1.0 (NASA Space Apps 2026)"},
     )
     if r.status_code != 200 or "image" not in r.headers.get("content-type", ""):
         raise DataUnavailable(f"imagery tile {src} {z}/{x}/{y}: HTTP {r.status_code}")

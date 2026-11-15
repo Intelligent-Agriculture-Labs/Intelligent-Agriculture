@@ -192,7 +192,7 @@ export default function Onboarding() {
   return (
     <Screen testID="onboarding">
       <Txt v="small" color={t.primary} style={{ fontWeight: "800", letterSpacing: 1 }}>
-        {tr("app.name").toUpperCase()}
+        {`${tr("app.name")} · ${tr("app.fullName")}`.toUpperCase()}
       </Txt>
       <Txt v="h1" style={{ marginTop: 4 }}>
         {tr("onboarding.title")}

@@ -161,7 +161,7 @@ def _get_csv(url: str, cache_tag: str, ttl_s: float, timeout_s: float = 30.0) ->
     if not offline_mode():
         try:
             r = httpx.get(
-                url, timeout=timeout_s, follow_redirects=True, headers={"User-Agent": "FieldShift/1.0"}
+                url, timeout=timeout_s, follow_redirects=True, headers={"User-Agent": "IA-Intelligent-Agriculture/1.0"}
             )
             if r.status_code == 200 and r.text.startswith("latitude"):
                 path.parent.mkdir(parents=True, exist_ok=True)

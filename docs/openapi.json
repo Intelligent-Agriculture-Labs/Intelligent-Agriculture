@@ -1,8 +1,8 @@
 {
  "openapi": "3.1.0",
  "info": {
-  "title": "FieldShift API",
-  "description": "NASA Earth observations → simple farm decisions on water, drought, pests, disease and crop rotations. NASA Space Apps Challenge 2026 — 'Field Shift: Adapting Farms with NASA Data'.",
+  "title": "IA · Intelligent Agriculture API",
+  "description": "Better decisions. Better harvests. NASA Earth observations → simple farm decisions on water, drought, pests, disease and crop rotations. NASA Space Apps Challenge 2026 — 'Field Shift: Adapting Farms with NASA Data'.",
   "version": "1.0.0"
  },
  "paths": {

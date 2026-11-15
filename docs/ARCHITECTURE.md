@@ -6,7 +6,7 @@ flowchart LR
     W[Web<br/>react-native-web] --- I[iOS] --- A[Android]
     C[(Device cache<br/>AsyncStorage:<br/>last advice per field)]
   end
-  subgraph API["FieldShift API (FastAPI, Python 3.13)"]
+  subgraph API["IA API (FastAPI, Python 3.13)"]
     R[Routes /api/*<br/>OpenAPI] --> E[Engine<br/>service.py + rules.yaml + messages.yaml]
     E --> S[Science<br/>ET₀ · season model · drought · disease · pests · climate · rotations]
     E --> X[Context builder<br/>POWER + forecast + SRTM + soil + satellites]

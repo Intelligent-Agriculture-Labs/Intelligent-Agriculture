@@ -1,6 +1,8 @@
 {
   "app": {
-    "name": "FieldShift",
+    "name": "IA",
+    "fullName": "Agricultura inteligente",
+    "slogan": "Mejores decisiones. Mejores cosechas.",
     "tagline": "Datos de la NASA → decisiones para tu finca esta semana"
   },
   "tabs": {
@@ -43,7 +45,7 @@
     "weekLater": "7 días después"
   },
   "banner": {
-    "mock": "DATOS DE PRUEBA — no se pudo contactar con el servidor de FieldShift. Las cifras son de ejemplo, no son datos de la NASA.",
+    "mock": "DATOS DE PRUEBA — no se pudo contactar con el servidor de IA. Las cifras son de ejemplo, no son datos de la NASA.",
     "offline": "Sin conexión — mostrando el consejo guardado del {{date}}",
     "demo": "Modo demo — datos de la NASA guardados previamente"
   },
@@ -103,7 +105,7 @@
     "moreTitle": "Más sobre su parcela esta semana",
     "moreSubtitle": "Sequía, agua del suelo, lluvia y totales de la campaña",
     "allClearTitle": "Nada urgente esta semana",
-    "allClearText": "Su parcela se ve bien. Vuelva en unos días: FieldShift se actualiza con cada nuevo pronóstico.",
+    "allClearText": "Su parcela se ve bien. Vuelva en unos días: IA se actualiza con cada nuevo pronóstico.",
     "waterUsed": "{{used}} de {{total}} usados",
     "noIrrigationNeededShort": "No hace falta"
   },
@@ -156,7 +158,7 @@
     "risks": "Consúltalo localmente antes de decidir",
     "context": "Lo que dicen los datos de la NASA sobre tu zona",
     "vulnerable": "Épocas vulnerables del año",
-    "disclaimer": "FieldShift apoya — no sustituye — tu criterio y el asesoramiento agronómico local.",
+    "disclaimer": "IA apoya — no sustituye — tu criterio y el asesoramiento agronómico local.",
     "update": "Actualizar comparación",
     "details": "Detalles",
     "hideDetails": "Ocultar detalles"
@@ -218,7 +220,7 @@
     "online": "En línea",
     "offline": "Inaccesible",
     "about": "Acerca de",
-    "aboutText": "FieldShift se creó para el NASA Space Apps Challenge 2026 (Field Shift: Adapting Farms with NASA Data). Es una ayuda a la decisión, no sustituye el conocimiento local.",
+    "aboutText": "IA (Agricultura inteligente) se creó para el NASA Space Apps Challenge 2026 (Field Shift: Adapting Farms with NASA Data). Es una ayuda a la decisión, no sustituye el conocimiento local.",
     "clearCache": "Borrar datos guardados",
     "cleared": "Datos guardados borrados",
     "rawSeries": "Series de datos",
@@ -330,7 +332,7 @@
     "risks": "Riesgo climático por mes",
     "riskA11y": "Riesgo de helada y calor por mes",
     "riskLegend": "❄ años pasados con helada dañina en ese mes · ☀ años con 3 o más días de estrés por calor.",
-    "sources": "Datos: NASA POWER (clima 1984→hoy), SoilGrids (suelo), modelo de temporada FieldShift.",
+    "sources": "Datos: NASA POWER (clima 1984→hoy), SoilGrids (suelo), modelo de temporada IA.",
     "tabSeason": "Esta campaña",
     "tabYears": "Próximos años",
     "waterSubtitle": "Necesidad mensual de agua, lluvia y riego",
@@ -412,7 +414,7 @@
     "defaultName": "Parcela {{n}}",
     "editTitle": "Editar parcela",
     "newTitle": "Nueva parcela",
-    "editorHint": "Toque dentro de su parcela en la imagen de satélite y FieldShift encuentra su límite automáticamente. Después arrastre, añada o borre esquinas para corregirlo, o dibuje el contorno usted mismo.",
+    "editorHint": "Toque dentro de su parcela en la imagen de satélite y IA encuentra su límite automáticamente. Después arrastre, añada o borre esquinas para corregirlo, o dibuje el contorno usted mismo.",
     "name": "Nombre de la parcela",
     "outline": "Contorno de la parcela",
     "layer": {
@@ -439,7 +441,7 @@
   },
   "sync": {
     "title": "Sincronizar dispositivos",
-    "intro": "Use FieldShift en el móvil y en el ordenador con las mismas parcelas, planes y registros de riego. Sin cuenta: un código privado une sus dispositivos.",
+    "intro": "Use IA en el móvil y en el ordenador con las mismas parcelas, planes y registros de riego. Sin cuenta: un código privado une sus dispositivos.",
     "farmName": "Nombre de la finca",
     "yourCode": "Código de su finca",
     "qrA11y": "Código QR para vincular otro dispositivo a esta finca",
@@ -447,9 +449,9 @@
     "syncNow": "Sincronizar ahora",
     "leave": "Dejar de sincronizar en este dispositivo",
     "enable": "Activar sincronización",
-    "joinLabel": "¿Ya usa FieldShift en otro dispositivo? Introduzca el código de la finca:",
+    "joinLabel": "¿Ya usa IA en otro dispositivo? Introduzca el código de la finca:",
     "join": "Vincular",
-    "privacy": "Sus parcelas se guardan en el servidor de FieldShift bajo un código aleatorio. Quien tenga el código puede ver y editar la finca: manténgalo en privado.",
+    "privacy": "Sus parcelas se guardan en el servidor de IA bajo un código aleatorio. Quien tenga el código puede ver y editar la finca: manténgalo en privado.",
     "statusOff": "Sincronización desactivada: los datos quedan en este dispositivo",
     "statusSyncing": "Sincronizando…",
     "statusOffline": "Sin conexión: se sincronizará al volver a tener red",
@@ -487,7 +489,7 @@
     "bare": "Suelo desnudo: {{periods}}",
     "seriesHint": "Puntos: media de la parcela en cada imagen Sentinel-2 despejada de 10 m. Línea: curva suavizada. Sombreado: periodos de suelo desnudo.",
     "kcbTitle": "Factor de agua del cultivo visto desde el espacio",
-    "kcbHint": "Cuánta agua usa su cultivo frente a un césped de referencia, estimado a partir de su verdor actual. FieldShift lo usa para corregir el balance hídrico con lo que realmente ve el satélite.",
+    "kcbHint": "Cuánta agua usa su cultivo frente a un césped de referencia, estimado a partir de su verdor actual. IA lo usa para corregir el balance hídrico con lo que realmente ve el satélite.",
     "scenes": "Imágenes utilizadas",
     "sceneRow": "nubes {{cloud}} % · parcela despejada {{valid}} %",
     "refresh": "Actualizar análisis de satélite",
@@ -502,7 +504,7 @@
     "mode": "Detectar parcela automáticamente",
     "modeEdit": "Editar contorno",
     "finding": "Buscando el límite de su parcela…",
-    "hint": "Toque dentro de su parcela: FieldShift encuentra su límite en la imagen de satélite.",
+    "hint": "Toque dentro de su parcela: IA encuentra su límite en la imagen de satélite.",
     "editHint": "Arrastre una esquina para moverla, toque un «+» en un borde para añadir una esquina, seleccione una esquina (o clic derecho / pulsación larga) para borrarla.",
     "notFound": "No se encontró un límite claro aquí. Dibuje el contorno tocando las esquinas.",
     "failed": "La detección automática no está disponible ahora. Dibuje el contorno tocando las esquinas.",
@@ -518,7 +520,7 @@
   "tips": {
     "today": "Estas son las tareas más importantes de la semana, la más urgente primero. Toque una tarjeta para ver por qué: cada número viene con su evidencia de la NASA.",
     "planSeason": "Su campaña de un vistazo: cuándo sembrar, qué pasa y cuándo, y cuánta agua necesitará el cultivo.",
-    "planYears": "Planifique qué sembrará en los próximos años. FieldShift revisa cada año enfermedades, nitrógeno, agua y suelo, y sugiere mejores opciones.",
+    "planYears": "Planifique qué sembrará en los próximos años. IA revisa cada año enfermedades, nitrógeno, agua y suelo, y sugiere mejores opciones.",
     "insights": "Profundice: pruebe escenarios '¿y si…?', vea cómo ha cambiado su clima y compare estrategias de rotación."
   },
   "account": {
@@ -534,7 +536,7 @@
     "passwordNew": "Contraseña (al menos 8 caracteres)",
     "uploadLocal": "Añadir a mi cuenta las {{count}} parcela(s) de este dispositivo",
     "privacy": "Solo guardamos su finca (parcelas, planes, ajustes). Las contraseñas se guardan como hash seguro. Sin publicidad y sin venta de datos.",
-    "nudge": "Cree una cuenta gratuita para usar FieldShift en el teléfono y en el ordenador.",
+    "nudge": "Cree una cuenta gratuita para usar IA en el teléfono y en el ordenador.",
     "signInRow": "Iniciar sesión o crear cuenta",
     "signInRowSub": "Sus parcelas en todos sus dispositivos",
     "syncInfo": "Su finca se guarda en su cuenta",
@@ -551,7 +553,7 @@
     "errExists": "Ya existe una cuenta con este correo. Pruebe a iniciar sesión.",
     "errTooMany": "Demasiados intentos. Espere un minuto y vuelva a intentarlo.",
     "errGeneric": "Algo salió mal. Vuelva a intentarlo.",
-    "errOffline": "Sin conexión con FieldShift. Compruebe su internet y vuelva a intentarlo.",
+    "errOffline": "Sin conexión con IA. Compruebe su internet y vuelva a intentarlo.",
     "errEmail": "Introduzca un correo electrónico válido.",
     "errPassword": "Introduzca su contraseña.",
     "errPasswordShort": "La contraseña necesita al menos 8 caracteres.",
@@ -567,18 +569,18 @@
   "glossary": {
     "title": "Glosario",
     "subtitle": "Cada término en palabras sencillas",
-    "intro": "Qué significan las palabras de FieldShift y por qué importan para su parcela.",
+    "intro": "Qué significan las palabras de IA y por qué importan para su parcela.",
     "search": "Buscar una palabra",
     "explain": "Explicar {{term}}",
     "items": {
       "waterDemand": {
         "term": "Demanda de agua del cultivo",
         "plain": "Cuánta agua extrae el tiempo cada día de un cultivo sano y bien regado: los días calurosos, secos, ventosos y soleados extraen más. Los científicos la llaman evapotranspiración de referencia (ET₀).",
-        "why": "Indica lo rápido que se seca su suelo, para que FieldShift diga cuándo y cuánto regar."
+        "why": "Indica lo rápido que se seca su suelo, para que IA diga cuándo y cuánto regar."
       },
       "soilWater": {
         "term": "Agua del suelo",
-        "plain": "El agua del suelo alrededor de las raíces que el cultivo aún puede tomar. FieldShift la sigue cada día como una cuenta bancaria: la lluvia y el riego ingresan, el consumo del cultivo retira.",
+        "plain": "El agua del suelo alrededor de las raíces que el cultivo aún puede tomar. IA la sigue cada día como una cuenta bancaria: la lluvia y el riego ingresan, el consumo del cultivo retira.",
         "why": "Cuando se agota la parte 'fácilmente disponible', el cultivo sufre y se pierde cosecha."
       },
       "easyWater": {
@@ -604,7 +606,7 @@
       "cropWaterFactor": {
         "term": "Factor de agua del cultivo",
         "plain": "Cuánta agua usa su cultivo comparado con la 'demanda de agua' del tiempo. Las plantas pequeñas usan menos; un cultivo verde y cerrado, más. Los científicos lo llaman Kc.",
-        "why": "FieldShift lo multiplica por el tiempo para conocer el consumo real de su cultivo, y lo corrige con imágenes satelitales de su parcela."
+        "why": "IA lo multiplica por el tiempo para conocer el consumo real de su cultivo, y lo corrige con imágenes satelitales de su parcela."
       },
       "zones": {
         "term": "Zonas de manejo",
@@ -648,7 +650,7 @@
       },
       "confidence": {
         "term": "Confianza",
-        "plain": "Lo seguro que está FieldShift de un consejo, según la calidad y resolución de los datos.",
+        "plain": "Lo seguro que está IA de un consejo, según la calidad y resolución de los datos.",
         "why": "Confianza baja significa: revise la parcela usted mismo antes de actuar."
       },
       "satellite": {
@@ -658,7 +660,7 @@
       },
       "yieldBadYear": {
         "term": "Rendimiento típico y de año malo",
-        "plain": "FieldShift simula su cultivo con el tiempo real de los últimos 15+ años en su parcela. 'Típico' es el resultado medio; 'año malo' es lo que dio 1 de cada 10 años.",
+        "plain": "IA simula su cultivo con el tiempo real de los últimos 15+ años en su parcela. 'Típico' es el resultado medio; 'año malo' es lo que dio 1 de cada 10 años.",
         "why": "Planifique para el año típico, pero asegúrese de poder soportar el malo."
       }
     }
@@ -673,7 +675,7 @@
     "stepOf": "Paso {{n}} de {{total}}",
     "s1": {
       "title": "Su finca, vista desde el espacio",
-      "text": "FieldShift convierte 40 años de datos satelitales y meteorológicos de la NASA en consejos sencillos para su parcela.",
+      "text": "IA convierte 40 años de datos satelitales y meteorológicos de la NASA en consejos sencillos para su parcela.",
       "p1": "Hoy: las 3 tareas más importantes de la semana: agua, plagas, enfermedades, heladas.",
       "p2": "Parcela: imágenes satelitales, zonas problemáticas y mapas de erosión de su propia parcela.",
       "p3": "Planificar: cuándo sembrar y qué cultivos poner en los próximos años."
@@ -682,7 +684,7 @@
       "title": "Añada su parcela en segundos",
       "text": "No necesita cuenta para empezar.",
       "p1": "Acerque el mapa satelital y toque dentro de su parcela.",
-      "p2": "FieldShift encuentra el límite de la parcela automáticamente.",
+      "p2": "IA encuentra el límite de la parcela automáticamente.",
       "p3": "Corrija cualquier esquina a mano si hace falta y elija cultivo y fecha de siembra."
     },
     "s3": {

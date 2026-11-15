@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import { Button, Txt } from "@/components/ui";
 import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 
 export const WELCOMED_KEY = "fieldshift:welcomed:v1";
+const APP_ICON = require("../../assets/icon.png");
 type IonName = React.ComponentProps<typeof Ionicons>["name"];
 const STEPS: { icon: IonName; points: IonName[] }[] = [
   { icon: "planet-outline", points: ["sunny-outline", "map-outline", "calendar-outline"] },
@@ -16,7 +17,7 @@ const STEPS: { icon: IonName; points: IonName[] }[] = [
   { icon: "leaf-outline", points: ["help-circle-outline", "phone-portrait-outline", "cloud-offline-outline"] },
 ];
 
-/** First-run: what FieldShift does, how to add a field, what you get — then add a field or try a demo farm. */
+/** First-run: what IA (Intelligent Agriculture) does, how to add a field, what you get — then add a field or try a demo farm. */
 export default function Welcome() {
   const t = useTheme();
   const { t: tr } = useTranslation();
@@ -31,9 +32,12 @@ export default function Welcome() {
     <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }} testID="welcome">
       <View style={{ flex: 1, width: "100%", maxWidth: 560, alignSelf: "center", paddingHorizontal: space.xl, paddingTop: space.lg }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: MIN_TOUCH }}>
-          <Txt v="small" color={t.primary} style={{ fontWeight: "700", letterSpacing: 1 }}>
-            {tr("app.name").toUpperCase()}
-          </Txt>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm, flexShrink: 1 }}>
+            <Image source={APP_ICON} style={{ width: 24, height: 24, borderRadius: 6 }} accessibilityIgnoresInvertColors />
+            <Txt v="small" color={t.primary} style={{ fontWeight: "700", letterSpacing: 1, flexShrink: 1 }} numberOfLines={1}>
+              {`${tr("app.name")} · ${tr("app.fullName")}`.toUpperCase()}
+            </Txt>
+          </View>
           {!last ? (
             <Pressable accessibilityRole="button" onPress={() => done("/onboarding")} hitSlop={10} testID="welcome-skip">
               <Txt v="small" muted>
@@ -44,9 +48,18 @@ export default function Welcome() {
         </View>
 
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <View style={{ width: 88, height: 88, borderRadius: 44, backgroundColor: t.cardAlt, alignItems: "center", justifyContent: "center" }}>
-            <Ionicons name={s.icon} size={44} color={t.primary} />
-          </View>
+          {step === 0 ? (
+            <>
+              <Image source={APP_ICON} style={{ width: 88, height: 88, borderRadius: 22 }} accessibilityIgnoresInvertColors testID="welcome-logo" />
+              <Txt v="small" color={t.primary} style={{ fontWeight: "700", marginTop: space.md }} testID="welcome-slogan">
+                {tr("app.slogan")}
+              </Txt>
+            </>
+          ) : (
+            <View style={{ width: 88, height: 88, borderRadius: 44, backgroundColor: t.cardAlt, alignItems: "center", justifyContent: "center" }}>
+              <Ionicons name={s.icon} size={44} color={t.primary} />
+            </View>
+          )}
           <Txt v="h1" style={{ marginTop: space.xl }} testID={`welcome-title-${step}`}>
             {tr(`welcome.s${step + 1}.title`)}
           </Txt>

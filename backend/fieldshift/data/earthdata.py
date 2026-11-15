@@ -40,7 +40,7 @@ log = logging.getLogger("fieldshift.earthdata")
 URS = "urs.earthdata.nasa.gov"
 GIOVANNI = "https://api.giovanni.earthdata.nasa.gov"
 CMR = "https://cmr.earthdata.nasa.gov/search"
-UA = {"User-Agent": "FieldShift/1.0 (NASA Space Apps 2026)"}
+UA = {"User-Agent": "IA/1.0 (NASA Space Apps 2026)"}
 
 IMERG_LATE = "GPM_3IMERGDL_07_precipitation"
 IMERG_EARLY = "GPM_3IMERGDE_07_precipitation"

@@ -5,17 +5,18 @@
 # Usage (repo root, API on :8000): app/scripts/capture-film-ios.sh   (SKIP_BUILD=1 reuses the installed build)
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; APP="$ROOT/app"; MEDIA="$ROOT/media"
-NAME="FieldShift Film iPhone 17"
+NAME="IA Film iPhone 17"
 xcrun simctl shutdown all 2>/dev/null || true
 U=$(xcrun simctl list devices | grep "$NAME (" | grep -oE "[0-9A-F-]{36}" | head -1 || true)
 [ -n "$U" ] || U=$(xcrun simctl create "$NAME" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0)
 xcrun simctl boot "$U" 2>/dev/null || true; xcrun simctl bootstatus "$U" -b >/dev/null
 cd "$APP/ios"
+WS=$(basename "$(ls -d *.xcworkspace | head -1)" .xcworkspace)  # IA (old prebuild) or IA
 if [ "${SKIP_BUILD:-0}" != 1 ]; then
-EXPO_PUBLIC_CAPTURE_TOUR=film xcodebuild -workspace FieldShift.xcworkspace -scheme FieldShift -configuration Release \
+EXPO_PUBLIC_CAPTURE_TOUR=film xcodebuild -workspace "$WS.xcworkspace" -scheme "$WS" -configuration Release \
   -sdk iphonesimulator -destination "id=$U" -derivedDataPath build CODE_SIGNING_ALLOWED=NO -quiet
 xcrun simctl uninstall "$U" org.fieldshift.app 2>/dev/null || true
-xcrun simctl install "$U" build/Build/Products/Release-iphonesimulator/FieldShift.app
+xcrun simctl install "$U" build/Build/Products/Release-iphonesimulator/"$WS".app
 fi
 xcrun simctl terminate "$U" org.fieldshift.app 2>/dev/null || true
 xcrun simctl status_bar "$U" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true

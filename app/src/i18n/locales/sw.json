@@ -1,6 +1,8 @@
 {
   "app": {
-    "name": "FieldShift",
+    "name": "IA",
+    "fullName": "Kilimo Mahiri",
+    "slogan": "Maamuzi bora. Mavuno bora.",
     "tagline": "Data za NASA → maamuzi ya shamba wiki hii"
   },
   "tabs": {
@@ -43,7 +45,7 @@
     "weekLater": "Siku 7 baadaye"
   },
   "banner": {
-    "mock": "DATA YA MFANO — seva ya FieldShift haipatikani. Namba zilizo hapa chini ni za mfano, si data za NASA.",
+    "mock": "DATA YA MFANO — seva ya IA haipatikani. Namba zilizo hapa chini ni za mfano, si data za NASA.",
     "offline": "Nje ya mtandao — ushauri uliohifadhiwa tarehe {{date}}",
     "demo": "Hali ya maonyesho — data za NASA zilizohifadhiwa awali"
   },
@@ -103,7 +105,7 @@
     "moreTitle": "Zaidi kuhusu shamba lako wiki hii",
     "moreSubtitle": "Ukame, maji ya udongo, mvua na jumla za msimu",
     "allClearTitle": "Hakuna jambo la haraka wiki hii",
-    "allClearText": "Shamba lako liko vizuri. Rudi baada ya siku chache — FieldShift husasishwa kila utabiri mpya unapotoka.",
+    "allClearText": "Shamba lako liko vizuri. Rudi baada ya siku chache — IA husasishwa kila utabiri mpya unapotoka.",
     "waterUsed": "{{used}} kati ya {{total}} yametumika",
     "noIrrigationNeededShort": "Haihitajiki"
   },
@@ -156,7 +158,7 @@
     "risks": "Hakiki na wataalamu wa eneo kabla ya kuamua",
     "context": "Data za NASA zinasema nini kuhusu eneo lako",
     "vulnerable": "Nyakati hatarishi za mwaka",
-    "disclaimer": "FieldShift inasaidia — haichukui nafasi ya — busara yako na ushauri wa wataalamu wa kilimo wa eneo lako.",
+    "disclaimer": "IA inasaidia — haichukui nafasi ya — busara yako na ushauri wa wataalamu wa kilimo wa eneo lako.",
     "update": "Sasisha ulinganisho",
     "details": "Maelezo",
     "hideDetails": "Ficha maelezo"
@@ -218,7 +220,7 @@
     "online": "Inapatikana",
     "offline": "Haipatikani",
     "about": "Kuhusu",
-    "aboutText": "FieldShift ilitengenezwa kwa NASA Space Apps Challenge 2026 (Field Shift: Adapting Farms with NASA Data). Ni msaada wa kufanya maamuzi, si mbadala wa ujuzi wa eneo lako.",
+    "aboutText": "IA (Kilimo Mahiri) ilitengenezwa kwa NASA Space Apps Challenge 2026 (Field Shift: Adapting Farms with NASA Data). Ni msaada wa kufanya maamuzi, si mbadala wa ujuzi wa eneo lako.",
     "clearCache": "Futa data zilizohifadhiwa",
     "cleared": "Data zilizohifadhiwa zimefutwa",
     "rawSeries": "Data ghafi",
@@ -330,7 +332,7 @@
     "risks": "Hatari za hali ya hewa kwa mwezi",
     "riskA11y": "Hatari ya baridi kali na joto kwa mwezi",
     "riskLegend": "❄ sehemu ya miaka yenye baridi kali yenye madhara mwezi huo · ☀ yenye siku 3 au zaidi za msongo wa joto.",
-    "sources": "Data: NASA POWER (hali ya hewa 1984→leo), SoilGrids (udongo), modeli ya msimu ya FieldShift.",
+    "sources": "Data: NASA POWER (hali ya hewa 1984→leo), SoilGrids (udongo), modeli ya msimu ya IA.",
     "tabSeason": "Msimu huu",
     "tabYears": "Miaka ijayo",
     "waterSubtitle": "Mahitaji ya maji ya kila mwezi, mvua na umwagiliaji",
@@ -412,7 +414,7 @@
     "defaultName": "Shamba {{n}}",
     "editTitle": "Hariri shamba",
     "newTitle": "Shamba jipya",
-    "editorHint": "Gusa ndani ya shamba lako kwenye picha ya setilaiti na FieldShift itapata mpaka wake kiotomatiki. Kisha buruta, ongeza au futa pembe kuurekebisha, au chora mpaka mwenyewe.",
+    "editorHint": "Gusa ndani ya shamba lako kwenye picha ya setilaiti na IA itapata mpaka wake kiotomatiki. Kisha buruta, ongeza au futa pembe kuurekebisha, au chora mpaka mwenyewe.",
     "name": "Jina la shamba",
     "outline": "Mpaka wa shamba",
     "layer": {
@@ -439,7 +441,7 @@
   },
   "sync": {
     "title": "Linganisha vifaa",
-    "intro": "Tumia FieldShift kwenye simu na kompyuta ukiwa na mashamba, mipango na kumbukumbu za umwagiliaji zilezile. Hakuna akaunti: msimbo wa siri unaunganisha vifaa vyako.",
+    "intro": "Tumia IA kwenye simu na kompyuta ukiwa na mashamba, mipango na kumbukumbu za umwagiliaji zilezile. Hakuna akaunti: msimbo wa siri unaunganisha vifaa vyako.",
     "farmName": "Jina la shamba kuu",
     "yourCode": "Msimbo wa shamba lako",
     "qrA11y": "Msimbo wa QR wa kuunganisha kifaa kingine na shamba hili",
@@ -447,9 +449,9 @@
     "syncNow": "Linganisha sasa",
     "leave": "Acha kulinganisha kwenye kifaa hiki",
     "enable": "Washa ulinganishaji",
-    "joinLabel": "Unatumia FieldShift kwingine tayari? Weka msimbo wa shamba:",
+    "joinLabel": "Unatumia IA kwingine tayari? Weka msimbo wa shamba:",
     "join": "Unganisha",
-    "privacy": "Mashamba yako yanahifadhiwa kwenye seva ya FieldShift chini ya msimbo wa nasibu. Yeyote mwenye msimbo anaweza kuona na kuhariri shamba hili — uweke siri.",
+    "privacy": "Mashamba yako yanahifadhiwa kwenye seva ya IA chini ya msimbo wa nasibu. Yeyote mwenye msimbo anaweza kuona na kuhariri shamba hili — uweke siri.",
     "statusOff": "Ulinganishaji umezimwa — data inabaki kwenye kifaa hiki",
     "statusSyncing": "Inalinganisha…",
     "statusOffline": "Nje ya mtandao — italinganisha mtandao ukirudi",
@@ -487,7 +489,7 @@
     "bare": "Udongo mtupu: {{periods}}",
     "seriesHint": "Vitone: wastani wa shamba kwa kila picha safi ya Sentinel-2 ya mita 10. Mstari: mkunjo uliolainishwa. Kivuli: vipindi vya udongo mtupu.",
     "kcbTitle": "Kipimo cha maji cha zao kutoka angani",
-    "kcbHint": "Kiasi cha maji ambacho zao lako linatumia ukilinganisha na nyasi ya marejeo, kinachokadiriwa kutokana na ukijani wake wa sasa. FieldShift inakitumia kusahihisha mizani ya maji kwa kile setilaiti inachoona hasa.",
+    "kcbHint": "Kiasi cha maji ambacho zao lako linatumia ukilinganisha na nyasi ya marejeo, kinachokadiriwa kutokana na ukijani wake wa sasa. IA inakitumia kusahihisha mizani ya maji kwa kile setilaiti inachoona hasa.",
     "scenes": "Picha zilizotumika",
     "sceneRow": "mawingu {{cloud}} % · shamba safi {{valid}} %",
     "refresh": "Onyesha upya uchambuzi wa setilaiti",
@@ -502,7 +504,7 @@
     "mode": "Tambua shamba kiotomatiki",
     "modeEdit": "Hariri mpaka",
     "finding": "Inatafuta mpaka wa shamba lako…",
-    "hint": "Gusa ndani ya shamba lako — FieldShift inapata mpaka wake kwenye picha ya setilaiti.",
+    "hint": "Gusa ndani ya shamba lako — IA inapata mpaka wake kwenye picha ya setilaiti.",
     "editHint": "Buruta pembe kuisogeza, gusa \"+\" kwenye ukingo kuongeza pembe, chagua pembe (au bofya kulia / bonyeza kwa muda) kuifuta.",
     "notFound": "Hakuna mpaka wazi uliopatikana hapa. Chora mpaka kwa kugusa pembe badala yake.",
     "failed": "Utambuzi wa kiotomatiki haupatikani sasa. Chora mpaka kwa kugusa pembe.",
@@ -518,7 +520,7 @@
   "tips": {
     "today": "Hizi ni kazi muhimu zaidi za wiki hii, ya haraka zaidi kwanza. Gusa kadi kuona sababu — kila namba ina ushahidi wake kutoka NASA.",
     "planSeason": "Msimu wako kwa mtazamo mmoja: lini kupanda, nini kinatokea lini, na zao litahitaji maji kiasi gani.",
-    "planYears": "Panga utakachopanda miaka ijayo. FieldShift hukagua kila mwaka magonjwa, naitrojeni, maji na udongo — na kupendekeza njia bora zaidi.",
+    "planYears": "Panga utakachopanda miaka ijayo. IA hukagua kila mwaka magonjwa, naitrojeni, maji na udongo — na kupendekeza njia bora zaidi.",
     "insights": "Chunguza zaidi: jaribu hali za 'itakuwaje kama', ona jinsi hali ya hewa yako imebadilika, na linganisha mikakati ya mzunguko wa mazao."
   },
   "account": {
@@ -534,7 +536,7 @@
     "passwordNew": "Nenosiri (angalau herufi 8)",
     "uploadLocal": "Ongeza shamba {{count}} lililo kwenye kifaa hiki kwenye akaunti yangu",
     "privacy": "Tunahifadhi shamba lako tu (mashamba, mipango, mipangilio). Manenosiri huhifadhiwa kama hash salama. Hakuna matangazo, hakuna kuuza data.",
-    "nudge": "Fungua akaunti ya bure kutumia FieldShift kwenye simu na kompyuta yako.",
+    "nudge": "Fungua akaunti ya bure kutumia IA kwenye simu na kompyuta yako.",
     "signInRow": "Ingia au fungua akaunti",
     "signInRowSub": "Mashamba yako kwenye kila kifaa",
     "syncInfo": "Shamba lako limehifadhiwa kwenye akaunti yako",
@@ -551,7 +553,7 @@
     "errExists": "Tayari kuna akaunti yenye barua pepe hii. Jaribu kuingia.",
     "errTooMany": "Majaribio mengi mno. Tafadhali subiri dakika moja kisha ujaribu tena.",
     "errGeneric": "Kuna tatizo. Tafadhali jaribu tena.",
-    "errOffline": "Hakuna muunganisho na FieldShift. Kagua intaneti yako kisha ujaribu tena.",
+    "errOffline": "Hakuna muunganisho na IA. Kagua intaneti yako kisha ujaribu tena.",
     "errEmail": "Tafadhali weka barua pepe sahihi.",
     "errPassword": "Tafadhali weka nenosiri lako.",
     "errPasswordShort": "Nenosiri linahitaji angalau herufi 8.",
@@ -567,18 +569,18 @@
   "glossary": {
     "title": "Kamusi",
     "subtitle": "Kila neno kwa lugha rahisi",
-    "intro": "Maana ya maneno katika FieldShift, na kwa nini ni muhimu kwa shamba lako.",
+    "intro": "Maana ya maneno katika IA, na kwa nini ni muhimu kwa shamba lako.",
     "search": "Tafuta neno",
     "explain": "Eleza {{term}}",
     "items": {
       "waterDemand": {
         "term": "Mahitaji ya maji ya zao",
         "plain": "Kiasi cha maji ambacho hali ya hewa huvuta kila siku kutoka kwa zao lenye afya na lenye maji ya kutosha — siku za joto, kavu, zenye upepo na jua huvuta zaidi. Wanasayansi huita evapotranspiration ya marejeo (ET₀).",
-        "why": "Huonyesha jinsi udongo wako unavyokauka haraka, ili FieldShift iseme lini na kiasi gani cha kumwagilia."
+        "why": "Huonyesha jinsi udongo wako unavyokauka haraka, ili IA iseme lini na kiasi gani cha kumwagilia."
       },
       "soilWater": {
         "term": "Maji ya udongo",
-        "plain": "Maji yaliyo kwenye udongo karibu na mizizi ambayo zao bado linaweza kunyonya. FieldShift huyafuatilia kila siku kama akaunti ya benki: mvua na umwagiliaji huweka, matumizi ya zao hutoa.",
+        "plain": "Maji yaliyo kwenye udongo karibu na mizizi ambayo zao bado linaweza kunyonya. IA huyafuatilia kila siku kama akaunti ya benki: mvua na umwagiliaji huweka, matumizi ya zao hutoa.",
         "why": "Sehemu ya 'inayopatikana kwa urahisi' ikiisha, zao huteseka na mavuno hupungua."
       },
       "easyWater": {
@@ -604,7 +606,7 @@
       "cropWaterFactor": {
         "term": "Kipimo cha maji cha zao",
         "plain": "Kiasi cha maji ambacho zao lako hutumia ikilinganishwa na 'mahitaji ya maji' ya hali ya hewa. Mimea michanga hutumia kidogo, zao lililofunika shamba hutumia zaidi. Wanasayansi huita Kc.",
-        "why": "FieldShift huzidisha kwa hali ya hewa kujua matumizi halisi ya maji ya zao lako — na kukirekebisha kwa picha za satelaiti za shamba lako."
+        "why": "IA huzidisha kwa hali ya hewa kujua matumizi halisi ya maji ya zao lako — na kukirekebisha kwa picha za satelaiti za shamba lako."
       },
       "zones": {
         "term": "Kanda za usimamizi",
@@ -648,7 +650,7 @@
       },
       "confidence": {
         "term": "Uhakika",
-        "plain": "Jinsi FieldShift ilivyo na uhakika kuhusu ushauri, kulingana na ubora na undani wa data iliyo nyuma yake.",
+        "plain": "Jinsi IA ilivyo na uhakika kuhusu ushauri, kulingana na ubora na undani wa data iliyo nyuma yake.",
         "why": "Uhakika mdogo unamaanisha: kagua shamba mwenyewe kabla ya kuchukua hatua."
       },
       "satellite": {
@@ -658,7 +660,7 @@
       },
       "yieldBadYear": {
         "term": "Mavuno ya kawaida na ya mwaka mbaya",
-        "plain": "FieldShift huiga zao lako kwa hali halisi ya hewa ya miaka 15+ iliyopita shambani kwako. 'Kawaida' ni matokeo ya kati, 'mwaka mbaya' ni yale ya mwaka 1 kati ya 10.",
+        "plain": "IA huiga zao lako kwa hali halisi ya hewa ya miaka 15+ iliyopita shambani kwako. 'Kawaida' ni matokeo ya kati, 'mwaka mbaya' ni yale ya mwaka 1 kati ya 10.",
         "why": "Panga kwa mwaka wa kawaida, lakini hakikisha unaweza kustahimili mwaka mbaya."
       }
     }
@@ -673,7 +675,7 @@
     "stepOf": "Hatua {{n}} kati ya {{total}}",
     "s1": {
       "title": "Shamba lako likionekana kutoka angani",
-      "text": "FieldShift hugeuza miaka 40 ya data ya satelaiti na hali ya hewa ya NASA kuwa ushauri rahisi kwa shamba lako.",
+      "text": "IA hugeuza miaka 40 ya data ya satelaiti na hali ya hewa ya NASA kuwa ushauri rahisi kwa shamba lako.",
       "p1": "Leo: kazi 3 muhimu zaidi za wiki hii — maji, wadudu, magonjwa, baridi kali.",
       "p2": "Shamba: picha za satelaiti, kanda zenye matatizo na ramani za mmomonyoko za shamba lako.",
       "p3": "Panga: lini kupanda, na mazao gani ya kupanda miaka ijayo."
@@ -682,7 +684,7 @@
       "title": "Ongeza shamba lako kwa sekunde",
       "text": "Huhitaji akaunti kuanza.",
       "p1": "Kuza ramani ya satelaiti na gusa ndani ya shamba lako.",
-      "p2": "FieldShift hupata mpaka wa shamba yenyewe.",
+      "p2": "IA hupata mpaka wa shamba yenyewe.",
       "p3": "Rekebisha kona yoyote kwa mkono ikihitajika, kisha chagua zao na tarehe ya kupanda."
     },
     "s3": {

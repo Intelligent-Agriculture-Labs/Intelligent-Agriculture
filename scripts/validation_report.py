@@ -44,7 +44,7 @@ def render(r: dict[str, Any]) -> str:
     out: list[str] = []
     et = r.get("et0", {})
     out.append(
-        "### V1 · Reference ET₀ (FieldShift FAO-56 PM from NASA POWER) vs. ERA5 FAO-56 ET₀, daily 2015–2024"
+        "### V1 · Reference ET₀ (IA FAO-56 PM from NASA POWER) vs. ERA5 FAO-56 ET₀, daily 2015–2024"
     )
     out.append(f"_run: {r.get('et0_run_at', '–')}_\n")
     out.append(
@@ -126,7 +126,7 @@ def render(r: dict[str, Any]) -> str:
         a = m["mod16_annual"]
         out.append("| Year | " + " | ".join(str(x) for x in a["years"]) + " |")
         out.append("|---|" + "---|" * len(a["years"]))
-        out.append("| FieldShift (mm/yr) | " + " | ".join(str(x) for x in a["model_mm"]) + " |")
+        out.append("| IA (mm/yr) | " + " | ".join(str(x) for x in a["model_mm"]) + " |")
         out.append("| MOD16 (mm/yr) | " + " | ".join(str(x) for x in a["mod16_mm"]) + " |")
     if "status" in m:
         out.append(f"*{m['status']}*")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Translation completeness checker for FieldShift (app + backend).
+"""Translation completeness checker for IA (app + backend).
 
     python scripts/check_i18n.py            # report, exit 1 on any problem
     python scripts/check_i18n.py --quiet    # only the summary line per check

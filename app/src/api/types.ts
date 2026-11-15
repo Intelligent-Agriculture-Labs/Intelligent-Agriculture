@@ -1,5 +1,5 @@
 /**
- * FieldShift API contract (v1) — single source of truth shared by backend (FastAPI/pydantic)
+ * IA API contract (v1) — single source of truth shared by backend (FastAPI/pydantic)
  * and client (Expo). The backend's pydantic models in backend/fieldshift/schemas.py mirror this.
  * All units are SI/metric on the wire; the client converts for display.
  */

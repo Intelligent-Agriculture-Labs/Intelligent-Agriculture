@@ -54,12 +54,12 @@ sim_step_warmer:
   hi: "गर्म परिदृश्य मौसम को छोटा करते हैं (ताप-समय) और पानी की माँग बढ़ाते हैं (ET₀ +3 %/°C)।"
   de: "Wärmere Szenarien verkürzen die Saison (Wärmesumme) und erhöhen den Wasserbedarf (ET₀ +3 %/°C)."
 sim_sum:
-  en: "What-if results from the FieldShift season model (FAO-56 water balance + FAO-33 yield response)."
-  es: "Resultados de escenarios del modelo de temporada FieldShift (balance hídrico FAO-56 + respuesta del rendimiento FAO-33)."
-  fr: "Résultats de scénarios du modèle de saison FieldShift (bilan hydrique FAO-56 + réponse du rendement FAO-33)."
-  sw: "Matokeo ya 'itakuwaje kama' kutoka modeli ya msimu ya FieldShift (mizania ya maji FAO-56 + mwitikio wa mavuno FAO-33)."
-  hi: "FieldShift मौसम मॉडल से 'क्या होगा अगर' परिणाम (FAO-56 जल संतुलन + FAO-33 उपज प्रतिक्रिया)।"
-  de: "Was-wäre-wenn-Ergebnisse des FieldShift-Saisonmodells (FAO-56-Wasserbilanz + FAO-33-Ertragsreaktion)."
+  en: "What-if results from the IA season model (FAO-56 water balance + FAO-33 yield response)."
+  es: "Resultados de escenarios del modelo de temporada IA (balance hídrico FAO-56 + respuesta del rendimiento FAO-33)."
+  fr: "Résultats de scénarios du modèle de saison IA (bilan hydrique FAO-56 + réponse du rendement FAO-33)."
+  sw: "Matokeo ya 'itakuwaje kama' kutoka modeli ya msimu ya IA (mizania ya maji FAO-56 + mwitikio wa mavuno FAO-33)."
+  hi: "IA मौसम मॉडल से 'क्या होगा अगर' परिणाम (FAO-56 जल संतुलन + FAO-33 उपज प्रतिक्रिया)।"
+  de: "Was-wäre-wenn-Ergebnisse des IA-Saisonmodells (FAO-56-Wasserbilanz + FAO-33-Ertragsreaktion)."
 model_season:
   en: "FAO-56 water balance + FAO-33 yield response + thermal-time phenology"
   es: "Balance hídrico FAO-56 + respuesta del rendimiento FAO-33 + fenología por tiempo térmico"

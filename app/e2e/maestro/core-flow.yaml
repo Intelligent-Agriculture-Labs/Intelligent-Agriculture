@@ -1,6 +1,6 @@
-# FieldShift core flow — mobile E2E (Maestro). Runs on iOS Simulator and Android emulator.
+# IA core flow — mobile E2E (Maestro). Runs on iOS Simulator and Android emulator.
 #   maestro test app/e2e/maestro/core-flow.yaml -e PLATFORM=ios     (from the media/ dir to collect screenshots)
-# Requires the FieldShift API reachable from the device (localhost:8000 on iOS, 10.0.2.2:8000 on Android).
+# Requires the IA API reachable from the device (localhost:8000 on iOS, 10.0.2.2:8000 on Android).
 appId: org.fieldshift.app
 env:
   PLATFORM: ios

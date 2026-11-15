@@ -1,4 +1,4 @@
-"""Daily crop water balance + yield model ("FieldShift season model").
+"""Daily crop water balance + yield model ("IA season model").
 
 Components (equations in docs/MODELS.md):
   * Phenology in thermal time: progress = ΣGDD / GDD_req, where GDD_req is calibrated per location as the

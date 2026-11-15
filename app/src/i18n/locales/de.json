@@ -1,6 +1,8 @@
 {
   "app": {
-    "name": "FieldShift",
+    "name": "IA",
+    "fullName": "Intelligente Landwirtschaft",
+    "slogan": "Bessere Entscheidungen. Bessere Ernten.",
     "tagline": "NASA-Erdbeobachtung → Entscheidungen für diese Woche"
   },
   "tabs": {
@@ -43,7 +45,7 @@
     "weekLater": "7 Tage später"
   },
   "banner": {
-    "mock": "BEISPIELDATEN — der FieldShift-Server war nicht erreichbar. Die Zahlen unten sind Platzhalter, keine NASA-Daten.",
+    "mock": "BEISPIELDATEN — der IA-Server war nicht erreichbar. Die Zahlen unten sind Platzhalter, keine NASA-Daten.",
     "offline": "Offline — gespeicherte Empfehlung vom {{date}}",
     "demo": "Demo-Modus — aus dem vorab gespeicherten NASA-Datensatz"
   },
@@ -103,7 +105,7 @@
     "moreTitle": "Mehr zu Ihrem Feld diese Woche",
     "moreSubtitle": "Trockenheit, Bodenwasser, Regen und Saisonsummen",
     "allClearTitle": "Diese Woche ist nichts dringend",
-    "allClearText": "Ihr Feld sieht gut aus. Schauen Sie in ein paar Tagen wieder vorbei — FieldShift aktualisiert sich mit jeder neuen Vorhersage.",
+    "allClearText": "Ihr Feld sieht gut aus. Schauen Sie in ein paar Tagen wieder vorbei — IA aktualisiert sich mit jeder neuen Vorhersage.",
     "waterUsed": "{{used}} von {{total}} verbraucht",
     "noIrrigationNeededShort": "Nicht nötig"
   },
@@ -156,7 +158,7 @@
     "risks": "Vor Ort prüfen, bevor Sie entscheiden",
     "context": "Was NASA-Daten über Ihren Standort sagen",
     "vulnerable": "Anfällige Zeiten im Jahr",
-    "disclaimer": "FieldShift unterstützt Ihr Urteil und lokale Fachberatung — es ersetzt sie nicht.",
+    "disclaimer": "IA unterstützt Ihr Urteil und lokale Fachberatung — es ersetzt sie nicht.",
     "update": "Vergleich aktualisieren",
     "details": "Details",
     "hideDetails": "Details ausblenden"
@@ -218,7 +220,7 @@
     "online": "Online",
     "offline": "Nicht erreichbar",
     "about": "Über",
-    "aboutText": "FieldShift entstand für die NASA Space Apps Challenge 2026 (Field Shift: Adapting Farms with NASA Data). Es ist eine Entscheidungshilfe und ersetzt keine lokale Fachkenntnis.",
+    "aboutText": "IA (Intelligente Landwirtschaft) entstand für die NASA Space Apps Challenge 2026 (Field Shift: Adapting Farms with NASA Data). Es ist eine Entscheidungshilfe und ersetzt keine lokale Fachkenntnis.",
     "clearCache": "Gespeicherte Daten löschen",
     "cleared": "Gespeicherte Daten gelöscht",
     "rawSeries": "Rohdaten",
@@ -330,7 +332,7 @@
     "risks": "Wetterrisiko nach Monat",
     "riskA11y": "Frost- und Hitzerisiko pro Monat",
     "riskLegend": "❄ Anteil der Jahre mit schädlichem Frost in diesem Monat · ☀ Anteil mit 3 oder mehr Hitzestresstagen.",
-    "sources": "Daten: NASA POWER (Wetter 1984→heute), SoilGrids (Boden), FieldShift-Saisonmodell.",
+    "sources": "Daten: NASA POWER (Wetter 1984→heute), SoilGrids (Boden), IA-Saisonmodell.",
     "tabSeason": "Diese Saison",
     "tabYears": "Nächste Jahre",
     "waterSubtitle": "Monatlicher Wasserbedarf, Regen und Bewässerung",
@@ -412,7 +414,7 @@
     "defaultName": "Feld {{n}}",
     "editTitle": "Feld bearbeiten",
     "newTitle": "Neues Feld",
-    "editorHint": "Tippen Sie im Satellitenbild in Ihr Feld und FieldShift findet seine Grenze automatisch. Dann Ecken ziehen, hinzufügen oder löschen – oder den Umriss selbst zeichnen.",
+    "editorHint": "Tippen Sie im Satellitenbild in Ihr Feld und IA findet seine Grenze automatisch. Dann Ecken ziehen, hinzufügen oder löschen – oder den Umriss selbst zeichnen.",
     "name": "Feldname",
     "outline": "Feldumriss",
     "layer": {
@@ -439,7 +441,7 @@
   },
   "sync": {
     "title": "Geräte synchronisieren",
-    "intro": "Nutzen Sie FieldShift auf Handy und Computer mit denselben Feldern, Plänen und Bewässerungsprotokollen. Kein Konto nötig: Ein privater Code verbindet Ihre Geräte.",
+    "intro": "Nutzen Sie IA auf Handy und Computer mit denselben Feldern, Plänen und Bewässerungsprotokollen. Kein Konto nötig: Ein privater Code verbindet Ihre Geräte.",
     "farmName": "Betriebsname",
     "yourCode": "Ihr Betriebscode",
     "qrA11y": "QR-Code, um ein weiteres Gerät mit diesem Betrieb zu verbinden",
@@ -447,9 +449,9 @@
     "syncNow": "Jetzt synchronisieren",
     "leave": "Synchronisierung auf diesem Gerät beenden",
     "enable": "Synchronisierung einschalten",
-    "joinLabel": "Sie nutzen FieldShift schon woanders? Betriebscode eingeben:",
+    "joinLabel": "Sie nutzen IA schon woanders? Betriebscode eingeben:",
     "join": "Verbinden",
-    "privacy": "Ihre Felder werden auf dem FieldShift-Server unter einem Zufallscode gespeichert. Wer den Code kennt, kann den Betrieb sehen und bearbeiten – halten Sie ihn geheim.",
+    "privacy": "Ihre Felder werden auf dem IA-Server unter einem Zufallscode gespeichert. Wer den Code kennt, kann den Betrieb sehen und bearbeiten – halten Sie ihn geheim.",
     "statusOff": "Synchronisierung aus – Daten bleiben auf diesem Gerät",
     "statusSyncing": "Synchronisiere…",
     "statusOffline": "Offline – wird synchronisiert, sobald wieder Netz da ist",
@@ -487,7 +489,7 @@
     "bare": "Offener Boden: {{periods}}",
     "seriesHint": "Punkte: Feldmittel jedes wolkenfreien 10-m-Sentinel-2-Bildes. Linie: geglättete Kurve. Schattiert: Zeiten mit offenem Boden.",
     "kcbTitle": "Wasserfaktor der Kultur aus dem All",
-    "kcbHint": "Wie viel Wasser Ihre Kultur im Vergleich zu Referenzgras verbraucht, geschätzt aus ihrer aktuellen Grünheit. FieldShift korrigiert damit die Wasserbilanz mit dem, was der Satellit tatsächlich sieht.",
+    "kcbHint": "Wie viel Wasser Ihre Kultur im Vergleich zu Referenzgras verbraucht, geschätzt aus ihrer aktuellen Grünheit. IA korrigiert damit die Wasserbilanz mit dem, was der Satellit tatsächlich sieht.",
     "scenes": "Verwendete Bilder",
     "sceneRow": "Wolken {{cloud}} % · Feld frei {{valid}} %",
     "refresh": "Satellitenauswertung aktualisieren",
@@ -502,7 +504,7 @@
     "mode": "Feld automatisch erkennen",
     "modeEdit": "Umriss bearbeiten",
     "finding": "Feldgrenze wird gesucht…",
-    "hint": "Tippen Sie in Ihr Feld – FieldShift findet seine Grenze im Satellitenbild.",
+    "hint": "Tippen Sie in Ihr Feld – IA findet seine Grenze im Satellitenbild.",
     "editHint": "Ecke ziehen zum Verschieben, „+“ auf einer Kante tippen zum Einfügen, Ecke auswählen (oder Rechtsklick / lange drücken) zum Löschen.",
     "notFound": "Hier wurde keine klare Feldgrenze gefunden. Zeichnen Sie den Umriss, indem Sie die Ecken antippen.",
     "failed": "Die automatische Erkennung ist gerade nicht verfügbar. Zeichnen Sie den Umriss, indem Sie die Ecken antippen.",
@@ -518,7 +520,7 @@
   "tips": {
     "today": "Das sind die wichtigsten Aufgaben dieser Woche, die dringendste zuerst. Tippen Sie auf eine Karte, um das Warum zu sehen — jede Zahl ist mit NASA-Daten belegt.",
     "planSeason": "Ihre Saison auf einen Blick: wann säen, was wann passiert und wie viel Wasser die Kultur braucht.",
-    "planYears": "Planen Sie, was Sie in den nächsten Jahren anbauen. FieldShift prüft jedes Jahr auf Krankheiten, Stickstoff, Wasser und Boden — und schlägt bessere Möglichkeiten vor.",
+    "planYears": "Planen Sie, was Sie in den nächsten Jahren anbauen. IA prüft jedes Jahr auf Krankheiten, Stickstoff, Wasser und Boden — und schlägt bessere Möglichkeiten vor.",
     "insights": "Tiefer einsteigen: 'Was wäre wenn'-Szenarien testen, sehen, wie sich Ihr Klima verändert hat, und Fruchtfolge-Strategien vergleichen."
   },
   "account": {
@@ -534,7 +536,7 @@
     "passwordNew": "Passwort (mindestens 8 Zeichen)",
     "uploadLocal": "Die {{count}} Feld(er) auf diesem Gerät zu meinem Konto hinzufügen",
     "privacy": "Wir speichern nur Ihren Hof (Felder, Pläne, Einstellungen). Passwörter werden als sicherer Hash gespeichert. Keine Werbung, kein Verkauf von Daten.",
-    "nudge": "Erstellen Sie ein kostenloses Konto, um FieldShift auf Handy und Computer zu nutzen.",
+    "nudge": "Erstellen Sie ein kostenloses Konto, um IA auf Handy und Computer zu nutzen.",
     "signInRow": "Anmelden oder Konto erstellen",
     "signInRowSub": "Ihre Felder auf jedem Gerät",
     "syncInfo": "Ihr Hof ist in Ihrem Konto gespeichert",
@@ -551,7 +553,7 @@
     "errExists": "Ein Konto mit dieser E-Mail gibt es schon. Versuchen Sie, sich anzumelden.",
     "errTooMany": "Zu viele Versuche. Bitte warten Sie eine Minute und versuchen Sie es erneut.",
     "errGeneric": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
-    "errOffline": "Keine Verbindung zu FieldShift. Prüfen Sie Ihr Internet und versuchen Sie es erneut.",
+    "errOffline": "Keine Verbindung zu IA. Prüfen Sie Ihr Internet und versuchen Sie es erneut.",
     "errEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
     "errPassword": "Bitte geben Sie Ihr Passwort ein.",
     "errPasswordShort": "Das Passwort braucht mindestens 8 Zeichen.",
@@ -567,18 +569,18 @@
   "glossary": {
     "title": "Glossar",
     "subtitle": "Jeder Begriff in einfachen Worten",
-    "intro": "Was die Wörter in FieldShift bedeuten und warum sie für Ihr Feld wichtig sind.",
+    "intro": "Was die Wörter in IA bedeuten und warum sie für Ihr Feld wichtig sind.",
     "search": "Wort suchen",
     "explain": "{{term}} erklären",
     "items": {
       "waterDemand": {
         "term": "Wasserbedarf der Kultur",
         "plain": "Wie viel Wasser das Wetter jeden Tag aus einem gesunden, gut versorgten Bestand zieht — heiße, trockene, windige und sonnige Tage ziehen mehr. Fachleute nennen es Referenz-Evapotranspiration (ET₀).",
-        "why": "Er zeigt, wie schnell Ihr Boden austrocknet, damit FieldShift sagen kann, wann und wie viel Sie bewässern sollten."
+        "why": "Er zeigt, wie schnell Ihr Boden austrocknet, damit IA sagen kann, wann und wie viel Sie bewässern sollten."
       },
       "soilWater": {
         "term": "Bodenwasser",
-        "plain": "Das Wasser im Boden rund um die Wurzeln, das die Kultur noch aufnehmen kann. FieldShift führt es täglich wie ein Konto: Regen und Bewässerung zahlen ein, der Wasserverbrauch der Kultur zahlt aus.",
+        "plain": "Das Wasser im Boden rund um die Wurzeln, das die Kultur noch aufnehmen kann. IA führt es täglich wie ein Konto: Regen und Bewässerung zahlen ein, der Wasserverbrauch der Kultur zahlt aus.",
         "why": "Ist der 'leicht verfügbare' Teil aufgebraucht, leidet die Kultur und es geht Ertrag verloren."
       },
       "easyWater": {
@@ -604,7 +606,7 @@
       "cropWaterFactor": {
         "term": "Wasserfaktor der Kultur",
         "plain": "Wie viel Wasser Ihre Kultur im Vergleich zum 'Wasserbedarf' des Wetters verbraucht. Kleine junge Pflanzen brauchen weniger, ein geschlossener grüner Bestand mehr. Fachleute nennen ihn Kc.",
-        "why": "FieldShift multipliziert ihn mit dem Wetter, um den echten Wasserverbrauch zu kennen — und korrigiert ihn mit Satellitenbildern Ihres Feldes."
+        "why": "IA multipliziert ihn mit dem Wetter, um den echten Wasserverbrauch zu kennen — und korrigiert ihn mit Satellitenbildern Ihres Feldes."
       },
       "zones": {
         "term": "Bewirtschaftungszonen",
@@ -648,7 +650,7 @@
       },
       "confidence": {
         "term": "Sicherheit",
-        "plain": "Wie sicher sich FieldShift bei einem Rat ist — abhängig von Qualität und Auflösung der Daten dahinter.",
+        "plain": "Wie sicher sich IA bei einem Rat ist — abhängig von Qualität und Auflösung der Daten dahinter.",
         "why": "Geringe Sicherheit heißt: Schauen Sie sich das Feld selbst an, bevor Sie handeln."
       },
       "satellite": {
@@ -658,7 +660,7 @@
       },
       "yieldBadYear": {
         "term": "Typischer Ertrag und Ertrag im schlechten Jahr",
-        "plain": "FieldShift simuliert Ihre Kultur mit dem echten Wetter der letzten 15+ Jahre an Ihrem Feld. 'Typisch' ist das mittlere Ergebnis, 'schlechtes Jahr' das, was 1 von 10 Jahren brachte.",
+        "plain": "IA simuliert Ihre Kultur mit dem echten Wetter der letzten 15+ Jahre an Ihrem Feld. 'Typisch' ist das mittlere Ergebnis, 'schlechtes Jahr' das, was 1 von 10 Jahren brachte.",
         "why": "Planen Sie für das typische Jahr, aber stellen Sie sicher, dass Sie das schlechte verkraften."
       }
     }
@@ -673,7 +675,7 @@
     "stepOf": "Schritt {{n}} von {{total}}",
     "s1": {
       "title": "Ihr Hof aus dem All gesehen",
-      "text": "FieldShift macht aus 40 Jahren NASA-Satelliten- und Wetterdaten einfache Ratschläge für Ihr Feld.",
+      "text": "IA macht aus 40 Jahren NASA-Satelliten- und Wetterdaten einfache Ratschläge für Ihr Feld.",
       "p1": "Heute: die 3 wichtigsten Aufgaben dieser Woche — Wasser, Schädlinge, Krankheiten, Frost.",
       "p2": "Feld: Satellitenbilder, Problemzonen und Erosionskarten Ihres eigenen Feldes.",
       "p3": "Planen: wann säen und welche Kulturen in den nächsten Jahren."
@@ -682,7 +684,7 @@
       "title": "Feld in Sekunden hinzufügen",
       "text": "Zum Start brauchen Sie kein Konto.",
       "p1": "Zoomen Sie in die Satellitenkarte und tippen Sie in Ihr Feld.",
-      "p2": "FieldShift findet die Feldgrenze automatisch.",
+      "p2": "IA findet die Feldgrenze automatisch.",
       "p3": "Korrigieren Sie Ecken bei Bedarf von Hand und wählen Sie dann Kultur und Saattermin."
     },
     "s3": {

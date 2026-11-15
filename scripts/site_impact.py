@@ -1,4 +1,4 @@
-"""Generate site/impact.json from the running API: continuous current crop (2 history + 4 plan years) vs. FieldShift's optimised plan on each demo field.
+"""Generate site/impact.json from the running API: continuous current crop (2 history + 4 plan years) vs. IA's optimised plan on each demo field.
 
     python3 scripts/site_impact.py [--api http://localhost:8000]
 """

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>FieldShift film</title>
+<title>IA film</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
 <style>
@@ -62,6 +62,9 @@ canvas{position:absolute;left:0;top:0}
 .sect .eyebrow{margin-bottom:26px}
 .sect .sub{margin-top:26px;width:700px}
 .sect .chips{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
+/* IA logo (inline SVG from scripts/brand/make_logo.py, animated part by part in markAnim) */
+.mk{position:relative;flex:none}
+.mk svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
 </style>
 </head>
 <body>
@@ -75,7 +78,7 @@ canvas{position:absolute;left:0;top:0}
   <!-- S1 team -->
   <div id="s1" class="full" style="opacity:0">
     <div style="position:absolute;left:0;right:0;bottom:150px;text-align:center">
-      <div class="eyebrow" id="s1a" style="color:#cfe9d5;letter-spacing:.5em">Team FieldShift</div>
+      <div class="eyebrow" id="s1a" style="color:#cfe9d5;letter-spacing:.5em">Team IA</div>
       <div class="small" style="margin-top:18px;letter-spacing:.3em;text-transform:uppercase;color:#7f9a87">NASA Space Apps Challenge 2026</div>
     </div>
   </div>
@@ -105,9 +108,13 @@ canvas{position:absolute;left:0;top:0}
 
   <!-- S3 title -->
   <div id="s3" class="full" style="opacity:0">
-    <div id="titlewrap" style="position:absolute;left:0;right:0;top:330px;text-align:center">
-      <div class="title" id="title">FieldShift</div>
-      <div class="sub" id="tag" style="margin:28px auto 0;font-size:38px;color:#e2ece4;width:1200px">40 years of NASA Earth data, turned into this week's farm decisions.</div>
+    <div id="titlewrap" style="position:absolute;left:0;right:0;top:250px;text-align:center">
+      <div id="lockup" style="display:flex;align-items:flex-start;justify-content:center">
+        <div id="tmark" class="mk" style="width:380px;height:380px;margin:-78px -40px -80px -80px"></div>
+        <div class="title" id="title" style="font-size:236px">IA</div>
+      </div>
+      <div class="eyebrow" id="tfull" style="margin-top:30px;font-size:30px;letter-spacing:.5em;color:#a6f3b6">Intelligent Agriculture</div>
+      <div class="sub" id="tag" style="margin:30px auto 0;font-size:44px;font-weight:700;color:#eef4ef;width:1200px">Better decisions. Better harvests.</div>
     </div>
     <div id="fieldlabel" class="chip" style="position:absolute;left:0;top:0;opacity:0"><i></i>Your field · found by AI in one tap</div>
   </div>
@@ -144,15 +151,17 @@ canvas{position:absolute;left:0;top:0}
 
   <div id="s6" class="full" style="opacity:0">
     <div class="abs" style="left:130px;top:270px;width:860px">
-      <div style="display:flex;align-items:center;gap:26px" id="s6logo">
-        <img src="../app/assets/icon.svg" width="104" height="104" style="border-radius:24px;box-shadow:0 10px 40px rgba(134,220,152,.25)">
-        <div style="font:800 110px/1 Manrope;letter-spacing:-.04em">FieldShift</div>
+      <div style="display:flex;align-items:center;gap:34px" id="s6logo">
+        <div id="emark" class="mk" style="width:150px;height:150px;border-radius:33px;box-shadow:0 14px 50px rgba(134,220,152,.28)"></div>
+        <div id="s6ia" class="title" style="font-size:132px;letter-spacing:-.03em">IA</div>
+        <div id="s6rule" style="width:3px;height:96px;border-radius:2px;background:rgba(238,244,239,.24)"></div>
+        <div id="s6full" class="eyebrow" style="font-size:31px;line-height:1.32;letter-spacing:.16em;color:#86dc98">Intelligent<br>Agriculture</div>
       </div>
-      <div class="sub" id="s6t" style="margin-top:32px;font-size:42px;color:#eef4ef;font-weight:700">Adapting every field with NASA data.</div>
-      <div class="sub" id="s6a" style="margin-top:22px;font-size:28px">Free and open source. NASA POWER, SMAP, MODIS, ECOSTRESS and SRTM.</div>
+      <div class="sub" id="s6t" style="margin-top:36px;font-size:46px;color:#eef4ef;font-weight:700">Better decisions. Better harvests.</div>
+      <div class="sub" id="s6a" style="margin-top:22px;font-size:28px">Adapting every field with NASA data. Free and open source: NASA POWER, SMAP, MODIS, ECOSTRESS and SRTM.</div>
       <div class="sub" id="s6n" style="margin-top:12px;font-size:28px">Next: field trials with farmers and extension services.</div>
     </div>
-    <div class="abs small" id="s6f" style="left:130px;top:970px;width:1660px;font-size:16px;color:#6f8676">NASA Space Apps Challenge 2026 · Team FieldShift · Real app screens (iPhone 17 simulator) · Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, Blue Marble (GIBS); Copernicus Sentinel-2 · Imagery: Esri, Maxar, Earthstar Geographics · Animation and score programmed with an SI coding assistant (no generative image, video, voice or music models)</div>
+    <div class="abs small" id="s6f" style="left:130px;top:970px;width:1660px;font-size:16px;color:#6f8676">NASA Space Apps Challenge 2026 · Team IA (Intelligent Agriculture) · Real app screens (iPhone 17 simulator) · Data: NASA POWER, SMAP, MODIS, ECOSTRESS, SRTM, Blue Marble (GIBS); Copernicus Sentinel-2 · Imagery: Esri, Maxar, Earthstar Geographics · Animation and score programmed with an SI coding assistant (no generative image, video, voice or music models)</div>
   </div>
 
   <canvas id="grain" width="960" height="540" style="width:1920px;height:1080px"></canvas>
@@ -251,7 +260,14 @@ async function init() {
   // text
   window.W_s2h = wordsify($("s2h")); window.W_s2b = wordsify($("s2b")); window.W_s2e = wordsify($("s2e"));
   window.W_tag = wordsify($("tag"));
-  $("title").innerHTML = [..."FieldShift"].map(c => `<span class="ch">${c}</span>`).join("");
+  $("title").innerHTML = [..."IA"].map(c => `<span class="ch">${c}</span>`).join("");
+  $("s6ia").innerHTML = [..."IA"].map(c => `<span class="ch">${c}</span>`).join("");
+  // the IA logo, inline so every part can be animated
+  const [mkT, mkE] = await Promise.all(["logo-mark-anim.svg", "logo-mark-tile-anim.svg"].map(f => fetch(f).then(r => r.text())));
+  $("tmark").innerHTML = mkT; $("emark").innerHTML = mkE;
+  for (const el of document.querySelectorAll(".mk [id$='e-legL'],.mk [id$='e-legR'],.mk [id$='e-legglowL'],.mk [id$='e-legglowR'],.mk [id$='e-orbit']")) {
+    el.dataset.len = el.getTotalLength(); el.style.strokeDasharray = `${el.dataset.len} ${el.dataset.len}`;
+  }
   for (const id of ["x1", "x2", "x3"]) {
     const el = $(id);
     SECT[id] = { el, eb: wordsify(el.querySelector(".eyebrow")), h: wordsify(el.querySelector(".h2")), subs: [...el.querySelectorAll(".sub")].map(s => ({ el: s, w: wordsify(s) })) };
@@ -414,6 +430,29 @@ function section(S, t, a, b, subSwap = null) {
   });
 }
 
+// IA logo build-up: satellite pops in, swath legs draw down, horizon sweeps, crop rows rise, orbit traces
+function markAnim(p, t, t0) {
+  const q = id => document.getElementById(p + "e-" + id);
+  const sp = seg(t, t0, t0 + .5);
+  const sat = q("sat"); sat.style.transformOrigin = "512px 262px"; sat.style.transform = `scale(${sp > 0 ? eBack(sp) : 0})`;
+  op(q("satglow"), .75 * seg(t, t0 + .05, t0 + .5) * (.85 + .15 * Math.sin(t * 4)));
+  for (const k of ["L", "R"]) {
+    const pl = eOut5(seg(t, t0 + .15, t0 + .95));
+    for (const id of ["leg" + k, "legglow" + k]) { const el = q(id); if (el) el.style.strokeDashoffset = el.dataset.len * (1 - pl); }
+    const g = q("legglow" + k); if (g) op(g, .38 * pl);
+  }
+  const rim = q("rim"); rim.style.transformOrigin = "512px 570px";
+  const rp = eOut5(seg(t, t0 + .45, t0 + 1.1)); rim.style.transform = `scaleX(${lerp(.05, 1, rp)})`; op(rim, rp);
+  op(q("beam"), seg(t, t0 + .8, t0 + 1.4));
+  op(q("soil"), seg(t, t0 + .6, t0 + 1.0));
+  for (let k = 0; k < 10; k++) {
+    const r = q("row" + k); if (!r) continue;
+    const d = Math.abs(k - 4.5), pr = eOut5(seg(t, t0 + .65 + d * .05, t0 + 1.15 + d * .05));
+    op(r, pr); r.style.transform = `translateY(${(1 - pr) * 60}px)`;
+  }
+  const o = q("orbit"); if (o) { o.style.strokeDashoffset = o.dataset.len * (1 - eIO(seg(t, t0 + .25, t0 + 1.25))); }
+}
+
 // ------------------------------------------------------------------ main render
 const HERO = { S0: 5.3, t0: 8.0, t1: 9.6 };
 window.render = function (t) {
@@ -470,12 +509,14 @@ window.render = function (t) {
   $("titlewrap").style.transform = `translateY(${-50 * eIO(seg(t, 7.8, 8.3))}px) scale(${1 + .03 * seg(t, 5, 8)})`;
   const chs = $("title").children;
   for (let i = 0; i < chs.length; i++) {
-    const p = eOut5(seg(t, 5.25 + i * .045, 6.15 + i * .045));
+    const p = eOut5(seg(t, 5.45 + i * .12, 6.35 + i * .12));
     chs[i].style.transform = `translateY(${(1 - p) * 60}px) scale(${1 + (1 - p) * .25})`;
     chs[i].style.filter = `blur(${(1 - p) * 18}px)`; chs[i].style.opacity = p;
   }
-  revealWords(W_tag, t, 6.3, .045, .7);
-  const fl = $("fieldlabel"); fl.style.left = "1050px"; fl.style.top = lerp(250, 236, eOut(seg(t, 6.3, 7))) + "px";
+  markAnim("tm-", t, 5.12);
+  { const p = eOut5(seg(t, 5.85, 6.7)); $("tfull").style.opacity = p; $("tfull").style.letterSpacing = lerp(.9, .5, p) + "em"; }
+  revealWords(W_tag, t, 6.35, .06, .7);
+  const fl = $("fieldlabel"); fl.style.left = "1196px"; fl.style.top = lerp(812, 796, eOut(seg(t, 6.3, 7))) + "px";
   op(fl, seg(t, 6.4, 6.8) * (1 - seg(t, 7.6, 7.9)));
 
   // ---------- studio world (8 - 25): moving light, dust, camera drift
@@ -582,9 +623,17 @@ window.render = function (t) {
   op($("s6"), seg(t, 25.0, 25.4));
   const lg = eOut5(seg(t, 25.0, 25.9));
   $("s6logo").style.transform = `translateY(${(1 - lg) * 40}px)`; $("s6logo").style.opacity = lg;
-  revealWords(W_s6.t, t, 25.45, .05, .7);
-  revealWords(W_s6.a, t, 26.2, .025, .6);
-  revealWords(W_s6.n, t, 26.9, .025, .6);
+  markAnim("em-", t, 25.05);
+  const ech = $("s6ia").children;
+  for (let i = 0; i < ech.length; i++) {
+    const p = eOut5(seg(t, 25.25 + i * .1, 26.0 + i * .1));
+    ech[i].style.transform = `translateY(${(1 - p) * 40}px)`; ech[i].style.filter = `blur(${(1 - p) * 14}px)`; ech[i].style.opacity = p;
+  }
+  { const p = eOut5(seg(t, 25.5, 26.1)); $("s6rule").style.transform = `scaleY(${p})`; }
+  { const p = eOut5(seg(t, 25.6, 26.4)); $("s6full").style.opacity = p; $("s6full").style.letterSpacing = lerp(.42, .16, p) + "em"; }
+  revealWords(W_s6.t, t, 25.85, .06, .7);
+  revealWords(W_s6.a, t, 26.45, .025, .6);
+  revealWords(W_s6.n, t, 27.0, .025, .6);
   op($("s6f"), seg(t, 27.4, 28.0));
 
   // ---------- grain

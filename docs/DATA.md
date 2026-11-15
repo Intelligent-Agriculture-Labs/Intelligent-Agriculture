@@ -1,6 +1,6 @@
 # Data sources
 
-All sources were verified reachable on 2026-11-14 from both the Mac and the VPS; the Earthdata Login routes (GES DISC, NSIDC, LP DAAC) on 2026-11-15 from the VPS. FieldShift needs **no API keys** by default: the Earthdata layers are optional enrichment (see [Earthdata Login layers](#earthdata-login-layers-optional)). Each source sits behind `backend/fieldshift/data/http.py`, which provides:
+All sources were verified reachable on 2026-11-14 from both the Mac and the VPS; the Earthdata Login routes (GES DISC, NSIDC, LP DAAC) on 2026-11-15 from the VPS. IA needs **no API keys** by default: the Earthdata layers are optional enrichment (see [Earthdata Login layers](#earthdata-login-layers-optional)). Each source sits behind `backend/fieldshift/data/http.py`, which provides:
 - a disk cache (TTL by data age);
 - retries with exponential backoff;
 - per-host rate limiting;
@@ -67,7 +67,7 @@ NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`
   - Global SPEIbase (CSIC, ODbL). Climatic and monthly, computed from CRU, and again close to the model's own SPEI features.
   - GDO Risk of Drought Impact for Agriculture. It mixes in exposure and vulnerability, which is not hazard severity.
   - So the weak global label is GDO's modelled soil-moisture anomaly. It is independent of NASA POWER rain, but it is still a single indicator, and we say so wherever it is used.
-- **CDL, SSURGO, PRISM:** US-only. FieldShift's backbone is global so smallholders outside the US get the same product; these are planned as US-only enrichments.
+- **CDL, SSURGO, PRISM:** US-only. IA's backbone is global so smallholders outside the US get the same product; these are planned as US-only enrichments.
 
 ## Earthdata Login layers (optional)
 `backend/fieldshift/data/earthdata.py` reads credentials from, in order: `EARTHDATA_USER`/`EARTHDATA_PASS`; a `user:password` file at `$FIELDSHIFT_EARTHDATA_FILE` (default `~/.config/fieldshift/earthdata`, mode 600); a `~/.netrc` entry for `urs.earthdata.nasa.gov`. `FIELDSHIFT_EARTHDATA=off` disables the layers. The account needs the GES DISC ("NASA GESDISC DATA ARCHIVE") and LP DAAC/NSIDC applications approved.

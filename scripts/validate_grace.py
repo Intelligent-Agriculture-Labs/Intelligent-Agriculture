@@ -1,4 +1,4 @@
-"""V14: does FieldShift's GRACE/GRACE-FO water-storage indicator agree with groundwater wells?
+"""V14: does IA's GRACE/GRACE-FO water-storage indicator agree with groundwater wells?
 
     cd backend && .venv/bin/python ../scripts/validate_grace.py        # writes docs/validation/grace.json
 
@@ -8,10 +8,10 @@ including the Fallon NV and Ames IA demo fields. Wells with ≥ 12 years of data
 becomes annual median water-level anomalies (m, sign flipped so up = more water); the regional index is the
 median across wells per year (≥ 5 wells).
 
-Compared with FieldShift's indicator at the box centre (data/grace.py + science/groundwater.py):
+Compared with IA's indicator at the box centre (data/grace.py + science/groundwater.py):
   * Pearson r of annual GRACE water storage (cm) vs. the regional well index (m) — wells measure head, GRACE
     measures mass, so only co-variation and trend sign are comparable, not magnitude (specific yield unknown);
-  * trend sign agreement, and whether FieldShift's class (declining / likely / stable / rising) matches the wells'
+  * trend sign agreement, and whether IA's class (declining / likely / stable / rising) matches the wells'
     trend class (OLS on the annual index with the same p-value thresholds).
 Plus a literature check outside the U.S. (published GRACE trends; Rodell et al. 2009, 2018; Voss et al. 2013;
 Feng et al. 2013) — sign and order of magnitude only.
@@ -128,7 +128,7 @@ def fetch_wells(rid: str, lat: float, lon: float, half: float = 1.0) -> list[dic
     }
     out: list[dict[str, str]] = []
     url: str | None = API
-    c = httpx.Client(timeout=240, headers={"User-Agent": "FieldShift/1.0 validation"})
+    c = httpx.Client(timeout=240, headers={"User-Agent": "IA-Intelligent-Agriculture/1.0 validation"})
     pages = 0
     while url and pages < 40:
         r = c.get(url, params=params if pages == 0 else None)
@@ -254,7 +254,7 @@ def main() -> None:
             }
         )
         print(
-            f"{lid:<20} published {pub:+.1f} ({period})  FieldShift same period {tr_p.slope_cm_yr:+.2f}, full record {tr_all.slope_cm_yr:+.2f} ({tr_all.status})"
+            f"{lid:<20} published {pub:+.1f} ({period})  IA same period {tr_p.slope_cm_yr:+.2f}, full record {tr_all.slope_cm_yr:+.2f} ({tr_all.status})"
         )
     usable = [x for x in rows if x.get("usable")]
     summary = {

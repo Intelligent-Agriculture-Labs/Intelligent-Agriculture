@@ -1,4 +1,4 @@
-"""Original score for the FieldShift film, synthesised from scratch (no samples, no generative-AI audio).
+"""Original score for the IA (Intelligent Agriculture) film, synthesised from scratch (no samples, no generative-AI audio).
 
 96 BPM, D minor, one bar = 2.5 s so every structural hit lands on the Space Apps template marks:
   0-5 s   intro: Earth from orbit. Shimmer, drone, Dm(add9) -> Bbmaj7 pads, riser into

@@ -1,6 +1,6 @@
-# Rotation science: the biology behind FieldShift's rotation planner
+# Rotation science: the biology behind IA's rotation planner
 
-FieldShift's rotation advice uses three data files:
+IA's rotation advice uses three data files:
 
 | File | What it holds |
 |---|---|
@@ -108,7 +108,7 @@ Deep-rooted crops such as sunflower and safflower also dry out the subsoil, so t
 
 - Break lengths are general guidance. Local inoculum, pathotypes, resistant varieties, tillage and climate can shorten or lengthen them. Soil tests (for PCN, *Aphanomyces*, SCN or clubroot) override the defaults.
 - Yield effects come from specific regions and should not be added up blindly. The checker should cap the combined effect.
-- Pathogen host lists are simplified to the crops in FieldShift. Weeds and volunteers can keep pathogens alive between hosts.
+- Pathogen host lists are simplified to the crops in IA. Weeds and volunteers can keep pathogens alive between hosts.
 
 ## References
 

@@ -44,7 +44,7 @@ Global awards include Best Use of Science, Best Use of Data, Best Use of Technol
 - Team size 1–6; all members registered for the same Local Event.
 
 ## Requirement → feature map
-| Requirement | FieldShift feature | Criterion |
+| Requirement | IA feature | Criterion |
 |---|---|---|
 | Use NASA EO data integrally | NASA POWER drives every model (ET₀, water balance, GDD, SPI, climate trends); SMAP, MODIS NDVI/ET/LST and SRTM feed drought, scouting and erosion | Relevance |
 | Compare ≥ 3 rotation strategies incl. existing | **Field Shift** view: current rotation + ranked alternatives, 8 metrics, calendar | Relevance, Impact |

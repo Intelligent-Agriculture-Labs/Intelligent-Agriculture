@@ -43,7 +43,7 @@ def _tile(z: int, x: int, y: int) -> np.ndarray:
     else:
         if offline_mode():
             raise FileNotFoundError(name)
-        r = httpx.get(TILE_URL.format(z=z, x=x, y=y), timeout=30, headers={"User-Agent": "FieldShift/1.0"})
+        r = httpx.get(TILE_URL.format(z=z, x=x, y=y), timeout=30, headers={"User-Agent": "IA-Intelligent-Agriculture/1.0"})
         r.raise_for_status()
         raw = r.content
         (CACHE_DIR / "dem").mkdir(parents=True, exist_ok=True)

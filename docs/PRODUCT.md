@@ -1,6 +1,6 @@
-# FieldShift — product brief
+# IA · Intelligent Agriculture — product brief
 
-**One line:** FieldShift turns 40 years of NASA Earth observations into this week's farm decisions and next season's crop-rotation plan, with every answer one tap away from the evidence behind it.
+**One line:** IA turns 40 years of NASA Earth observations into this week's farm decisions and next season's crop-rotation plan, with every answer one tap away from the evidence behind it.
 
 ## Users
 1. **Smallholder farmers in low-connectivity, rain-fed regions.** Examples: maize/cowpea farmers in Machakos, Kenya. Cheap Android phone, intermittent data, Swahili or English. They need to know when to plant, whether a dry spell is coming, and which rotation spreads risk.
@@ -8,7 +8,7 @@
 3. **Extension agents and agronomists**, who advise many farms. They need the raw layers, exports, methods and uncertainty (Expert mode).
 
 ## The three questions every week
-| Question | How FieldShift answers |
+| Question | How IA answers |
 |---|---|
 | **1. Do I need to water, and how much, by when?** | A daily FAO-56 root-zone water balance driven by NASA POWER plus the forecast gives a card like "Irrigate 38 mm by Thu 16". The amount accounts for irrigation-method efficiency. Rain-fed fields get a "stress likely from…" warning with low-cost actions instead. |
 | **2. Is anything threatening my crop right now?** | Drought status (SPI/SPEI from 40 years of POWER rain, plus SMAP soil moisture and MODIS vegetation health). Disease risk from hourly humidity and temperature models (Hutton late blight, stripe rust, white mould…). Insect timing from degree-day models. Frost and heat warnings. NDVI anomaly → "scout this field". |
