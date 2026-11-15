@@ -107,7 +107,9 @@
     "allClearTitle": "Rien d'urgent cette semaine",
     "allClearText": "Votre parcelle va bien. Revenez dans quelques jours — IA se met à jour à chaque nouvelle prévision.",
     "waterUsed": "{{used}} sur {{total}} utilisés",
-    "noIrrigationNeededShort": "Pas nécessaire"
+    "noIrrigationNeededShort": "Pas nécessaire",
+    "expertGraceDa": "GRACE-DA nappe P{{p}}",
+    "expertEcostress": "ECOSTRESS {{v}} mm/j"
   },
   "why": {
     "title": "Pourquoi ce conseil ?",

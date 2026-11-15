@@ -152,11 +152,9 @@ export default function Home() {
                       a.drought.spi90 !== null ? `SPI-90 ${a.drought.spi90.toFixed(1)}` : null,
                       a.drought.sm_percentile !== null ? `SMAP P${Math.round(a.drought.sm_percentile)}` : null,
                       a.drought.vhi !== null ? `VHI ${Math.round(a.drought.vhi)}` : null,
-                      a.drought.grace_da ? `GRACE-DA GW P${Math.round(a.drought.grace_da.groundwater_pct)}` : null,
-                      a.water?.satellite?.smap?.rootzone_m3m3 != null
-                        ? `SMAP L4 ${a.water.satellite.smap.rootzone_m3m3.toFixed(2)} m³/m³`
-                        : null,
-                      a.water?.satellite?.et ? `ECOSTRESS ${a.water.satellite.et.last_et_mm.toFixed(1)} mm/d` : null,
+                      a.drought.grace_da ? tr("home.expertGraceDa", { p: Math.round(a.drought.grace_da.groundwater_pct) }) : null,
+                      a.water?.satellite?.smap?.rootzone_m3m3 != null ? `SMAP L4 ${a.water.satellite.smap.rootzone_m3m3.toFixed(2)} m³/m³` : null,
+                      a.water?.satellite?.et ? tr("home.expertEcostress", { v: a.water.satellite.et.last_et_mm.toFixed(1) }) : null,
                     ]
                       .filter(Boolean)
                       .join(" · ")}

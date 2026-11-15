@@ -1,0 +1,313 @@
+# Satellite checks of the water balance (engine/satellite_water.py): SMAP L4, ECOSTRESS, GRACE-DA; plus related series labels.
+sw_na: {en: "n/a", es: "s/d", fr: "n.d.", sw: "haipo", hi: "उपलब्ध नहीं", de: "k. A."}
+sw_pct_exceptionally_dry: {en: "exceptionally dry", es: "excepcionalmente seco", fr: "exceptionnellement sec", sw: "kavu kupita kiasi", hi: "असाधारण रूप से सूखा", de: "außergewöhnlich trocken"}
+sw_pct_extremely_dry: {en: "extremely dry", es: "extremadamente seco", fr: "extrêmement sec", sw: "kavu sana kabisa", hi: "अत्यधिक सूखा", de: "extrem trocken"}
+sw_pct_severely_dry: {en: "severely dry", es: "severamente seco", fr: "sévèrement sec", sw: "kavu sana", hi: "गंभीर रूप से सूखा", de: "stark trocken"}
+sw_pct_moderately_dry: {en: "moderately dry", es: "moderadamente seco", fr: "modérément sec", sw: "kavu kiasi", hi: "मध्यम सूखा", de: "mäßig trocken"}
+sw_pct_abnormally_dry: {en: "abnormally dry", es: "anormalmente seco", fr: "anormalement sec", sw: "kavu kuliko kawaida", hi: "असामान्य रूप से सूखा", de: "ungewöhnlich trocken"}
+sw_pct_near_normal: {en: "near normal", es: "cerca de lo normal", fr: "proche de la normale", sw: "karibu na kawaida", hi: "लगभग सामान्य", de: "nahe normal"}
+sw_pct_wet: {en: "wet", es: "húmedo", fr: "humide", sw: "unyevu", hi: "नम", de: "feucht"}
+
+# ---- SMAP L4
+sw_smap_caveat_1:
+  en: "SMAP L4 is a 9 km cell: it mixes your field with its surroundings and does not see irrigation on a single field."
+  es: "SMAP L4 es una celda de 9 km: mezcla su campo con el entorno y no ve el riego de un solo campo."
+  fr: "SMAP L4 est une maille de 9 km : elle mélange votre parcelle avec ses alentours et ne voit pas l'irrigation d'une seule parcelle."
+  sw: "SMAP L4 ni seli ya km 9: inachanganya shamba lako na mazingira yake na haioni umwagiliaji wa shamba moja."
+  hi: "SMAP L4 एक 9 किमी सेल है: यह आपके खेत को आसपास की ज़मीन के साथ मिला देता है और किसी एक खेत की सिंचाई नहीं देखता।"
+  de: "SMAP L4 ist eine 9-km-Zelle: Sie mischt Ihr Feld mit seiner Umgebung und sieht keine Bewässerung auf einem einzelnen Feld."
+sw_smap_caveat_2:
+  en: "SMAP L4 merges the satellite's surface measurement with a land model (NASA GMAO); the root zone is modelled, not measured directly."
+  es: "SMAP L4 combina la medición satelital de superficie con un modelo de suelo (NASA GMAO); la zona de raíces se modela, no se mide directamente."
+  fr: "SMAP L4 fusionne la mesure de surface du satellite avec un modèle de surface (NASA GMAO) ; la zone racinaire est modélisée, pas mesurée directement."
+  sw: "SMAP L4 huunganisha kipimo cha setilaiti cha juu ya udongo na modeli ya ardhi (NASA GMAO); eneo la mizizi linakadiriwa kwa modeli, halipimwi moja kwa moja."
+  hi: "SMAP L4 उपग्रह के सतही माप को एक भूमि मॉडल (NASA GMAO) से मिलाता है; जड़ क्षेत्र मॉडल से निकाला जाता है, सीधे मापा नहीं जाता।"
+  de: "SMAP L4 verbindet die Oberflächenmessung des Satelliten mit einem Landoberflächenmodell (NASA GMAO); der Wurzelraum ist modelliert, nicht direkt gemessen."
+sw_smap_step_obs:
+  en: "NASA SMAP L4 ({date}, 9 km): root-zone soil moisture "
+  es: "NASA SMAP L4 ({date}, 9 km): humedad del suelo en la zona de raíces "
+  fr: "NASA SMAP L4 ({date}, 9 km) : humidité du sol dans la zone racinaire "
+  sw: "NASA SMAP L4 ({date}, km 9): unyevu wa udongo katika eneo la mizizi "
+  hi: "NASA SMAP L4 ({date}, 9 किमी): जड़ क्षेत्र की मिट्टी की नमी "
+  de: "NASA SMAP L4 ({date}, 9 km): Bodenfeuchte im Wurzelraum "
+sw_smap_rz_val: {en: "{v:.3f} m³/m³", es: "{v:.3f} m³/m³", fr: "{v:.3f} m³/m³", sw: "{v:.3f} m³/m³", hi: "{v:.3f} m³/m³", de: "{v:.3f} m³/m³"}
+sw_smap_sf_val: {en: ", surface {v:.3f} m³/m³", es: ", superficie {v:.3f} m³/m³", fr: ", surface {v:.3f} m³/m³", sw: ", juu ya udongo {v:.3f} m³/m³", hi: ", सतह {v:.3f} m³/m³", de: ", Oberfläche {v:.3f} m³/m³"}
+sw_smap_pctl:
+  en: "; wetter than {pct:.0f} % of days in SMAP's record for this place and season ({cls})."
+  es: "; más húmeda que el {pct:.0f} % de los días del registro de SMAP para este lugar y época ({cls})."
+  fr: "; plus humide que {pct:.0f} % des jours de l'archive SMAP pour ce lieu et cette saison ({cls})."
+  sw: "; yenye unyevu zaidi kuliko {pct:.0f} % ya siku katika kumbukumbu za SMAP kwa mahali hapa na msimu huu ({cls})."
+  hi: "; इस स्थान और मौसम के SMAP रिकॉर्ड के {pct:.0f} % दिनों से अधिक नम ({cls})।"
+  de: "; feuchter als an {pct:.0f} % der Tage in SMAPs Aufzeichnung für diesen Ort und diese Jahreszeit ({cls})."
+sw_smap_model:
+  en: "FieldShift's water balance for your crop: {pct:.0f} % of available root-zone water left."
+  es: "Balance hídrico de FieldShift para su cultivo: queda el {pct:.0f} % del agua disponible en la zona de raíces."
+  fr: "Bilan hydrique FieldShift pour votre culture : il reste {pct:.0f} % de l'eau disponible de la zone racinaire."
+  sw: "Mizania ya maji ya FieldShift kwa zao lako: imebaki {pct:.0f} % ya maji yanayopatikana katika eneo la mizizi."
+  hi: "आपकी फसल के लिए FieldShift का जल संतुलन: जड़ क्षेत्र का {pct:.0f} % उपलब्ध पानी बचा है।"
+  de: "FieldShift-Wasserbilanz für Ihre Kultur: {pct:.0f} % des verfügbaren Wassers im Wurzelraum sind noch da."
+sw_smap_validation:
+  en: "Check against SMAP L4 over 9 growing seasons (VALIDATION V3): the model's rain-fed root-zone water moved with SMAP's root zone with a median per-season correlation of 0.92 in Iowa, 0.66 in Córdoba and 0.64 in Machakos. SMAP is independent of the NASA POWER rain that drives the model."
+  es: "Comprobación con SMAP L4 en 9 temporadas (VALIDACIÓN V3): el agua de la zona de raíces del modelo en secano siguió a la de SMAP con una correlación mediana por temporada de 0,92 en Iowa, 0,66 en Córdoba y 0,64 en Machakos. SMAP es independiente de la lluvia NASA POWER que alimenta el modelo."
+  fr: "Contrôle avec SMAP L4 sur 9 saisons (VALIDATION V3) : l'eau de la zone racinaire du modèle en pluvial a suivi celle de SMAP avec une corrélation médiane par saison de 0,92 en Iowa, 0,66 à Córdoba et 0,64 à Machakos. SMAP est indépendant de la pluie NASA POWER qui alimente le modèle."
+  sw: "Ukaguzi dhidi ya SMAP L4 kwa misimu 9 (UTHIBITISHO V3): maji ya eneo la mizizi ya modeli kwa kilimo cha mvua yalienda sambamba na ya SMAP kwa uhusiano wa wastani wa 0.92 Iowa, 0.66 Córdoba na 0.64 Machakos kwa kila msimu. SMAP haitegemei mvua ya NASA POWER inayoendesha modeli."
+  hi: "9 मौसमों में SMAP L4 से जाँच (सत्यापन V3): वर्षा-आधारित खेती में मॉडल का जड़-क्षेत्र जल SMAP के साथ चला — प्रति मौसम माध्यिका सहसंबंध आयोवा में 0.92, कॉर्डोबा में 0.66 और मचाकोस में 0.64। SMAP मॉडल को चलाने वाली NASA POWER वर्षा से स्वतंत्र है।"
+  de: "Abgleich mit SMAP L4 über 9 Anbauperioden (VALIDIERUNG V3): Das Wurzelraumwasser des Modells (Regenfeldbau) lief mit dem von SMAP mit einer medianen Korrelation je Saison von 0,92 in Iowa, 0,66 in Córdoba und 0,64 in Machakos. SMAP ist unabhängig vom NASA-POWER-Regen, der das Modell antreibt."
+sw_smap_step_drier:
+  en: "The satellite sees drier soil than the model: rain may have missed your area (the model's rain is a ~50 km grid average) or the soil holds less water than assumed. Check the soil by hand before relying on the model."
+  es: "El satélite ve el suelo más seco que el modelo: puede que la lluvia no haya caído en su zona (la lluvia del modelo es un promedio de una cuadrícula de ~50 km) o que el suelo retenga menos agua de lo supuesto. Revise el suelo a mano antes de fiarse del modelo."
+  fr: "Le satellite voit un sol plus sec que le modèle : la pluie a pu manquer votre secteur (la pluie du modèle est une moyenne sur une maille de ~50 km) ou le sol retient moins d'eau que prévu. Vérifiez le sol à la main avant de vous fier au modèle."
+  sw: "Setilaiti inaona udongo mkavu kuliko modeli: huenda mvua haikunyesha eneo lako (mvua ya modeli ni wastani wa gridi ya ~km 50) au udongo unashika maji kidogo kuliko ilivyodhaniwa. Kagua udongo kwa mkono kabla ya kutegemea modeli."
+  hi: "उपग्रह मिट्टी को मॉडल से ज़्यादा सूखी देखता है: हो सकता है बारिश आपके इलाक़े में न हुई हो (मॉडल की बारिश ~50 किमी ग्रिड का औसत है) या मिट्टी अनुमान से कम पानी रखती हो। मॉडल पर भरोसा करने से पहले हाथ से मिट्टी जाँचें।"
+  de: "Der Satellit sieht trockeneren Boden als das Modell: Der Regen hat Ihre Gegend vielleicht verfehlt (der Modellregen ist ein ~50-km-Gittermittel) oder der Boden hält weniger Wasser als angenommen. Prüfen Sie den Boden von Hand, bevor Sie sich auf das Modell verlassen."
+sw_smap_step_wetter:
+  en: "The satellite sees wetter soil than the model: local rain the weather grid missed, or a shallow water table. Check the soil before irrigating or replanting."
+  es: "El satélite ve el suelo más húmedo que el modelo: lluvia local que la cuadrícula meteorológica no captó, o un nivel freático poco profundo. Revise el suelo antes de regar o resembrar."
+  fr: "Le satellite voit un sol plus humide que le modèle : pluie locale manquée par la grille météo, ou nappe peu profonde. Vérifiez le sol avant d'irriguer ou de ressemer."
+  sw: "Setilaiti inaona udongo wenye unyevu zaidi kuliko modeli: mvua ya eneo ambayo gridi ya hali ya hewa haikuiona, au maji ya ardhini yaliyo karibu na juu. Kagua udongo kabla ya kumwagilia au kupanda upya."
+  hi: "उपग्रह मिट्टी को मॉडल से ज़्यादा नम देखता है: स्थानीय बारिश जो मौसम ग्रिड से छूट गई, या उथला जल स्तर। सिंचाई या दोबारा बुवाई से पहले मिट्टी जाँचें।"
+  de: "Der Satellit sieht feuchteren Boden als das Modell: lokaler Regen, den das Wettergitter nicht erfasst hat, oder ein hoher Grundwasserspiegel. Prüfen Sie den Boden, bevor Sie bewässern oder nachsäen."
+sw_smap_step_agree:
+  en: "Satellite and model tell the same story; this raises confidence in the water advice."
+  es: "Satélite y modelo coinciden; esto aumenta la confianza en el consejo de agua."
+  fr: "Satellite et modèle racontent la même histoire ; cela renforce la confiance dans le conseil sur l'eau."
+  sw: "Setilaiti na modeli zinakubaliana; hii inaongeza imani katika ushauri wa maji."
+  hi: "उपग्रह और मॉडल एक ही बात कहते हैं; इससे पानी की सलाह पर भरोसा बढ़ता है।"
+  de: "Satellit und Modell zeigen dasselbe Bild; das stärkt das Vertrauen in die Wasserempfehlung."
+sw_smap_step_irrigated:
+  en: "On an irrigated field the 9 km SMAP cell mostly reflects the surrounding land, so it is shown for context only."
+  es: "En un campo regado, la celda SMAP de 9 km refleja sobre todo el terreno circundante, así que solo se muestra como contexto."
+  fr: "Sur une parcelle irriguée, la maille SMAP de 9 km reflète surtout les terres alentour ; elle n'est montrée qu'à titre de contexte."
+  sw: "Kwenye shamba linalomwagiliwa, seli ya SMAP ya km 9 huonyesha zaidi ardhi inayozunguka, kwa hiyo inaonyeshwa kama muktadha tu."
+  hi: "सिंचित खेत पर 9 किमी का SMAP सेल ज़्यादातर आसपास की ज़मीन दिखाता है, इसलिए इसे केवल संदर्भ के लिए दिखाया गया है।"
+  de: "Auf einem bewässerten Feld spiegelt die 9-km-SMAP-Zelle vor allem das Umland wider; sie wird daher nur zur Einordnung gezeigt."
+sw_smap_summary_satellite_drier:
+  en: "NASA SMAP soil moisture compared with the model's root zone: the satellite sees drier soil."
+  es: "Humedad del suelo NASA SMAP comparada con la zona de raíces del modelo: el satélite ve el suelo más seco."
+  fr: "Humidité du sol NASA SMAP comparée à la zone racinaire du modèle : le satellite voit un sol plus sec."
+  sw: "Unyevu wa udongo wa NASA SMAP ukilinganishwa na eneo la mizizi la modeli: setilaiti inaona udongo mkavu zaidi."
+  hi: "NASA SMAP मिट्टी की नमी बनाम मॉडल का जड़ क्षेत्र: उपग्रह मिट्टी को ज़्यादा सूखी देखता है।"
+  de: "NASA-SMAP-Bodenfeuchte im Vergleich zum Wurzelraum des Modells: Der Satellit sieht trockeneren Boden."
+sw_smap_summary_satellite_wetter:
+  en: "NASA SMAP soil moisture compared with the model's root zone: the satellite sees wetter soil."
+  es: "Humedad del suelo NASA SMAP comparada con la zona de raíces del modelo: el satélite ve el suelo más húmedo."
+  fr: "Humidité du sol NASA SMAP comparée à la zone racinaire du modèle : le satellite voit un sol plus humide."
+  sw: "Unyevu wa udongo wa NASA SMAP ukilinganishwa na eneo la mizizi la modeli: setilaiti inaona udongo wenye unyevu zaidi."
+  hi: "NASA SMAP मिट्टी की नमी बनाम मॉडल का जड़ क्षेत्र: उपग्रह मिट्टी को ज़्यादा नम देखता है।"
+  de: "NASA-SMAP-Bodenfeuchte im Vergleich zum Wurzelraum des Modells: Der Satellit sieht feuchteren Boden."
+sw_smap_summary_agree:
+  en: "NASA SMAP soil moisture compared with the model's root zone: they agree."
+  es: "Humedad del suelo NASA SMAP comparada con la zona de raíces del modelo: coinciden."
+  fr: "Humidité du sol NASA SMAP comparée à la zone racinaire du modèle : ils concordent."
+  sw: "Unyevu wa udongo wa NASA SMAP ukilinganishwa na eneo la mizizi la modeli: vinakubaliana."
+  hi: "NASA SMAP मिट्टी की नमी बनाम मॉडल का जड़ क्षेत्र: दोनों मेल खाते हैं।"
+  de: "NASA-SMAP-Bodenfeuchte im Vergleich zum Wurzelraum des Modells: Beide stimmen überein."
+sw_smap_summary_unknown:
+  en: "NASA SMAP soil moisture compared with the model's root zone."
+  es: "Humedad del suelo NASA SMAP comparada con la zona de raíces del modelo."
+  fr: "Humidité du sol NASA SMAP comparée à la zone racinaire du modèle."
+  sw: "Unyevu wa udongo wa NASA SMAP ukilinganishwa na eneo la mizizi la modeli."
+  hi: "NASA SMAP मिट्टी की नमी बनाम मॉडल का जड़ क्षेत्र।"
+  de: "NASA-SMAP-Bodenfeuchte im Vergleich zum Wurzelraum des Modells."
+sw_smap_model_name:
+  en: "SMAP L4 percentile vs. FAO-56 root-zone water balance"
+  es: "Percentil SMAP L4 frente al balance hídrico FAO-56 de la zona de raíces"
+  fr: "Centile SMAP L4 vs. bilan hydrique FAO-56 de la zone racinaire"
+  sw: "Asilimia-nafasi ya SMAP L4 dhidi ya mizania ya maji ya FAO-56 ya eneo la mizizi"
+  hi: "SMAP L4 पर्सेंटाइल बनाम FAO-56 जड़-क्षेत्र जल संतुलन"
+  de: "SMAP-L4-Perzentil vs. FAO-56-Wasserbilanz des Wurzelraums"
+sw_smap_note:
+  en: "Two independent estimates; SMAP's 9 km cell is coarse for one field."
+  es: "Dos estimaciones independientes; la celda de 9 km de SMAP es gruesa para un solo campo."
+  fr: "Deux estimations indépendantes ; la maille de 9 km de SMAP est grossière pour une seule parcelle."
+  sw: "Makadirio mawili huru; seli ya SMAP ya km 9 ni kubwa mno kwa shamba moja."
+  hi: "दो स्वतंत्र अनुमान; एक खेत के लिए SMAP का 9 किमी सेल मोटा है।"
+  de: "Zwei unabhängige Schätzungen; die 9-km-Zelle von SMAP ist für ein einzelnes Feld grob."
+
+# ---- ECOSTRESS
+sw_et_caveat_1:
+  en: "ECOSTRESS flies on the Space Station: overpasses are irregular and clouds block many of them."
+  es: "ECOSTRESS va en la Estación Espacial: los pasos son irregulares y las nubes bloquean muchos."
+  fr: "ECOSTRESS est à bord de la Station spatiale : les passages sont irréguliers et les nuages en masquent beaucoup."
+  sw: "ECOSTRESS iko kwenye Kituo cha Anga: inapita kwa vipindi visivyo vya kawaida na mawingu huzuia mapito mengi."
+  hi: "ECOSTRESS अंतरिक्ष स्टेशन पर है: इसके गुज़रने का समय अनियमित है और बादल कई बार उसे रोक देते हैं।"
+  de: "ECOSTRESS fliegt auf der Raumstation: Die Überflüge sind unregelmäßig, und Wolken verdecken viele davon."
+sw_et_caveat_2:
+  en: "One overpass is an instantaneous snapshot scaled to a daily total; single days are noisy (±1–2 mm/day)."
+  es: "Cada paso es una instantánea escalada a un total diario; los días sueltos son ruidosos (±1–2 mm/día)."
+  fr: "Un passage est un instantané extrapolé à un total journalier ; les jours isolés sont bruités (±1–2 mm/jour)."
+  sw: "Pito moja ni picha ya papo hapo iliyopanuliwa kuwa jumla ya siku; siku moja moja zina makosa (±1–2 mm/siku)."
+  hi: "एक बार गुज़रना एक क्षणिक तस्वीर है जिसे दैनिक कुल में बदला जाता है; अकेले दिनों में उतार-चढ़ाव होता है (±1–2 मिमी/दिन)।"
+  de: "Ein Überflug ist eine Momentaufnahme, hochgerechnet auf eine Tagessumme; einzelne Tage streuen stark (±1–2 mm/Tag)."
+sw_et_step_obs:
+  en: "NASA ECOSTRESS (70 m, sees this field) measured {et:.1f} mm/day of evapotranspiration on {date}"
+  es: "NASA ECOSTRESS (70 m, ve este campo) midió {et:.1f} mm/día de evapotranspiración el {date}"
+  fr: "NASA ECOSTRESS (70 m, voit cette parcelle) a mesuré {et:.1f} mm/jour d'évapotranspiration le {date}"
+  sw: "NASA ECOSTRESS (m 70, inaona shamba hili) ilipima mvukeuvukizaji wa {et:.1f} mm/siku tarehe {date}"
+  hi: "NASA ECOSTRESS (70 मी, यह खेत देखता है) ने {date} को {et:.1f} मिमी/दिन वाष्पोत्सर्जन मापा"
+  de: "NASA ECOSTRESS (70 m, sieht dieses Feld) maß am {date} eine Evapotranspiration von {et:.1f} mm/Tag"
+sw_et_model_val:
+  en: "; the model had {et:.1f} mm/day."
+  es: "; el modelo tenía {et:.1f} mm/día."
+  fr: " ; le modèle donnait {et:.1f} mm/jour."
+  sw: "; modeli ilikuwa na {et:.1f} mm/siku."
+  hi: "; मॉडल में {et:.1f} मिमी/दिन था।"
+  de: "; das Modell hatte {et:.1f} mm/Tag."
+sw_et_step_recent:
+  en: "Clear overpasses in the last {days} days: {n}; satellite / model ET = {ratio:.2f}."
+  es: "Pasos despejados en los últimos {days} días: {n}; ET satélite / modelo = {ratio:.2f}."
+  fr: "Passages dégagés sur les {days} derniers jours : {n} ; ET satellite / modèle = {ratio:.2f}."
+  sw: "Mapito bila mawingu katika siku {days} zilizopita: {n}; ET ya setilaiti / modeli = {ratio:.2f}."
+  hi: "पिछले {days} दिनों में साफ़ आसमान वाले पास: {n}; उपग्रह / मॉडल ET = {ratio:.2f}।"
+  de: "Wolkenfreie Überflüge in den letzten {days} Tagen: {n}; ET Satellit / Modell = {ratio:.2f}."
+sw_et_validation:
+  en: "Check at the Fallon alfalfa field (VALIDATION V6): on 110 clear summer overpasses 2018–2024 ECOSTRESS averaged 2.3 mm/day and the model 6.2 mm/day, with no day-to-day agreement. The model assumes a well-watered crop without cutting cycles; ECOSTRESS's daily total is scaled from one instant. Which is closer on your field cannot be told from one check, so this comparison is shown but does not trigger advice."
+  es: "Comprobación en el campo de alfalfa de Fallon (VALIDACIÓN V6): en 110 pasos despejados de verano 2018–2024, ECOSTRESS promedió 2,3 mm/día y el modelo 6,2 mm/día, sin concordancia día a día. El modelo supone un cultivo bien regado sin ciclos de corte; el total diario de ECOSTRESS se escala desde un instante. Con una sola comprobación no se puede saber cuál se acerca más en su campo, así que esta comparación se muestra pero no genera consejos."
+  fr: "Contrôle sur la luzerne de Fallon (VALIDATION V6) : sur 110 passages d'été dégagés 2018–2024, ECOSTRESS donnait en moyenne 2,3 mm/jour et le modèle 6,2 mm/jour, sans accord jour par jour. Le modèle suppose une culture bien arrosée sans cycles de coupe ; le total journalier d'ECOSTRESS est extrapolé d'un instant. Un seul contrôle ne permet pas de dire lequel est le plus proche sur votre parcelle : cette comparaison est montrée mais ne déclenche pas de conseil."
+  sw: "Ukaguzi kwenye shamba la alfalfa la Fallon (UTHIBITISHO V6): katika mapito 110 ya kiangazi bila mawingu 2018–2024, ECOSTRESS ilikuwa wastani wa 2.3 mm/siku na modeli 6.2 mm/siku, bila kukubaliana siku kwa siku. Modeli inadhani zao lenye maji ya kutosha bila mizunguko ya ukataji; jumla ya siku ya ECOSTRESS hupanuliwa kutoka papo hapo moja. Kipi kiko karibu zaidi kwenye shamba lako hakiwezi kujulikana kwa ukaguzi mmoja, kwa hiyo ulinganisho huu unaonyeshwa lakini hauleti ushauri."
+  hi: "फ़ॉलन अल्फ़ाल्फ़ा खेत पर जाँच (सत्यापन V6): 2018–2024 की गर्मियों के 110 साफ़ पासों पर ECOSTRESS का औसत 2.3 मिमी/दिन और मॉडल का 6.2 मिमी/दिन रहा, दिन-प्रतिदिन कोई मेल नहीं। मॉडल कटाई चक्रों के बिना भरपूर पानी वाली फसल मानता है; ECOSTRESS का दैनिक कुल एक क्षण से निकाला जाता है। एक जाँच से यह नहीं कहा जा सकता कि आपके खेत पर कौन ज़्यादा सही है, इसलिए यह तुलना दिखाई जाती है पर इससे कोई सलाह नहीं बनती।"
+  de: "Abgleich am Luzernefeld in Fallon (VALIDIERUNG V6): Bei 110 wolkenfreien Sommerüberflügen 2018–2024 lag ECOSTRESS im Mittel bei 2,3 mm/Tag und das Modell bei 6,2 mm/Tag, ohne Übereinstimmung von Tag zu Tag. Das Modell nimmt einen gut versorgten Bestand ohne Schnittzyklen an; die Tagessumme von ECOSTRESS ist aus einem Moment hochgerechnet. Welcher Wert auf Ihrem Feld näher liegt, lässt sich aus einem Abgleich nicht sagen; der Vergleich wird daher gezeigt, löst aber keine Empfehlung aus."
+sw_et_summary:
+  en: "NASA ECOSTRESS measured field ET {et:.1f} mm/day on {date}"
+  es: "NASA ECOSTRESS midió una ET del campo de {et:.1f} mm/día el {date}"
+  fr: "NASA ECOSTRESS a mesuré une ET de la parcelle de {et:.1f} mm/jour le {date}"
+  sw: "NASA ECOSTRESS ilipima ET ya shamba ya {et:.1f} mm/siku tarehe {date}"
+  hi: "NASA ECOSTRESS ने {date} को खेत का ET {et:.1f} मिमी/दिन मापा"
+  de: "NASA ECOSTRESS maß am {date} eine Feld-ET von {et:.1f} mm/Tag"
+sw_et_summary_ratio:
+  en: " ({ratio:.0%} of the model's estimate in the last {days} days)."
+  es: " ({ratio:.0%} de la estimación del modelo en los últimos {days} días)."
+  fr: " ({ratio:.0%} de l'estimation du modèle sur les {days} derniers jours)."
+  sw: " ({ratio:.0%} ya makadirio ya modeli katika siku {days} zilizopita)."
+  hi: " (पिछले {days} दिनों में मॉडल के अनुमान का {ratio:.0%})।"
+  de: " ({ratio:.0%} der Modellschätzung in den letzten {days} Tagen)."
+sw_et_model_name:
+  en: "ECOSTRESS L3T JET ensemble ET vs. FAO-56 crop ET"
+  es: "ET del conjunto JET de ECOSTRESS L3T frente a la ET del cultivo FAO-56"
+  fr: "ET de l'ensemble JET ECOSTRESS L3T vs. ET de culture FAO-56"
+  sw: "ET ya mkusanyiko wa JET wa ECOSTRESS L3T dhidi ya ET ya zao ya FAO-56"
+  hi: "ECOSTRESS L3T JET एन्सेम्बल ET बनाम FAO-56 फसल ET"
+  de: "ECOSTRESS-L3T-JET-Ensemble-ET vs. FAO-56-Bestandes-ET"
+sw_et_note:
+  en: "Field-scale satellite measurement, but on clear overpass days only and in large disagreement with the model at the validation field."
+  es: "Medición satelital a escala de campo, pero solo en días de paso despejado y con gran discrepancia con el modelo en el campo de validación."
+  fr: "Mesure satellite à l'échelle de la parcelle, mais seulement les jours de passage dégagé et en fort désaccord avec le modèle sur la parcelle de validation."
+  sw: "Kipimo cha setilaiti kwa kiwango cha shamba, lakini siku za mapito bila mawingu tu na kinatofautiana sana na modeli kwenye shamba la uthibitisho."
+  hi: "खेत-स्तर का उपग्रह माप, पर केवल साफ़ आसमान वाले दिनों में, और सत्यापन खेत पर मॉडल से बहुत अलग।"
+  de: "Satellitenmessung auf Feldebene, aber nur an wolkenfreien Überflugtagen und am Validierungsfeld in starkem Widerspruch zum Modell."
+
+# ---- GRACE-DA
+sw_gda_caveat_1:
+  en: "GRACE-DA is a land model (Catchment) that assimilates GRACE/GRACE-FO; it covers ~25 km cells, not your well."
+  es: "GRACE-DA es un modelo de suelo (Catchment) que asimila GRACE/GRACE-FO; cubre celdas de ~25 km, no su pozo."
+  fr: "GRACE-DA est un modèle de surface (Catchment) qui assimile GRACE/GRACE-FO ; il couvre des mailles de ~25 km, pas votre puits."
+  sw: "GRACE-DA ni modeli ya ardhi (Catchment) inayoingiza data za GRACE/GRACE-FO; inashughulikia seli za ~km 25, si kisima chako."
+  hi: "GRACE-DA एक भूमि मॉडल (Catchment) है जो GRACE/GRACE-FO डेटा को समाहित करता है; यह ~25 किमी सेल दिखाता है, आपका कुआँ नहीं।"
+  de: "GRACE-DA ist ein Landoberflächenmodell (Catchment), das GRACE/GRACE-FO assimiliert; es deckt ~25-km-Zellen ab, nicht Ihren Brunnen."
+sw_gda_caveat_2:
+  en: "Percentiles compare with the model's own 1948–2012 climatology; the data arrive ~2–3 months late."
+  es: "Los percentiles se comparan con la climatología del propio modelo 1948–2012; los datos llegan con ~2–3 meses de retraso."
+  fr: "Les centiles se comparent à la climatologie 1948–2012 du modèle lui-même ; les données arrivent avec ~2–3 mois de retard."
+  sw: "Asilimia-nafasi hulinganishwa na takwimu za modeli yenyewe za 1948–2012; data hufika kwa kuchelewa ~miezi 2–3."
+  hi: "पर्सेंटाइल मॉडल की अपनी 1948–2012 जलवायु से तुलना करते हैं; डेटा ~2–3 महीने देर से आता है।"
+  de: "Die Perzentile beziehen sich auf die modelleigene Klimatologie 1948–2012; die Daten kommen ~2–3 Monate verspätet."
+sw_series_grace_gws: {en: "Groundwater percentile (GRACE-DA, weekly)", es: "Percentil de agua subterránea (GRACE-DA, semanal)", fr: "Centile des eaux souterraines (GRACE-DA, hebdomadaire)", sw: "Asilimia-nafasi ya maji ya ardhini (GRACE-DA, kila wiki)", hi: "भूजल पर्सेंटाइल (GRACE-DA, साप्ताहिक)", de: "Grundwasser-Perzentil (GRACE-DA, wöchentlich)"}
+sw_series_grace_rtzsm: {en: "Root-zone soil moisture percentile (GRACE-DA)", es: "Percentil de humedad del suelo en la zona de raíces (GRACE-DA)", fr: "Centile d'humidité du sol de la zone racinaire (GRACE-DA)", sw: "Asilimia-nafasi ya unyevu wa udongo katika eneo la mizizi (GRACE-DA)", hi: "जड़ क्षेत्र मिट्टी नमी पर्सेंटाइल (GRACE-DA)", de: "Bodenfeuchte-Perzentil im Wurzelraum (GRACE-DA)"}
+sw_gda_step_obs:
+  en: "NASA GRACE-FO data assimilation (week of {date}, ~25 km): groundwater is wetter than {pct:.0f} % of the same weeks in 1948–2012 ({cls})."
+  es: "Asimilación de datos NASA GRACE-FO (semana del {date}, ~25 km): el agua subterránea está más alta que en el {pct:.0f} % de las mismas semanas de 1948–2012 ({cls})."
+  fr: "Assimilation de données NASA GRACE-FO (semaine du {date}, ~25 km) : les eaux souterraines sont plus abondantes que {pct:.0f} % des mêmes semaines de 1948–2012 ({cls})."
+  sw: "Uingizaji wa data za NASA GRACE-FO (wiki ya {date}, ~km 25): maji ya ardhini ni mengi kuliko {pct:.0f} % ya wiki hizo hizo katika 1948–2012 ({cls})."
+  hi: "NASA GRACE-FO डेटा समावेशन ({date} का सप्ताह, ~25 किमी): भूजल 1948–2012 के उन्हीं सप्ताहों के {pct:.0f} % से अधिक है ({cls})।"
+  de: "NASA-GRACE-FO-Datenassimilation (Woche ab {date}, ~25 km): Das Grundwasser ist feuchter als in {pct:.0f} % derselben Wochen 1948–2012 ({cls})."
+sw_gda_rz:
+  en: " Root-zone soil moisture: {pct:.0f}th percentile."
+  es: " Humedad del suelo en la zona de raíces: percentil {pct:.0f}."
+  fr: " Humidité du sol de la zone racinaire : {pct:.0f}e centile."
+  sw: " Unyevu wa udongo katika eneo la mizizi: asilimia-nafasi ya {pct:.0f}."
+  hi: " जड़ क्षेत्र की मिट्टी की नमी: {pct:.0f}वाँ पर्सेंटाइल।"
+  de: " Bodenfeuchte im Wurzelraum: {pct:.0f}. Perzentil."
+sw_gda_sf:
+  en: " Surface soil moisture: {pct:.0f}th percentile."
+  es: " Humedad del suelo superficial: percentil {pct:.0f}."
+  fr: " Humidité du sol en surface : {pct:.0f}e centile."
+  sw: " Unyevu wa udongo wa juu: asilimia-nafasi ya {pct:.0f}."
+  hi: " सतही मिट्टी की नमी: {pct:.0f}वाँ पर्सेंटाइल।"
+  de: " Bodenfeuchte an der Oberfläche: {pct:.0f}. Perzentil."
+sw_gda_latency:
+  en: "Latency: the latest week is {days} days old."
+  es: "Retraso: la semana más reciente tiene {days} días."
+  fr: "Délai : la semaine la plus récente date de {days} jours."
+  sw: "Ucheleweshaji: wiki ya karibuni zaidi ina umri wa siku {days}."
+  hi: "विलंब: नवीनतम सप्ताह {days} दिन पुराना है।"
+  de: "Verzögerung: Die neueste Woche ist {days} Tage alt."
+sw_gda_usdm:
+  en: "These are the maps behind the U.S. Drought Monitor's groundwater input, now worldwide (GRACEDADM_CLSM025GL_7D)."
+  es: "Son los mapas detrás del dato de agua subterránea del U.S. Drought Monitor, ahora a escala mundial (GRACEDADM_CLSM025GL_7D)."
+  fr: "Ce sont les cartes derrière l'indicateur eaux souterraines du U.S. Drought Monitor, désormais mondiales (GRACEDADM_CLSM025GL_7D)."
+  sw: "Hizi ndizo ramani zinazotumika kwa takwimu za maji ya ardhini za U.S. Drought Monitor, sasa kwa dunia nzima (GRACEDADM_CLSM025GL_7D)."
+  hi: "ये वही नक्शे हैं जिनसे U.S. Drought Monitor का भूजल इनपुट बनता है, अब पूरी दुनिया के लिए (GRACEDADM_CLSM025GL_7D)।"
+  de: "Das sind die Karten hinter dem Grundwasser-Input des U.S. Drought Monitor, jetzt weltweit (GRACEDADM_CLSM025GL_7D)."
+sw_gda_step_low:
+  en: "On an irrigated farm, severely low groundwater means wells may yield less and pumping costs rise; plan water use for the season and check your well level."
+  es: "En una finca regada, un nivel de agua subterránea muy bajo significa que los pozos pueden dar menos y que el bombeo cuesta más; planifique el uso del agua para la temporada y revise el nivel de su pozo."
+  fr: "Sur une exploitation irriguée, des eaux souterraines très basses signifient que les puits peuvent moins débiter et que le pompage coûte plus ; planifiez l'eau de la saison et vérifiez le niveau de votre puits."
+  sw: "Kwenye shamba linalomwagiliwa, maji ya ardhini yaliyopungua sana yanamaanisha visima vinaweza kutoa kidogo na gharama za kusukuma kupanda; panga matumizi ya maji kwa msimu na ukague kina cha kisima chako."
+  hi: "सिंचित खेत पर बहुत कम भूजल का मतलब है कि कुएँ कम पानी दे सकते हैं और पंपिंग महँगी होती है; मौसम के लिए पानी की योजना बनाएँ और अपने कुएँ का स्तर जाँचें।"
+  de: "Auf einem bewässerten Betrieb heißt sehr niedriges Grundwasser: Brunnen können weniger liefern und das Pumpen wird teurer; planen Sie den Wasserverbrauch der Saison und prüfen Sie Ihren Brunnenpegel."
+sw_gda_summary:
+  en: "Groundwater here is at the {pct:.0f}th percentile for the time of year (GRACE-DA, week of {date})."
+  es: "El agua subterránea aquí está en el percentil {pct:.0f} para esta época del año (GRACE-DA, semana del {date})."
+  fr: "Les eaux souterraines sont ici au {pct:.0f}e centile pour la saison (GRACE-DA, semaine du {date})."
+  sw: "Maji ya ardhini hapa yako kwenye asilimia-nafasi ya {pct:.0f} kwa wakati huu wa mwaka (GRACE-DA, wiki ya {date})."
+  hi: "यहाँ भूजल साल के इस समय के लिए {pct:.0f}वें पर्सेंटाइल पर है (GRACE-DA, {date} का सप्ताह)।"
+  de: "Das Grundwasser liegt hier für die Jahreszeit beim {pct:.0f}. Perzentil (GRACE-DA, Woche ab {date})."
+sw_gda_model_name:
+  en: "GRACE/GRACE-FO data assimilation into the Catchment land model (NASA GSFC)"
+  es: "Asimilación de datos GRACE/GRACE-FO en el modelo de suelo Catchment (NASA GSFC)"
+  fr: "Assimilation des données GRACE/GRACE-FO dans le modèle de surface Catchment (NASA GSFC)"
+  sw: "Uingizaji wa data za GRACE/GRACE-FO kwenye modeli ya ardhi ya Catchment (NASA GSFC)"
+  hi: "Catchment भूमि मॉडल में GRACE/GRACE-FO डेटा समावेशन (NASA GSFC)"
+  de: "GRACE/GRACE-FO-Datenassimilation in das Landoberflächenmodell Catchment (NASA GSFC)"
+sw_gda_note:
+  en: "Model + satellite gravity; regional, and 2–3 months late."
+  es: "Modelo + gravimetría satelital; regional y con 2–3 meses de retraso."
+  fr: "Modèle + gravimétrie satellite ; régional, et avec 2–3 mois de retard."
+  sw: "Modeli + mvutano wa setilaiti; ya kikanda, na huchelewa miezi 2–3."
+  hi: "मॉडल + उपग्रह गुरुत्व; क्षेत्रीय, और 2–3 महीने देर से।"
+  de: "Modell + Satelliten-Schwerefeld; regional und 2–3 Monate verspätet."
+
+# ---- series labels and drought step (engine/service.py)
+sw_series_eta_model: {en: "Crop ET (model)", es: "ET del cultivo (modelo)", fr: "ET de la culture (modèle)", sw: "ET ya zao (modeli)", hi: "फसल ET (मॉडल)", de: "Bestandes-ET (Modell)"}
+sw_series_smap_sf: {en: "Surface soil moisture (SMAP L4, 0–5 cm, 9 km)", es: "Humedad del suelo superficial (SMAP L4, 0–5 cm, 9 km)", fr: "Humidité du sol en surface (SMAP L4, 0–5 cm, 9 km)", sw: "Unyevu wa udongo wa juu (SMAP L4, sm 0–5, km 9)", hi: "सतही मिट्टी की नमी (SMAP L4, 0–5 सेमी, 9 किमी)", de: "Bodenfeuchte Oberfläche (SMAP L4, 0–5 cm, 9 km)"}
+sw_series_smap_rz: {en: "Root-zone soil moisture (SMAP L4, 0–100 cm, 9 km)", es: "Humedad del suelo en la zona de raíces (SMAP L4, 0–100 cm, 9 km)", fr: "Humidité du sol de la zone racinaire (SMAP L4, 0–100 cm, 9 km)", sw: "Unyevu wa udongo katika eneo la mizizi (SMAP L4, sm 0–100, km 9)", hi: "जड़ क्षेत्र की मिट्टी की नमी (SMAP L4, 0–100 सेमी, 9 किमी)", de: "Bodenfeuchte Wurzelraum (SMAP L4, 0–100 cm, 9 km)"}
+dr_step_grace_da:
+  en: "Groundwater now (NASA GRACE-FO data assimilation, week of {date}, ~25 km): {pct:.0f}th percentile"
+  es: "Agua subterránea ahora (asimilación de datos NASA GRACE-FO, semana del {date}, ~25 km): percentil {pct:.0f}"
+  fr: "Eaux souterraines actuelles (assimilation de données NASA GRACE-FO, semaine du {date}, ~25 km) : {pct:.0f}e centile"
+  sw: "Maji ya ardhini sasa (uingizaji wa data za NASA GRACE-FO, wiki ya {date}, ~km 25): asilimia-nafasi ya {pct:.0f}"
+  hi: "अभी भूजल (NASA GRACE-FO डेटा समावेशन, {date} का सप्ताह, ~25 किमी): {pct:.0f}वाँ पर्सेंटाइल"
+  de: "Grundwasser aktuell (NASA-GRACE-FO-Datenassimilation, Woche ab {date}, ~25 km): {pct:.0f}. Perzentil"
+dr_step_grace_da_rz:
+  en: "; root-zone soil moisture {pct:.0f}th"
+  es: "; humedad del suelo en la zona de raíces, percentil {pct:.0f}"
+  fr: " ; humidité du sol de la zone racinaire {pct:.0f}e"
+  sw: "; unyevu wa udongo katika eneo la mizizi, ya {pct:.0f}"
+  hi: "; जड़ क्षेत्र की मिट्टी की नमी {pct:.0f}वाँ"
+  de: "; Bodenfeuchte im Wurzelraum {pct:.0f}."
+dr_step_grace_da_end:
+  en: ". Context only; not part of the level."
+  es: ". Solo contexto; no forma parte del nivel."
+  fr: ". Pour contexte seulement ; n'entre pas dans le niveau."
+  sw: ". Ni muktadha tu; si sehemu ya kiwango."
+  hi: "। केवल संदर्भ; स्तर का हिस्सा नहीं।"
+  de: ". Nur zur Einordnung; nicht Teil der Stufe."
+
+# ---- rain provenance with near-real-time IMERG (engine/water_supply.py)
+rain_step_imerg_nrt:
+  en: "Rain: NASA POWER (MERRA-2) and NASA GPM IMERG satellite rain averaged day by day — IMERG Final (gauge-calibrated) to {final}, then IMERG {runs} near-real-time runs from NASA GES DISC to {last} ({days} days). Against 18 rain gauges on 6 continents the Final blend beat POWER alone at 16 (VALIDATION V13); the near-real-time runs are not gauge-calibrated and are checked against Final in VALIDATION V13b."
+  es: "Lluvia: NASA POWER (MERRA-2) y lluvia satelital NASA GPM IMERG promediadas día a día — IMERG Final (calibrada con pluviómetros) hasta el {final}, luego las ejecuciones casi en tiempo real IMERG {runs} de NASA GES DISC hasta el {last} ({days} días). Frente a 18 pluviómetros en 6 continentes, la combinación con Final superó a POWER solo en 16 (VALIDACIÓN V13); las ejecuciones casi en tiempo real no están calibradas con pluviómetros y se comparan con Final en la VALIDACIÓN V13b."
+  fr: "Pluie : NASA POWER (MERRA-2) et pluie satellite NASA GPM IMERG moyennées jour par jour — IMERG Final (calée sur pluviomètres) jusqu'au {final}, puis les productions quasi temps réel IMERG {runs} de la NASA GES DISC jusqu'au {last} ({days} jours). Face à 18 pluviomètres sur 6 continents, le mélange Final a battu POWER seul dans 16 cas (VALIDATION V13) ; les productions quasi temps réel ne sont pas calées sur pluviomètres et sont comparées à Final dans la VALIDATION V13b."
+  sw: "Mvua: NASA POWER (MERRA-2) na mvua ya setilaiti ya NASA GPM IMERG zimewekwa wastani siku kwa siku — IMERG Final (iliyorekebishwa kwa vipimo vya mvua) hadi {final}, kisha matoleo ya karibu-wakati-halisi ya IMERG {runs} kutoka NASA GES DISC hadi {last} (siku {days}). Dhidi ya vipimo 18 vya mvua katika mabara 6 mchanganyiko wa Final ulishinda POWER peke yake mara 16 (UTHIBITISHO V13); matoleo ya karibu-wakati-halisi hayajarekebishwa kwa vipimo vya mvua na yanakaguliwa dhidi ya Final katika UTHIBITISHO V13b."
+  hi: "वर्षा: NASA POWER (MERRA-2) और NASA GPM IMERG उपग्रह वर्षा का दिन-प्रतिदिन औसत — {final} तक IMERG Final (वर्षामापी से अंशांकित), फिर {last} तक NASA GES DISC के IMERG {runs} लगभग-वास्तविक-समय रन ({days} दिन)। 6 महाद्वीपों के 18 वर्षामापियों पर Final मिश्रण 16 जगह अकेले POWER से बेहतर रहा (सत्यापन V13); लगभग-वास्तविक-समय रन वर्षामापी से अंशांकित नहीं हैं और सत्यापन V13b में Final से जाँचे गए हैं।"
+  de: "Regen: NASA POWER (MERRA-2) und NASA-GPM-IMERG-Satellitenregen, Tag für Tag gemittelt – IMERG Final (an Regenmessern kalibriert) bis {final}, danach die echtzeitnahen IMERG-{runs}-Läufe von NASA GES DISC bis {last} ({days} Tage). Gegen 18 Regenmesser auf 6 Kontinenten schlug die Final-Kombination POWER allein an 16 Stationen (VALIDIERUNG V13); die echtzeitnahen Läufe sind nicht an Regenmessern kalibriert und werden in VALIDIERUNG V13b gegen Final geprüft."
