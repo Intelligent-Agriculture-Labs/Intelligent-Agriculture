@@ -89,7 +89,7 @@ Texts are in `config/pest_disease.yaml` in six languages. Actions are scouting a
 - **Default:** an hour is wet when RH ≥ 90 %, or when rain ≥ 0.1 mm falls in that hour. RH ≥ 90 % performed best overall against sensors in Brazil, Canada, Italy and the U.S. (fraction correct 0.87–0.92; Sentelhas et al. 2008).
 - **Alternative:** dew-point depression with hysteresis: wet from T − Td ≤ 1.8 °C until T − Td ≥ 2.2 °C (Rao et al. 1998, as tested by Sentelhas et al. 2008).
 - **Missing dew point:** derived from T and RH with the Magnus formula (Alduchov & Eskridge 1996).
-- **Wet periods:** runs of wet hours. Dry gaps up to a pathogen-specific length (Magarey's D50 classes) do not end a period.
+- **Wet periods:** runs of wet hours. Dry gaps up to a pathogen-specific length (Magarey's D50 classes) do not end a period. A period counts on every calendar day it covers.
 
 **Generic infection equation** (Magarey, Sutton & Thayer 2005, eqs. 1–2), used for the fungal leaf diseases:
 
