@@ -1,0 +1,36 @@
+# Season planner (engine/planner.py; POST /api/planner): stage names, operations, notes.
+plan_stage_0: {en: "Establishment complete", es: "Establecimiento completo", fr: "Levée terminée", sw: "Kuota kumekamilika", hi: "स्थापना पूरी", de: "Feldaufgang abgeschlossen"}
+plan_stage_1: {en: "Full canopy / flowering", es: "Cobertura completa / floración", fr: "Couvert complet / floraison", sw: "Majani kamili / kuchanua", hi: "पूरा छत्र / फूल आना", de: "Bestandesschluss / Blüte"}
+plan_stage_2: {en: "Start of ripening", es: "Inicio de la maduración", fr: "Début de maturation", sw: "Mwanzo wa kukomaa", hi: "पकने की शुरुआत", de: "Beginn der Reife"}
+plan_stage_3: {en: "Maturity / harvest", es: "Madurez / cosecha", fr: "Maturité / récolte", sw: "Kukomaa / mavuno", hi: "परिपक्वता / कटाई", de: "Reife / Ernte"}
+plan_cutting: {en: "Cutting {n}", es: "Corte {n}", fr: "Coupe {n}", sw: "Ukataji wa {n}", hi: "{n}वीं कटाई", de: "{n}. Schnitt"}
+plan_op_greenup: {en: "Green-up / first irrigation check", es: "Rebrote / primera revisión del riego", fr: "Reprise de végétation / premier contrôle de l'irrigation", sw: "Kuchipua upya / ukaguzi wa kwanza wa umwagiliaji", hi: "हरियाली लौटना / पहली सिंचाई जाँच", de: "Vegetationsbeginn / erste Bewässerungskontrolle"}
+plan_op_sowing: {en: "Sowing", es: "Siembra", fr: "Semis", sw: "Kupanda", hi: "बुवाई", de: "Aussaat"}
+plan_op_scout:
+  en: "{pest}: {stage} — {action}"
+  es: "{pest}: {stage} — {action}"
+  fr: "{pest} : {stage} — {action}"
+  sw: "{pest}: {stage} — {action}"
+  hi: "{pest}: {stage} — {action}"
+  de: "{pest}: {stage} – {action}"
+plan_op_peak_irrigation:
+  en: "Peak irrigation month: ~{mm:.0f} mm"
+  es: "Mes de mayor riego: ~{mm:.0f} mm"
+  fr: "Mois de pointe d'irrigation : ~{mm:.0f} mm"
+  sw: "Mwezi wa kilele cha umwagiliaji: ~mm {mm:.0f}"
+  hi: "सबसे अधिक सिंचाई का महीना: ~{mm:.0f} मिमी"
+  de: "Monat mit dem höchsten Bewässerungsbedarf: ~{mm:.0f} mm"
+plan_alloc_note:
+  en: "Your allocation covers ~{pct} % of the full-irrigation need ({need} mm); plan deficit irrigation, a split season, or a shorter-season crop."
+  es: "Su cupo cubre ~{pct} % de la necesidad de riego completo ({need} mm); planifique riego deficitario, una temporada partida o un cultivo de ciclo más corto."
+  fr: "Votre quota couvre ~{pct} % du besoin d'irrigation complète ({need} mm) ; prévoyez une irrigation déficitaire, une saison fractionnée ou une culture plus courte."
+  sw: "Mgao wako unatosheleza ~{pct} % ya mahitaji ya umwagiliaji kamili (mm {need}); panga umwagiliaji pungufu, msimu uliogawanywa, au zao la msimu mfupi."
+  hi: "आपका आवंटन पूर्ण सिंचाई ज़रूरत ({need} मिमी) का ~{pct} % पूरा करता है; घाटा सिंचाई, बँटा हुआ मौसम या कम अवधि की फसल की योजना बनाएँ।"
+  de: "Ihr Kontingent deckt ~{pct} % des vollen Bewässerungsbedarfs ({need} mm); Defizitbewässerung, eine geteilte Saison oder eine kürzere Kultur einplanen."
+plan_why:
+  en: "Every number here comes from re-running the FieldShift season model for each of the last 15 seasons of NASA POWER weather at your field: dates are medians, 'spread' is the 10–90 % range between years."
+  es: "Cada número viene de volver a correr el modelo de temporada FieldShift para cada una de las últimas 15 temporadas de clima NASA POWER en su campo: las fechas son medianas y la 'dispersión' es el rango 10–90 % entre años."
+  fr: "Chaque chiffre provient du modèle de saison FieldShift relancé pour chacune des 15 dernières saisons de météo NASA POWER sur votre parcelle : les dates sont des médianes, l'« écart » est la plage 10–90 % entre années."
+  sw: "Kila namba hapa inatokana na kuendesha upya modeli ya msimu ya FieldShift kwa kila moja ya misimu 15 iliyopita ya hali ya hewa ya NASA POWER shambani kwako: tarehe ni wastani wa kati, 'tofauti' ni kiwango cha 10–90 % kati ya miaka."
+  hi: "यहाँ हर संख्या आपके खेत पर पिछले 15 मौसमों के NASA POWER मौसम के लिए FieldShift मौसम मॉडल दोबारा चलाकर मिली है: तिथियाँ माध्यिका हैं, 'फैलाव' वर्षों के बीच 10–90 % सीमा है।"
+  de: "Jede Zahl hier stammt aus dem FieldShift-Saisonmodell, neu gerechnet für jede der letzten 15 Saisons mit NASA-POWER-Wetter an Ihrem Feld: Termine sind Mediane, „Streuung“ ist der 10–90-%-Bereich zwischen den Jahren."

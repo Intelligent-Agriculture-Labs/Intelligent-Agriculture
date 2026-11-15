@@ -35,7 +35,7 @@ export function SyncCard() {
         <Txt v="label">{tr("sync.farmName")}</Txt>
         <TextInput
           accessibilityLabel={tr("sync.farmName")}
-          value={farmName}
+          value={farmName === "My farm" ? tr("sync.defaultFarmName") : farmName}
           onChangeText={setFarmName}
           style={[ui.input, { color: t.text, borderColor: t.border, backgroundColor: t.card, marginTop: space.xs }]}
           testID="farm-name"

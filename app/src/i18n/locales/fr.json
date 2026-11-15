@@ -38,7 +38,9 @@
     "none": "Aucun",
     "gotIt": "Compris",
     "showAll": "Tout afficher ({{n}})",
-    "showLess": "Afficher moins"
+    "showLess": "Afficher moins",
+    "weekEarlier": "7 jours plus tôt",
+    "weekLater": "7 jours plus tard"
   },
   "banner": {
     "mock": "DONNÉES FICTIVES — le serveur FieldShift est injoignable. Les chiffres ci-dessous sont des exemples, pas des données NASA.",
@@ -295,7 +297,10 @@
     "subtitleSatellite": "Images Sentinel-2 à 10 m de votre parcelle sur 12 mois : verdure, coupes et récoltes, et zones de gestion par IA.",
     "layersButton": "Calques",
     "baseTitle": "Fond de carte",
-    "legendTitle": "Ce que signifient les couleurs"
+    "legendTitle": "Ce que signifient les couleurs",
+    "a11yMap": "Carte",
+    "a11yTerrain": "Carte du relief",
+    "addCorner": "Ajouter un coin"
   },
   "plan": {
     "title": "Planificateur de saison",
@@ -453,7 +458,8 @@
     "joinTitle": "Relier cet appareil",
     "joining": "Connexion à la ferme {{code}}…",
     "invalidCode": "Ce lien ne contient pas de code de ferme valide.",
-    "openSettings": "Ouvrir les réglages"
+    "openSettings": "Ouvrir les réglages",
+    "defaultFarmName": "Ma ferme"
   },
   "sat": {
     "noOutline": "Astuce : dessinez le contour de votre parcelle (Modifier la parcelle) pour des statistiques exactes. Sinon, un petit carré autour du point est analysé.",
@@ -550,7 +556,8 @@
     "errPassword": "Veuillez saisir votre mot de passe.",
     "errPasswordShort": "Le mot de passe doit contenir au moins 8 caractères.",
     "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe"
+    "hidePassword": "Masquer le mot de passe",
+    "errSession": "Votre session a expiré. Veuillez vous reconnecter."
   },
   "share": {
     "title": "Partager la ferme avec un code",
@@ -733,5 +740,20 @@
     "copy": "Copier le texte",
     "copied": "Copié — collez-le dans un SMS ou WhatsApp",
     "share": "Partager…"
+  },
+  "units": {
+    "days": "jours",
+    "doy": "jour de l'année",
+    "daysYr": "jours/an",
+    "mmYr": "mm/an",
+    "tHaYr": "t/ha/an",
+    "usdHaYr": "USD/ha/an",
+    "index": "indice",
+    "pctLowerBetter": "% (plus bas = mieux)",
+    "kgNHaYr": "kg N/ha/an",
+    "cDecade": "°C/décennie",
+    "fDecade": "°F/décennie",
+    "mmDecade": "mm/décennie",
+    "inDecade": "in/décennie"
   }
 }

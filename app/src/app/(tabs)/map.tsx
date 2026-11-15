@@ -52,8 +52,15 @@ export default function MapScreen() {
   const [layersOpen, setLayersOpen] = useState(false);
   const retries = useRef(0);
   const q = useQuery<TerrainResponse>(
-    field && view === "terrain" ? `${field.lat},${field.lon},${field.crop},${JSON.stringify(field.polygon ?? null)}` : null,
-    () => api.terrain({ lat: field!.lat, lon: field!.lon, crop: field!.crop, polygon: field!.polygon && field!.polygon.length >= 3 ? field!.polygon : null }),
+    field && view === "terrain" ? `${field.lat},${field.lon},${field.crop},${JSON.stringify(field.polygon ?? null)},${settings.lang}` : null,
+    () =>
+      api.terrain({
+        lat: field!.lat,
+        lon: field!.lon,
+        crop: field!.crop,
+        polygon: field!.polygon && field!.polygon.length >= 3 ? field!.polygon : null,
+        lang: settings.lang,
+      }),
   );
   const { data, origin, savedAt, error } = q;
   if (!field) return <Redirect href="/onboarding" />;

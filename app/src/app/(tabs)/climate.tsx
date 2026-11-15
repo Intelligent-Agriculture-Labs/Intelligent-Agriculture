@@ -18,7 +18,7 @@ export default function Climate() {
   const { t: tr, i18n } = useTranslation();
   const { field, settings } = useStore();
   const sys = settings.units;
-  const q = useQuery<ClimateResponse>(field ? `${field.lat},${field.lon}` : null, () => api.climate(field!.lat, field!.lon));
+  const q = useQuery<ClimateResponse>(field ? `${field.lat},${field.lon},${settings.lang}` : null, () => api.climate(field!.lat, field!.lon, settings.lang));
   const { data, origin, error } = q;
 
   if (!field) return <Redirect href="/onboarding" />;

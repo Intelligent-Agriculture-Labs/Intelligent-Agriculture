@@ -1,0 +1,371 @@
+# Rotation comparison (POST /api/rotations, engine/service.py rotations_api) and climate trends (GET /api/climate).
+# Template names/ideas: rot_tpl_<template id>_name / _idea (English must match config/rotations.yaml).
+rot_tpl_current_name: {en: "Your current rotation", es: "Su rotación actual", fr: "Votre rotation actuelle", sw: "Mzunguko wako wa sasa", hi: "आपका मौजूदा फसल-चक्र", de: "Ihre jetzige Fruchtfolge"}
+rot_tpl_current_idea: {en: "What you grow today.", es: "Lo que siembra hoy.", fr: "Ce que vous cultivez aujourd'hui.", sw: "Unachopanda leo.", hi: "आज आप जो उगाते हैं।", de: "Was Sie heute anbauen."}
+rot_tpl_alfalfa_teff_wheat_name:
+  en: "Alfalfa (3 yr) → teff → winter wheat"
+  es: "Alfalfa (3 años) → tef → trigo de invierno"
+  fr: "Luzerne (3 ans) → teff → blé d'hiver"
+  sw: "Alfalfa (miaka 3) → tefu → ngano ya baridi"
+  hi: "रिजका (3 वर्ष) → टेफ → रबी गेहूं"
+  de: "Luzerne (3 J.) → Teff → Winterweizen"
+rot_tpl_alfalfa_teff_wheat_idea:
+  en: "Keep the alfalfa income, then break the stand with two short, lower-water grass crops."
+  es: "Mantenga el ingreso de la alfalfa y luego rompa la pradera con dos gramíneas cortas que usan menos agua."
+  fr: "Gardez le revenu de la luzerne, puis cassez la prairie avec deux graminées courtes et moins gourmandes en eau."
+  sw: "Endelea na mapato ya alfalfa, kisha ivunje kwa mazao mawili mafupi ya nyasi yanayotumia maji kidogo."
+  hi: "रिजका की आय बनाए रखें, फिर कम पानी वाली दो छोटी घास-फसलों से खेत बदलें।"
+  de: "Das Luzerne-Einkommen behalten, dann den Bestand mit zwei kurzen, wassersparenden Gräsern umbrechen."
+rot_tpl_split_season_alfalfa_name:
+  en: "Split-season alfalfa (stop irrigating after mid-July)"
+  es: "Alfalfa con riego parcial (dejar de regar a mediados de julio)"
+  fr: "Luzerne en irrigation partielle (arrêt mi-juillet)"
+  sw: "Alfalfa ya msimu nusu (acha kumwagilia katikati ya Julai)"
+  hi: "आंशिक-मौसम रिजका (मध्य जुलाई के बाद सिंचाई बंद)"
+  de: "Luzerne mit Teilsaison-Bewässerung (ab Mitte Juli nicht mehr bewässern)"
+rot_tpl_split_season_alfalfa_idea:
+  en: "Same crop, less water: alfalfa survives summer dormancy; skip the low-value late cuts in drought years."
+  es: "Mismo cultivo, menos agua: la alfalfa sobrevive al reposo de verano; omita los cortes tardíos de poco valor en años secos."
+  fr: "Même culture, moins d'eau : la luzerne survit à la dormance estivale ; renoncez aux coupes tardives peu rentables les années sèches."
+  sw: "Zao lile lile, maji kidogo: alfalfa huvumilia kulala wakati wa kiangazi; acha mikato ya mwisho yenye thamani ndogo miaka ya ukame."
+  hi: "वही फसल, कम पानी: रिजका गर्मी की सुप्तावस्था झेल लेता है; सूखे वर्षों में कम मूल्य वाली देर की कटाइयाँ छोड़ें।"
+  de: "Gleiche Kultur, weniger Wasser: Luzerne übersteht die Sommerruhe; in Dürrejahren die wenig lohnenden späten Schnitte auslassen."
+rot_tpl_alfalfa_silage_triticale_name:
+  en: "Alfalfa (3 yr) → corn silage → winter triticale"
+  es: "Alfalfa (3 años) → maíz para ensilaje → triticale de invierno"
+  fr: "Luzerne (3 ans) → maïs ensilage → triticale d'hiver"
+  sw: "Alfalfa (miaka 3) → sileji ya mahindi → tritikale ya baridi"
+  hi: "रिजका (3 वर्ष) → मक्का साइलेज → शीतकालीन ट्रिटिकेल"
+  de: "Luzerne (3 J.) → Silomais → Wintertriticale"
+rot_tpl_alfalfa_silage_triticale_idea:
+  en: "Use the alfalfa nitrogen credit in a high-yield forage crop, then keep the ground covered over winter."
+  es: "Aproveche el nitrógeno que deja la alfalfa en un forraje de alto rendimiento y mantenga el suelo cubierto en invierno."
+  fr: "Valorisez l'azote laissé par la luzerne dans un fourrage productif, puis gardez le sol couvert en hiver."
+  sw: "Tumia naitrojeni iliyoachwa na alfalfa kwa zao la lishe lenye mavuno mengi, kisha funika ardhi wakati wa baridi."
+  hi: "रिजका से मिली नाइट्रोजन का उपयोग अधिक उपज वाले चारे में करें, फिर सर्दियों में ज़मीन ढकी रखें।"
+  de: "Die Stickstoff-Nachwirkung der Luzerne in einer ertragreichen Futterkultur nutzen, dann den Boden über Winter bedeckt halten."
+rot_tpl_wheat_safflower_barley_cover_name:
+  en: "Winter wheat → safflower → barley + rye/vetch cover"
+  es: "Trigo de invierno → cártamo → cebada + cobertura de centeno/veza"
+  fr: "Blé d'hiver → carthame → orge + couvert seigle/vesce"
+  sw: "Ngano ya baridi → safflower → shayiri + zao funika la raye/vechi"
+  hi: "रबी गेहूं → कुसुम → जौ + राई/वेच आवरण"
+  de: "Winterweizen → Färberdistel → Gerste + Roggen/Wicke-Zwischenfrucht"
+rot_tpl_wheat_safflower_barley_cover_idea:
+  en: "Use winter and spring moisture; deep-rooted safflower scavenges water and breaks cereal disease."
+  es: "Aproveche la humedad de invierno y primavera; el cártamo de raíz profunda capta agua y corta las enfermedades de cereales."
+  fr: "Valorisez l'humidité d'hiver et de printemps ; le carthame à enracinement profond puise l'eau et coupe les maladies des céréales."
+  sw: "Tumia unyevu wa baridi na masika; safflower yenye mizizi mirefu hufikia maji na kuvunja magonjwa ya nafaka."
+  hi: "सर्दी और वसंत की नमी का उपयोग करें; गहरी जड़ वाला कुसुम पानी खींचता है और अनाज के रोग-चक्र तोड़ता है।"
+  de: "Winter- und Frühjahrsfeuchte nutzen; die tiefwurzelnde Färberdistel erschließt Wasser und unterbricht Getreidekrankheiten."
+rot_tpl_maize_soy_wheat_cover_name:
+  en: "Maize → soybean → winter wheat + cover"
+  es: "Maíz → soja → trigo de invierno + cobertura"
+  fr: "Maïs → soja → blé d'hiver + couvert"
+  sw: "Mahindi → soya → ngano ya baridi + zao funika"
+  hi: "मक्का → सोयाबीन → रबी गेहूं + आवरण फसल"
+  de: "Mais → Soja → Winterweizen + Zwischenfrucht"
+rot_tpl_maize_soy_wheat_cover_idea:
+  en: "Classic legume–cereal rotation that breaks the corn-rootworm cycle and adds residue."
+  es: "Rotación clásica leguminosa–cereal que corta el ciclo del gusano de la raíz del maíz y aporta rastrojo."
+  fr: "Rotation classique légumineuse–céréale qui coupe le cycle de la chrysomèle du maïs et apporte des résidus."
+  sw: "Mzunguko wa kawaida wa jamii ya kunde na nafaka unaovunja mzunguko wa funza wa mizizi ya mahindi na kuongeza masalia."
+  hi: "क्लासिक दलहन–अनाज चक्र जो मक्का जड़ कीट का चक्र तोड़ता है और फसल अवशेष बढ़ाता है।"
+  de: "Klassische Leguminosen-Getreide-Folge, die den Maiswurzelbohrer-Zyklus unterbricht und Ernterückstände liefert."
+rot_tpl_sorghum_cowpea_maize_name:
+  en: "Sorghum → cowpea → maize"
+  es: "Sorgo → caupí → maíz"
+  fr: "Sorgho → niébé → maïs"
+  sw: "Mtama → kunde → mahindi"
+  hi: "ज्वार → लोबिया → मक्का"
+  de: "Sorghum → Augenbohne → Mais"
+rot_tpl_sorghum_cowpea_maize_idea:
+  en: "Drought-tolerant cereal, a nitrogen-fixing legume, then maize using that nitrogen."
+  es: "Un cereal tolerante a la sequía, una leguminosa que fija nitrógeno y luego maíz que aprovecha ese nitrógeno."
+  fr: "Une céréale tolérante à la sécheresse, une légumineuse qui fixe l'azote, puis du maïs qui en profite."
+  sw: "Nafaka inayostahimili ukame, zao la jamii ya kunde linaloweka naitrojeni, kisha mahindi yanayotumia naitrojeni hiyo."
+  hi: "सूखा सहने वाला अनाज, नाइट्रोजन जोड़ने वाली दलहन, फिर वह नाइट्रोजन उपयोग करने वाला मक्का।"
+  de: "Trockenheitstolerantes Getreide, eine stickstoffbindende Leguminose, dann Mais, der diesen Stickstoff nutzt."
+rot_tpl_millet_cowpea_name:
+  en: "Pearl millet → cowpea"
+  es: "Mijo perla → caupí"
+  fr: "Mil → niébé"
+  sw: "Uwele → kunde"
+  hi: "बाजरा → लोबिया"
+  de: "Perlhirse → Augenbohne"
+rot_tpl_millet_cowpea_idea:
+  en: "Very low water need; cowpea fixes nitrogen and breaks Striga and stem-borer cycles."
+  es: "Muy poca necesidad de agua; el caupí fija nitrógeno y corta los ciclos de Striga y del barrenador del tallo."
+  fr: "Très faible besoin en eau ; le niébé fixe l'azote et coupe les cycles du Striga et des foreurs de tiges."
+  sw: "Mahitaji kidogo sana ya maji; kunde huweka naitrojeni na kuvunja mizunguko ya kiduha (Striga) na vipekecha shina."
+  hi: "पानी की बहुत कम ज़रूरत; लोबिया नाइट्रोजन जोड़ता है और स्ट्राइगा व तना छेदक के चक्र तोड़ता है।"
+  de: "Sehr geringer Wasserbedarf; die Augenbohne bindet Stickstoff und unterbricht Striga- und Stängelbohrer-Zyklen."
+rot_tpl_potato_wheat_alfalfa_name:
+  en: "Potato → winter wheat → alfalfa (2 yr)"
+  es: "Papa → trigo de invierno → alfalfa (2 años)"
+  fr: "Pomme de terre → blé d'hiver → luzerne (2 ans)"
+  sw: "Viazi → ngano ya baridi → alfalfa (miaka 2)"
+  hi: "आलू → रबी गेहूं → रिजका (2 वर्ष)"
+  de: "Kartoffel → Winterweizen → Luzerne (2 J.)"
+rot_tpl_potato_wheat_alfalfa_idea:
+  en: "High-value crop followed by a cereal and a perennial legume that rebuilds soil structure."
+  es: "Un cultivo de alto valor seguido de un cereal y una leguminosa perenne que reconstruye la estructura del suelo."
+  fr: "Une culture à forte valeur suivie d'une céréale et d'une légumineuse pérenne qui reconstruit la structure du sol."
+  sw: "Zao la thamani kubwa likifuatwa na nafaka na zao la kudumu la jamii ya kunde linalojenga upya muundo wa udongo."
+  hi: "उच्च मूल्य वाली फसल, फिर अनाज और एक बहुवर्षीय दलहन जो मिट्टी की संरचना फिर से बनाती है।"
+  de: "Eine hochwertige Kultur, gefolgt von Getreide und einer mehrjährigen Leguminose, die die Bodenstruktur wieder aufbaut."
+rot_tpl_sunflower_wheat_cover_name:
+  en: "Sunflower → winter wheat → cover crop"
+  es: "Girasol → trigo de invierno → cultivo de cobertura"
+  fr: "Tournesol → blé d'hiver → couvert végétal"
+  sw: "Alizeti → ngano ya baridi → zao funika"
+  hi: "सूरजमुखी → रबी गेहूं → आवरण फसल"
+  de: "Sonnenblume → Winterweizen → Zwischenfrucht"
+rot_tpl_sunflower_wheat_cover_idea:
+  en: "Deep-rooted oilseed and a winter cereal; the cover crop protects soil in the bare window."
+  es: "Una oleaginosa de raíz profunda y un cereal de invierno; la cobertura protege el suelo cuando quedaría desnudo."
+  fr: "Un oléagineux à enracinement profond et une céréale d'hiver ; le couvert protège le sol pendant l'interculture."
+  sw: "Zao la mafuta lenye mizizi mirefu na nafaka ya baridi; zao funika hulinda udongo ukiwa wazi."
+  hi: "गहरी जड़ वाली तिलहन और शीतकालीन अनाज; आवरण फसल खाली समय में मिट्टी बचाती है।"
+  de: "Tiefwurzelnde Ölsaat und Wintergetreide; die Zwischenfrucht schützt den Boden in der Brachezeit."
+rot_tpl_maize_bean_sorghum_name:
+  en: "Maize → dry bean → sorghum"
+  es: "Maíz → frijol → sorgo"
+  fr: "Maïs → haricot sec → sorgho"
+  sw: "Mahindi → maharagwe → mtama"
+  hi: "मक्का → राजमा → ज्वार"
+  de: "Mais → Trockenbohne → Sorghum"
+rot_tpl_maize_bean_sorghum_idea:
+  en: "Alternates grass and legume families; sorghum tolerates the driest year in the cycle."
+  es: "Alterna gramíneas y leguminosas; el sorgo aguanta el año más seco del ciclo."
+  fr: "Alterne graminées et légumineuses ; le sorgho supporte l'année la plus sèche du cycle."
+  sw: "Hubadilishana jamii ya nyasi na ya kunde; mtama huvumilia mwaka mkavu zaidi wa mzunguko."
+  hi: "घास और दलहन परिवार बारी-बारी से; ज्वार चक्र का सबसे सूखा वर्ष झेल लेता है।"
+  de: "Wechselt Gräser und Leguminosen ab; Sorghum verträgt das trockenste Jahr im Zyklus."
+rot_tpl_sweetpotato_maize_cowpea_name:
+  en: "Sweet potato → maize → cowpea"
+  es: "Camote → maíz → caupí"
+  fr: "Patate douce → maïs → niébé"
+  sw: "Viazi vitamu → mahindi → kunde"
+  hi: "शकरकंद → मक्का → लोबिया"
+  de: "Süßkartoffel → Mais → Augenbohne"
+rot_tpl_sweetpotato_maize_cowpea_idea:
+  en: "A ground-covering root crop protects soil and spreads risk; cowpea restores nitrogen for the next maize."
+  es: "Un cultivo de raíz que cubre el suelo lo protege y reparte el riesgo; el caupí repone nitrógeno para el siguiente maíz."
+  fr: "Une plante à racines couvrante protège le sol et répartit le risque ; le niébé restitue de l'azote pour le maïs suivant."
+  sw: "Zao la mizizi linalofunika ardhi hulinda udongo na kugawa hatari; kunde hurudisha naitrojeni kwa mahindi yanayofuata."
+  hi: "ज़मीन ढकने वाली कंद फसल मिट्टी बचाती है और जोखिम बाँटती है; लोबिया अगली मक्का के लिए नाइट्रोजन लौटाता है।"
+  de: "Eine bodendeckende Knollenkultur schützt den Boden und verteilt das Risiko; die Augenbohne liefert Stickstoff für den nächsten Mais."
+rot_note_few_seasons:
+  en: "{crop}: not enough simulated seasons"
+  es: "{crop}: no hay suficientes temporadas simuladas"
+  fr: "{crop} : pas assez de saisons simulées"
+  sw: "{crop}: misimu iliyoigwa haitoshi"
+  hi: "{crop}: पर्याप्त अनुकरणित मौसम नहीं"
+  de: "{crop}: zu wenige simulierte Saisons"
+rot_note_frost:
+  en: "{crop}: frost during the season in >30 % of years"
+  es: "{crop}: heladas durante la temporada en >30 % de los años"
+  fr: "{crop} : gel pendant la saison dans >30 % des années"
+  sw: "{crop}: baridi kali wakati wa msimu katika >30 % ya miaka"
+  hi: "{crop}: >30 % वर्षों में मौसम के दौरान पाला"
+  de: "{crop}: Frost während der Saison in >30 % der Jahre"
+rot_note_unfit:
+  en: "{crop}: local season too short/cold or too dry"
+  es: "{crop}: la temporada local es demasiado corta/fría o seca"
+  fr: "{crop} : saison locale trop courte/froide ou trop sèche"
+  sw: "{crop}: msimu wa hapa ni mfupi/baridi mno au mkavu mno"
+  hi: "{crop}: स्थानीय मौसम बहुत छोटा/ठंडा या बहुत सूखा"
+  de: "{crop}: örtliche Saison zu kurz/kalt oder zu trocken"
+met_water_irrigated: {en: "Irrigation water", es: "Agua de riego", fr: "Eau d'irrigation", sw: "Maji ya umwagiliaji", hi: "सिंचाई का पानी", de: "Bewässerungswasser"}
+met_water_rainfed: {en: "Crop water shortfall", es: "Déficit de agua del cultivo", fr: "Déficit en eau de la culture", sw: "Upungufu wa maji ya zao", hi: "फसल में पानी की कमी", de: "Wasserdefizit der Kultur"}
+met_income_margin: {en: "Gross margin (indicative)", es: "Margen bruto (orientativo)", fr: "Marge brute (indicative)", sw: "Faida ghafi (makadirio)", hi: "सकल मार्जिन (अनुमानित)", de: "Deckungsbeitrag (Richtwert)"}
+met_income_net:
+  en: "Net revenue after ~30 % input costs (indicative)"
+  es: "Ingreso neto tras ~30 % de costos de insumos (orientativo)"
+  fr: "Revenu net après ~30 % de coûts d'intrants (indicatif)"
+  sw: "Mapato halisi baada ya ~30 % ya gharama za pembejeo (makadirio)"
+  hi: "~30 % लागत घटाकर शुद्ध आय (अनुमानित)"
+  de: "Nettoerlös nach ~30 % Betriebsmittelkosten (Richtwert)"
+met_soil: {en: "Soil-health index", es: "Índice de salud del suelo", fr: "Indice de santé du sol", sw: "Kielelezo cha afya ya udongo", hi: "मिट्टी स्वास्थ्य सूचकांक", de: "Bodengesundheitsindex"}
+met_erosion: {en: "Erosion risk (relative)", es: "Riesgo de erosión (relativo)", fr: "Risque d'érosion (relatif)", sw: "Hatari ya mmomonyoko (linganishi)", hi: "कटाव जोखिम (सापेक्ष)", de: "Erosionsrisiko (relativ)"}
+met_pests: {en: "Pest-cycle disruption", es: "Interrupción de ciclos de plagas", fr: "Rupture des cycles de ravageurs", sw: "Kuvunja mizunguko ya wadudu", hi: "कीट-चक्र में रुकावट", de: "Unterbrechung von Schädlingszyklen"}
+met_risk: {en: "Climate risk (bad seasons)", es: "Riesgo climático (malas temporadas)", fr: "Risque climatique (mauvaises saisons)", sw: "Hatari ya hali ya hewa (misimu mibaya)", hi: "जलवायु जोखिम (खराब मौसम)", de: "Klimarisiko (schlechte Jahre)"}
+met_nitrogen: {en: "Biological N", es: "N biológico", fr: "Azote biologique", sw: "Naitrojeni ya kibiolojia", hi: "जैविक नाइट्रोजन", de: "Biologischer Stickstoff"}
+met_bare_days: {en: "Bare-soil days", es: "Días de suelo desnudo", fr: "Jours de sol nu", sw: "Siku za udongo wazi", hi: "खाली मिट्टी के दिन", de: "Tage mit offenem Boden"}
+unit_mm_yr: {en: "mm/yr", es: "mm/año", fr: "mm/an", sw: "mm/mwaka", hi: "मिमी/वर्ष", de: "mm/Jahr"}
+unit_usd_ha_yr: {en: "USD/ha/yr", es: "USD/ha/año", fr: "USD/ha/an", sw: "USD/ha/mwaka", hi: "USD/हे/वर्ष", de: "USD/ha/Jahr"}
+unit_index: {en: "index", es: "índice", fr: "indice", sw: "kielelezo", hi: "सूचकांक", de: "Index"}
+unit_pct_lower_better: {en: "% (lower better)", es: "% (menos es mejor)", fr: "% (plus bas = mieux)", sw: "% (chini ni bora)", hi: "% (कम बेहतर)", de: "% (niedriger ist besser)"}
+unit_kgn_ha_yr: {en: "kg N/ha/yr", es: "kg N/ha/año", fr: "kg N/ha/an", sw: "kg N/ha/mwaka", hi: "किग्रा N/हे/वर्ष", de: "kg N/ha/Jahr"}
+unit_days_yr: {en: "days/yr", es: "días/año", fr: "jours/an", sw: "siku/mwaka", hi: "दिन/वर्ष", de: "Tage/Jahr"}
+unit_days: {en: "days", es: "días", fr: "jours", sw: "siku", hi: "दिन", de: "Tage"}
+unit_doy: {en: "day of year", es: "día del año", fr: "jour de l'année", sw: "siku ya mwaka", hi: "वर्ष का दिन", de: "Tag im Jahr"}
+rot_ev_peak:
+  en: "Peak crop water demand in {month}: ET₀ ≈ {et0:.0f} mm/month vs. {rain:.0f} mm rain (NASA POWER 1991–2020)."
+  es: "Máxima demanda de agua en {month}: ET₀ ≈ {et0:.0f} mm/mes frente a {rain:.0f} mm de lluvia (NASA POWER 1991–2020)."
+  fr: "Besoin en eau maximal en {month} : ET₀ ≈ {et0:.0f} mm/mois contre {rain:.0f} mm de pluie (NASA POWER 1991–2020)."
+  sw: "Mahitaji makubwa ya maji mwezi {month}: ET₀ ≈ mm {et0:.0f}/mwezi dhidi ya mvua mm {rain:.0f} (NASA POWER 1991–2020)."
+  hi: "{month} में फसल जल माँग चरम पर: ET₀ ≈ {et0:.0f} मिमी/माह, जबकि वर्षा {rain:.0f} मिमी (NASA POWER 1991–2020)।"
+  de: "Höchster Wasserbedarf im {month}: ET₀ ≈ {et0:.0f} mm/Monat gegenüber {rain:.0f} mm Regen (NASA POWER 1991–2020)."
+rot_ev_irrigated:
+  en: "{crop}: simulated median irrigation {irr:.0f} mm, median yield {y:.1f} t/ha over {n} seasons."
+  es: "{crop}: riego mediano simulado {irr:.0f} mm, rendimiento mediano {y:.1f} t/ha en {n} temporadas."
+  fr: "{crop} : irrigation médiane simulée {irr:.0f} mm, rendement médian {y:.1f} t/ha sur {n} saisons."
+  sw: "{crop}: umwagiliaji wa wastani wa kati ulioigwa mm {irr:.0f}, mavuno ya wastani wa kati t/ha {y:.1f} kwa misimu {n}."
+  hi: "{crop}: {n} मौसमों में अनुकरणित माध्यिका सिंचाई {irr:.0f} मिमी, माध्यिका उपज {y:.1f} t/ha।"
+  de: "{crop}: simulierte mediane Bewässerung {irr:.0f} mm, medianer Ertrag {y:.1f} t/ha über {n} Saisons."
+rot_ev_rainfed:
+  en: "{crop}: simulated median yield {y:.1f} t/ha; failed seasons {fail:.0f} % of {n}."
+  es: "{crop}: rendimiento mediano simulado {y:.1f} t/ha; temporadas fallidas {fail:.0f} % de {n}."
+  fr: "{crop} : rendement médian simulé {y:.1f} t/ha ; saisons ratées {fail:.0f} % sur {n}."
+  sw: "{crop}: mavuno ya wastani wa kati yaliyoigwa t/ha {y:.1f}; misimu iliyoshindwa {fail:.0f} % ya {n}."
+  hi: "{crop}: अनुकरणित माध्यिका उपज {y:.1f} t/ha; {n} में से {fail:.0f} % मौसम विफल।"
+  de: "{crop}: simulierter medianer Ertrag {y:.1f} t/ha; Missernten in {fail:.0f} % von {n} Saisons."
+rot_ev_slope_low:
+  en: "Field slope {slope:.1f} % (NASA SRTM 30 m) — low erosion leverage."
+  es: "Pendiente del campo {slope:.1f} % (NASA SRTM 30 m): poco margen de mejora frente a la erosión."
+  fr: "Pente de la parcelle {slope:.1f} % (NASA SRTM 30 m) — faible levier contre l'érosion."
+  sw: "Mteremko wa shamba {slope:.1f} % (NASA SRTM m 30) — athari ndogo ya mmomonyoko."
+  hi: "खेत की ढलान {slope:.1f} % (NASA SRTM 30 मी) — कटाव पर कम असर।"
+  de: "Hangneigung {slope:.1f} % (NASA SRTM 30 m) – geringer Hebel gegen Erosion."
+rot_ev_slope_notable:
+  en: "Field slope {slope:.1f} % (NASA SRTM 30 m) — notable erosion leverage."
+  es: "Pendiente del campo {slope:.1f} % (NASA SRTM 30 m): la rotación influye bastante en la erosión."
+  fr: "Pente de la parcelle {slope:.1f} % (NASA SRTM 30 m) — levier notable contre l'érosion."
+  sw: "Mteremko wa shamba {slope:.1f} % (NASA SRTM m 30) — mzunguko una athari kubwa kwa mmomonyoko."
+  hi: "खेत की ढलान {slope:.1f} % (NASA SRTM 30 मी) — कटाव पर उल्लेखनीय असर।"
+  de: "Hangneigung {slope:.1f} % (NASA SRTM 30 m) – deutlicher Hebel gegen Erosion."
+rot_ben_water: {en: "Uses less water: {v} {u} vs. your current rotation.", es: "Usa menos agua: {v} {u} frente a su rotación actual.", fr: "Consomme moins d'eau : {v} {u} par rapport à votre rotation actuelle.", sw: "Hutumia maji kidogo: {v} {u} ukilinganisha na mzunguko wako wa sasa.", hi: "कम पानी: {v} {u}, आपके मौजूदा फसल-चक्र की तुलना में।", de: "Braucht weniger Wasser: {v} {u} im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_income: {en: "Higher indicative margin: {v} {u} vs. your current rotation.", es: "Mayor margen orientativo: {v} {u} frente a su rotación actual.", fr: "Marge indicative plus élevée : {v} {u} par rapport à votre rotation actuelle.", sw: "Faida kubwa zaidi (makadirio): {v} {u} ukilinganisha na mzunguko wako wa sasa.", hi: "अधिक अनुमानित मार्जिन: {v} {u}, आपके मौजूदा फसल-चक्र की तुलना में।", de: "Höherer Richtwert-Deckungsbeitrag: {v} {u} im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_soil: {en: "Healthier soil (index {v}/100) vs. your current rotation.", es: "Suelo más sano (índice {v}/100) frente a su rotación actual.", fr: "Sol plus sain (indice {v}/100) par rapport à votre rotation actuelle.", sw: "Udongo wenye afya zaidi (kielelezo {v}/100) ukilinganisha na mzunguko wako wa sasa.", hi: "स्वस्थ मिट्टी (सूचकांक {v}/100), आपके मौजूदा फसल-चक्र की तुलना में।", de: "Gesünderer Boden (Index {v}/100) im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_erosion: {en: "Lower erosion risk (index {v}) vs. your current rotation.", es: "Menor riesgo de erosión (índice {v}) frente a su rotación actual.", fr: "Risque d'érosion plus faible (indice {v}) par rapport à votre rotation actuelle.", sw: "Hatari ndogo ya mmomonyoko (kielelezo {v}) ukilinganisha na mzunguko wako wa sasa.", hi: "कम कटाव जोखिम (सूचकांक {v}), आपके मौजूदा फसल-चक्र की तुलना में।", de: "Geringeres Erosionsrisiko (Index {v}) im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_pests: {en: "Breaks pest and disease cycles (score {v}/100) vs. your current rotation.", es: "Corta ciclos de plagas y enfermedades (puntuación {v}/100) frente a su rotación actual.", fr: "Coupe les cycles de ravageurs et maladies (score {v}/100) par rapport à votre rotation actuelle.", sw: "Huvunja mizunguko ya wadudu na magonjwa (alama {v}/100) ukilinganisha na mzunguko wako wa sasa.", hi: "कीट और रोग चक्र तोड़ता है (स्कोर {v}/100), आपके मौजूदा फसल-चक्र की तुलना में।", de: "Unterbricht Schädlings- und Krankheitszyklen (Wert {v}/100) im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_risk: {en: "Fewer bad seasons ({v} % risk) vs. your current rotation.", es: "Menos temporadas malas ({v} % de riesgo) frente a su rotación actual.", fr: "Moins de mauvaises saisons ({v} % de risque) par rapport à votre rotation actuelle.", sw: "Misimu mibaya michache ({v} % hatari) ukilinganisha na mzunguko wako wa sasa.", hi: "कम खराब मौसम ({v} % जोखिम), आपके मौजूदा फसल-चक्र की तुलना में।", de: "Weniger schlechte Jahre ({v} % Risiko) im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_nitrogen: {en: "More biological nitrogen: {v} {u} vs. your current rotation.", es: "Más nitrógeno biológico: {v} {u} frente a su rotación actual.", fr: "Plus d'azote biologique : {v} {u} par rapport à votre rotation actuelle.", sw: "Naitrojeni zaidi ya kibiolojia: {v} {u} ukilinganisha na mzunguko wako wa sasa.", hi: "अधिक जैविक नाइट्रोजन: {v} {u}, आपके मौजूदा फसल-चक्र की तुलना में।", de: "Mehr biologischer Stickstoff: {v} {u} im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_bare_days: {en: "Fewer bare-soil days: {v} {u} vs. your current rotation.", es: "Menos días de suelo desnudo: {v} {u} frente a su rotación actual.", fr: "Moins de jours de sol nu : {v} {u} par rapport à votre rotation actuelle.", sw: "Siku chache za udongo wazi: {v} {u} ukilinganisha na mzunguko wako wa sasa.", hi: "खाली मिट्टी के कम दिन: {v} {u}, आपके मौजूदा फसल-चक्र की तुलना में।", de: "Weniger Tage mit offenem Boden: {v} {u} im Vergleich zu Ihrer jetzigen Fruchtfolge."}
+rot_ben_similar:
+  en: "Similar overall to your current rotation; may suit different priorities."
+  es: "En general similar a su rotación actual; puede convenir con otras prioridades."
+  fr: "Globalement proche de votre rotation actuelle ; peut convenir à d'autres priorités."
+  sw: "Kwa jumla inafanana na mzunguko wako wa sasa; inaweza kufaa vipaumbele tofauti."
+  hi: "कुल मिलाकर आपके मौजूदा फसल-चक्र जैसा; अलग प्राथमिकताओं के लिए उपयुक्त हो सकता है।"
+  de: "Insgesamt ähnlich wie Ihre jetzige Fruchtfolge; passt eventuell zu anderen Prioritäten."
+rot_gap_prices:
+  en: "Prices and costs are national averages — local market access (hay buyers, elevators) is not known to FieldShift."
+  es: "Precios y costos son promedios nacionales; FieldShift no conoce su acceso al mercado local (compradores de heno, acopios)."
+  fr: "Prix et coûts sont des moyennes nationales — FieldShift ne connaît pas votre accès au marché local (acheteurs de foin, silos)."
+  sw: "Bei na gharama ni wastani wa kitaifa — FieldShift haijui upatikanaji wa soko lako la karibu (wanunuzi wa nyasi, maghala)."
+  hi: "कीमतें और लागत राष्ट्रीय औसत हैं — स्थानीय बाज़ार (चारा खरीदार, गोदाम) तक पहुँच FieldShift को ज्ञात नहीं।"
+  de: "Preise und Kosten sind Landesdurchschnitte – den Zugang zum lokalen Markt (Heukäufer, Landhandel) kennt FieldShift nicht."
+rot_gap_lowconf:
+  en: "Some crops here (e.g. teff, cover mixes) are not in FAO-56; their water parameters are literature estimates."
+  es: "Algunos cultivos aquí (p. ej. tef, mezclas de cobertura) no están en FAO-56; sus parámetros de agua son estimaciones de la literatura."
+  fr: "Certaines cultures ici (p. ex. teff, mélanges de couverts) ne figurent pas dans FAO-56 ; leurs paramètres hydriques sont des estimations publiées."
+  sw: "Baadhi ya mazao hapa (mf. tefu, mchanganyiko wa mazao funika) hayamo kwenye FAO-56; vigezo vyao vya maji ni makadirio ya machapisho."
+  hi: "यहाँ कुछ फसलें (जैसे टेफ, आवरण मिश्रण) FAO-56 में नहीं हैं; उनके जल मानदंड शोध-आधारित अनुमान हैं।"
+  de: "Einige Kulturen hier (z. B. Teff, Zwischenfruchtmischungen) fehlen in FAO-56; ihre Wasserparameter sind Literaturschätzungen."
+rot_gap_soil:
+  en: "Soil data are 250 m SoilGrids estimates, not a field soil test."
+  es: "Los datos de suelo son estimaciones SoilGrids de 250 m, no un análisis de suelo del campo."
+  fr: "Les données de sol sont des estimations SoilGrids à 250 m, pas une analyse de sol de la parcelle."
+  sw: "Data za udongo ni makadirio ya SoilGrids ya m 250, si kipimo cha udongo wa shamba."
+  hi: "मिट्टी के आँकड़े 250 मी SoilGrids अनुमान हैं, खेत की मिट्टी जाँच नहीं।"
+  de: "Bodendaten sind 250-m-Schätzungen von SoilGrids, keine Bodenprobe vom Feld."
+rot_risk_alfalfa:
+  en: "Alfalfa autotoxicity: do not re-seed alfalfa directly after alfalfa; check stand age and weeds."
+  es: "Autotoxicidad de la alfalfa: no resiembre alfalfa justo después de alfalfa; revise la edad de la pradera y las malezas."
+  fr: "Autotoxicité de la luzerne : ne ressemez pas de luzerne juste après une luzerne ; vérifiez l'âge du peuplement et les adventices."
+  sw: "Sumu ya alfalfa kwa yenyewe: usipande alfalfa mara baada ya alfalfa; angalia umri wa shamba na magugu."
+  hi: "रिजका की स्व-विषाक्तता: रिजका के तुरंत बाद फिर रिजका न बोएँ; फसल की उम्र और खरपतवार जाँचें।"
+  de: "Luzerne-Selbstunverträglichkeit: Luzerne nicht direkt nach Luzerne säen; Bestandsalter und Unkraut prüfen."
+rot_risk_split:
+  en: "Split-season irrigation depends on water-right rules and stand health — confirm with your water district."
+  es: "El riego parcial depende de las reglas de derechos de agua y del estado del cultivo; confírmelo con su junta de riego."
+  fr: "L'irrigation partielle dépend des droits d'eau et de l'état du peuplement — vérifiez auprès de votre gestionnaire d'eau."
+  sw: "Umwagiliaji wa msimu nusu unategemea kanuni za haki ya maji na afya ya zao — thibitisha na mamlaka ya maji ya eneo lako."
+  hi: "आंशिक-मौसम सिंचाई जल-अधिकार नियमों और फसल की सेहत पर निर्भर है — अपने जल विभाग से पुष्टि करें।"
+  de: "Teilsaison-Bewässerung hängt von Wasserrechten und Bestandszustand ab – mit Ihrem Wasserverband klären."
+rot_risk_teff:
+  en: "Teff needs a fine, firm seedbed and has a niche hay market — verify buyers before planting."
+  es: "El tef necesita una cama de siembra fina y firme y tiene un mercado de heno reducido; asegure compradores antes de sembrar."
+  fr: "Le teff demande un lit de semences fin et rappuyé et a un marché du foin de niche — trouvez des acheteurs avant de semer."
+  sw: "Tefu inahitaji kitalu laini na imara na ina soko dogo la nyasi — hakikisha wanunuzi kabla ya kupanda."
+  hi: "टेफ को महीन, सख्त बीज-शय्या चाहिए और इसका चारा बाज़ार सीमित है — बोने से पहले खरीदार पक्के करें।"
+  de: "Teff braucht ein feines, rückverfestigtes Saatbett und hat einen Nischen-Heumarkt – vor der Saat Abnehmer sichern."
+rot_risk_cover:
+  en: "Cover crops use some spring water in dry regions; terminate early if the season is dry."
+  es: "Los cultivos de cobertura usan algo de agua en primavera en zonas secas; termínelos pronto si la temporada es seca."
+  fr: "Les couverts consomment un peu d'eau au printemps en zone sèche ; détruisez-les tôt si la saison est sèche."
+  sw: "Mazao funika hutumia maji kidogo ya masika maeneo makavu; yaondoe mapema msimu ukiwa mkavu."
+  hi: "सूखे क्षेत्रों में आवरण फसलें वसंत का कुछ पानी लेती हैं; मौसम सूखा हो तो इन्हें जल्दी खत्म करें।"
+  de: "Zwischenfrüchte verbrauchen in Trockengebieten etwas Frühjahrswasser; bei Trockenheit früh beenden."
+rot_risk_herbicide:
+  en: "Check herbicide carry-over restrictions before switching crops."
+  es: "Antes de cambiar de cultivo, revise las restricciones por residuos de herbicidas."
+  fr: "Vérifiez les restrictions liées aux rémanences d'herbicides avant de changer de culture."
+  sw: "Kagua vikwazo vya mabaki ya dawa za magugu kabla ya kubadilisha zao."
+  hi: "फसल बदलने से पहले खरपतवारनाशी के बचे असर की पाबंदियाँ जाँचें।"
+  de: "Vor dem Kulturwechsel Nachbauauflagen von Herbiziden prüfen."
+rot_disclaimer:
+  en: "FieldShift compares rotations under the last 15 seasons of NASA weather at your location. It supports, but does not replace, your judgement and local agronomic advice. Prices and costs are indicative and must be checked against your market."
+  es: "FieldShift compara rotaciones con las últimas 15 temporadas de clima NASA en su ubicación. Apoya, pero no reemplaza, su criterio y la asesoría agronómica local. Precios y costos son orientativos y deben contrastarse con su mercado."
+  fr: "FieldShift compare les rotations sur les 15 dernières saisons de météo NASA à votre emplacement. Il appuie, sans les remplacer, votre jugement et le conseil agronomique local. Prix et coûts sont indicatifs et doivent être vérifiés sur votre marché."
+  sw: "FieldShift hulinganisha mizunguko kwa misimu 15 iliyopita ya hali ya hewa ya NASA mahali ulipo. Inasaidia, lakini haichukui nafasi ya, uamuzi wako na ushauri wa ugani wa eneo lako. Bei na gharama ni makadirio na lazima zilinganishwe na soko lako."
+  hi: "FieldShift आपके स्थान पर पिछले 15 मौसमों के NASA मौसम पर फसल-चक्रों की तुलना करता है। यह आपके निर्णय और स्थानीय कृषि सलाह में मदद करता है, उनकी जगह नहीं लेता। कीमतें और लागत अनुमानित हैं, अपने बाज़ार से जाँचें।"
+  de: "FieldShift vergleicht Fruchtfolgen mit den letzten 15 Jahren NASA-Wetter an Ihrem Standort. Es unterstützt Ihr Urteil und die lokale Beratung, ersetzt sie aber nicht. Preise und Kosten sind Richtwerte und mit Ihrem Markt abzugleichen."
+vuln_water:
+  en: "High water demand: ET₀ {et0:.0f} mm vs. rain {rain:.0f} mm"
+  es: "Alta demanda de agua: ET₀ {et0:.0f} mm frente a {rain:.0f} mm de lluvia"
+  fr: "Forte demande en eau : ET₀ {et0:.0f} mm contre {rain:.0f} mm de pluie"
+  sw: "Mahitaji makubwa ya maji: ET₀ mm {et0:.0f} dhidi ya mvua mm {rain:.0f}"
+  hi: "पानी की अधिक माँग: ET₀ {et0:.0f} मिमी, वर्षा {rain:.0f} मिमी"
+  de: "Hoher Wasserbedarf: ET₀ {et0:.0f} mm gegenüber {rain:.0f} mm Regen"
+vuln_frost:
+  en: "Frost risk with active growth (mean Tmin {tmin:.0f} °C)"
+  es: "Riesgo de helada con el cultivo en crecimiento (mínima media {tmin:.0f} °C)"
+  fr: "Risque de gel en pleine croissance (minimale moyenne {tmin:.0f} °C)"
+  sw: "Hatari ya baridi kali wakati mimea inakua (wastani wa joto la chini {tmin:.0f} °C)"
+  hi: "बढ़वार के दौरान पाले का जोखिम (औसत न्यूनतम {tmin:.0f} °C)"
+  de: "Frostgefahr bei aktivem Wachstum (mittleres Minimum {tmin:.0f} °C)"
+vuln_heat:
+  en: "Heat stress likely (mean Tmax {tmax:.0f} °C)"
+  es: "Probable estrés por calor (máxima media {tmax:.0f} °C)"
+  fr: "Stress thermique probable (maximale moyenne {tmax:.0f} °C)"
+  sw: "Msongo wa joto unatarajiwa (wastani wa joto la juu {tmax:.0f} °C)"
+  hi: "गर्मी का तनाव संभावित (औसत अधिकतम {tmax:.0f} °C)"
+  de: "Hitzestress wahrscheinlich (mittleres Maximum {tmax:.0f} °C)"
+clim_tmax_summer: {en: "Warm-season mean max temperature", es: "Máxima media de la estación cálida", fr: "Maximale moyenne de la saison chaude", sw: "Wastani wa joto la juu msimu wa joto", hi: "गर्म मौसम का औसत अधिकतम तापमान", de: "Mittlere Höchsttemperatur der warmen Saison"}
+clim_tmin_winter: {en: "Winter mean min temperature", es: "Mínima media de invierno", fr: "Minimale moyenne d'hiver", sw: "Wastani wa joto la chini msimu wa baridi", hi: "सर्दी का औसत न्यूनतम तापमान", de: "Mittlere Tiefsttemperatur im Winter"}
+clim_gdd: {en: "Growing degree-days (base 10 °C)", es: "Grados-día de crecimiento (base 10 °C)", fr: "Degrés-jours de croissance (base 10 °C)", sw: "Nyuzi-siku za ukuaji (msingi 10 °C)", hi: "वृद्धि डिग्री-दिन (आधार 10 °C)", de: "Wachstumsgradtage (Basis 10 °C)"}
+clim_frost_free_days: {en: "Frost-free season length", es: "Duración del periodo libre de heladas", fr: "Durée de la saison sans gel", sw: "Urefu wa msimu bila baridi kali", hi: "पाला-मुक्त मौसम की अवधि", de: "Länge der frostfreien Zeit"}
+clim_last_spring_frost_doy: {en: "Last spring frost (day of year)", es: "Última helada de primavera (día del año)", fr: "Dernière gelée de printemps (jour de l'année)", sw: "Baridi kali ya mwisho ya masika (siku ya mwaka)", hi: "वसंत का अंतिम पाला (वर्ष का दिन)", de: "Letzter Frühjahrsfrost (Tag im Jahr)"}
+clim_first_fall_frost_doy: {en: "First autumn frost (day of year)", es: "Primera helada de otoño (día del año)", fr: "Première gelée d'automne (jour de l'année)", sw: "Baridi kali ya kwanza ya vuli (siku ya mwaka)", hi: "शरद का पहला पाला (वर्ष का दिन)", de: "Erster Herbstfrost (Tag im Jahr)"}
+clim_heat_days: {en: "Days ≥ 35 °C", es: "Días ≥ 35 °C", fr: "Jours ≥ 35 °C", sw: "Siku ≥ 35 °C", hi: "≥ 35 °C वाले दिन", de: "Tage ≥ 35 °C"}
+clim_precip_annual: {en: "Annual rain", es: "Lluvia anual", fr: "Pluie annuelle", sw: "Mvua ya mwaka", hi: "वार्षिक वर्षा", de: "Jahresniederschlag"}
+clim_precip_growing: {en: "Warm-season rain", es: "Lluvia de la estación cálida", fr: "Pluie de la saison chaude", sw: "Mvua ya msimu wa joto", hi: "गर्म मौसम की वर्षा", de: "Regen in der warmen Saison"}
+clim_et0_annual: {en: "Annual reference ET₀", es: "ET₀ de referencia anual", fr: "ET₀ de référence annuelle", sw: "ET₀ ya marejeo ya mwaka", hi: "वार्षिक संदर्भ ET₀", de: "Jährliche Referenz-ET₀"}
+clim_water_deficit: {en: "Warm-season water deficit (ET₀ − rain)", es: "Déficit hídrico de la estación cálida (ET₀ − lluvia)", fr: "Déficit hydrique de la saison chaude (ET₀ − pluie)", sw: "Upungufu wa maji msimu wa joto (ET₀ − mvua)", hi: "गर्म मौसम में पानी की कमी (ET₀ − वर्षा)", de: "Wasserdefizit der warmen Saison (ET₀ − Regen)"}
+clim_heavy_rain_days: {en: "Heavy-rain days (≥ {thr} mm)", es: "Días de lluvia intensa (≥ {thr} mm)", fr: "Jours de forte pluie (≥ {thr} mm)", sw: "Siku za mvua kubwa (≥ mm {thr})", hi: "भारी वर्षा के दिन (≥ {thr} मिमी)", de: "Starkregentage (≥ {thr} mm)"}
+clim_dry_spell_max: {en: "Longest warm-season dry spell", es: "Racha seca más larga de la estación cálida", fr: "Plus longue période sèche de la saison chaude", sw: "Kipindi kirefu zaidi cha ukavu msimu wa joto", hi: "गर्म मौसम का सबसे लंबा सूखा दौर", de: "Längste Trockenperiode der warmen Saison"}
+clim_insight_up:
+  en: "{label} has risen by {slope:.1f} {unit} per decade since {year} ({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+  es: "{label} ha subido {slope:.1f} {unit} por década desde {year} ({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+  fr: "{label} : hausse de {slope:.1f} {unit} par décennie depuis {year} ({base:.0f} → {recent:.0f} {unit} ; Mann–Kendall p = {p:.2f})."
+  sw: "{label} imeongezeka kwa {slope:.1f} {unit} kila muongo tangu {year} ({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+  hi: "{label} {year} से प्रति दशक {slope:.1f} {unit} बढ़ा है ({base:.0f} → {recent:.0f} {unit}; मैन–केंडल p = {p:.2f})।"
+  de: "{label}: Anstieg um {slope:.1f} {unit} pro Jahrzehnt seit {year} ({base:.0f} → {recent:.0f} {unit}; Mann-Kendall p = {p:.2f})."
+clim_insight_down:
+  en: "{label} has fallen by {slope:.1f} {unit} per decade since {year} ({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+  es: "{label} ha bajado {slope:.1f} {unit} por década desde {year} ({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+  fr: "{label} : baisse de {slope:.1f} {unit} par décennie depuis {year} ({base:.0f} → {recent:.0f} {unit} ; Mann–Kendall p = {p:.2f})."
+  sw: "{label} imepungua kwa {slope:.1f} {unit} kila muongo tangu {year} ({base:.0f} → {recent:.0f} {unit}; Mann–Kendall p = {p:.2f})."
+  hi: "{label} {year} से प्रति दशक {slope:.1f} {unit} घटा है ({base:.0f} → {recent:.0f} {unit}; मैन–केंडल p = {p:.2f})।"
+  de: "{label}: Rückgang um {slope:.1f} {unit} pro Jahrzehnt seit {year} ({base:.0f} → {recent:.0f} {unit}; Mann-Kendall p = {p:.2f})."
+clim_no_trend:
+  en: "No statistically clear trend (p < 0.1) in the main indicators since {year}; year-to-year variability dominates."
+  es: "No hay una tendencia estadísticamente clara (p < 0,1) en los indicadores principales desde {year}; domina la variabilidad entre años."
+  fr: "Aucune tendance statistiquement nette (p < 0,1) sur les principaux indicateurs depuis {year} ; la variabilité d'une année à l'autre domine."
+  sw: "Hakuna mwelekeo wazi kitakwimu (p < 0.1) katika viashiria vikuu tangu {year}; tofauti za mwaka hadi mwaka ndizo kubwa."
+  hi: "{year} से मुख्य संकेतकों में कोई सांख्यिकीय रूप से स्पष्ट रुझान नहीं (p < 0.1); साल-दर-साल उतार-चढ़ाव हावी है।"
+  de: "Seit {year} kein statistisch klarer Trend (p < 0,1) bei den Hauptindikatoren; die Schwankung von Jahr zu Jahr überwiegt."

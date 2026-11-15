@@ -296,6 +296,7 @@ export function LabeledSlider({
 
 export function DateField({ label, value, onChange, testID }: { label: string; value: string; onChange: (v: string) => void; testID?: string }) {
   const t = useTheme();
+  const { t: tr } = useTranslation();
   const shift = (days: number) => {
     const d = new Date(value + "T00:00:00Z");
     if (Number.isNaN(d.getTime())) return;
@@ -308,7 +309,7 @@ export function DateField({ label, value, onChange, testID }: { label: string; v
         {label}
       </Txt>
       <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
-        <IconButton icon="remove" label="-7 days" onPress={() => shift(-7)} />
+        <IconButton icon="remove" label={tr("common.weekEarlier")} onPress={() => shift(-7)} />
         <TextInput
           testID={testID}
           accessibilityLabel={label}
@@ -318,7 +319,7 @@ export function DateField({ label, value, onChange, testID }: { label: string; v
           placeholderTextColor={t.textMuted}
           style={[styles.input, { color: t.text, borderColor: t.border, backgroundColor: t.card, flex: 1, textAlign: "center" }]}
         />
-        <IconButton icon="add" label="+7 days" onPress={() => shift(7)} />
+        <IconButton icon="add" label={tr("common.weekLater")} onPress={() => shift(7)} />
       </View>
     </View>
   );

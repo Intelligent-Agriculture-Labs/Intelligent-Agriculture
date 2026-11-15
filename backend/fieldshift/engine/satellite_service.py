@@ -26,6 +26,7 @@ from ..data.http import CACHE_DIR, DEMO_DIR
 from ..science import satellite as sat
 from ..science import terrain
 from ..science.cropmodel import crop
+from .messages import localize_text, localize_tree
 
 log = logging.getLogger("fieldshift.satellite")
 _jobs: dict[str, dict[str, Any]] = {}
@@ -72,9 +73,10 @@ def satellite_api(req: dict[str, Any]) -> dict[str, Any]:
     end = end - dt.timedelta(days=end.weekday())  # week granularity -> stable cache key within a week
     start = dt.date.fromisoformat(req["start"]) if req.get("start") else end - dt.timedelta(days=365)
     key = _key(req, start, end)
+    lang = req.get("lang") or "en"
     hit = _cached(key)
     if hit:
-        return hit
+        return dict(localize_tree(hit, "sat_", lang))  # cached in English, served in the farmer's language
     with _lock:
         job = _jobs.get(key)
         if job is None or job["status"] == "error" and job.get("retry", True):
@@ -84,7 +86,7 @@ def satellite_api(req: dict[str, Any]) -> dict[str, Any]:
     return {
         "status": job["status"],
         "progress": round(job["progress"], 2),
-        "message": job.get("message"),
+        "message": localize_text(job["message"], "sat_", lang) if job.get("message") else None,
         "field_key": key,
     }
 
@@ -250,9 +252,7 @@ def _analyse(key: str, req: dict[str, Any], start: dt.date, end: dt.date) -> Non
             zones_out = {
                 "png": f"/api/satellite/png/{key}/zones.png",
                 "k": z["k"],
-                "method": "k-means on standardized per-pixel features ("
-                + ", ".join(z["features"])
-                + "), k chosen by silhouette",
+                "method": f"k-means on standardized per-pixel features ({', '.join(z['features'])}), k chosen by silhouette",
                 "silhouette": z["silhouette"],
                 "legend": [
                     {
@@ -313,10 +313,10 @@ def _analyse(key: str, req: dict[str, Any], start: dt.date, end: dt.date) -> Non
             {
                 "id": "sentinel2",
                 "name": "Copernicus Sentinel-2 L2A (via Earth Search, AWS Open Data)",
-                "provider": "ESA Copernicus / Element 84",
+                "provider": "ESA Copernicus / Element 84",  # i18n: ok (organisation names)
                 "url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
                 "resolution": "10 m, 5-day revisit",
-                "latency": "~1 day",
+                "latency": "~1 day",  # localised when served (sat_src_latency)
                 "last_date": recs[-1]["date"],
                 "is_nasa": False,
                 "status": "live",

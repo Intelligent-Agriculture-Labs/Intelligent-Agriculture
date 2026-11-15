@@ -9,10 +9,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import type { CropInfo } from "@/api/types";
+import type { CropInfo, Lang } from "@/api/types";
 import { MIN_TOUCH, radius, space, useTheme } from "@/lib/theme";
 import { useCrops } from "./domain";
 import { Button, Txt, styles as ui } from "./ui";
+
+/** Crop name in `lang` (falls back to the English name). */
+const localName = (c: CropInfo, lang?: string) => c.names?.[lang as Lang] ?? c.name;
 
 type IonName = React.ComponentProps<typeof Ionicons>["name"];
 
@@ -410,9 +413,11 @@ export function cropIcon(c: CropInfo | undefined): IonName {
   return (name in Ionicons.glyphMap ? name : "leaf") as IonName;
 }
 
-export function groupCrops(crops: CropInfo[], query: string): { family: string; crops: CropInfo[] }[] {
+export function groupCrops(crops: CropInfo[], query: string, lang?: string): { family: string; crops: CropInfo[] }[] {
   const q = query.trim().toLowerCase();
-  const hit = crops.filter((c) => !q || c.name.toLowerCase().includes(q) || c.id.includes(q) || c.family.toLowerCase().includes(q));
+  const hit = crops.filter(
+    (c) => !q || localName(c, lang).toLowerCase().includes(q) || c.name.toLowerCase().includes(q) || c.id.includes(q) || c.family.toLowerCase().includes(q),
+  );
   const by = new Map<string, CropInfo[]>();
   for (const c of hit) by.set(c.family, [...(by.get(c.family) ?? []), c]);
   const fams = [...by.keys()].sort((a, b) => {
@@ -420,7 +425,7 @@ export function groupCrops(crops: CropInfo[], query: string): { family: string; 
     const ib = FAMILY_ORDER.indexOf(b);
     return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
   });
-  return fams.map((f) => ({ family: f, crops: (by.get(f) ?? []).sort((a, b) => a.name.localeCompare(b.name)) }));
+  return fams.map((f) => ({ family: f, crops: (by.get(f) ?? []).sort((a, b) => localName(a, lang).localeCompare(localName(b, lang), lang)) }));
 }
 
 export function CropPicker({
@@ -441,13 +446,13 @@ export function CropPicker({
   compact?: boolean;
 }) {
   const t = useTheme();
-  const { t: tr } = useTranslation();
+  const { t: tr, i18n } = useTranslation();
   const all = useCrops();
   const crops = useMemo(() => (filter ? all.filter(filter) : all), [all, filter]);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const current = all.find((c) => c.id === value);
-  const groups = useMemo(() => groupCrops(crops, q), [crops, q]);
+  const groups = useMemo(() => groupCrops(crops, q, i18n.language), [crops, q, i18n.language]);
   const choose = (id: string | null) => {
     onChange(id);
     setOpen(false);
@@ -498,7 +503,7 @@ export function CropPicker({
               <ListRow
                 key={c.id}
                 icon={cropIcon(c)}
-                title={c.name}
+                title={localName(c, i18n.language)}
                 subtitle={[
                   c.n_fixing ? tr("crops.fixesN") : null,
                   c.type === "perennial" ? tr("crops.perennial") : c.type === "cover" ? tr("crops.cover") : null,

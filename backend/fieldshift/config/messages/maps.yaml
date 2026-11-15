@@ -1,0 +1,139 @@
+# Terrain maps (engine/maps.py; POST /api/terrain): layer names, legends, management zones and their advice.
+slope_flat: {en: "0–2 % flat", es: "0–2 % plano", fr: "0–2 % plat", sw: "0–2 % tambarare", hi: "0–2 % समतल", de: "0–2 % eben"}
+slope_gentle: {en: "2–5 % gentle", es: "2–5 % suave", fr: "2–5 % douce", sw: "2–5 % mteremko mdogo", hi: "2–5 % हल्की ढलान", de: "2–5 % flach geneigt"}
+slope_moderate: {en: "5–8 % moderate", es: "5–8 % moderada", fr: "5–8 % modérée", sw: "5–8 % wastani", hi: "5–8 % मध्यम", de: "5–8 % mäßig"}
+slope_strong: {en: "8–15 % strong", es: "8–15 % fuerte", fr: "8–15 % forte", sw: "8–15 % mkali", hi: "8–15 % तीव्र", de: "8–15 % stark"}
+slope_steep: {en: "> 15 % steep", es: "> 15 % escarpada", fr: "> 15 % raide", sw: "> 15 % mkali sana", hi: "> 15 % खड़ी", de: "> 15 % steil"}
+loss_tolerable: {en: "< 1 t/ha/yr (tolerable)", es: "< 1 t/ha/año (tolerable)", fr: "< 1 t/ha/an (tolérable)", sw: "< t/ha 1/mwaka (inavumilika)", hi: "< 1 t/हे/वर्ष (सहनीय)", de: "< 1 t/ha/Jahr (tolerierbar)"}
+loss_high: {en: "5–10 (high)", es: "5–10 (alta)", fr: "5–10 (élevée)", sw: "5–10 (juu)", hi: "5–10 (अधिक)", de: "5–10 (hoch)"}
+loss_severe: {en: "> 10 (severe)", es: "> 10 (grave)", fr: "> 10 (sévère)", sw: "> 10 (kali)", hi: "> 10 (गंभीर)", de: "> 10 (schwer)"}
+zone_erosion: {en: "Erosion hotspot", es: "Foco de erosión", fr: "Point chaud d'érosion", sw: "Eneo hatari la mmomonyoko", hi: "कटाव हॉटस्पॉट", de: "Erosions-Hotspot"}
+zone_erosion_advice:
+  en: "The worst-eroding part of the field: start here. Grass strips or contour bunds across the slope, terraces (e.g. fanya juu) on steep parts, permanent cover on the steepest spots."
+  es: "La parte del campo que más se erosiona: empiece aquí. Franjas de pasto o bordos en curvas de nivel a través de la pendiente, terrazas (p. ej. fanya juu) en las partes empinadas y cobertura permanente en los puntos más inclinados."
+  fr: "La partie de la parcelle la plus érodée : commencez ici. Bandes enherbées ou diguettes en courbes de niveau en travers de la pente, terrasses (p. ex. fanya juu) sur les parties raides, couverture permanente aux endroits les plus pentus."
+  sw: "Sehemu ya shamba inayomomonyoka zaidi: anza hapa. Vipande vya nyasi au matuta ya kontua kukatiza mteremko, matuta (mf. fanya juu) sehemu zenye mteremko mkali, na kifuniko cha kudumu sehemu kali zaidi."
+  hi: "खेत का सबसे अधिक कटने वाला हिस्सा: यहीं से शुरू करें। ढलान के आर-पार घास की पट्टियाँ या समोच्च मेड़ें, खड़े हिस्सों पर सीढ़ीदार खेत (जैसे फ़ान्या जू), सबसे खड़ी जगहों पर स्थायी आवरण।"
+  de: "Der am stärksten erodierende Teil des Feldes: hier anfangen. Grasstreifen oder Konturwälle quer zum Hang, Terrassen (z. B. Fanya Juu) an steilen Stellen, Dauerbewuchs an den steilsten Punkten."
+zone_erosion_risk: {en: "Erosion risk", es: "Riesgo de erosión", fr: "Risque d'érosion", sw: "Hatari ya mmomonyoko", hi: "कटाव जोखिम", de: "Erosionsgefahr"}
+zone_erosion_risk_advice:
+  en: "Soil loss above the tolerable ~5 t/ha a year: keep the soil covered (residue, cover crops), plough and plant along the contour."
+  es: "Pérdida de suelo por encima de lo tolerable (~5 t/ha al año): mantenga el suelo cubierto (rastrojo, coberturas) y are y siembre en curvas de nivel."
+  fr: "Perte de sol au-dessus du tolérable (~5 t/ha par an) : gardez le sol couvert (résidus, couverts) et labourez et semez en courbes de niveau."
+  sw: "Upotevu wa udongo juu ya kiwango kinachovumilika (~t/ha 5 kwa mwaka): funika udongo (masalia, mazao funika), lima na panda kufuata kontua."
+  hi: "मिट्टी का नुकसान सहनीय (~5 t/हे प्रति वर्ष) से अधिक: मिट्टी ढकी रखें (अवशेष, आवरण फसलें), समोच्च रेखा पर जुताई और बुवाई करें।"
+  de: "Bodenabtrag über dem tolerierbaren Maß (~5 t/ha im Jahr): Boden bedeckt halten (Rückstände, Zwischenfrüchte), quer zum Hang pflügen und säen."
+zone_wet: {en: "Wet / waterlogging-prone", es: "Húmedo / propenso a encharcarse", fr: "Humide / sujet à l'engorgement", sw: "Unyevu / hutuamisha maji", hi: "गीला / जलभराव वाला", de: "Nass / staunässegefährdet"}
+zone_wet_advice:
+  en: "Water collects here: check drainage, avoid early-spring traffic, consider water-tolerant crops."
+  es: "Aquí se acumula el agua: revise el drenaje, evite pasar con maquinaria a inicios de primavera y considere cultivos tolerantes al agua."
+  fr: "L'eau s'accumule ici : vérifiez le drainage, évitez de circuler tôt au printemps, envisagez des cultures tolérantes à l'eau."
+  sw: "Maji hukusanyika hapa: kagua mifereji, epuka kupitisha mashine mwanzoni mwa masika, fikiria mazao yanayostahimili maji."
+  hi: "यहाँ पानी जमा होता है: जल निकासी जाँचें, वसंत की शुरुआत में मशीन न चलाएँ, पानी सहने वाली फसलों पर विचार करें।"
+  de: "Hier sammelt sich Wasser: Drainage prüfen, im zeitigen Frühjahr nicht befahren, nässeverträgliche Kulturen erwägen."
+zone_frost: {en: "Frost-prone hollow", es: "Hondonada propensa a heladas", fr: "Cuvette gélive", sw: "Bonde lenye baridi kali", hi: "पाले वाला गड्ढा", de: "Frostsenke"}
+zone_frost_advice:
+  en: "Cold air pools here on clear nights: avoid frost-sensitive crops and very early sowing."
+  es: "Aquí se acumula el aire frío en noches despejadas: evite cultivos sensibles a heladas y siembras muy tempranas."
+  fr: "L'air froid stagne ici par nuits claires : évitez les cultures sensibles au gel et les semis très précoces."
+  sw: "Hewa baridi hukusanyika hapa usiku usio na mawingu: epuka mazao yanayoathiriwa na baridi kali na kupanda mapema sana."
+  hi: "साफ़ रातों में यहाँ ठंडी हवा जमा होती है: पाला-संवेदनशील फसलें और बहुत जल्दी बुवाई से बचें।"
+  de: "In klaren Nächten sammelt sich hier Kaltluft: frostempfindliche Kulturen und sehr frühe Saat meiden."
+zone_core: {en: "Productive core", es: "Núcleo productivo", fr: "Cœur productif", sw: "Kiini chenye tija", hi: "उत्पादक मुख्य भाग", de: "Produktiver Kern"}
+zone_core_advice:
+  en: "No major terrain constraint; manage as the main field."
+  es: "Sin limitaciones importantes del terreno; manéjelo como el campo principal."
+  fr: "Pas de contrainte de relief majeure ; à conduire comme le reste de la parcelle."
+  sw: "Hakuna kikwazo kikubwa cha ardhi; simamia kama shamba kuu."
+  hi: "ज़मीन की कोई बड़ी बाधा नहीं; मुख्य खेत की तरह संभालें।"
+  de: "Keine wesentliche Geländeeinschränkung; wie das übrige Feld bewirtschaften."
+zone_core_none:
+  en: "No major terrain constraint in your field."
+  es: "Su campo no tiene limitaciones importantes del terreno."
+  fr: "Pas de contrainte de relief majeure dans votre parcelle."
+  sw: "Hakuna kikwazo kikubwa cha ardhi shambani kwako."
+  hi: "आपके खेत में ज़मीन की कोई बड़ी बाधा नहीं।"
+  de: "Keine wesentliche Geländeeinschränkung auf Ihrem Feld."
+map_srtm_note:
+  en: "Elevation from AWS Terrain Tiles (NASA SRTM 30 m outside the U.S., USGS 3DEP in the U.S.), resampled to ~{m:.0f} m pixels."
+  es: "Altitud de AWS Terrain Tiles (NASA SRTM 30 m fuera de EE. UU., USGS 3DEP en EE. UU.), remuestreada a píxeles de ~{m:.0f} m."
+  fr: "Altitude issue des AWS Terrain Tiles (NASA SRTM 30 m hors États-Unis, USGS 3DEP aux États-Unis), rééchantillonnée en pixels de ~{m:.0f} m."
+  sw: "Mwinuko kutoka AWS Terrain Tiles (NASA SRTM m 30 nje ya Marekani, USGS 3DEP ndani ya Marekani), umebadilishwa kuwa pikseli za ~m {m:.0f}."
+  hi: "ऊँचाई AWS Terrain Tiles से (अमेरिका के बाहर NASA SRTM 30 मी, अमेरिका में USGS 3DEP), ~{m:.0f} मी पिक्सेल में बदली गई।"
+  de: "Höhe aus AWS Terrain Tiles (NASA SRTM 30 m außerhalb der USA, USGS 3DEP in den USA), auf ~{m:.0f}-m-Pixel umgerechnet."
+src_srtm_name: {en: "Elevation: AWS Terrain Tiles (NASA SRTM, USGS 3DEP)", es: "Altitud: AWS Terrain Tiles (NASA SRTM, USGS 3DEP)", fr: "Altitude : AWS Terrain Tiles (NASA SRTM, USGS 3DEP)", sw: "Mwinuko: AWS Terrain Tiles (NASA SRTM, USGS 3DEP)", hi: "ऊँचाई: AWS Terrain Tiles (NASA SRTM, USGS 3DEP)", de: "Höhe: AWS Terrain Tiles (NASA SRTM, USGS 3DEP)"}
+src_srtm_res: {en: "~30 m source (10 m in U.S.)", es: "fuente de ~30 m (10 m en EE. UU.)", fr: "source ~30 m (10 m aux États-Unis)", sw: "chanzo ~m 30 (m 10 Marekani)", hi: "~30 मी स्रोत (अमेरिका में 10 मी)", de: "~30-m-Quelle (10 m in den USA)"}
+layer_elevation: {en: "Elevation & relief", es: "Altitud y relieve", fr: "Altitude et relief", sw: "Mwinuko na umbo la ardhi", hi: "ऊँचाई और भू-आकृति", de: "Höhe & Relief"}
+layer_elevation_why:
+  en: "Shaded relief from the DEM. Elevation range in view: {lo:.0f}–{hi:.0f} m. {note}"
+  es: "Relieve sombreado del modelo de elevación. Rango de altitud visible: {lo:.0f}–{hi:.0f} m. {note}"
+  fr: "Relief ombré issu du MNT. Plage d'altitude visible : {lo:.0f}–{hi:.0f} m. {note}"
+  sw: "Umbo la ardhi lenye kivuli kutoka DEM. Kiwango cha mwinuko kinachoonekana: m {lo:.0f}–{hi:.0f}. {note}"
+  hi: "DEM से छायांकित भू-आकृति। दिख रही ऊँचाई सीमा: {lo:.0f}–{hi:.0f} मी। {note}"
+  de: "Schummerung aus dem Höhenmodell. Höhenbereich im Ausschnitt: {lo:.0f}–{hi:.0f} m. {note}"
+layer_slope: {en: "Slope", es: "Pendiente", fr: "Pente", sw: "Mteremko", hi: "ढलान", de: "Hangneigung"}
+layer_slope_why:
+  en: "Steepness from Horn's method. Your field: mean {mean:.1f} %, steepest 10 % above {p90:.1f} %. Slopes above ~8 % need contour work and permanent cover."
+  es: "Pendiente por el método de Horn. Su campo: media {mean:.1f} %, el 10 % más empinado por encima de {p90:.1f} %. Las pendientes de más de ~8 % necesitan trabajo en curvas de nivel y cobertura permanente."
+  fr: "Pente par la méthode de Horn. Votre parcelle : moyenne {mean:.1f} %, les 10 % les plus raides au-dessus de {p90:.1f} %. Au-delà de ~8 %, il faut travailler en courbes de niveau et garder une couverture permanente."
+  sw: "Mteremko kwa njia ya Horn. Shamba lako: wastani {mean:.1f} %, asilimia 10 zenye mteremko mkali zaidi juu ya {p90:.1f} %. Miteremko zaidi ya ~8 % inahitaji kazi ya kontua na kifuniko cha kudumu."
+  hi: "Horn विधि से ढलान। आपका खेत: औसत {mean:.1f} %, सबसे खड़े 10 % हिस्से {p90:.1f} % से ऊपर। ~8 % से अधिक ढलान पर समोच्च कार्य और स्थायी आवरण चाहिए।"
+  de: "Hangneigung nach Horn. Ihr Feld: Mittel {mean:.1f} %, die steilsten 10 % über {p90:.1f} %. Hänge über ~8 % brauchen Konturbewirtschaftung und Dauerbewuchs."
+layer_erosion: {en: "Erosion risk (RUSLE)", es: "Riesgo de erosión (RUSLE)", fr: "Risque d'érosion (RUSLE)", sw: "Hatari ya mmomonyoko (RUSLE)", hi: "कटाव जोखिम (RUSLE)", de: "Erosionsgefahr (RUSLE)"}
+layer_erosion_why:
+  en: "Estimated long-term soil loss A = R·K·LS·C (RUSLE) with R = {r:.0f} MJ·mm/ha/h/yr from NASA POWER mean annual rain ({p:.0f} mm), K = {k:.3f} for {soil} soil, LS from slope and upslope flow area, and C = {cf:.2f} for {crop}. Field mean {mean:.1f}, hotspots (p90) {p90:.1f} t/ha/yr. Values are indicative (no support practices, P = 1)."
+  es: "Pérdida de suelo estimada a largo plazo A = R·K·LS·C (RUSLE) con R = {r:.0f} MJ·mm/ha/h/año según la lluvia media anual NASA POWER ({p:.0f} mm), K = {k:.3f} para suelo {soil}, LS según pendiente y área de escurrimiento, y C = {cf:.2f} para {crop}. Media del campo {mean:.1f}, focos (p90) {p90:.1f} t/ha/año. Valores orientativos (sin prácticas de conservación, P = 1)."
+  fr: "Perte de sol estimée à long terme A = R·K·LS·C (RUSLE) avec R = {r:.0f} MJ·mm/ha/h/an d'après la pluie annuelle moyenne NASA POWER ({p:.0f} mm), K = {k:.3f} pour un sol {soil}, LS d'après la pente et l'aire drainée, et C = {cf:.2f} pour {crop}. Moyenne parcelle {mean:.1f}, points chauds (p90) {p90:.1f} t/ha/an. Valeurs indicatives (sans pratiques antiérosives, P = 1)."
+  sw: "Makadirio ya upotevu wa udongo wa muda mrefu A = R·K·LS·C (RUSLE) ambapo R = {r:.0f} MJ·mm/ha/h/mwaka kutoka mvua ya wastani ya mwaka ya NASA POWER (mm {p:.0f}), K = {k:.3f} kwa udongo wa {soil}, LS kutoka mteremko na eneo la mtiririko, na C = {cf:.2f} kwa {crop}. Wastani wa shamba {mean:.1f}, maeneo hatari (p90) t/ha {p90:.1f}/mwaka. Thamani ni makadirio (bila hatua za uhifadhi, P = 1)."
+  hi: "अनुमानित दीर्घकालिक मिट्टी नुकसान A = R·K·LS·C (RUSLE): R = {r:.0f} MJ·mm/हे/घं/वर्ष, NASA POWER औसत वार्षिक वर्षा ({p:.0f} मिमी) से; K = {k:.3f} {soil} मिट्टी के लिए; LS ढलान और ऊपरी बहाव क्षेत्र से; C = {cf:.2f} {crop} के लिए। खेत औसत {mean:.1f}, हॉटस्पॉट (p90) {p90:.1f} t/हे/वर्ष। मान अनुमानित हैं (कोई संरक्षण उपाय नहीं, P = 1)।"
+  de: "Geschätzter langfristiger Bodenabtrag A = R·K·LS·C (RUSLE) mit R = {r:.0f} MJ·mm/ha/h/Jahr aus dem mittleren NASA-POWER-Jahresniederschlag ({p:.0f} mm), K = {k:.3f} für {soil}, LS aus Hangneigung und Einzugsfläche und C = {cf:.2f} für {crop}. Feldmittel {mean:.1f}, Hotspots (p90) {p90:.1f} t/ha/Jahr. Richtwerte (ohne Schutzmaßnahmen, P = 1)."
+layer_wetness: {en: "Wetness (water collects)", es: "Humedad (se acumula agua)", fr: "Humidité (l'eau s'accumule)", sw: "Unyevu (maji hukusanyika)", hi: "नमी (पानी जमा होता है)", de: "Nässe (Wasser sammelt sich)"}
+legend_dry: {en: "dry / shedding", es: "seco / escurre", fr: "sec / ruisselle", sw: "kavu / maji hutiririka", hi: "सूखा / पानी बहता है", de: "trocken / abfließend"}
+legend_wet: {en: "wet / collecting", es: "húmedo / acumula", fr: "humide / accumule", sw: "nyevu / maji hukusanyika", hi: "गीला / पानी जमा", de: "nass / sammelnd"}
+layer_wetness_why:
+  en: "Topographic wetness index ln(a / tan β): high where a large upslope area drains into flat ground. Shows where water ponds and soils stay wet longer."
+  es: "Índice topográfico de humedad ln(a / tan β): alto donde una gran área de ladera drena hacia terreno plano. Muestra dónde se encharca el agua y el suelo se mantiene húmedo más tiempo."
+  fr: "Indice topographique d'humidité ln(a / tan β) : élevé là où une grande surface amont s'écoule vers un terrain plat. Montre où l'eau stagne et où les sols restent humides plus longtemps."
+  sw: "Kielelezo cha unyevu wa ardhi ln(a / tan β): juu pale eneo kubwa la juu linapomwaga maji kwenye ardhi tambarare. Huonyesha mahali maji hutuama na udongo hubaki na unyevu muda mrefu."
+  hi: "स्थलाकृतिक नमी सूचकांक ln(a / tan β): जहाँ बड़ा ऊपरी क्षेत्र समतल ज़मीन में बहता है वहाँ अधिक। दिखाता है कि कहाँ पानी रुकता है और मिट्टी देर तक गीली रहती है।"
+  de: "Topografischer Feuchteindex ln(a / tan β): hoch, wo eine große Einzugsfläche in flaches Gelände entwässert. Zeigt, wo Wasser steht und Böden länger nass bleiben."
+layer_frost: {en: "Frost-prone hollows", es: "Hondonadas con heladas", fr: "Cuvettes gélives", sw: "Mabonde yenye baridi kali", hi: "पाले वाले गड्ढे", de: "Frostsenken"}
+legend_low: {en: "low", es: "bajo", fr: "faible", sw: "chini", hi: "कम", de: "gering"}
+legend_cold_pool: {en: "cold-air pooling", es: "acumulación de aire frío", fr: "accumulation d'air froid", sw: "mkusanyiko wa hewa baridi", hi: "ठंडी हवा का जमाव", de: "Kaltluftsee"}
+layer_frost_why:
+  en: "Valleys and hollows lower than their surroundings (negative topographic position within ~300 m) on gentle slopes collect cold, dense air on clear, calm nights — late spring and early autumn frosts hit here first."
+  es: "Los valles y hondonadas más bajos que su entorno (posición topográfica negativa en ~300 m) en pendientes suaves acumulan aire frío y denso en noches despejadas y calmas: las heladas tardías de primavera y tempranas de otoño llegan aquí primero."
+  fr: "Les vallons et creux plus bas que leurs alentours (position topographique négative sur ~300 m) en pente douce accumulent l'air froid et dense par nuits claires et calmes — les gelées tardives de printemps et précoces d'automne y frappent en premier."
+  sw: "Mabonde na mashimo yaliyo chini kuliko mazingira yake (nafasi hasi ya ardhi ndani ya ~m 300) kwenye miteremko midogo hukusanya hewa baridi nzito usiku usio na mawingu na utulivu — baridi kali za mwisho wa masika na mwanzo wa vuli hufika hapa kwanza."
+  hi: "हल्की ढलानों पर आसपास से नीचे की घाटियाँ और गड्ढे (~300 मी में नकारात्मक स्थलाकृतिक स्थिति) साफ़, शांत रातों में ठंडी, भारी हवा जमा करते हैं — देर वसंत और जल्दी शरद का पाला यहीं पहले पड़ता है।"
+  de: "Täler und Mulden, die tiefer liegen als ihre Umgebung (negative Reliefposition im Umkreis von ~300 m), sammeln an flachen Hängen in klaren, windstillen Nächten kalte, schwere Luft – Spät- und Frühfröste treffen hier zuerst."
+layer_zones: {en: "Management zones", es: "Zonas de manejo", fr: "Zones de gestion", sw: "Kanda za usimamizi", hi: "प्रबंधन क्षेत्र", de: "Bewirtschaftungszonen"}
+layer_zones_why:
+  en: "Zones combine the maps: erosion risk (RUSLE ≥ 5 t/ha/yr, about the tolerable soil loss) and erosion hotspots (≥ 10 t/ha/yr, or the worst quarter of the at-risk part of this field), wet spots (top 10 % wetness on < 3 % slope), frost hollows (index ≥ 0.5); the rest is the productive core."
+  es: "Las zonas combinan los mapas: riesgo de erosión (RUSLE ≥ 5 t/ha/año, cerca de la pérdida tolerable) y focos de erosión (≥ 10 t/ha/año, o el peor cuarto de la parte en riesgo del campo), puntos húmedos (10 % más húmedo con pendiente < 3 %), hondonadas con heladas (índice ≥ 0,5); el resto es el núcleo productivo."
+  fr: "Les zones combinent les cartes : risque d'érosion (RUSLE ≥ 5 t/ha/an, environ la perte tolérable) et points chauds d'érosion (≥ 10 t/ha/an, ou le pire quart de la partie à risque de la parcelle), zones humides (10 % les plus humides sur pente < 3 %), cuvettes gélives (indice ≥ 0,5) ; le reste est le cœur productif."
+  sw: "Kanda zinaunganisha ramani: hatari ya mmomonyoko (RUSLE ≥ t/ha 5/mwaka, karibu na upotevu unaovumilika) na maeneo hatari ya mmomonyoko (≥ t/ha 10/mwaka, au robo mbaya zaidi ya sehemu iliyo hatarini), maeneo yenye unyevu (10 % zenye unyevu zaidi kwenye mteremko < 3 %), mabonde ya baridi kali (kielelezo ≥ 0.5); sehemu iliyobaki ni kiini chenye tija."
+  hi: "क्षेत्र नक्शों को जोड़ते हैं: कटाव जोखिम (RUSLE ≥ 5 t/हे/वर्ष, लगभग सहनीय नुकसान) और कटाव हॉटस्पॉट (≥ 10 t/हे/वर्ष, या जोखिम वाले हिस्से का सबसे खराब चौथाई), गीले स्थान (< 3 % ढलान पर शीर्ष 10 % नमी), पाले वाले गड्ढे (सूचकांक ≥ 0.5); बाकी उत्पादक मुख्य भाग है।"
+  de: "Die Zonen kombinieren die Karten: Erosionsgefahr (RUSLE ≥ 5 t/ha/Jahr, etwa der tolerierbare Abtrag) und Erosions-Hotspots (≥ 10 t/ha/Jahr oder das schlechteste Viertel des gefährdeten Teils), nasse Stellen (feuchteste 10 % bei < 3 % Neigung), Frostsenken (Index ≥ 0,5); der Rest ist der produktive Kern."
+layer_hillshade: {en: "Hillshade", es: "Sombreado", fr: "Ombrage", sw: "Kivuli cha milima", hi: "पहाड़ी छाया", de: "Schummerung"}
+layer_hillshade_why:
+  en: "Relief illuminated from the north-west to make landforms visible."
+  es: "Relieve iluminado desde el noroeste para hacer visibles las formas del terreno."
+  fr: "Relief éclairé depuis le nord-ouest pour rendre les formes du terrain visibles."
+  sw: "Umbo la ardhi limemulikwa kutoka kaskazini-magharibi ili maumbo yaonekane."
+  hi: "भू-आकृतियाँ दिखाने के लिए उत्तर-पश्चिम से रोशन की गई सतह।"
+  de: "Relief von Nordwesten beleuchtet, damit Geländeformen sichtbar werden."
+map_caveat_radius:
+  en: "Without a drawn field outline, statistics use a 150 m radius around your pin."
+  es: "Sin un contorno de campo dibujado, las estadísticas usan un radio de 150 m alrededor de su marcador."
+  fr: "Sans contour de parcelle dessiné, les statistiques utilisent un rayon de 150 m autour de votre repère."
+  sw: "Bila mpaka wa shamba uliochorwa, takwimu hutumia kipenyo cha m 150 kuzunguka alama yako."
+  hi: "खेत की सीमा न बनाई हो तो आँकड़े आपके पिन के चारों ओर 150 मी दायरे के होते हैं।"
+  de: "Ohne gezeichnete Feldgrenze gelten die Statistiken für 150 m um Ihre Markierung."
+map_caveat_features:
+  en: "Terrain maps show where water, soil and cold air move; they do not include drainage tiles, terraces or field roads."
+  es: "Los mapas de terreno muestran por dónde se mueven el agua, el suelo y el aire frío; no incluyen drenes, terrazas ni caminos."
+  fr: "Les cartes de relief montrent où circulent l'eau, le sol et l'air froid ; elles n'incluent ni drains, ni terrasses, ni chemins."
+  sw: "Ramani za ardhi zinaonyesha mahali maji, udongo na hewa baridi vinapoenda; hazijumuishi mabomba ya mifereji, matuta au barabara za shamba."
+  hi: "भू-नक्शे दिखाते हैं कि पानी, मिट्टी और ठंडी हवा कहाँ जाती है; इनमें नालियाँ, सीढ़ीदार खेत या खेत के रास्ते शामिल नहीं।"
+  de: "Geländekarten zeigen, wohin Wasser, Boden und Kaltluft wandern; Drainagen, Terrassen und Feldwege sind nicht enthalten."

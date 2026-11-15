@@ -22,13 +22,11 @@ def _card_class(animal: str, cls: str) -> str:
 
 
 DAY_HOURS = range(6, 21)  # outdoor working day considered for the advice (local time)
-ANIMAL_LABEL = {
-    "dairy_cattle": "dairy cattle",
-    "beef_cattle": "beef cattle",
-    "poultry_layers": "laying hens",
-    "poultry_broilers": "broilers",
-    "sheep_goats": "sheep & goats",
-}
+
+
+def animal_label(animal: str, lang: str = "en") -> str:
+    """Livestock class name in `lang` (config/messages/heat.yaml: animal_<id>)."""
+    return t(f"animal_{animal}", lang)
 
 
 def _days_label(days: list[dt.date], lang: str) -> str:
@@ -112,7 +110,7 @@ def heat_stress_cards(
     series.append(
         {
             "id": "wbgt_max",
-            "label": "Daily max outdoor WBGT (heat stress for workers)",
+            "label": t("series_wbgt", lang),
             "unit": "°C",
             "points": [{"date": d.isoformat(), "value": round(daily[d]["wbgt_max"], 1)} for d in dates],
             "source": a["sources"][0],
@@ -122,7 +120,7 @@ def heat_stress_cards(
     series.append(
         {
             "id": "thi_cattle",
-            "label": "Daily max temperature–humidity index (cattle)",
+            "label": t("series_thi", lang),
             "unit": "THI",
             "points": [
                 {"date": d.isoformat(), "value": round(daily[d]["thi"]["dairy_cattle"][0], 1)} for d in dates
@@ -148,12 +146,7 @@ def heat_stress_cards(
     )
     risk = max(worker_risk, animal_risk, key=RISKS.index)
     steps: list[str] = []
-    caveats = [
-        "WBGT is for a person in full sun on open ground with light clothing; shade lowers it by several °C, "
-        "heavy or protective clothing raises the effective value (NIOSH clothing adjustment).",
-        "Weather is a ~10–50 km grid value; sheltered, irrigated or humid spots can be hotter.",
-        *a["notes"],
-    ]
+    caveats = [t("hs_caveat_sun", lang), t("hs_caveat_grid", lang), *a["notes"]]
     if hot:
         run = _first_run(hot)
         start_h, end_h = restricted_window(daily, run)
@@ -185,18 +178,39 @@ def heat_stress_cards(
             )
         due = run[0].isoformat()
         steps += [
-            f"Hourly weather ({a['origin'].replace('+', ' + ')}): peak on {peak_day.isoformat()} around "
-            f"{pk.time.hour:02d}:00 with {pk.t:.1f} °C, {pk.rh:.0f}% humidity, wind {pk.wind2:.1f} m/s and sunshine {pk.ghi:.0f} W/m².",
-            f"Outdoor wet-bulb globe temperature (Liljegren et al. 2008): {pk.wbgt:.1f} °C "
-            f"(natural wet bulb and 150 mm black globe solved from their heat balances; air pressure {a['pressure']:.0f} hPa from elevation).",
-            f"NIOSH limit for acclimatized workers: REL = 56.7 − 11.5·log10(M). Moderate field work (M = 300 W) → {hs.rel_wbgt(300):.1f} °C; "
-            f"resting (115 W) → {hs.rel_wbgt(115):.1f} °C.",
-            f"At {pk.wbgt:.1f} °C, work at most {round(pk.work_frac * 100)}% of each hour (time-weighted M stays within the REL): "
-            f"≈{rest_min} min rest per hour in the shade. Unacclimatized workers (first 1–2 weeks): limit {hs.rel_wbgt(300, False):.1f} °C for moderate work.",
-            "Daily max WBGT: "
-            + ", ".join(f"{d.isoformat()[5:]} {daily[d]['wbgt_max']:.1f} °C" for d in dates)
-            + ".",
-            f"Hours with restricted work on {_days_label(run, 'en')}: {start_h:02d}:00–{end_h:02d}:00 (local time).",
+            t(
+                "hs_step_weather",
+                lang,
+                origin=a["origin"].replace("+", " + "),
+                date=peak_day.isoformat(),
+                hour=f"{pk.time.hour:02d}",
+                t=pk.t,
+                rh=pk.rh,
+                wind=pk.wind2,
+                ghi=pk.ghi,
+            ),
+            t("hs_step_wbgt", lang, wbgt=pk.wbgt, p=a["pressure"]),
+            t("hs_step_niosh", lang, rel300=hs.rel_wbgt(300), rel115=hs.rel_wbgt(115)),
+            t(
+                "hs_step_work",
+                lang,
+                wbgt=pk.wbgt,
+                pct=round(pk.work_frac * 100),
+                rest=rest_min,
+                rel=hs.rel_wbgt(300, False),
+            ),
+            t(
+                "hs_step_daily",
+                lang,
+                list=", ".join(f"{d.isoformat()[5:]} {daily[d]['wbgt_max']:.1f} °C" for d in dates),
+            ),
+            t(
+                "hs_step_hours",
+                lang,
+                days=_days_label(run, lang),
+                start=f"{start_h:02d}",
+                end=f"{end_h:02d}",
+            ),
         ]
     else:
         an, (v, cls, d0) = max(
@@ -211,20 +225,25 @@ def heat_stress_cards(
         for an, (v, cls, d0) in stressed.items():
             spec = hs.LIVESTOCK[an]
             thr = (
-                f"threshold {spec['threshold']:.0f}"
+                t("hs_thr_single", lang, v=spec["threshold"])
                 if "threshold" in spec
-                else f"classes {spec['bounds'][0]}/{spec['bounds'][1]}/{spec['bounds'][2]}"
+                else t("hs_thr_classes", lang, a=spec["bounds"][0], b=spec["bounds"][1], c=spec["bounds"][2])
             )
+            name = animal_label(an, lang)
             steps.append(
-                f"{ANIMAL_LABEL[an].capitalize()}: max THI {v:.1f} on {d0.isoformat()} → {cls} ({thr}; {spec['ref']})."
+                t(
+                    "hs_step_animal",
+                    lang,
+                    animal=name[:1].upper() + name[1:],
+                    v=v,
+                    date=d0.isoformat(),
+                    cls=t(f"thi_class_{cls}", lang),
+                    thr=thr,
+                    ref=spec["ref"],
+                )
             )
-        steps.append(
-            "Livestock actions: shade, unlimited cool water (cattle drink up to 2× more in heat), handle and move animals only "
-            "in the cool early morning, ventilate poultry houses, feed in the evening."
-        )
-        caveats.append(
-            "THI uses outdoor air; housed animals (poultry, dairy barns) can be hotter or cooler than outside."
-        )
+        steps.append(t("hs_step_livestock", lang))
+        caveats.append(t("hs_caveat_housed", lang))
     return [
         {
             "id": "heat_stress",
@@ -236,15 +255,13 @@ def heat_stress_cards(
             "due": due,
             "amount": None,
             "why": why(
-                "Heat stress for people and animals from forecast temperature, humidity, wind and sunshine: "
-                "outdoor wet-bulb globe temperature (WBGT) for field workers and temperature–humidity index (THI) for livestock.",
+                t("hs_sum", lang),
                 steps,
                 ["wbgt_max", "thi_cattle", "tmax"],
-                "Outdoor WBGT (Liljegren et al. 2008) with NIOSH 2016 / ISO 7243 work–rest limits; livestock THI (NRC 1971; Marai et al. 2007)",
+                t("model_heat_stress", lang),
                 "heat-stress",
                 0.6 if a["origin"] != "context+climatology" else 0.45,
-                "WBGT model agrees with an independent implementation to <0.02 °C and is validated against field "
-                "measurements in the literature (≈1 °C); the forecast itself is the main uncertainty.",
+                t("hs_note", lang),
                 caveats,
                 list(dict.fromkeys(["nasa_power", *a["sources"]])),
             ),

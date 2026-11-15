@@ -70,7 +70,7 @@ export default function FieldEditor() {
     setDetecting(true);
     setSelected(null);
     try {
-      const res = await api.detectField({ lat, lon, source: layer === "naip" ? "naip" : "esri" });
+      const res = await api.detectField({ lat, lon, source: layer === "naip" ? "naip" : "esri", lang: settings.lang });
       const ring = openRing(res.polygon);
       if (ring.length < 3) throw new Error("empty");
       setPolygon(ring);

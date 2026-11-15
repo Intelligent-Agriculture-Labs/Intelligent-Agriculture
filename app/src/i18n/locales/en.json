@@ -38,7 +38,9 @@
     "none": "None",
     "gotIt": "Got it",
     "showAll": "Show all {{n}}",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "weekEarlier": "7 days earlier",
+    "weekLater": "7 days later"
   },
   "banner": {
     "mock": "MOCK DATA — the FieldShift server could not be reached. Numbers below are placeholders, not NASA data.",
@@ -295,7 +297,10 @@
     "subtitleSatellite": "10 m Sentinel-2 images of your field over the last 12 months: greenness, cuttings and harvests, and AI management zones.",
     "layersButton": "Layers",
     "baseTitle": "Background map",
-    "legendTitle": "What the colours mean"
+    "legendTitle": "What the colours mean",
+    "a11yMap": "Map",
+    "a11yTerrain": "Terrain map",
+    "addCorner": "Add corner"
   },
   "plan": {
     "title": "Season planner",
@@ -453,7 +458,8 @@
     "joinTitle": "Link this device",
     "joining": "Linking to farm {{code}}…",
     "invalidCode": "This link does not contain a valid farm code.",
-    "openSettings": "Open settings"
+    "openSettings": "Open settings",
+    "defaultFarmName": "My farm"
   },
   "sat": {
     "noOutline": "Tip: draw your field outline (Edit field) for exact field statistics. Without it, a small square around your pin is analysed.",
@@ -550,7 +556,8 @@
     "errPassword": "Please enter your password.",
     "errPasswordShort": "The password needs at least 8 characters.",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "errSession": "Your session has expired. Please log in again."
   },
   "share": {
     "title": "Share farm with a code",
@@ -733,5 +740,20 @@
     "copy": "Copy text",
     "copied": "Copied — paste it into SMS or WhatsApp",
     "share": "Share…"
+  },
+  "units": {
+    "days": "days",
+    "doy": "day of year",
+    "daysYr": "days/yr",
+    "mmYr": "mm/yr",
+    "tHaYr": "t/ha/yr",
+    "usdHaYr": "USD/ha/yr",
+    "index": "index",
+    "pctLowerBetter": "% (lower better)",
+    "kgNHaYr": "kg N/ha/yr",
+    "cDecade": "°C/decade",
+    "fDecade": "°F/decade",
+    "mmDecade": "mm/decade",
+    "inDecade": "in/decade"
   }
 }

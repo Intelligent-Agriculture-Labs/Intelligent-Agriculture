@@ -1,0 +1,56 @@
+# Crop names per language (key: crop_<id>). "Name (detail)" keeps the short name before " (".
+# English must match crops.yaml / crops_extra.yaml `name`. Used by messages.crop_name() and GET /api/crops (names).
+crop_alfalfa: {en: "Alfalfa (hay)", es: "Alfalfa (heno)", fr: "Luzerne (foin)", sw: "Alfalfa (nyasi kavu)", hi: "रिजका (सूखा चारा)", de: "Luzerne (Heu)"}
+crop_maize: {en: "Maize (grain)", es: "Maíz (grano)", fr: "Maïs (grain)", sw: "Mahindi (nafaka)", hi: "मक्का (दाना)", de: "Mais (Körner)"}
+crop_maize_silage: {en: "Maize (silage)", es: "Maíz (ensilaje)", fr: "Maïs (ensilage)", sw: "Mahindi (sileji)", hi: "मक्का (साइलेज)", de: "Mais (Silage)"}
+crop_winter_wheat: {en: "Winter wheat", es: "Trigo de invierno", fr: "Blé d'hiver", sw: "Ngano ya majira ya baridi", hi: "रबी गेहूं", de: "Winterweizen"}
+crop_barley: {en: "Spring barley", es: "Cebada de primavera", fr: "Orge de printemps", sw: "Shayiri ya masika", hi: "बसंत जौ", de: "Sommergerste"}
+crop_triticale_forage: {en: "Winter triticale (forage)", es: "Triticale de invierno (forraje)", fr: "Triticale d'hiver (fourrage)", sw: "Tritikale ya baridi (lishe)", hi: "शीतकालीन ट्रिटिकेल (चारा)", de: "Wintertriticale (Futter)"}
+crop_sorghum: {en: "Sorghum (grain/forage)", es: "Sorgo (grano/forraje)", fr: "Sorgho (grain/fourrage)", sw: "Mtama (nafaka/lishe)", hi: "ज्वार (दाना/चारा)", de: "Sorghum (Körner/Futter)"}
+crop_teff: {en: "Teff (summer forage)", es: "Tef (forraje de verano)", fr: "Teff (fourrage d'été)", sw: "Tefu (lishe ya kiangazi)", hi: "टेफ (गर्मी का चारा)", de: "Teff (Sommerfutter)"}
+crop_soybean: {en: "Soybean", es: "Soja", fr: "Soja", sw: "Soya", hi: "सोयाबीन", de: "Sojabohne"}
+crop_dry_bean: {en: "Dry bean", es: "Frijol seco", fr: "Haricot sec", sw: "Maharagwe makavu", hi: "राजमा (सूखी फली)", de: "Trockenbohne"}
+crop_potato: {en: "Potato", es: "Papa", fr: "Pomme de terre", sw: "Viazi mviringo", hi: "आलू", de: "Kartoffel"}
+crop_tomato: {en: "Tomato", es: "Tomate", fr: "Tomate", sw: "Nyanya", hi: "टमाटर", de: "Tomate"}
+crop_safflower: {en: "Safflower", es: "Cártamo", fr: "Carthame", sw: "Alizeti mwitu (safflower)", hi: "कुसुम", de: "Färberdistel"}
+crop_sunflower: {en: "Sunflower", es: "Girasol", fr: "Tournesol", sw: "Alizeti", hi: "सूरजमुखी", de: "Sonnenblume"}
+crop_pearl_millet: {en: "Pearl millet", es: "Mijo perla", fr: "Mil à chandelle", sw: "Uwele", hi: "बाजरा", de: "Perlhirse"}
+crop_cowpea: {en: "Cowpea", es: "Caupí", fr: "Niébé", sw: "Kunde", hi: "लोबिया", de: "Augenbohne"}
+crop_sweet_potato: {en: "Sweet potato", es: "Camote", fr: "Patate douce", sw: "Viazi vitamu", hi: "शकरकंद", de: "Süßkartoffel"}
+crop_cover_rye_vetch: {en: "Cover crop (cereal rye + hairy vetch)", es: "Cultivo de cobertura (centeno + veza vellosa)", fr: "Couvert végétal (seigle + vesce velue)", sw: "Zao funika (raye + vechi)", hi: "आवरण फसल (राई + वेच)", de: "Zwischenfrucht (Roggen + Zottelwicke)"}
+crop_oats: {en: "Oats (spring)", es: "Avena (de primavera)", fr: "Avoine (de printemps)", sw: "Shayiri ya oti (masika)", hi: "जई (बसंत)", de: "Hafer (Sommer)"}
+crop_winter_rye: {en: "Winter rye (grain)", es: "Centeno de invierno (grano)", fr: "Seigle d'hiver (grain)", sw: "Raye ya baridi (nafaka)", hi: "शीतकालीन राई (दाना)", de: "Winterroggen (Körner)"}
+crop_durum_wheat: {en: "Durum wheat", es: "Trigo duro", fr: "Blé dur", sw: "Ngano ngumu (durum)", hi: "कठिया गेहूं", de: "Hartweizen"}
+crop_spring_wheat: {en: "Spring wheat", es: "Trigo de primavera", fr: "Blé de printemps", sw: "Ngano ya masika", hi: "बसंत गेहूं", de: "Sommerweizen"}
+crop_winter_barley: {en: "Winter barley", es: "Cebada de invierno", fr: "Orge d'hiver", sw: "Shayiri ya baridi", hi: "शीतकालीन जौ", de: "Wintergerste"}
+crop_spelt: {en: "Spelt (winter, in husk)", es: "Espelta (de invierno, con cáscara)", fr: "Épeautre (d'hiver, vêtu)", sw: "Spelti (ya baridi, na maganda)", hi: "स्पेल्ट गेहूं (शीतकालीन, छिलके सहित)", de: "Dinkel (Winter, im Spelz)"}
+crop_rice: {en: "Rice (paddy)", es: "Arroz (con cáscara)", fr: "Riz (paddy)", sw: "Mpunga", hi: "धान", de: "Reis (Rohreis)"}
+crop_sugar_beet: {en: "Sugar beet", es: "Remolacha azucarera", fr: "Betterave sucrière", sw: "Kiazi sukari", hi: "चुकंदर (चीनी)", de: "Zuckerrübe"}
+crop_winter_rapeseed: {en: "Winter oilseed rape / canola", es: "Colza de invierno / canola", fr: "Colza d'hiver", sw: "Kanola ya baridi", hi: "शीतकालीन सरसों / कैनोला", de: "Winterraps"}
+crop_mustard_cover: {en: "Mustard (cover / biofumigant)", es: "Mostaza (cobertura / biofumigante)", fr: "Moutarde (couvert / biofumigant)", sw: "Haradali (zao funika)", hi: "सरसों (आवरण / जैव-धूमक)", de: "Senf (Zwischenfrucht / Biofumigation)"}
+crop_flax: {en: "Flax / linseed", es: "Lino / linaza", fr: "Lin", sw: "Kitani", hi: "अलसी", de: "Lein / Öllein"}
+crop_cotton: {en: "Cotton (lint)", es: "Algodón (fibra)", fr: "Coton (fibre)", sw: "Pamba (nyuzi)", hi: "कपास (रुई)", de: "Baumwolle (Faser)"}
+crop_field_pea: {en: "Field pea (dry)", es: "Arveja (seca)", fr: "Pois protéagineux (sec)", sw: "Njegere (kavu)", hi: "मटर (सूखा)", de: "Futtererbse (trocken)"}
+crop_lentil: {en: "Lentil", es: "Lenteja", fr: "Lentille", sw: "Adesi", hi: "मसूर", de: "Linse"}
+crop_chickpea: {en: "Chickpea", es: "Garbanzo", fr: "Pois chiche", sw: "Dengu", hi: "चना", de: "Kichererbse"}
+crop_faba_bean: {en: "Faba bean (dry)", es: "Haba (seca)", fr: "Féverole (sèche)", sw: "Maharagwe fava (makavu)", hi: "बाकला (सूखा)", de: "Ackerbohne (trocken)"}
+crop_groundnut: {en: "Groundnut / peanut (in shell)", es: "Maní (con cáscara)", fr: "Arachide (en coque)", sw: "Karanga (na maganda)", hi: "मूंगफली (छिलके सहित)", de: "Erdnuss (in der Schale)"}
+crop_pigeon_pea: {en: "Pigeon pea", es: "Gandul", fr: "Pois d'Angole", sw: "Mbaazi", hi: "अरहर", de: "Straucherbse"}
+crop_mung_bean: {en: "Mung bean (green gram)", es: "Frijol mungo", fr: "Haricot mungo", sw: "Choroko (ndengu)", hi: "मूंग", de: "Mungbohne"}
+crop_cassava: {en: "Cassava (fresh roots)", es: "Yuca (raíces frescas)", fr: "Manioc (racines fraîches)", sw: "Muhogo (mizizi mibichi)", hi: "कसावा (ताज़ी जड़ें)", de: "Maniok (frische Knollen)"}
+crop_sugarcane: {en: "Sugarcane (ratoon cycle)", es: "Caña de azúcar (ciclo de soca)", fr: "Canne à sucre (cycle de repousse)", sw: "Miwa (mzunguko wa machipukizi)", hi: "गन्ना (पेड़ी चक्र)", de: "Zuckerrohr (Ratoon-Zyklus)"}
+crop_onion: {en: "Onion (dry bulb)", es: "Cebolla (bulbo seco)", fr: "Oignon (bulbe sec)", sw: "Kitunguu (kikavu)", hi: "प्याज़ (सूखा कंद)", de: "Zwiebel (Trockenzwiebel)"}
+crop_carrot: {en: "Carrot", es: "Zanahoria", fr: "Carotte", sw: "Karoti", hi: "गाजर", de: "Möhre"}
+crop_cabbage: {en: "Cabbage / brassica vegetables", es: "Repollo / coles", fr: "Chou / légumes-choux", sw: "Kabichi / sukuma", hi: "पत्तागोभी / गोभी सब्ज़ियाँ", de: "Kohl / Kohlgemüse"}
+crop_pepper: {en: "Pepper (bell / chilli)", es: "Pimiento (dulce / ají)", fr: "Poivron / piment", sw: "Pilipili (hoho / kali)", hi: "मिर्च (शिमला / हरी)", de: "Paprika (Gemüse / Chili)"}
+crop_watermelon: {en: "Watermelon / melon", es: "Sandía / melón", fr: "Pastèque / melon", sw: "Tikiti maji / tikiti", hi: "तरबूज़ / खरबूजा", de: "Wassermelone / Melone"}
+crop_squash: {en: "Squash / pumpkin", es: "Calabaza / zapallo", fr: "Courge / potiron", sw: "Boga / maboga", hi: "कद्दू", de: "Kürbis"}
+crop_sweet_corn: {en: "Sweet corn (fresh ears)", es: "Maíz dulce (mazorcas frescas)", fr: "Maïs doux (épis frais)", sw: "Mahindi matamu (mabichi)", hi: "स्वीट कॉर्न (ताज़े भुट्टे)", de: "Zuckermais (frische Kolben)"}
+crop_buckwheat: {en: "Buckwheat", es: "Alforfón", fr: "Sarrasin", sw: "Bakwiti", hi: "कुट्टू", de: "Buchweizen"}
+crop_quinoa: {en: "Quinoa", es: "Quinua", fr: "Quinoa", sw: "Kinoa", hi: "क्विनोआ", de: "Quinoa"}
+crop_hemp: {en: "Hemp (grain)", es: "Cáñamo (grano)", fr: "Chanvre (graine)", sw: "Katani (mbegu)", hi: "भांग (बीज)", de: "Hanf (Körner)"}
+crop_clover_grass_ley: {en: "Grass–clover ley (hay/silage)", es: "Pradera de gramíneas y trébol (heno/ensilaje)", fr: "Prairie temporaire graminées–trèfle (foin/ensilage)", sw: "Malisho ya nyasi na karafuu (nyasi kavu/sileji)", hi: "घास–तिपतिया चारागाह (सूखा चारा/साइलेज)", de: "Kleegras (Heu/Silage)"}
+crop_phacelia_cover: {en: "Phacelia (cover)", es: "Facelia (cobertura)", fr: "Phacélie (couvert)", sw: "Fasilia (zao funika)", hi: "फेसेलिया (आवरण फसल)", de: "Phacelia (Zwischenfrucht)"}
+crop_sorghum_sudan: {en: "Sorghum-sudangrass (forage / cover)", es: "Sorgo forrajero sudán (forraje / cobertura)", fr: "Sorgho fourrager (fourrage / couvert)", sw: "Mtama-sudani (lishe / zao funika)", hi: "सूडान ज्वार (चारा / आवरण)", de: "Sudangras-Hybride (Futter / Zwischenfrucht)"}
+crop_coffee: {en: "Coffee (arabica)", es: "Café (arábica)", fr: "Café (arabica)", sw: "Kahawa (arabika)", hi: "कॉफ़ी (अरेबिका)", de: "Kaffee (Arabica)"}
+crop_banana: {en: "Banana / plantain", es: "Banano / plátano", fr: "Banane / plantain", sw: "Ndizi", hi: "केला", de: "Banane / Kochbanane"}

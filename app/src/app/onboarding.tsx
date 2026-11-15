@@ -33,7 +33,7 @@ function polygonAreaHa(pts: [number, number][]): number {
 
 export default function Onboarding() {
   const t = useTheme();
-  const { t: tr } = useTranslation();
+  const { t: tr, i18n } = useTranslation();
   const { field, setField } = useStore();
   // deep link for demos / scripted captures: fieldshift://onboarding?preset=fallon_nv&replay=1
   const params = useLocalSearchParams<{ preset?: string; replay?: string }>();
@@ -92,7 +92,7 @@ export default function Onboarding() {
     setDetectBusy(true);
     setDetectMsg(null);
     try {
-      const res = await api.detectField({ lat: la, lon: lo, source: "esri" });
+      const res = await api.detectField({ lat: la, lon: lo, source: "esri", lang: i18n.language });
       const ring = openRing(res.polygon);
       if (ring.length < 3) throw new Error("empty");
       const c = polygonCentroid(ring);

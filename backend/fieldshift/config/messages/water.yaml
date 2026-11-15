@@ -1,0 +1,151 @@
+# Water supply evidence (engine/water_supply.py): GRACE groundwater trend and rain provenance (POWER + GPM IMERG).
+gw_caveat_regional:
+  en: "This is a regional signal: your own well can stay steady while the region loses water, or the reverse."
+  es: "Es una señal regional: su pozo puede mantenerse estable mientras la región pierde agua, o al revés."
+  fr: "C'est un signal régional : votre puits peut rester stable alors que la région perd de l'eau, ou l'inverse."
+  sw: "Hii ni ishara ya kikanda: kisima chako kinaweza kubaki sawa wakati eneo linapoteza maji, au kinyume chake."
+  hi: "यह क्षेत्रीय संकेत है: क्षेत्र का पानी घटते हुए भी आपका कुआँ स्थिर रह सकता है, या उल्टा।"
+  de: "Das ist ein regionales Signal: Ihr eigener Brunnen kann stabil bleiben, während die Region Wasser verliert – oder umgekehrt."
+gw_caveat_total:
+  en: "GRACE senses total water storage (groundwater + soil water + surface water + snow) over ~300 km (one 3° mascon), not the aquifer under your field; local wells can behave differently."
+  es: "GRACE mide el agua total almacenada (subterránea + del suelo + superficial + nieve) en ~300 km (un mascon de 3°), no el acuífero bajo su campo; los pozos locales pueden comportarse distinto."
+  fr: "GRACE mesure le stock d'eau total (nappes + eau du sol + eaux de surface + neige) sur ~300 km (un mascon de 3°), pas l'aquifère sous votre parcelle ; les puits locaux peuvent se comporter autrement."
+  sw: "GRACE hupima jumla ya maji yaliyohifadhiwa (ya ardhini + ya udongo + ya juu + theluji) kwa ~km 300 (mascon moja ya 3°), si chemichemi iliyo chini ya shamba lako; visima vya eneo vinaweza kuwa tofauti."
+  hi: "GRACE ~300 किमी (एक 3° मैस्कॉन) में कुल जल भंडार (भूजल + मिट्टी का पानी + सतही पानी + बर्फ़) मापता है, आपके खेत के नीचे का जलभृत नहीं; स्थानीय कुएँ अलग व्यवहार कर सकते हैं।"
+  de: "GRACE misst den gesamten Wasservorrat (Grundwasser + Bodenwasser + Oberflächenwasser + Schnee) über ~300 km (ein 3°-Mascon), nicht den Grundwasserleiter unter Ihrem Feld; lokale Brunnen können sich anders verhalten."
+gw_caveat_latency:
+  en: "GRACE data arrive ~2–3 months late, and the GRACE → GRACE-FO gap (Jul 2017 – May 2018) has no data."
+  es: "Los datos GRACE llegan con ~2–3 meses de retraso, y no hay datos en la pausa GRACE → GRACE-FO (jul 2017 – may 2018)."
+  fr: "Les données GRACE arrivent avec ~2–3 mois de retard, et la lacune GRACE → GRACE-FO (juil. 2017 – mai 2018) n'a pas de données."
+  sw: "Data za GRACE hufika kwa kuchelewa ~miezi 2–3, na pengo la GRACE → GRACE-FO (Jul 2017 – Mei 2018) halina data."
+  hi: "GRACE डेटा ~2–3 महीने देर से आता है, और GRACE → GRACE-FO अंतराल (जुलाई 2017 – मई 2018) में डेटा नहीं है।"
+  de: "GRACE-Daten kommen ~2–3 Monate verspätet, und in der Lücke GRACE → GRACE-FO (Juli 2017 – Mai 2018) gibt es keine Daten."
+rain_step_imerg:
+  en: "Rain: NASA POWER (MERRA-2) and NASA GPM IMERG satellite rain averaged day by day (IMERG to {last}; later days use POWER scaled to IMERG's climatology). Against 18 rain gauges on 6 continents this blend beat POWER alone at 16 (VALIDATION V13)."
+  es: "Lluvia: NASA POWER (MERRA-2) y lluvia satelital NASA GPM IMERG promediadas día a día (IMERG hasta el {last}; los días posteriores usan POWER escalado a la climatología de IMERG). Frente a 18 pluviómetros en 6 continentes, esta combinación superó a POWER solo en 16 (VALIDACIÓN V13)."
+  fr: "Pluie : NASA POWER (MERRA-2) et pluie satellite NASA GPM IMERG moyennées jour par jour (IMERG jusqu'au {last} ; ensuite POWER recalé sur la climatologie IMERG). Face à 18 pluviomètres sur 6 continents, ce mélange a battu POWER seul dans 16 cas (VALIDATION V13)."
+  sw: "Mvua: NASA POWER (MERRA-2) na mvua ya setilaiti ya NASA GPM IMERG zimewekwa wastani siku kwa siku (IMERG hadi {last}; siku za baadaye hutumia POWER iliyorekebishwa kwa takwimu za IMERG). Dhidi ya vipimo 18 vya mvua katika mabara 6 mchanganyiko huu ulishinda POWER peke yake mara 16 (UTHIBITISHO V13)."
+  hi: "वर्षा: NASA POWER (MERRA-2) और NASA GPM IMERG उपग्रह वर्षा का दिन-प्रतिदिन औसत ({last} तक IMERG; बाद के दिनों में IMERG जलवायु के अनुसार समायोजित POWER)। 6 महाद्वीपों के 18 वर्षामापियों पर यह मिश्रण 16 जगह अकेले POWER से बेहतर रहा (सत्यापन V13)।"
+  de: "Regen: NASA POWER (MERRA-2) und NASA-GPM-IMERG-Satellitenregen, Tag für Tag gemittelt (IMERG bis {last}; spätere Tage nutzen auf die IMERG-Klimatologie skaliertes POWER). Gegen 18 Regenmesser auf 6 Kontinenten schlug diese Kombination POWER allein an 16 Stationen (VALIDIERUNG V13)."
+rain_step_power_only:
+  en: "Rain: NASA POWER only — GPM IMERG blending is validated only between 45° S and 45° N."
+  es: "Lluvia: solo NASA POWER; la combinación con GPM IMERG solo está validada entre 45° S y 45° N."
+  fr: "Pluie : NASA POWER seul — le mélange avec GPM IMERG n'est validé qu'entre 45° S et 45° N."
+  sw: "Mvua: NASA POWER pekee — kuchanganya na GPM IMERG kumethibitishwa tu kati ya 45° Kusini na 45° Kaskazini."
+  hi: "वर्षा: केवल NASA POWER — GPM IMERG मिश्रण केवल 45° द और 45° उ के बीच सत्यापित है।"
+  de: "Regen: nur NASA POWER – die Kombination mit GPM IMERG ist nur zwischen 45° S und 45° N validiert."
+gw_sig_yes: {en: "statistically significant", es: "estadísticamente significativa", fr: "statistiquement significative", sw: "muhimu kitakwimu", hi: "सांख्यिकीय रूप से महत्वपूर्ण", de: "statistisch signifikant"}
+gw_sig_likely: {en: "probable but not certain", es: "probable pero no segura", fr: "probable mais pas certaine", sw: "inawezekana lakini si hakika", hi: "संभावित पर निश्चित नहीं", de: "wahrscheinlich, aber nicht sicher"}
+gw_sig_no: {en: "not significant", es: "no significativa", fr: "non significative", sw: "si muhimu kitakwimu", hi: "महत्वपूर्ण नहीं", de: "nicht signifikant"}
+gw_trend_text:
+  en: "{slope:+.2f} ± {se:.2f} cm/yr (95 % range), p = {p:.3f} — {sig}"
+  es: "{slope:+.2f} ± {se:.2f} cm/año (rango 95 %), p = {p:.3f}: {sig}"
+  fr: "{slope:+.2f} ± {se:.2f} cm/an (intervalle 95 %), p = {p:.3f} — {sig}"
+  sw: "{slope:+.2f} ± {se:.2f} sm/mwaka (kiwango cha 95 %), p = {p:.3f} — {sig}"
+  hi: "{slope:+.2f} ± {se:.2f} सेमी/वर्ष (95 % सीमा), p = {p:.3f} — {sig}"
+  de: "{slope:+.2f} ± {se:.2f} cm/Jahr (95-%-Bereich), p = {p:.3f} – {sig}"
+series_grace_tws:
+  en: "Water storage anomaly (GRACE/GRACE-FO, ~300 km)"
+  es: "Anomalía del agua almacenada (GRACE/GRACE-FO, ~300 km)"
+  fr: "Anomalie du stock d'eau (GRACE/GRACE-FO, ~300 km)"
+  sw: "Hitilafu ya maji yaliyohifadhiwa (GRACE/GRACE-FO, ~km 300)"
+  hi: "जल भंडार विसंगति (GRACE/GRACE-FO, ~300 किमी)"
+  de: "Wasserspeicher-Anomalie (GRACE/GRACE-FO, ~300 km)"
+series_grace_trend: {en: "Long-term trend (fitted)", es: "Tendencia a largo plazo (ajustada)", fr: "Tendance à long terme (ajustée)", sw: "Mwelekeo wa muda mrefu (uliokokotolewa)", hi: "दीर्घकालिक रुझान (फ़िट किया गया)", de: "Langfristiger Trend (angepasst)"}
+gw_step_intro:
+  en: "NASA GRACE and GRACE-FO weigh the water stored under and on the land each month ({first} to {last}, {n} months; JPL RL06.3 mascons)."
+  es: "NASA GRACE y GRACE-FO pesan cada mes el agua almacenada bajo y sobre la tierra ({first} a {last}, {n} meses; mascons JPL RL06.3)."
+  fr: "NASA GRACE et GRACE-FO pèsent chaque mois l'eau stockée sous et sur les terres ({first} à {last}, {n} mois ; mascons JPL RL06.3)."
+  sw: "NASA GRACE na GRACE-FO hupima uzito wa maji yaliyohifadhiwa chini na juu ya ardhi kila mwezi ({first} hadi {last}, miezi {n}; mascon za JPL RL06.3)."
+  hi: "NASA GRACE और GRACE-FO हर महीने ज़मीन के नीचे और ऊपर जमा पानी को तौलते हैं ({first} से {last}, {n} महीने; JPL RL06.3 मैस्कॉन)।"
+  de: "NASA GRACE und GRACE-FO wiegen jeden Monat das Wasser unter und auf dem Land ({first} bis {last}, {n} Monate; JPL-RL06.3-Mascons)."
+gw_step_trend:
+  en: "Trend at this location: {trend}. Change since 2003: {change:+.0f} cm of water."
+  es: "Tendencia en este lugar: {trend}. Cambio desde 2003: {change:+.0f} cm de agua."
+  fr: "Tendance à cet endroit : {trend}. Variation depuis 2003 : {change:+.0f} cm d'eau."
+  sw: "Mwelekeo mahali hapa: {trend}. Mabadiliko tangu 2003: sm {change:+.0f} za maji."
+  hi: "इस स्थान पर रुझान: {trend}। 2003 से बदलाव: {change:+.0f} सेमी पानी।"
+  de: "Trend an diesem Ort: {trend}. Änderung seit 2003: {change:+.0f} cm Wasser."
+gw_step_recent:
+  en: "Last 3 months (seasonal cycle removed): {anom:+.0f} cm vs. the 2004–2009 mean, lower than {pct:.0f} % of months on record."
+  es: "Últimos 3 meses (sin ciclo estacional): {anom:+.0f} cm frente a la media 2004–2009, por debajo del {pct:.0f} % de los meses registrados."
+  fr: "3 derniers mois (cycle saisonnier retiré) : {anom:+.0f} cm par rapport à la moyenne 2004–2009, plus bas que {pct:.0f} % des mois enregistrés."
+  sw: "Miezi 3 iliyopita (mzunguko wa msimu umeondolewa): sm {anom:+.0f} ukilinganisha na wastani wa 2004–2009, chini kuliko {pct:.0f} % ya miezi iliyorekodiwa."
+  hi: "पिछले 3 महीने (मौसमी चक्र हटाकर): 2004–2009 के औसत की तुलना में {anom:+.0f} सेमी, रिकॉर्ड के {pct:.0f} % महीनों से कम।"
+  de: "Letzte 3 Monate (ohne Jahresgang): {anom:+.0f} cm gegenüber dem Mittel 2004–2009, niedriger als {pct:.0f} % der erfassten Monate."
+gw_step_5y:
+  en: "Last 5 years alone: {slope:+.1f} cm/yr (wet or dry spells dominate short windows)."
+  es: "Solo los últimos 5 años: {slope:+.1f} cm/año (las rachas húmedas o secas dominan en periodos cortos)."
+  fr: "5 dernières années seules : {slope:+.1f} cm/an (les épisodes humides ou secs dominent sur des périodes courtes)."
+  sw: "Miaka 5 iliyopita pekee: sm {slope:+.1f}/mwaka (vipindi vya mvua au ukame hutawala vipindi vifupi)."
+  hi: "केवल पिछले 5 वर्ष: {slope:+.1f} सेमी/वर्ष (छोटी अवधि में गीले या सूखे दौर हावी रहते हैं)।"
+  de: "Nur die letzten 5 Jahre: {slope:+.1f} cm/Jahr (nasse oder trockene Phasen dominieren kurze Zeiträume)."
+gw_step_wells:
+  en: "Check against wells (VALIDATION V14): in 11 U.S. aquifer regions, GRACE's yearly storage moved with USGS groundwater levels in all 11 (median r = 0.56) and the trend direction matched in 8; it can disagree where irrigation recharge keeps shallow wells steady while the wider region dries (e.g. Fallon, Nevada)."
+  es: "Comprobación con pozos (VALIDACIÓN V14): en 11 regiones acuíferas de EE. UU., el almacenamiento anual de GRACE se movió con los niveles freáticos del USGS en las 11 (r mediana = 0,56) y la dirección de la tendencia coincidió en 8; puede discrepar donde la recarga por riego mantiene estables los pozos someros mientras la región se seca (p. ej. Fallon, Nevada)."
+  fr: "Vérification avec des puits (VALIDATION V14) : dans 11 régions aquifères des États-Unis, le stock annuel GRACE a suivi les niveaux de nappe USGS dans les 11 (r médian = 0,56) et le sens de la tendance concordait dans 8 ; il peut diverger là où la recharge par l'irrigation maintient les puits peu profonds alors que la région s'assèche (p. ex. Fallon, Nevada)."
+  sw: "Ulinganisho na visima (UTHIBITISHO V14): katika maeneo 11 ya chemichemi nchini Marekani, hifadhi ya kila mwaka ya GRACE ilienda sambamba na viwango vya maji ya ardhini vya USGS katika yote 11 (r ya kati = 0.56) na mwelekeo ulilingana katika 8; inaweza kutofautiana pale ujazaji wa umwagiliaji unapoweka visima vifupi sawa wakati eneo pana linakauka (mf. Fallon, Nevada)."
+  hi: "कुओं से जाँच (सत्यापन V14): अमेरिका के 11 जलभृत क्षेत्रों में GRACE का वार्षिक भंडार सभी 11 में USGS भूजल स्तर के साथ बदला (माध्यिका r = 0.56) और 8 में रुझान की दिशा मेल खाई; जहाँ सिंचाई से उथले कुएँ भरे रहते हैं पर बड़ा क्षेत्र सूखता है, वहाँ अंतर हो सकता है (जैसे Fallon, Nevada)।"
+  de: "Abgleich mit Brunnen (VALIDIERUNG V14): In 11 US-Grundwasserregionen folgte der jährliche GRACE-Speicher in allen 11 den USGS-Grundwasserständen (Median r = 0,56), die Trendrichtung stimmte in 8; Abweichungen gibt es, wo Bewässerung flache Brunnen auffüllt, während die Region austrocknet (z. B. Fallon, Nevada)."
+gw_step_moved:
+  en: "Nearest land cell used ({km} km away)."
+  es: "Se usó la celda terrestre más cercana (a {km} km)."
+  fr: "Cellule terrestre la plus proche utilisée (à {km} km)."
+  sw: "Seli ya nchi kavu iliyo karibu zaidi imetumika (km {km})."
+  hi: "सबसे नज़दीकी ज़मीनी सेल उपयोग किया गया ({km} किमी दूर)।"
+  de: "Nächstgelegene Landzelle verwendet ({km} km entfernt)."
+gw_note_sig:
+  en: "A long, statistically tested record; but the footprint is ~300 km and includes soil and surface water."
+  es: "Un registro largo y probado estadísticamente; pero la huella es de ~300 km e incluye agua del suelo y superficial."
+  fr: "Une longue série testée statistiquement ; mais l'emprise est de ~300 km et inclut l'eau du sol et de surface."
+  sw: "Kumbukumbu ndefu iliyopimwa kitakwimu; lakini eneo ni ~km 300 na linajumuisha maji ya udongo na ya juu."
+  hi: "लंबा, सांख्यिकीय रूप से परखा रिकॉर्ड; पर दायरा ~300 किमी है और इसमें मिट्टी व सतही पानी शामिल है।"
+  de: "Eine lange, statistisch geprüfte Reihe; die Fläche ist aber ~300 km groß und umfasst Boden- und Oberflächenwasser."
+gw_note_uncertain:
+  en: "Year-to-year swings are large compared with the trend, so its direction is uncertain."
+  es: "Las variaciones entre años son grandes frente a la tendencia, así que su dirección es incierta."
+  fr: "Les variations d'une année à l'autre sont grandes par rapport à la tendance, sa direction est donc incertaine."
+  sw: "Tofauti za mwaka hadi mwaka ni kubwa ukilinganisha na mwelekeo, hivyo mwelekeo wake hauna uhakika."
+  hi: "रुझान की तुलना में साल-दर-साल उतार-चढ़ाव बड़े हैं, इसलिए इसकी दिशा अनिश्चित है।"
+  de: "Die Schwankungen von Jahr zu Jahr sind groß gegenüber dem Trend, seine Richtung ist daher unsicher."
+gw_status_declining: {en: "falling", es: "bajando", fr: "en baisse", sw: "yanapungua", hi: "घट रहा है", de: "rückläufig"}
+gw_status_likely_declining: {en: "probably falling", es: "probablemente bajando", fr: "probablement en baisse", sw: "huenda yanapungua", hi: "संभवतः घट रहा है", de: "wahrscheinlich rückläufig"}
+gw_status_stable: {en: "no clear trend", es: "sin tendencia clara", fr: "sans tendance nette", sw: "bila mwelekeo wazi", hi: "कोई स्पष्ट रुझान नहीं", de: "ohne klaren Trend"}
+gw_status_likely_rising: {en: "probably rising", es: "probablemente subiendo", fr: "probablement en hausse", sw: "huenda yanaongezeka", hi: "संभवतः बढ़ रहा है", de: "wahrscheinlich steigend"}
+gw_status_rising: {en: "rising", es: "subiendo", fr: "en hausse", sw: "yanaongezeka", hi: "बढ़ रहा है", de: "steigend"}
+gw_sum:
+  en: "Water stored in this region is {status}: {slope:+.1f} cm per year since {year} (p = {p:.2f})."
+  es: "El agua almacenada en esta región está {status}: {slope:+.1f} cm por año desde {year} (p = {p:.2f})."
+  fr: "L'eau stockée dans cette région est {status} : {slope:+.1f} cm par an depuis {year} (p = {p:.2f})."
+  sw: "Maji yaliyohifadhiwa katika eneo hili {status}: sm {slope:+.1f} kwa mwaka tangu {year} (p = {p:.2f})."
+  hi: "इस क्षेत्र में जमा पानी {status}: {year} से प्रति वर्ष {slope:+.1f} सेमी (p = {p:.2f})।"
+  de: "Der Wasservorrat in dieser Region ist {status}: {slope:+.1f} cm pro Jahr seit {year} (p = {p:.2f})."
+model_grace:
+  en: "Harmonic regression with AR(1)-adjusted trend test on GRACE/GRACE-FO mascons"
+  es: "Regresión armónica con prueba de tendencia ajustada AR(1) sobre mascons GRACE/GRACE-FO"
+  fr: "Régression harmonique avec test de tendance ajusté AR(1) sur les mascons GRACE/GRACE-FO"
+  sw: "Urejeshi wa harmoniki na jaribio la mwelekeo lililorekebishwa kwa AR(1) kwenye mascon za GRACE/GRACE-FO"
+  hi: "GRACE/GRACE-FO मैस्कॉन पर AR(1)-समायोजित रुझान परीक्षण के साथ हार्मोनिक प्रतिगमन"
+  de: "Harmonische Regression mit AR(1)-korrigiertem Trendtest auf GRACE/GRACE-FO-Mascons"
+gw_step_irrigated:
+  en: "On an irrigated farm, falling storage means pumping is drawing down the aquifer faster than rain and rivers refill it: wells get deeper and pumping costs rise."
+  es: "En una finca con riego, un almacenamiento en descenso significa que el bombeo vacía el acuífero más rápido de lo que la lluvia y los ríos lo recargan: los pozos se hacen más profundos y el bombeo cuesta más."
+  fr: "Sur une ferme irriguée, un stock en baisse signifie que le pompage vide l'aquifère plus vite que la pluie et les rivières ne le rechargent : les puits s'approfondissent et le pompage coûte plus cher."
+  sw: "Kwenye shamba linalomwagiliwa, hifadhi inayopungua inamaanisha kusukuma maji kunamaliza chemichemi haraka kuliko mvua na mito inavyoijaza: visima vinakuwa virefu zaidi na gharama ya kusukuma inapanda."
+  hi: "सिंचित खेत पर घटते भंडार का मतलब है कि पंपिंग जलभृत को बारिश और नदियों के भरने से तेज़ी से खाली कर रही है: कुएँ गहरे होते हैं और पंपिंग महँगी होती है।"
+  de: "Auf einem bewässerten Betrieb heißt sinkender Vorrat: Die Pumpen entleeren den Grundwasserleiter schneller, als Regen und Flüsse ihn auffüllen – Brunnen werden tiefer und das Pumpen teurer."
+gw_step_rotations:
+  en: "Water-saving rotations (fewer thirsty crops in a row, deficit irrigation, winter cover crops instead of summer-irrigated crops) reduce the draw; compare them in the Rotations tab."
+  es: "Las rotaciones que ahorran agua (menos cultivos sedientos seguidos, riego deficitario, coberturas de invierno en lugar de cultivos regados en verano) reducen la extracción; compárelas en la pestaña Rotaciones."
+  fr: "Les rotations économes en eau (moins de cultures gourmandes à la suite, irrigation déficitaire, couverts d'hiver au lieu de cultures irriguées l'été) réduisent les prélèvements ; comparez-les dans l'onglet Rotations."
+  sw: "Mizunguko inayookoa maji (mazao machache yenye kiu mfululizo, umwagiliaji pungufu, mazao funika ya baridi badala ya mazao yanayomwagiliwa kiangazi) hupunguza uvutaji; yalinganishe kwenye kichupo cha Mizunguko."
+  hi: "पानी बचाने वाले फसल-चक्र (लगातार कम प्यासी फसलें, घाटा सिंचाई, गर्मियों की सिंचित फसलों की जगह सर्दियों की आवरण फसलें) निकासी घटाते हैं; इन्हें फसल-चक्र टैब में तुलना करें।"
+  de: "Wassersparende Fruchtfolgen (weniger durstige Kulturen hintereinander, Defizitbewässerung, Winterzwischenfrüchte statt sommerbewässerter Kulturen) senken die Entnahme; vergleichen Sie sie im Tab Fruchtfolgen."
+gw_rotation_note:
+  en: "NASA GRACE/GRACE-FO: water storage in this region is falling ({slope:+.1f} cm/yr since {year}, p = {p:.2f}), so water use counts {f:g}× in the ranking. Prefer rotations that pump less."
+  es: "NASA GRACE/GRACE-FO: el agua almacenada en esta región está bajando ({slope:+.1f} cm/año desde {year}, p = {p:.2f}), así que el uso de agua cuenta {f:g}× en la clasificación. Prefiera rotaciones que bombeen menos."
+  fr: "NASA GRACE/GRACE-FO : le stock d'eau de cette région baisse ({slope:+.1f} cm/an depuis {year}, p = {p:.2f}), donc la consommation d'eau compte {f:g}× dans le classement. Préférez les rotations qui pompent moins."
+  sw: "NASA GRACE/GRACE-FO: maji yaliyohifadhiwa katika eneo hili yanapungua (sm {slope:+.1f}/mwaka tangu {year}, p = {p:.2f}), hivyo matumizi ya maji yanahesabiwa mara {f:g} katika mpangilio. Pendelea mizunguko inayosukuma maji kidogo."
+  hi: "NASA GRACE/GRACE-FO: इस क्षेत्र में जल भंडार घट रहा है ({year} से {slope:+.1f} सेमी/वर्ष, p = {p:.2f}), इसलिए रैंकिंग में पानी का उपयोग {f:g}× गिना जाता है। कम पंपिंग वाले फसल-चक्र चुनें।"
+  de: "NASA GRACE/GRACE-FO: Der Wasservorrat in dieser Region sinkt ({slope:+.1f} cm/Jahr seit {year}, p = {p:.2f}), daher zählt der Wasserverbrauch {f:g}× in der Rangfolge. Fruchtfolgen mit weniger Pumpbedarf bevorzugen."
+series_precip_imerg: {en: "Rain (NASA POWER + GPM IMERG)", es: "Lluvia (NASA POWER + GPM IMERG)", fr: "Pluie (NASA POWER + GPM IMERG)", sw: "Mvua (NASA POWER + GPM IMERG)", hi: "वर्षा (NASA POWER + GPM IMERG)", de: "Regen (NASA POWER + GPM IMERG)"}

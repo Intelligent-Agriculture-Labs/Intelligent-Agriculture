@@ -12,9 +12,11 @@ import numpy as np
 from ..science import pests as pst
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, gdd, gdd_requirement, simulate
 from .context import build
+from .messages import t
 from .rain_season import onset_ok, planner_season
+from .risk_cards import legacy_event, legacy_pest
 
-STAGE_NAMES = ["Establishment complete", "Full canopy / flowering", "Start of ripening", "Maturity / harvest"]
+STAGE_KEYS = ["plan_stage_0", "plan_stage_1", "plan_stage_2", "plan_stage_3"]  # config/messages/planner.yaml
 
 
 def _next_occurrence(p: dt.date, today: dt.date) -> dt.date:
@@ -28,6 +30,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
     ctx = build(lat, lon, today)
     w = ctx.weather
     cid = req["crop"]
+    lang = req.get("lang") or "en"
     c = crop(cid)
     method = req.get("irrigation", "sprinkler")
     irrigated = method != "none"
@@ -64,7 +67,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
         return out
 
     # ---- rain-fed tropics: the scan must respect the rainy-season onset climatology (engine/rain_season.py)
-    rain_lim = planner_season(ctx, c, cid, p_next, today, irrigated)
+    rain_lim = planner_season(ctx, c, cid, p_next, today, irrigated, lang)
     cands = [p_next + dt.timedelta(days=7 * k) for k in range(-6, 7)]
     if rain_lim is not None:
         # make sure the scan covers the onset-based window even if the entered date is far from it
@@ -117,7 +120,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
 
     # ---- chosen date: stages, water budget, events
     runs = run(p_next, True)
-    stage_offsets: list[list[int]] = [[] for _ in STAGE_NAMES]
+    stage_offsets: list[list[int]] = [[] for _ in STAGE_KEYS]
     cut_offsets: list[list[int]] = []
     monthly: dict[int, dict[str, list[float]]] = {}
     req_gdd = gdd_requirement(c, w, p_next, years)
@@ -187,7 +190,8 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
             if offs:
                 stages.append(
                     {
-                        "label": f"Cutting {k + 1}",
+                        "label": t("plan_cutting", lang, n=k + 1),
+                        "kind": "harvest",
                         "date": (p_next + dt.timedelta(days=int(median(offs)))).isoformat(),
                         "spread_days": int(np.percentile(offs, 90) - np.percentile(offs, 10))
                         if len(offs) > 2
@@ -195,11 +199,12 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
                     }
                 )
     else:
-        for name, offs in zip(STAGE_NAMES, stage_offsets, strict=True):
+        for si, (key, offs) in enumerate(zip(STAGE_KEYS, stage_offsets, strict=True)):
             if offs:
                 stages.append(
                     {
-                        "label": name,
+                        "label": t(key, lang),
+                        "kind": "harvest" if si == len(STAGE_KEYS) - 1 else "stage",
                         "date": (p_next + dt.timedelta(days=int(median(offs)))).isoformat(),
                         "spread_days": int(np.percentile(offs, 90) - np.percentile(offs, 10)),
                     }
@@ -209,7 +214,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
     ops: list[dict[str, Any]] = [
         {
             "date": p_next.isoformat(),
-            "label": "Green-up / first irrigation check" if perennial else "Sowing",
+            "label": t("plan_op_greenup" if perennial else "plan_op_sowing", lang),
             "kind": "sow",
         }
     ]
@@ -218,13 +223,13 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
             {
                 "date": stg["date"],
                 "label": stg["label"],
-                "kind": "harvest" if ("Maturity" in stg["label"] or "Cutting" in stg["label"]) else "stage",
+                "kind": stg.pop("kind"),
             }
         )
     for pid, pest in pst.PESTS.items():
         if cid not in pest["crops"] or not pst.present(pid, lat, lon):
             continue
-        for dd_ev, label, action in pest["events"][:2]:
+        for ei, (dd_ev, label, _action) in enumerate(pest["events"][:2]):
             offs = []
             for y in years:
                 bf = pst.biofix(dt.date(y, p_next.month, min(p_next.day, 28)), lat)
@@ -245,7 +250,13 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
                 ops.append(
                     {
                         "date": (p_next + dt.timedelta(days=int(median(offs)))).isoformat(),
-                        "label": f"{pest['name']}: {label.lower()} — {action}",
+                        "label": t(
+                            "plan_op_scout",
+                            lang,
+                            pest=legacy_pest(pid, lang, pest["name"]),
+                            stage=legacy_event(label, lang),
+                            action=t(f"pest_action_{pid}_{ei}", lang),
+                        ),
                         "kind": "scout",
                     }
                 )
@@ -257,7 +268,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
                     "date": dt.date(
                         p_next.year + (1 if peak["month"] < p_next.month else 0), int(peak["month"]), 1
                     ).isoformat(),
-                    "label": f"Peak irrigation month: ~{peak['irr']:.0f} mm",
+                    "label": t("plan_op_peak_irrigation", lang, mm=peak["irr"]),
                     "kind": "water",
                 }
             )
@@ -289,8 +300,12 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
         "coverage_pct": round(100 * min(1.0, alloc / full_need)) if (alloc and full_need > 0) else None,
         "efficiency": eff,
         "note": (
-            f"Your allocation covers ~{round(100 * min(1.0, alloc / full_need))} % of the full-irrigation need ({round(full_need)} mm); "
-            "plan deficit irrigation, a split season, or a shorter-season crop."
+            t(
+                "plan_alloc_note",
+                lang,
+                pct=round(100 * min(1.0, alloc / full_need)),
+                need=round(full_need),
+            )
             if alloc and full_need > 0 and alloc < full_need
             else None
         ),
@@ -307,9 +322,6 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
         "water": water,
         "risk_calendar": risk_cal,
         "rain_season": rain_lim,
-        "why": (
-            "Every number here comes from re-running the FieldShift season model for each of the last 15 seasons of NASA POWER weather "
-            "at your field: dates are medians, 'spread' is the 10–90 % range between years."
-        ),
+        "why": t("plan_why", lang),
         "sources": ["nasa_power", "soilgrids", "srtm"],
     }

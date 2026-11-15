@@ -1,4 +1,30 @@
+/* eslint-disable import/no-named-as-default-member -- i18n.t on the shared instance, as in i18n/index.ts */
+import i18n from "i18next";
+
 export type UnitSystem = "metric" | "imperial";
+
+/** Units that contain words: shown in the app language (locales: units.*). Numeric units are language-neutral. */
+const UNIT_KEYS: Record<string, string> = {
+  days: "units.days",
+  doy: "units.doy",
+  "days/yr": "units.daysYr",
+  "mm/yr": "units.mmYr",
+  "t/ha/yr": "units.tHaYr",
+  "USD/ha/yr": "units.usdHaYr",
+  index: "units.index",
+  "% (lower better)": "units.pctLowerBetter",
+  "kg N/ha/yr": "units.kgNHaYr",
+  "°C/decade": "units.cDecade",
+  "°F/decade": "units.fDecade",
+  "mm/decade": "units.mmDecade",
+  "in/decade": "units.inDecade",
+};
+
+/** Display form of a (converted) unit in the current language. */
+export function unitLabel(unit: string): string {
+  const key = UNIT_KEYS[unit];
+  return key && i18n.isInitialized ? i18n.t(key, { defaultValue: unit }) : unit;
+}
 
 const MM_PER_IN = 25.4;
 const M2_PER_ACRE = 4046.8564224;
@@ -49,5 +75,6 @@ export function fmt(value: number | null | undefined, unit: string, system: Unit
   const c = convert(value, unit, system);
   const d = digits ?? (c.unit === "in" || c.unit === "in/day" ? 1 : Math.abs(c.value) < 10 ? 1 : 0);
   const sep = c.unit.startsWith("°") || c.unit === "%" ? "" : " ";
-  return `${round(c.value, d).toLocaleString(undefined, { maximumFractionDigits: d })}${c.unit ? sep + c.unit : ""}`;
+  const u = unitLabel(c.unit);
+  return `${round(c.value, d).toLocaleString(undefined, { maximumFractionDigits: d })}${u ? sep + u : ""}`;
 }

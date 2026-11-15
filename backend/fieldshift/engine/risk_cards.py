@@ -17,7 +17,7 @@ import yaml
 
 from ..science import globalrisk as gr
 from ..science import leafwet as lw
-from .messages import CONFIG, day_label, risk_word
+from .messages import CONFIG, day_label, risk_word, t
 
 SATURATING_IN_TROPICS = {"gray_leaf_spot", "coffee_leaf_rust", "black_sigatoka"}
 WINDOW_DAYS = 7
@@ -43,6 +43,13 @@ def name(mid: str, lang: str) -> str:
 def action(mid: str, lang: str) -> str:
     m = texts()["models"][mid]["action"]
     return str(m.get(lang) or m["en"])
+
+
+def loc(v: Any, lang: str) -> str:
+    """A YAML text that is either a plain string or a {en, es, ...} translation mapping."""
+    if isinstance(v, dict):
+        return str(v.get(lang) or v.get("en") or "")
+    return str(v)
 
 
 def legacy_name(did: str, lang: str, default: str) -> str:
@@ -115,6 +122,7 @@ def cards(
             ar = _annual_rain(x)
             if ar is None or ar > gr.LOCUST_MAX_ANNUAL_RAIN_MM:
                 continue
+        gr.LANG.set(lang)
         res = m.fn(x)
         lo = today - dt.timedelta(days=m.window_back)
         hi = today + dt.timedelta(days=WINDOW_DAYS)
@@ -125,7 +133,7 @@ def cards(
         series.append(
             {
                 "id": f"risk_{mid}",
-                "label": f"{texts()['models'][mid]['name']['en']} risk",
+                "label": t("series_model_risk", lang, name=name(mid, lang)),
                 "unit": "0–1",
                 "points": [{"date": d.isoformat(), "value": round(res.scores[d], 3)} for d in sdates],
                 "source": "openmeteo_forecast" if m.hourly else "nasa_power",
@@ -153,27 +161,16 @@ def cards(
             day=day_label(due, today, lang),
         )
         meta = texts()["models"][mid]
-        steps = [f"Model: {meta['model']}"]
+        steps = [t("risk_step_model", lang, model=meta["model"])]
         steps += res.evidence.get(dmax, [])
-        steps.append(
-            f"Score {smax:.2f} on {dmax.isoformat()} (0 = unfavourable, 1 = all published criteria met)."
-        )
+        steps.append(t("risk_step_score", lang, score=smax, date=dmax.isoformat()))
         if "sv7" in res.extra:
-            steps.append(
-                f"7-day sum of severity values to {dmax.isoformat()}: {res.extra['sv7'].get(dmax, 0)}."
-            )
+            steps.append(t("risk_step_sv7", lang, date=dmax.isoformat(), sv=res.extra["sv7"].get(dmax, 0)))
         if meta.get("references"):
-            steps.append("References: " + "; ".join(meta["references"]) + ".")
+            steps.append(t("risk_step_refs", lang, refs="; ".join(meta["references"])))
         if capped:
-            steps.append(
-                "Shown as moderate: in the humid tropics gridded humidity overstates leaf wetness, so this model "
-                "cannot tell a bad season from a normal one (VALIDATION V11)."
-            )
-        steps.append(
-            "Favourable weather is not detection: scout before you act."
-            if m.kind == "disease"
-            else "The model describes conditions for the insect, not insect counts: confirm by scouting."
-        )
+            steps.append(t("risk_step_capped", lang))
+        steps.append(t("risk_step_scout_disease" if m.kind == "disease" else "risk_step_scout_pest", lang))
         out.append(
             {
                 "id": f"{m.kind}_{mid}",
@@ -185,19 +182,18 @@ def cards(
                 "due": due.isoformat(),
                 "amount": None,
                 "why": {
-                    "summary": meta["summary"],
+                    "summary": loc(meta["summary"], lang),
                     "steps": steps,
                     "series": [f"risk_{mid}", "tmin", "precip"],
                     "model": meta["model"],
                     "model_doc": "global-pest-disease",
                     "confidence": meta.get("confidence", 0.45),
-                    "confidence_note": meta.get(
-                        "confidence_note",
-                        "Leaf wetness is estimated from gridded humidity; forecast skill drops after ~3 days.",
-                    ),
+                    "confidence_note": loc(meta["confidence_note"], lang)
+                    if meta.get("confidence_note")
+                    else t("risk_note_default", lang),
                     "caveats": [
-                        "Weather grid ~10–50 km; humid valleys, dense or irrigated canopies are wetter than the grid.",
-                        *meta.get("caveats", []),
+                        t("risk_caveat_grid", lang),
+                        *(loc(c, lang) for c in meta.get("caveats", [])),
                     ],
                     "sources": ["openmeteo_forecast", "nasa_power"]
                     if m.hourly

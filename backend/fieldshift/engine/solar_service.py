@@ -14,6 +14,7 @@ import yaml
 from ..science import solarpump as sp
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop
 from .context import FieldContext, build
+from .messages import crop_name, t, word
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
 MONTHS_EN = [calendar.month_name[m] for m in range(13)]
@@ -185,6 +186,7 @@ def solar_pump(
     capex_usd_kwp: float | None = None,
     as_of: str | None = None,
     ctx: FieldContext | None = None,
+    lang: str = "en",
 ) -> dict[str, Any]:
     conf = cfg()
     d = conf["defaults"]
@@ -224,21 +226,70 @@ def solar_pump(
     )
     dm = next(r for r in des.months if r.month == des.design_month)
     needs_water = des.annual_m3 > 0 and des.kwp > 0
+    mname = MONTHS.get(lang, MONTHS_EN)[dm.month]
+    mword = word("irr", method, lang)
     steps = [
-        f"Crop water need (FAO-56): ETc = Kc × ET₀. In {MONTHS_EN[dm.month]} ET₀ averages {dm.et0_mm_day:.1f} mm/day "
-        f"(NASA POWER, {ctx.today.year - 20}–{ctx.today.year - 1}) and the season-weighted Kc of {c['name']} is {dm.kc:.2f}.",
-        f"Effective rain (USDA-SCS) {dm.peff_mm:.0f} mm of {dm.rain_mm:.0f} mm → net irrigation {dm.net_mm:.0f} mm/month; "
-        f"with {method} irrigation (~{eff:.0%} efficient) gross {dm.gross_mm:.0f} mm/month = {dm.volume_m3_day:.0f} m³/day on {area:.2f} ha.",
-        f"Total dynamic head {head:.1f} m = static lift {static:.0f} m + {method} pressure {pressure:.0f} m + 10% pipe friction.",
-        f"Hydraulic energy E = ρ·g·H·V = 0.002725 × {head:.1f} m × {dm.volume_m3_day:.0f} m³ = {dm.e_hyd_kwh_day:.1f} kWh/day "
-        f"({des.hyd_kwh_m3 * 1000:.0f} Wh per m³).",
-        f"Sunshine in {MONTHS_EN[dm.month]}: {dm.psh:.2f} kWh/m²/day (NASA POWER all-sky irradiance = peak-sun hours). "
-        f"PV performance ratio {dm.pr:.2f} (module temperature at {dm.t_air_c:.0f} °C air: ×{sp.pv_temperature_factor(dm.t_air_c):.2f}; other losses ×{d['other_losses']}).",
-        f"PV size = E / (sun hours × pump efficiency {d['eta_mp']} × PR) = {des.kwp:.2f} kWp; pump rated ~{des.flow_m3_h:.1f} m³/h.",
-        f"Over the season the pump lifts {des.annual_m3:,.0f} m³. Solar water cost {des.solar_usd_m3:.3f} USD/m³ "
-        f"(capex {des.solar_capex_usd:,.0f} USD annualised over {d['lifetime_y']} years at {d['discount']:.0%} + {d['om_frac']:.0%} O&M).",
-        f"Diesel pump set (fuel-to-water efficiency {d['diesel_eta']:.0%}): {des.diesel_l_m3 * 1000:.0f} mL fuel per m³ → "
-        f"{des.diesel_usd_m3:.3f} USD/m³ fuel + maintenance (purchase not included); {des.diesel_l_year:,.0f} L/yr = {des.co2_t_year:.1f} t CO₂/yr avoided.",
+        t(
+            "solar_step_need",
+            lang,
+            month=mname,
+            et0=dm.et0_mm_day,
+            y0=ctx.today.year - 20,
+            y1=ctx.today.year - 1,
+            crop=crop_name(crop_id, lang, c["name"]),
+            kc=dm.kc,
+        ),
+        t(
+            "solar_step_rain",
+            lang,
+            peff=dm.peff_mm,
+            rain=dm.rain_mm,
+            net=dm.net_mm,
+            method=mword,
+            eff=eff,
+            gross=dm.gross_mm,
+            m3=dm.volume_m3_day,
+            area=area,
+        ),
+        t("solar_step_head", lang, head=head, static=static, method=mword, pressure=pressure),
+        t(
+            "solar_step_energy",
+            lang,
+            head=head,
+            m3=dm.volume_m3_day,
+            kwh=dm.e_hyd_kwh_day,
+            wh=des.hyd_kwh_m3 * 1000,
+        ),
+        t(
+            "solar_step_sun",
+            lang,
+            month=mname,
+            psh=dm.psh,
+            pr=dm.pr,
+            tair=dm.t_air_c,
+            tf=sp.pv_temperature_factor(dm.t_air_c),
+            loss=d["other_losses"],
+        ),
+        t("solar_step_size", lang, eta=d["eta_mp"], kwp=des.kwp, flow=des.flow_m3_h),
+        t(
+            "solar_step_cost",
+            lang,
+            m3=f"{des.annual_m3:,.0f}",
+            usd=des.solar_usd_m3,
+            capex=f"{des.solar_capex_usd:,.0f}",
+            life=d["lifetime_y"],
+            disc=d["discount"],
+            om=d["om_frac"],
+        ),
+        t(
+            "solar_step_diesel",
+            lang,
+            eta=d["diesel_eta"],
+            ml=des.diesel_l_m3 * 1000,
+            usd=des.diesel_usd_m3,
+            litres=f"{des.diesel_l_year:,.0f}",
+            co2=des.co2_t_year,
+        ),
     ]
     monthly = [
         {
@@ -295,8 +346,6 @@ def solar_pump_cards(
     ctx: FieldContext, inp: dict[str, Any], planting: dt.date, lang: str, why: Any
 ) -> list[dict[str, Any]]:
     """Optional low-priority planning card for irrigated fields."""
-    from .messages import t
-
     if inp.get("irrigation", "none") == "none":
         return []
     try:
@@ -308,6 +357,7 @@ def solar_pump_cards(
             inp.get("irrigation", "drip"),
             polygon=inp.get("polygon"),
             ctx=ctx,
+            lang=lang,
         )
     except (ValueError, KeyError):
         return []
@@ -334,20 +384,24 @@ def solar_pump_cards(
             "due": None,
             "amount": {"value": r["pv_kwp"], "unit": "kWp"},
             "why": why(
-                f"A {r['pv_kwp']:.1f} kWp solar pump lifts the peak-month water need of this field "
-                f"({r['peak_volume_m3_day']:.0f} m³/day) using NASA POWER sunshine; it replaces "
-                f"{r['diesel_l_per_season']:,} L of diesel per season.",
+                t(
+                    "solar_sum",
+                    lang,
+                    kwp=r["pv_kwp"],
+                    m3=r["peak_volume_m3_day"],
+                    litres=f"{r['diesel_l_per_season']:,}",
+                ),
                 r["steps"],
                 ["et0", "precip"],
-                "PV pump sizing: hydraulic energy ρgHV / (irradiation × pump efficiency × PR) (FAO & GIZ 2018 SPIS)",
+                t("model_solar", lang),
                 "solar-pump",
                 0.5,
-                "Climatology is robust; pumping head, well yield and local prices dominate the uncertainty.",
+                t("solar_note", lang),
                 [
-                    "Static lift assumed 15 m — set your well/canal depth in the planner for a real quote.",
-                    "Costs are indicative world averages (USD); check local prices and subsidies (e.g. PM-KUSUM in India).",
-                    "Check that your well can deliver the pump flow; solar pumps work in daylight — a storage tank smooths supply.",
-                    "Paddy rice also needs water for puddling and percolation, which is not included.",
+                    t("solar_caveat_head", lang),
+                    t("solar_caveat_costs", lang),
+                    t("solar_caveat_well", lang),
+                    t("solar_caveat_rice", lang),
                 ],
                 ["nasa_power"],
             ),

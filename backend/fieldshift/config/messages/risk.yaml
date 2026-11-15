@@ -1,0 +1,117 @@
+# Global pest & disease risk cards (engine/risk_cards.py, science/globalrisk.py evidence lines).
+gr_need_hours: {en: "{h:.0f} h", es: "{h:.0f} h", fr: "{h:.0f} h", sw: "saa {h:.0f}", hi: "{h:.0f} घंटे", de: "{h:.0f} h"}
+gr_need_unreachable: {en: "not reachable at this temperature", es: "no alcanzable a esta temperatura", fr: "impossible à cette température", sw: "haiwezekani kwa joto hili", hi: "इस तापमान पर संभव नहीं", de: "bei dieser Temperatur nicht erreichbar"}
+gr_need_outside: {en: "outside 15–25 °C", es: "fuera de 15–25 °C", fr: "hors de 15–25 °C", sw: "nje ya 15–25 °C", hi: "15–25 °C से बाहर", de: "außerhalb 15–25 °C"}
+gr_wet_period:
+  en: "Wet period from {start}: {hours} h leaf wetness at a mean {t:.1f} °C (needed at that temperature: {need})."
+  es: "Periodo húmedo desde {start}: {hours} h de hoja mojada a una media de {t:.1f} °C (necesario a esa temperatura: {need})."
+  fr: "Période humide dès {start} : {hours} h d'humectation à {t:.1f} °C en moyenne (nécessaire à cette température : {need})."
+  sw: "Kipindi cha unyevu kuanzia {start}: saa {hours} za majani kuwa na unyevu kwa wastani wa {t:.1f} °C (kinachohitajika kwa joto hilo: {need})."
+  hi: "{start} से गीला दौर: औसत {t:.1f} °C पर {hours} घंटे पत्ती गीली (उस तापमान पर आवश्यक: {need})।"
+  de: "Nassphase ab {start}: {hours} h Blattnässe bei im Mittel {t:.1f} °C (bei dieser Temperatur nötig: {need})."
+gr_blast_favourable: {en: "favourable", es: "favorable", fr: "favorable", sw: "inafaa", hi: "अनुकूल", de: "günstig"}
+gr_blast_quasi: {en: "quasi-favourable (one temperature condition missed)", es: "casi favorable (falla una condición de temperatura)", fr: "quasi favorable (une condition de température manquée)", sw: "karibu inafaa (sharti moja la joto halijatimia)", hi: "लगभग अनुकूल (एक तापमान शर्त पूरी नहीं)", de: "fast günstig (eine Temperaturbedingung verfehlt)"}
+gr_blast_short: {en: "wet period too short", es: "periodo húmedo demasiado corto", fr: "période humide trop courte", sw: "kipindi cha unyevu ni kifupi mno", hi: "गीला दौर बहुत छोटा", de: "Nassphase zu kurz"}
+gr_blast_unfavourable: {en: "unfavourable", es: "desfavorable", fr: "défavorable", sw: "haifai", hi: "प्रतिकूल", de: "ungünstig"}
+gr_blast:
+  en: "Wet period from {start}: {hours} h at a mean {t:.1f} °C (BLASTAM needs {need}); 5-day mean temperature {m5:.1f} °C (needs 20–25 °C) → {why}."
+  es: "Periodo húmedo desde {start}: {hours} h a una media de {t:.1f} °C (BLASTAM necesita {need}); temperatura media de 5 días {m5:.1f} °C (necesita 20–25 °C) → {why}."
+  fr: "Période humide dès {start} : {hours} h à {t:.1f} °C en moyenne (BLASTAM exige {need}) ; température moyenne sur 5 jours {m5:.1f} °C (exige 20–25 °C) → {why}."
+  sw: "Kipindi cha unyevu kuanzia {start}: saa {hours} kwa wastani wa {t:.1f} °C (BLASTAM inahitaji {need}); wastani wa joto la siku 5 {m5:.1f} °C (inahitaji 20–25 °C) → {why}."
+  hi: "{start} से गीला दौर: औसत {t:.1f} °C पर {hours} घंटे (BLASTAM को {need} चाहिए); 5 दिन का औसत तापमान {m5:.1f} °C (20–25 °C चाहिए) → {why}।"
+  de: "Nassphase ab {start}: {hours} h bei im Mittel {t:.1f} °C (BLASTAM braucht {need}); 5-Tage-Mitteltemperatur {m5:.1f} °C (nötig 20–25 °C) → {why}."
+gr_wallin:
+  en: "Longest humid period from {start}: {hours} h at RH ≥ 90 %, mean {t:.1f} °C → Wallin severity value {sv} of 4."
+  es: "Periodo húmedo más largo desde {start}: {hours} h con HR ≥ 90 %, media {t:.1f} °C → valor de severidad de Wallin {sv} de 4."
+  fr: "Plus longue période humide dès {start} : {hours} h à HR ≥ 90 %, moyenne {t:.1f} °C → valeur de sévérité de Wallin {sv} sur 4."
+  sw: "Kipindi kirefu zaidi cha unyevu kuanzia {start}: saa {hours} kwa unyevu ≥ 90 %, wastani {t:.1f} °C → thamani ya ukali ya Wallin {sv} kati ya 4."
+  hi: "{start} से सबसे लंबा नम दौर: RH ≥ 90 % पर {hours} घंटे, औसत {t:.1f} °C → Wallin गंभीरता मान 4 में से {sv}।"
+  de: "Längste Feuchtphase ab {start}: {hours} h bei rF ≥ 90 %, im Mittel {t:.1f} °C → Wallin-Schwerewert {sv} von 4."
+gr_gls:
+  en: "Last {win} days: {a:.0f} h at 22–30 °C (epidemic-level ≈ {refw:.0f} h) and {b:.0f} humid night hours at RH ≥ 90 % (≈ {refn:.0f} h), from Paul & Munkvold 2005."
+  es: "Últimos {win} días: {a:.0f} h a 22–30 °C (nivel epidémico ≈ {refw:.0f} h) y {b:.0f} horas nocturnas húmedas con HR ≥ 90 % (≈ {refn:.0f} h), según Paul y Munkvold 2005."
+  fr: "{win} derniers jours : {a:.0f} h à 22–30 °C (niveau épidémique ≈ {refw:.0f} h) et {b:.0f} heures nocturnes humides à HR ≥ 90 % (≈ {refn:.0f} h), d'après Paul et Munkvold 2005."
+  sw: "Siku {win} zilizopita: saa {a:.0f} kwa 22–30 °C (kiwango cha mlipuko ≈ saa {refw:.0f}) na saa {b:.0f} za usiku zenye unyevu ≥ 90 % (≈ saa {refn:.0f}), kutoka Paul & Munkvold 2005."
+  hi: "पिछले {win} दिन: 22–30 °C पर {a:.0f} घंटे (महामारी स्तर ≈ {refw:.0f} घंटे) और RH ≥ 90 % वाले {b:.0f} नम रात्रि घंटे (≈ {refn:.0f} घंटे), Paul & Munkvold 2005 के अनुसार।"
+  de: "Letzte {win} Tage: {a:.0f} h bei 22–30 °C (Epidemieniveau ≈ {refw:.0f} h) und {b:.0f} feuchte Nachtstunden bei rF ≥ 90 % (≈ {refn:.0f} h), nach Paul & Munkvold 2005."
+gr_coffee_inside:
+  en: "Daily maximum {tx:.1f} °C (inside the 22–28 °C band that shortens the latent period; Avelino et al. 2015)."
+  es: "Máxima diaria {tx:.1f} °C (dentro de la franja de 22–28 °C que acorta el periodo de latencia; Avelino et al. 2015)."
+  fr: "Maximale du jour {tx:.1f} °C (dans la plage 22–28 °C qui raccourcit la période de latence ; Avelino et al. 2015)."
+  sw: "Joto la juu la siku {tx:.1f} °C (ndani ya kiwango cha 22–28 °C kinachofupisha kipindi cha kujificha; Avelino et al. 2015)."
+  hi: "दैनिक अधिकतम {tx:.1f} °C (22–28 °C दायरे के भीतर, जो सुप्त अवधि घटाता है; Avelino et al. 2015)।"
+  de: "Tagesmaximum {tx:.1f} °C (innerhalb des Bereichs 22–28 °C, der die Latenzzeit verkürzt; Avelino et al. 2015)."
+gr_coffee_outside:
+  en: "Daily maximum {tx:.1f} °C (outside the 22–28 °C band that shortens the latent period; Avelino et al. 2015)."
+  es: "Máxima diaria {tx:.1f} °C (fuera de la franja de 22–28 °C que acorta el periodo de latencia; Avelino et al. 2015)."
+  fr: "Maximale du jour {tx:.1f} °C (hors de la plage 22–28 °C qui raccourcit la période de latence ; Avelino et al. 2015)."
+  sw: "Joto la juu la siku {tx:.1f} °C (nje ya kiwango cha 22–28 °C kinachofupisha kipindi cha kujificha; Avelino et al. 2015)."
+  hi: "दैनिक अधिकतम {tx:.1f} °C (22–28 °C दायरे से बाहर, जो सुप्त अवधि घटाता है; Avelino et al. 2015)।"
+  de: "Tagesmaximum {tx:.1f} °C (außerhalb des Bereichs 22–28 °C, der die Latenzzeit verkürzt; Avelino et al. 2015)."
+gr_whitefly:
+  en: "Last 30 days: mean temperature {tm:.1f} °C (best 28–30), rain {rn:.0f} mm (best 30–150){rh} — Katono et al. 2021."
+  es: "Últimos 30 días: temperatura media {tm:.1f} °C (óptimo 28–30), lluvia {rn:.0f} mm (óptimo 30–150){rh} — Katono et al. 2021."
+  fr: "30 derniers jours : température moyenne {tm:.1f} °C (optimum 28–30), pluie {rn:.0f} mm (optimum 30–150){rh} — Katono et al. 2021."
+  sw: "Siku 30 zilizopita: wastani wa joto {tm:.1f} °C (bora 28–30), mvua mm {rn:.0f} (bora 30–150){rh} — Katono et al. 2021."
+  hi: "पिछले 30 दिन: औसत तापमान {tm:.1f} °C (सर्वोत्तम 28–30), वर्षा {rn:.0f} मिमी (सर्वोत्तम 30–150){rh} — Katono et al. 2021।"
+  de: "Letzte 30 Tage: Mitteltemperatur {tm:.1f} °C (optimal 28–30), Regen {rn:.0f} mm (optimal 30–150){rh} – Katono et al. 2021."
+gr_whitefly_rh: {en: ", RH {rh:.0f} % (best 55–70)", es: ", HR {rh:.0f} % (óptimo 55–70)", fr: ", HR {rh:.0f} % (optimum 55–70)", sw: ", unyevu {rh:.0f} % (bora 55–70)", hi: ", RH {rh:.0f} % (सर्वोत्तम 55–70)", de: ", rF {rh:.0f} % (optimal 55–70)"}
+gr_locust:
+  en: "Rain in the last 30 days: {rn:.0f} mm (FAO: breeding usually needs ≥ 25 mm); mean temperature {tm:.1f} °C."
+  es: "Lluvia de los últimos 30 días: {rn:.0f} mm (FAO: la reproducción suele necesitar ≥ 25 mm); temperatura media {tm:.1f} °C."
+  fr: "Pluie des 30 derniers jours : {rn:.0f} mm (FAO : la reproduction demande en général ≥ 25 mm) ; température moyenne {tm:.1f} °C."
+  sw: "Mvua ya siku 30 zilizopita: mm {rn:.0f} (FAO: uzalianaji kwa kawaida unahitaji ≥ mm 25); wastani wa joto {tm:.1f} °C."
+  hi: "पिछले 30 दिनों की वर्षा: {rn:.0f} मिमी (FAO: प्रजनन के लिए आमतौर पर ≥ 25 मिमी चाहिए); औसत तापमान {tm:.1f} °C।"
+  de: "Regen der letzten 30 Tage: {rn:.0f} mm (FAO: Vermehrung braucht meist ≥ 25 mm); Mitteltemperatur {tm:.1f} °C."
+series_model_risk: {en: "{name} risk", es: "Riesgo de {name}", fr: "Risque : {name}", sw: "Hatari ya {name}", hi: "{name} जोखिम", de: "Risiko {name}"}
+risk_step_model: {en: "Model: {model}", es: "Modelo: {model}", fr: "Modèle : {model}", sw: "Modeli: {model}", hi: "मॉडल: {model}", de: "Modell: {model}"}
+risk_step_score:
+  en: "Score {score:.2f} on {date} (0 = unfavourable, 1 = all published criteria met)."
+  es: "Puntuación {score:.2f} el {date} (0 = desfavorable, 1 = se cumplen todos los criterios publicados)."
+  fr: "Score {score:.2f} le {date} (0 = défavorable, 1 = tous les critères publiés remplis)."
+  sw: "Alama {score:.2f} tarehe {date} (0 = haifai, 1 = vigezo vyote vilivyochapishwa vimetimia)."
+  hi: "{date} को स्कोर {score:.2f} (0 = प्रतिकूल, 1 = सभी प्रकाशित मानदंड पूरे)।"
+  de: "Wert {score:.2f} am {date} (0 = ungünstig, 1 = alle veröffentlichten Kriterien erfüllt)."
+risk_step_sv7:
+  en: "7-day sum of severity values to {date}: {sv}."
+  es: "Suma de valores de severidad de 7 días hasta el {date}: {sv}."
+  fr: "Somme des valeurs de sévérité sur 7 jours au {date} : {sv}."
+  sw: "Jumla ya thamani za ukali za siku 7 hadi {date}: {sv}."
+  hi: "{date} तक 7 दिनों के गंभीरता मानों का योग: {sv}।"
+  de: "7-Tage-Summe der Schwerewerte bis {date}: {sv}."
+risk_step_refs: {en: "References: {refs}.", es: "Referencias: {refs}.", fr: "Références : {refs}.", sw: "Marejeo: {refs}.", hi: "संदर्भ: {refs}।", de: "Quellen: {refs}."}
+risk_step_capped:
+  en: "Shown as moderate: in the humid tropics gridded humidity overstates leaf wetness, so this model cannot tell a bad season from a normal one (VALIDATION V11)."
+  es: "Se muestra como moderado: en el trópico húmedo la humedad de cuadrícula exagera el mojado foliar, así que este modelo no distingue una mala temporada de una normal (VALIDACIÓN V11)."
+  fr: "Affiché comme modéré : sous les tropiques humides, l'humidité maillée surestime l'humectation, donc ce modèle ne distingue pas une mauvaise saison d'une saison normale (VALIDATION V11)."
+  sw: "Inaonyeshwa kama wastani: katika tropiki zenye unyevu, unyevu wa gridi hukuza unyevu wa majani, hivyo modeli hii haiwezi kutofautisha msimu mbaya na wa kawaida (UTHIBITISHO V11)."
+  hi: "मध्यम दिखाया गया: नम उष्णकटिबंध में ग्रिड की नमी पत्ती के गीलेपन को बढ़ाकर आँकती है, इसलिए यह मॉडल खराब और सामान्य मौसम में फ़र्क नहीं कर पाता (सत्यापन V11)।"
+  de: "Als mäßig angezeigt: In den feuchten Tropen überschätzt die Rasterfeuchte die Blattnässe, daher kann dieses Modell schlechte und normale Jahre nicht unterscheiden (VALIDIERUNG V11)."
+risk_step_scout_disease:
+  en: "Favourable weather is not detection: scout before you act."
+  es: "Tiempo favorable no es detección: revise el campo antes de actuar."
+  fr: "Météo favorable ne veut pas dire maladie détectée : observez avant d'agir."
+  sw: "Hali ya hewa inayofaa si ugunduzi: kagua shamba kabla ya kuchukua hatua."
+  hi: "अनुकूल मौसम का मतलब रोग मिलना नहीं: कदम उठाने से पहले खेत जाँचें।"
+  de: "Günstiges Wetter ist kein Befund: Erst kontrollieren, dann handeln."
+risk_step_scout_pest:
+  en: "The model describes conditions for the insect, not insect counts: confirm by scouting."
+  es: "El modelo describe condiciones para el insecto, no cuántos hay: confírmelo revisando el campo."
+  fr: "Le modèle décrit des conditions favorables à l'insecte, pas leur nombre : confirmez par l'observation."
+  sw: "Modeli inaeleza hali zinazomfaa mdudu, si idadi ya wadudu: thibitisha kwa kukagua shamba."
+  hi: "मॉडल कीट के लिए परिस्थितियाँ बताता है, कीटों की संख्या नहीं: खेत जाँचकर पुष्टि करें।"
+  de: "Das Modell beschreibt Bedingungen für das Insekt, nicht die Zahl der Insekten: durch Kontrolle bestätigen."
+risk_note_default:
+  en: "Leaf wetness is estimated from gridded humidity; forecast skill drops after ~3 days."
+  es: "El mojado foliar se estima con humedad de cuadrícula; la fiabilidad del pronóstico baja tras ~3 días."
+  fr: "L'humectation est estimée à partir de l'humidité maillée ; la fiabilité de la prévision baisse après ~3 jours."
+  sw: "Unyevu wa majani unakadiriwa kutoka unyevu wa gridi; usahihi wa utabiri hupungua baada ya ~siku 3."
+  hi: "पत्ती का गीलापन ग्रिड नमी से अनुमानित है; ~3 दिन बाद पूर्वानुमान की सटीकता घटती है।"
+  de: "Die Blattnässe wird aus der Rasterfeuchte geschätzt; die Vorhersagegüte sinkt nach ~3 Tagen."
+risk_caveat_grid:
+  en: "Weather grid ~10–50 km; humid valleys, dense or irrigated canopies are wetter than the grid."
+  es: "Cuadrícula meteorológica ~10–50 km; los valles húmedos y los cultivos densos o regados son más húmedos que la cuadrícula."
+  fr: "Maille météo ~10–50 km ; vallées humides, couverts denses ou irrigués sont plus humides que la maille."
+  sw: "Gridi ya hali ya hewa ~km 10–50; mabonde yenye unyevu, mimea minene au inayomwagiliwa huwa na unyevu zaidi kuliko gridi."
+  hi: "मौसम ग्रिड ~10–50 किमी; नम घाटियाँ, घनी या सिंचित फसलें ग्रिड से अधिक गीली होती हैं।"
+  de: "Wetterraster ~10–50 km; feuchte Täler, dichte oder bewässerte Bestände sind nasser als das Raster."

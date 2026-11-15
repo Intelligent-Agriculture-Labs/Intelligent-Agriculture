@@ -2,6 +2,14 @@
  {
   "id": "alfalfa",
   "name": "Alfalfa",
+  "names": {
+   "en": "Alfalfa (hay)",
+   "es": "Alfalfa (heno)",
+   "fr": "Luzerne (foin)",
+   "sw": "Alfalfa (nyasi kavu)",
+   "hi": "रिजका (सूखा चारा)",
+   "de": "Luzerne (Heu)"
+  },
   "family": "Fabaceae",
   "type": "perennial",
   "n_fixing": true,
@@ -13,6 +21,14 @@
  {
   "id": "maize",
   "name": "Maize (grain)",
+  "names": {
+   "en": "Maize (grain)",
+   "es": "Maíz (grano)",
+   "fr": "Maïs (grain)",
+   "sw": "Mahindi (nafaka)",
+   "hi": "मक्का (दाना)",
+   "de": "Mais (Körner)"
+  },
   "family": "Poaceae",
   "type": "annual",
   "n_fixing": false,
@@ -24,6 +40,14 @@
  {
   "id": "maize_silage",
   "name": "Maize (silage)",
+  "names": {
+   "en": "Maize (silage)",
+   "es": "Maíz (ensilaje)",
+   "fr": "Maïs (ensilage)",
+   "sw": "Mahindi (sileji)",
+   "hi": "मक्का (साइलेज)",
+   "de": "Mais (Silage)"
+  },
   "family": "Poaceae",
   "type": "annual",
   "n_fixing": false,
@@ -35,6 +59,14 @@
  {
   "id": "winter_wheat",
   "name": "Winter wheat",
+  "names": {
+   "en": "Winter wheat",
+   "es": "Trigo de invierno",
+   "fr": "Blé d'hiver",
+   "sw": "Ngano ya majira ya baridi",
+   "hi": "रबी गेहूं",
+   "de": "Winterweizen"
+  },
   "family": "Poaceae",
   "type": "annual",
   "n_fixing": false,
@@ -46,6 +78,14 @@
  {
   "id": "barley",
   "name": "Barley",
+  "names": {
+   "en": "Spring barley",
+   "es": "Cebada de primavera",
+   "fr": "Orge de printemps",
+   "sw": "Shayiri ya masika",
+   "hi": "बसंत जौ",
+   "de": "Sommergerste"
+  },
   "family": "Poaceae",
   "type": "annual",
   "n_fixing": false,
@@ -57,6 +97,14 @@
  {
   "id": "sorghum",
   "name": "Sorghum",
+  "names": {
+   "en": "Sorghum (grain/forage)",
+   "es": "Sorgo (grano/forraje)",
+   "fr": "Sorgho (grain/fourrage)",
+   "sw": "Mtama (nafaka/lishe)",
+   "hi": "ज्वार (दाना/चारा)",
+   "de": "Sorghum (Körner/Futter)"
+  },
   "family": "Poaceae",
   "type": "annual",
   "n_fixing": false,
@@ -68,6 +116,14 @@
  {
   "id": "teff",
   "name": "Teff (forage)",
+  "names": {
+   "en": "Teff (summer forage)",
+   "es": "Tef (forraje de verano)",
+   "fr": "Teff (fourrage d'été)",
+   "sw": "Tefu (lishe ya kiangazi)",
+   "hi": "टेफ (गर्मी का चारा)",
+   "de": "Teff (Sommerfutter)"
+  },
   "family": "Poaceae",
   "type": "annual",
   "n_fixing": false,
@@ -79,6 +135,14 @@
  {
   "id": "safflower",
   "name": "Safflower",
+  "names": {
+   "en": "Safflower",
+   "es": "Cártamo",
+   "fr": "Carthame",
+   "sw": "Alizeti mwitu (safflower)",
+   "hi": "कुसुम",
+   "de": "Färberdistel"
+  },
   "family": "Asteraceae",
   "type": "annual",
   "n_fixing": false,
@@ -90,6 +154,14 @@
  {
   "id": "dry_bean",
   "name": "Dry bean",
+  "names": {
+   "en": "Dry bean",
+   "es": "Frijol seco",
+   "fr": "Haricot sec",
+   "sw": "Maharagwe makavu",
+   "hi": "राजमा (सूखी फली)",
+   "de": "Trockenbohne"
+  },
   "family": "Fabaceae",
   "type": "annual",
   "n_fixing": true,
@@ -101,6 +173,14 @@
  {
   "id": "potato",
   "name": "Potato",
+  "names": {
+   "en": "Potato",
+   "es": "Papa",
+   "fr": "Pomme de terre",
+   "sw": "Viazi mviringo",
+   "hi": "आलू",
+   "de": "Kartoffel"
+  },
   "family": "Solanaceae",
   "type": "annual",
   "n_fixing": false,
@@ -112,6 +192,14 @@
  {
   "id": "cover_rye_vetch",
   "name": "Cover: rye + vetch",
+  "names": {
+   "en": "Cover crop (cereal rye + hairy vetch)",
+   "es": "Cultivo de cobertura (centeno + veza vellosa)",
+   "fr": "Couvert végétal (seigle + vesce velue)",
+   "sw": "Zao funika (raye + vechi)",
+   "hi": "आवरण फसल (राई + वेच)",
+   "de": "Zwischenfrucht (Roggen + Zottelwicke)"
+  },
   "family": "Mixed",
   "type": "cover",
   "n_fixing": true,
