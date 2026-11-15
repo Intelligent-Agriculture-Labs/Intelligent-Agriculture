@@ -74,13 +74,14 @@ One image (root `Dockerfile`). Stage 1 exports the Expo web bundle; stage 2 is t
 ```
 backend/            FastAPI app (fieldshift/), tests/, demo_cache/, Dockerfile
   fieldshift/data/      http.py (cache/fallbacks), sources.py (adapters, incl. GPM IMERG via POWER), grace.py + grace/ (global GRACE-FO asset)
-  fieldshift/science/   et0, soil, cropmodel, drought, drought_ml, disease, pests, climate, rotation, terrain, satellite, fielddetect
-  fieldshift/models/    trained drought classifier (joblib + metadata)
+  fieldshift/science/   et0, soil, cropmodel, drought, drought_ml, disease, pests, climate, rotation, terrain, satellite, fielddetect, fieldedge, onset, globalrisk, leafwet, yieldcal, rainblend, groundwater
+  fieldshift/models/    trained drought classifier (joblib + metadata); field-edge U-Net + candidate selector (numpy .npz)
   fieldshift/engine/    context, service, messages, maps (terrain), planner, satellite_service, fields (detect), farms (sync)
   fieldshift/config/    crops.yaml, rotations.yaml, rules.yaml, messages.yaml, presets.yaml
 app/                Expo client (src/app = routes, src/components, src/i18n, src/api), e2e/, Dockerfile
 contracts/api.ts    API contract shared by client and server
-scripts/            build_demo_cache.py, validate.py, validation_report.py, train_drought_ml.py, appeears_smap.py (SMAP/ECOSTRESS/MOD16), make_demo_video.py
+scripts/            build_demo_cache.py, validate.py, validation_report.py, train_drought_ml.py, appeears_smap.py (SMAP/ECOSTRESS/MOD16), make_demo_video.py,
+                    field_benchmark.py (FTW field-boundary benchmark), fieldedge/ (edge-model + selector training)
 docs/               all documentation, validation figures, openapi.json
 media/              screenshots, screen recordings, build notes
 ```

@@ -174,7 +174,7 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
   - The API shape is unchanged. Yields, margins and rotation rankings now reflect typical local management. Ames maize median 10.9 → 10.5 t/ha, Córdoba wheat 2.3 → 1.8, Machakos maize 6.4 → 1.1. Fallon is unchanged.
   - The feasibility screen ("below a third of normal") compares with the calibrated level, so low-input regions do not mark every crop infeasible.
   - Calibrated yields describe the *typical* farm in the region. A farmer with better management will exceed them; LIMITATIONS says so.
-  - Re-running the benchmark (~20 min on the data box with a warm POWER cache) regenerates the factors and the V9 tables.
+  - Re-running the benchmark (~20 min on the data box with a warm POWER cache) regenerates the factors and the V10 tables.
 
 ## ADR-023 Global pest & disease risk models (2026-11-15)
 - **Context:** pest and disease advice covered mainly U.S./European examples (Hutton late blight, stripe rust, North American degree-day insects). The goal was scientifically sound advice for the world's major crops and farming regions.
@@ -215,3 +215,28 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - **GRACE route:** JPL RL06.3 CRI mascons from PO.DAAC (Earthdata Login worked there), compacted by `scripts/grace_extract.py` into a committed 0.7 MB global asset (distinct land mascon series + 0.5° index + JPL scale factors). No runtime network, works offline everywhere.
 - **GRACE decision (V14):** a harmonic + linear trend with AR(1)-adjusted significance, five classes with a 0.3 cm/yr floor. Shown in the drought status as context (not in the level: 2–3 month latency, ~300 km, not validated against drought labels); a planning card for irrigated fields where storage is falling; the rotation ranking weights water 1.5× (declining) or 1.25× (likely declining) there. Because wells at Fallon are flat while the region falls, the card says "regional water reserves", not "groundwater under your field".
 - **Consequences:** new modules only (`science/rainblend.py`, `science/groundwater.py`, `data/grace.py`, `engine/water_supply.py`), a few hook lines in `context.py` and `service.py`, optional fields in the API contract (`drought.groundwater`, `drought.rain_source`, `rotations.groundwater_note`). Refreshing GRACE needs `scripts/grace_extract.py` on the data box; IMERG refreshes itself through POWER.
+
+## ADR-026 Learned field-edge model + candidate selector for tap-to-detect (2026-11-15)
+- **Context:**
+  - Tap-to-detect (ADR-015, EXP-10) had been tuned on four demo fields.
+  - A global benchmark (467 FTW fields, 25 countries; VALIDATION V15) measured a mean IoU of only 0.24. The method leaked into neighbouring fields everywhere, and smallholder Africa and Asia were near zero.
+- **Decision:**
+  - Replace the default with v3. A tiny U-Net edge map (1 MB) feeds scale-adaptive flood-fill candidates, ranked by a 58 KB gradient-boosted IoU predictor plus a rim-contrast prior.
+  - Both models are evaluated in numpy on CPU (no deep-learning runtime).
+  - Adoption rule, fixed in advance: mean IoU must improve on held-out countries, without regression on the demo fields. Result: 0.24 → 0.52 on 20 held-out countries, every country better. Demo fields are equal or better on visual check (EXP-13).
+- **Data and licences:**
+  - Training labels: FTW polygons of four countries, AT (CC-BY-4.0), FR (Licence Ouverte), NL (CC0) and ES (CC-BY-4.0).
+  - Training imagery: open national orthophotos of the same four countries (IGN, PNOA, PDOK, basemap.at; Licence Ouverte / CC-BY 4.0).
+  - No Esri imagery is used for training. Countries with non-commercial or GPL labels are used for evaluation only, and no FTW polygons are redistributed.
+- **Unchanged:** the API response shape (`polygon`, `area_ha`, `confidence`, `touches_border`, `method`, `imagery`, `pixel_m`, `params`, `note`) and the offline behaviour (tiles from cache or demo cache, else `DataUnavailable`).
+  - `confidence` is now the predicted IoU, which fits the app's existing 0.4 / 0.7 risk bands.
+  - `method` names the pipeline that ran.
+- **Fallback:** if the model files are absent, the v2 classical pipeline runs automatically.
+- **Alternatives:**
+  - SAM-class promptable segmenters: hundreds of MB and GPU-bound (stays on the roadmap as an optional service).
+  - ONNX Runtime or PyTorch on the server: new heavy dependency for a 0.5 M-parameter net.
+  - Tuning the classical method only: DEV 0.25 → 0.33, far below the learned variant.
+- **Consequences:**
+  - Retraining is scripted (`scripts/fieldedge/`, about 1 h, mostly orthophoto download).
+  - The models are versioned in `backend/fieldshift/models/`.
+  - Smallholder plots and > 100 ha fields remain the weakest cases (LIMITATIONS).

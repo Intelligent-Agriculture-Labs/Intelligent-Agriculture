@@ -223,28 +223,46 @@ For the next occurrence of the planting date, the season model runs for each of 
 - **Monthly water budget:** median ET₀, ETc, ETa, rain and gross irrigation per month. With an allocation, the full-irrigation need is simulated too, and coverage = allocation / full need.
 - **Risk calendar:** share of years with a damaging frost (crop kill threshold) or ≥ 3 heat days (≥ T_heat) in each month.
 
-## <a id="field-detect"></a>11. Tap-to-detect field boundaries (`science/fielddetect.py`)
-The farmer taps inside a field, and an editable polygon comes back in ~0.5–3 s.
+## <a id="field-detect"></a>11. Tap-to-detect field boundaries (`science/fielddetect.py`, `science/fieldedge.py`)
+The farmer taps inside a field, and an editable polygon comes back in about 1–3 s (CPU only).
 
-**Imagery.** Sub-metre RGB (Esri World Imagery; USDA NAIP option in the U.S.), a 3 × 3 tile window at zoom 17, retrying at zoom 16 if the field touches the window edge.
+**Imagery.** Sub-metre RGB (Esri World Imagery; USDA NAIP option in the U.S.), a 3 × 3 tile window at zoom 17, retried at zoom 16 if the field touches the window edge.
 
-**Pipeline:**
-1. Downsample to ~2.7 m and apply a 5 × 5 median filter, which removes crop rows and wheel tracks.
-2. Convert to CIE-Lab.
-3. Felzenszwalb–Huttenlocher graph segmentation (scale 300).
-4. Snap the tap to the lowest-gradient pixel nearby.
-5. Edge-aware region growing over adjacent segments. A segment joins when ΔE(segment, region mean) < 9 **and** the median gradient along the shared border is below max(90th-percentile gradient, 5). Roads and ditches stop the growth; internal irrigation borders do not.
-6. Fill holes, morphological opening, keep the component containing the tap.
-7. Trace the contour and simplify it (Douglas–Peucker, 2 px).
+**Pipeline (v3, since EXP-13):**
+1. Downsample to ~2.7 m (Lanczos). This removes crop rows and wheel tracks.
+2. **Learned edge map.** A tiny U-Net (`models/fieldedge.npz`) predicts, per pixel, the probability of a field boundary B and of field interior X.
+   - Architecture: 4 levels with 16-32-64-128 channels; 3 × 3 conv + BatchNorm + ReLU; nearest-neighbour upsampling with skip connections.
+   - Size: 0.54 M parameters, float16, 1.0 MB.
+   - Inference: plain numpy in `fieldedge.py`, with BatchNorm folded into the convolutions. No deep-learning runtime is needed.
+3. **Cost map** E = B + 0.5 (1 − X).
+4. **Scale-adaptive candidates.** Flood fills from the tap (snapped to the lowest-cost pixel within 3 px) over {E ≤ t}.
+   - t sweeps 24 quantiles of E (20th–98th percentile).
+   - Each fill is repeated after a morphological opening of radius 0–3 px, which cuts thin leaks through hedge gaps and farm tracks.
+   - The same sweep yields 0.05 ha plots and 100 ha fields, so no field-size parameter is needed.
+5. **Learned selection.** Each candidate gets 14 features: log area, area relative to the median candidate, solidity, compactness, mean B on the rim and inside, mean X inside and on the rim, mean E on the rim and inside, border contact, threshold and its rank, and opening radius.
+   - 300 gradient-boosted regression trees (`models/fieldselect.npz`, 58 KB, evaluated in numpy) predict the candidate's IoU with the true field.
+   - The winner maximises predicted IoU + 0.3 × (rim B − inner B) × solidity². This small prior keeps large uniform fields whole (EXP-13).
+6. Fill holes, give back the 1-px boundary, close slits of radius 2 px (irrigation checks, tramlines), trace, and simplify with Douglas–Peucker (1 working pixel).
 
-**Confidence** = f(boundary contrast, compactness, border contact).
+**Confidence** = the selector's predicted IoU (minus 0.2 if the field touches the window edge), clipped to 0.05–0.95. It ranks results but is not calibrated.
 
-**Visual check on real farms:**
-- Fallon border-irrigated field and Córdoba wheat field: outlined correctly.
-- Iowa: correct, with one leak through a farmstead gap.
-- Terraced smallholder plots (Machakos): only one strip is found.
+**Fallback.** If the model files are missing, the v2 pipeline runs (`detect_classical`). That is Felzenszwalb segmentation on median-filtered CIE-Lab, plus edge-aware region growing (ΔE < 9 and border gradient < max(p90, 5)); see EXP-10.
 
-That is why the polygon always stays editable.
+**Training (GPU, `scripts/fieldedge/`).**
+- **Labels:** Fields of The World (FTW) polygons.
+- **Imagery:** open national orthophotos of four countries only, never Esri imagery:
+  - France: IGN BD ORTHO, Licence Ouverte 2.0
+  - Spain: PNOA, CC-BY 4.0
+  - Netherlands: PDOK Luchtfoto, CC-BY 4.0
+  - Austria: basemap.at, CC-BY 4.0
+- **Windows:** 4,049 web-mercator windows with the app's geometry: 2,800 at zoom 17 and 1,249 at zoom 16. Windows within ~3 km of a benchmark field are excluded.
+- **Unlabelled land:** pixels farther than 8 px from a labelled field are ignored in the loss, because registers omit some parcels.
+- **Edge model:** boundary BCE (positive weight 4) + Dice, plus interior BCE. Colour, contrast, blur and noise augmentation. 16k steps, batch 32, 160 px crops, about 4 min on an RTX 5070 Ti.
+- **Selector:** trained on 1.1 M candidates from 15.9 k simulated taps. The candidates come from *cross-fitted* edge models: FR+ES windows are scored by a model trained on NL+AT, and vice versa. The selector therefore learns from realistic, imperfect edge maps.
+
+**Accuracy (VALIDATION V15).** Measured on 467 FTW fields in 25 countries, with 20 countries held out. Mean IoU on held-out countries rose from 0.24 (v2) to 0.52 (v3), with all 20 held-out countries improving. Smallholder plots under 0.5 ha went from 0.13 to 0.41. On a laptop CPU a window takes a median of 0.5 s (max ≈ 2 s). Smallholder plots and > 100 ha fields remain the hardest cases; see LIMITATIONS.
+
+The polygon always stays editable.
 
 ## <a id="satellite"></a>12. Field satellite analytics (`science/satellite.py`, `engine/satellite_service.py`)
 **Data.** Sentinel-2 L2A COGs (Earth Search STAC) from the last 12 months, cloud cover < 60 %, up to 24 scenes spread over time. Bands red, NIR and SCL are read through a GDAL WarpedVRT onto a ~10 m web-mercator grid around the field, so scenes from different UTM tiles stack pixel-for-pixel and align with the map. Clear pixels are SCL classes 4/5/6; a scene counts only if ≥ 60 % of the field is clear.
