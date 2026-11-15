@@ -26,7 +26,7 @@
   - Solar-pump capex is a world small-system price with the installation share scaled by the country's price level; IRENA publishes country data only for utility-scale PV.
   - Exchange rates are annual averages (World Bank, latest year), not today's rate.
   - The country grid is 5 arc-min (~9 km): fields within a few km of a border can be assigned to the neighbour (e.g. Konstanz → Switzerland).
-  - Observed sowing calendars (Sacks et al. 2010) date from ~2000 and are partly national-level; in the tropics and Mediterranean climates FieldShift keeps its rainfall-derived sowing rules instead.
+  - Observed sowing calendars (Sacks et al. 2010) date from ~2000 and are partly national-level; in the tropics and Mediterranean climates IA keeps its rainfall-derived sowing rules instead.
 
 ## Models
 - **Single-Kc water balance.** Evaporation and transpiration are not separated (FAO-56 dual Kc would be better for sparse canopies and drip). Salinity and capillary rise from shallow groundwater are not modelled. The latter matters in parts of the Lahontan Valley.

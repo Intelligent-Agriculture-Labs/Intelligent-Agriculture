@@ -9,7 +9,7 @@ method: "Country yield factors on top of the crop × region calibration (config/
   \ from NASA POWER."
 sources:
 - FAOSTAT QCL national yields 2019→latest (FAO, CC BY 4.0)
-- FieldShift global yield benchmark, docs/validation/yield_benchmark/results.json (V10, ADR-022)
+- IA global yield benchmark, docs/validation/yield_benchmark/results.json (V10, ADR-022)
 countries:
   AFG:
     factor: 0.982

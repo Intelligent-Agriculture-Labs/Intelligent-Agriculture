@@ -1,4 +1,4 @@
-# FieldShift country economics — hand-maintained mapping and model parameters (ADR-027, docs/DATA.md "Country data").
+# IA country economics — hand-maintained mapping and model parameters (ADR-027, docs/DATA.md "Country data").
 # The numbers per country (prices, yields, exchange rates, price levels, diesel) are generated from official open data
 # by scripts/build_country_data.py into country_data.json; nothing here is a national average of one country.
 #
@@ -11,9 +11,9 @@
 
 version: "1.0.0"
 
-# FieldShift crop -> FAOSTAT item (producer prices: domain PP, element 5532 "Producer Price (USD/tonne)";
+# IA crop -> FAOSTAT item (producer prices: domain PP, element 5532 "Producer Price (USD/tonne)";
 # yields: domain QCL). `price_factor` converts the FAOSTAT unit to the crop table's marketed product
-# (cotton: FAOSTAT prices seed cotton, FieldShift yields are lint → seed-cotton price / lint turnout 0.38).
+# (cotton: FAOSTAT prices seed cotton, IA yields are lint → seed-cotton price / lint turnout 0.38).
 # `proxy: true` marks a close but not identical FAOSTAT item; the API says so.
 faostat_items:
   maize: {item: 56, name: "Maize (corn)"}

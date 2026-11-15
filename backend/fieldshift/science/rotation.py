@@ -86,7 +86,7 @@ def is_mediterranean(normals: list[dict[str, float]], lat: float) -> bool:
     return abs(lat) >= 20 and p_cool > 2 * p_warm and p_cool + p_warm < 1000 and mild_winter
 
 
-# Sacks et al. (2010) calendars used for each FieldShift crop (same table as scripts/build_country_data.py)
+# Sacks et al. (2010) calendars used for each IA crop (same table as scripts/build_country_data.py)
 SACKS_CALENDARS: dict[str, tuple[str, ...]] = {
     "maize": ("Maize",),
     "maize_silage": ("Maize",),
@@ -184,7 +184,7 @@ def _field_rule(crop_id: str, lat: float, rainy_onset_month: int | None, mediter
     (tropical rainy-season onset; Mediterranean winter-rain calendar) and are kept over the observed calendar,
     whose tropical entries are often national-level (Sacks et al. 2010 `political.level`)."""
     if climate_zone(lat) == "tropical" and rainy_onset_month and crop(crop_id)["type"] != "perennial":
-        return "FieldShift rainy-season onset rule (field's NASA rainfall)"
+        return "IA rainy-season onset rule (field's NASA rainfall)"
     if mediterranean and crop_id in MEDITERRANEAN_PLANTING:
         return "Mediterranean calendar rule (field's NASA rainfall)"
     return None
@@ -231,7 +231,7 @@ def planting_source(
         return rule
     if override:
         return "rotation template"
-    return "FieldShift temperate calendar (shifted by hemisphere); no observed calendar for this crop here"
+    return "IA temperate calendar (shifted by hemisphere); no observed calendar for this crop here"
 
 
 def planting_date_for(
