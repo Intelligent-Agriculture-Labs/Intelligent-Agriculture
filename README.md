@@ -55,6 +55,12 @@ Licences, latencies and resolutions: [`docs/DATA.md`](docs/DATA.md).
 ## AI and advanced algorithms (all explainable, all validated)
 - **AI drought classifier.** Gradient-boosted trees trained on 83,600 weekly U.S. Drought Monitor maps from 80 counties, with NASA POWER features. **On counties it never saw** it beats the rule-based baseline: within ±1 category 88.9 % vs. 86.2 %, Spearman 0.68 vs. 0.55, D1+ detection 70 % vs. 45 % (EXP-09).
 - **Tap-to-detect field boundaries.** Field-scale graph segmentation plus edge-aware region growing on sub-metre imagery returns an editable polygon in ~1 s (EXP-10).
+- **Rainy-season onset and false-start advisor.** Uses the Sivakumar/Stern onset rule and a water-balance season end on 40 years of NASA rain. Validated against IMD normals (India, MAE 3.6 days) and Sivakumar's Sahel stations (season length, MAE 12.5 days). V9.
+- **Global yield calibration.** Calibrated against FAOSTAT yields in 41 countries with leave-one-country-out validation (RMSLE 0.84 → 0.50). V10.
+- **Learned field-edge model.** A 1 MB U-Net running in pure numpy, plus a candidate selector, trained on the open Fields of The World dataset. On 20 held-out countries, mean IoU rose from 0.24 to 0.52. V15.
+- **Global pest and disease models.** Leaf wetness after Sentelhas; BLASTAM rice blast; Magarey rust infection; Wallin tropical late blight; coffee rust, Sigatoka and desert locust. Validated against documented outbreaks, misses included. V11.
+- **GPM IMERG rain blend and GRACE/GRACE-FO water storage.** The blend beats POWER alone at 16 of 18 rain gauges. GRACE agrees with groundwater wells in 11 of 11 U.S. aquifer regions. V13, V14.
+- **Heat stress (WBGT, Liljegren) and livestock THI, solar pump sizing, NASA FIRMS fires.** V12.
 - **AI management zones.** k-means on 10 m Sentinel-2 NDVI time series plus terrain, with k chosen by silhouette score, ranked zones and agronomic advice.
 - **Satellite–model data fusion.** Observed canopy (Sentinel-2 NDVI → FAO-56 Kcb) corrects the modelled crop water use.
 - **Satellite phenology.** Savitzky–Golay smoothing plus TIMESAT-style green-up, peak and senescence; bare-soil periods; double-crop and cutting detection.

@@ -121,7 +121,7 @@ canvas{position:absolute;left:0;top:0}
     <div class="sect" id="x2">
       <div class="eyebrow">02 · This week</div>
       <div class="h2">Three clear actions,<br>every week.</div>
-      <div class="sub" id="x2a">Irrigation, drought, pests and frost from NASA POWER, SMAP and ECOSTRESS.</div>
+      <div class="sub" id="x2a">Heat, irrigation, drought and pests from NASA POWER, IMERG, SMAP and ECOSTRESS.</div>
       <div class="sub" id="x2b" style="position:absolute;left:0;opacity:0">Tap any card to see the NASA evidence behind it.</div>
     </div>
     <div class="sect" id="x3">
@@ -283,10 +283,10 @@ async function init() {
   window.CALL = {
     c1: mkCall("c1", "✦", "Boundary in one tap", "AI segmentation on sub-metre imagery"),
     c2: mkCall("c2", "🛰", "AI management zones", "k-means on Sentinel-2 greenness"),
-    c3: mkCall("c3", "💧", "Irrigate 151 mm by Mon 21", "before the crop runs short of water"),
-    c4: mkCall("c4", "∑", "FAO-56 water balance", "NASA POWER weather · confidence · sources"),
+    c3: mkCall("c3", "☀", "High heat stress Wed–Thu", "field work only before 12:00 · shade and water for animals"),
+    c4: mkCall("c4", "∑", "WBGT 30.1 °C", "Liljegren heat model · NIOSH work–rest limits"),
     c5: mkCall("c5", "◎", "Plan score 78 / 100", "disease, nitrogen, erosion and water"),
-    c6: mkCall("c6", "↓", "29,075 m³", "less irrigation water a year · this field", true),
+    c6: mkCall("c6", "↓", "23,130 m³", "less irrigation water a year · this field", true),
   };
 
   const L = [["This week", 20.35], ["Wiki hii", 21.05], ["इस सप्ताह", 21.75], ["Esta semana", 22.45]];
@@ -538,7 +538,7 @@ window.render = function (t) {
     layer(L.es, { o: lang(22.35) });
     // tap ripple on the irrigation card
     const tp2 = seg(t, 14.45, 15.0);
-    hero.tap.style.left = (scrW * .46) + "px"; hero.tap.style.top = (scrH * .76) + "px";
+    hero.tap.style.left = (scrW * .46) + "px"; hero.tap.style.top = (scrH * .65) + "px";
     hero.tap.style.opacity = tp2 > 0 && tp2 < 1 ? Math.sin(Math.PI * tp2) : 0;
     hero.tap.style.transform = `scale(${.4 + 1.1 * eOut(tp2)})`;
   } else hero.el.style.opacity = 0;

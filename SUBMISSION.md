@@ -27,7 +27,15 @@ FieldShift is a free web, iOS and Android app that turns 40 years of NASA Earth 
 - **Plan the next years:** a per-field rotation plan over 54 crops, checked year by year against a cited knowledge base (30 pathogens, 22 rules). It says what to change, offers a beam-search optimised plan, and states the **impact** (water, N fertiliser, CO₂e, topsoil, income) with trade-offs.
 - **Insights:** 40-year climate trends at the field, What-if scenarios, rotation comparison on 15 simulated seasons.
 - **For every farmer:** offline mode, six languages incl. Swahili and Hindi, a plain-language glossary, a first-run guide, and **weekly advice as text that fits two SMS**.
-- **NASA data everywhere:** POWER (1984→), **GPM IMERG** rain (blended with POWER; beat POWER alone at 16 of 18 rain gauges), **GRACE/GRACE-FO** regional water-storage trends, SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, SRTM, GIBS. Partner data: Sentinel-2 and ERA5.
+- **NASA data everywhere:** POWER (1984→), **GPM IMERG** rain (blended with POWER; beat POWER alone at 16 of 18 rain gauges), **GRACE/GRACE-FO** regional water-storage trends, SMAP L3E/L4, MODIS, **ECOSTRESS 70 m ET**, **FIRMS** active fires, SRTM, GIBS. Partner data: Sentinel-2 and ERA5.
+
+- **Built for farmers anywhere on Earth, and checked there:**
+  - **Rainy-season advisor:** whether the rains have truly started, the false-start risk and what to sow now. Onset dates are within 3.6 days of the India Meteorological Department normals at 9 cities, and season length is within 12.5 days of 17 Sahel stations.
+  - **Yields:** calibrated against FAOSTAT in 41 countries. On held-out countries the error fell from 0.84 to 0.50 RMSLE, with the biggest gains in the tropics.
+  - **Tap-to-detect fields:** a learned edge model raised mean IoU from 0.24 to 0.52 on 20 countries it never saw, including Kenya, Rwanda, Vietnam and Cambodia.
+  - **Pests and diseases:** rice blast, wheat rusts, tropical late blight, coffee rust, black Sigatoka, gray leaf spot, cassava whitefly and desert locust, each from a published model and checked against documented outbreaks.
+  - **Heat, solar and fire:** WBGT heat stress for farm workers and THI for livestock; a solar irrigation pump sized from NASA POWER sunshine and compared with diesel; NASA FIRMS fires nearby, with "don't burn the residue" advice.
+  - **Honest negatives:** a worldwide AI drought model was trained and tested on 7 regions but not adopted, because the rules did better outside the U.S.
 
 ## High-level summary (long)
 **What it does.** Farmers face hotter summers, less reliable rain and declining soil, but NASA's long-term data rarely reaches them in a usable form. FieldShift turns that data into decisions for each field, in five simple tabs:
