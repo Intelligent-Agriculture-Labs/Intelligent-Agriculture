@@ -67,21 +67,45 @@ class Weather:
     tmin: np.ndarray
     rain: np.ndarray
     et0: np.ndarray
+    # location for the global yield calibration (science/yieldcal.py); None = uncalibrated
+    region: str | None = None
+    _zone: str | None = field(default=None, repr=False)
 
     def index(self, d: dt.date) -> int:
         return (d - self.dates[0]).days
+
+    def climate_zone(self) -> str:
+        """Köppen–Geiger main group of this record (cached; observed days only)."""
+        if self._zone is None:
+            from .yieldcal import climate_zone
+
+            self._zone = climate_zone(self.dates, self.tmax, self.tmin, self.rain)
+        return self._zone
+
+    def yield_factor(self, crop_id: str, irrigated: bool = False) -> float:
+        """Global yield calibration factor for this location (1.0 when the location is unknown)."""
+        if self.region is None:
+            return 1.0
+        from .yieldcal import calibration, factor
+
+        zone = self.climate_zone() if calibration().get("zones") else None
+        return factor(crop_id, self.region, zone, irrigated)
 
     def perturbed(self, delta_t: float = 0.0, rain_factor: float = 1.0) -> Weather:
         """Simple delta-change climate scenario. ET0 scaled with the FAO-56 temperature sensitivity
         (~ +3 % per °C for typical semi-arid conditions; see docs/MODELS.md) instead of a full re-run."""
         if delta_t == 0 and rain_factor == 1:
             return self
+        # the calibration (management / yield gap) stays that of the real location under a scenario
+        zone = self.climate_zone() if self.region is not None else None
         return Weather(
             self.dates,
             self.tmax + delta_t,
             self.tmin + delta_t,
             self.rain * rain_factor,
             self.et0 * (1 + 0.03 * delta_t),
+            self.region,
+            zone,
         )
 
 
@@ -167,6 +191,24 @@ def gdd_requirement(c: dict[str, Any], w: Weather, planting: dt.date, years: lis
     return float(np.mean(tot)) if tot else float(sum(c["stages"]) * 10)
 
 
+ANTECEDENT_DAYS = 180  # fallow water balance before sowing (EXP-12); 0 = FAO-56 default (deep soil at FC)
+FALLOW_KC = 0.3  # bare soil / stubble evaporation coefficient between seasons (FAO-56 Kc_ini order)
+FALLOW_START_DEPLETION = 0.6  # profile left near the end-of-season depletion by the previous crop
+
+
+def antecedent_depletion(w: Weather, i0: int, days: int, taw_max: float) -> float:
+    """Relative depletion (0 = field capacity, 1 = wilting point) of the full root zone at sowing, from a
+    fallow bucket run over `days` before day index i0. Evaporation declines linearly with depletion
+    (stage-2 drying, FAO-56 Ch. 7); rain refills; excess drains."""
+    d = FALLOW_START_DEPLETION * taw_max
+    for i in range(i0 - days, i0):
+        et0 = w.et0[i] if np.isfinite(w.et0[i]) else 0.0
+        p_mm = w.rain[i] if np.isfinite(w.rain[i]) else 0.0
+        d = d - p_mm + FALLOW_KC * et0 * (1 - d / taw_max)
+        d = min(max(d, 0.0), taw_max)
+    return float(d / taw_max)
+
+
 def simulate(
     crop_id: str,
     w: Weather,
@@ -187,6 +229,7 @@ def simulate(
     irrigate_until_date: dt.date | None = None,
     kc_scale: float = 1.0,
     kc_scale_from: dt.date | None = None,
+    antecedent_days: int = ANTECEDENT_DAYS,
 ) -> SeasonResult:
     """Run one season from `planting`. `until` stops early (used for 'today' state).
 
@@ -208,7 +251,14 @@ def simulate(
         gdd_req = float(sum(c["stages"]) * 10)
 
     zr_min, zr_max = c["root_m"]
+    # soil water below the initial root zone: at field capacity (FAO-56 default), or, with
+    # antecedent_days > 0, at the depletion left by a fallow water balance before sowing (EXP-12)
+    deep_frac = 0.0
+    if antecedent_days > 0 and not perennial and i0 - antecedent_days >= 0:
+        deep_frac = antecedent_depletion(w, i0, antecedent_days, taw_per_m * zr_max)
+        initial_depletion_frac = deep_frac
     dr = initial_depletion_frac * taw_per_m * zr_min
+    zr_prev = zr_min
     g_sum = 0.0
     cycle_g = 0.0
     cuts = 0.0
@@ -300,7 +350,11 @@ def simulate(
         p_adj = float(np.clip(c["p"] + 0.04 * (5 - etc), 0.1, 0.8))
         taw = taw_per_m * zr
         raw = p_adj * taw
-        # root growth brings in water at field capacity below the old root front: depletion unchanged
+        # root growth brings in soil below the old root front at field capacity (deep_frac = 0) or at
+        # its antecedent depletion
+        if zr > zr_prev:
+            dr += deep_frac * taw_per_m * (zr - zr_prev)
+            zr_prev = zr
         dr = min(dr, taw)
 
         # irrigation decision (net depth), made at the start of the day
@@ -375,7 +429,8 @@ def simulate(
         ym = c["typical_yield_t_ha"] * (completion**2)
     heat_factor = max(0.5, 1 - 0.03 * heat)
     frost_factor = max(0.2, 1 - frost_penalty)
-    ya = ym * water_factor * heat_factor * frost_factor
+    # global calibration against FAOSTAT (ADR-021): potential-yield × regional management factor
+    ya = ym * water_factor * heat_factor * frost_factor * w.yield_factor(crop_id, strategy != "rainfed")
     biomass = c["wp"] * tr_norm * c.get("calib", 1.0) / 100.0  # g/m2 -> t/ha
 
     end_date = w.dates[min(end_idx, len(w.dates) - 1)]

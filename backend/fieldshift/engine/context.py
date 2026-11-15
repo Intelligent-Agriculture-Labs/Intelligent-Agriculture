@@ -20,6 +20,7 @@ from ..data import sources
 from ..data.http import DataUnavailable
 from ..science import et0 as et0mod
 from ..science.cropmodel import Weather
+from ..science.yieldcal import region_of
 
 log = logging.getLogger("fieldshift.context")
 HIST_START = dt.date(1984, 1, 1)
@@ -162,7 +163,7 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
             log.warning("POWER hourly unavailable: %s", e)
 
     # extend with climatology for long simulations beyond the forecast horizon (marked provenance 3)
-    w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0)
+    w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0, region=region_of(lat, lon))
     ctx = FieldContext(
         lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0
     )

@@ -1466,7 +1466,8 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                 notes.append(f"{crop(s['crop'])['name']}: frost during the season in >30 % of years")
             elif (
                 ss.yields
-                and np.median(ss.yields) < 0.35 * crop(s["crop"])["typical_yield_t_ha"]
+                and np.median(ss.yields)
+                < 0.35 * crop(s["crop"])["typical_yield_t_ha"] * w.yield_factor(s["crop"], irrigated)
                 and crop(s["crop"])["typical_yield_t_ha"] > 0
             ):
                 feasible = False

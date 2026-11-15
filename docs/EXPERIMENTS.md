@@ -140,6 +140,59 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
   - Weak-label results measure agreement with one modelled soil-moisture product, not with expert drought maps.
 - **Next:** add expert-curated categorical labels where they exist (e.g. national drought monitors in Mexico/NADM, Canada and South Africa). Try an ordinal or regression target with per-region calibration instead of class balancing.
 
+## EXP-12 Global yield level and year-to-year skill against FAOSTAT (adopted: calendars, antecedent soil water, calibration)
+- **Question:** the season model was only checked at a few demo sites. How close are its yields to national statistics worldwide, and can a few transparent factors close the gap without overfitting?
+- **Data and method:** see VALIDATION.md V9 and `scripts/yield_benchmark.py`.
+  - 263 country × crop pairs in 41 countries and 761 MIRCA2000 cropland sites.
+  - Sacks et al. (2010) sowing dates, NASA POWER weather, 2000–2024 seasons.
+  - Every calibration is scored **leave-one-country-out**.
+- **Step 1: calendars.**
+  - The first run used MIRCA2000's condensed calendars, which treat Russia and Kazakhstan as single units listed as Sept→July wheat.
+  - The spring-wheat belts of Kurgan and northern Kazakhstan were therefore simulated as winter wheat.
+  - Switching to Sacks et al. (2010) cell calendars (MIRCA2000 only as the last fallback) cut the held-out RMSLE of the best structure from 0.578 to 0.512.
+  - Russia 2010 moved from rank 21 to rank 1 of 25 seasons.
+- **Step 2: antecedent soil water** (model change).
+  - **Observation:** before, soil below the sowing root zone entered the root zone at field capacity every season. Deep roots therefore always found a full profile, so winter-rain droughts were missed: with Sacks calendars, Morocco 2007 ranked 9/25 and 2016 11/25.
+  - **Change:** `simulate(antecedent_days=180)`, now the default for annual crops. A fallow bucket over the full root zone runs from 180 days before sowing:
+    - it starts at 60 % depletion (the previous crop);
+    - evaporation is 0.3·ET₀·(1 − D/TAW) (stage-2 drying);
+    - rain refills it.
+    The resulting depletion sets the initial and deeper soil water.
+  - **Result:**
+
+    | | before (FC below roots) | after (180-day antecedent) |
+    |---|---|---|
+    | Documented droughts in worst 3 / worst 5 of 25 seasons | 11 / 15 | **13 / 17** |
+    | Median rank of the 25 documented drought seasons | 4 | **3** |
+    | Median detrended r with FAOSTAT | 0.13 | 0.14 |
+    | Held-out level RMSLE (adopted calibration) | 0.498 | 0.501 |
+    | V5 Ames 2012 / 1988 | 1 / 2 | **1 / 2** |
+    | V5 Machakos short rains 2016 / 2005 | 6 / 8 | **4 / 3** |
+
+  - Morocco 2007 and 2016 moved to ranks 3 and 4, and South Africa 2016 to rank 2. One case got worse: eastern Australia 2019 went from rank 1 to 7.
+- **Step 3: calibration structure.** Held-out RMSLE of the level (before: 0.843):
+
+  | Structure | Parameters | Held-out RMSLE | within ±30 % |
+  |---|---|---|---|
+  | crop factor only | 15 | 0.631 | 37 % |
+  | crop + Köppen zone | 19 | 0.596 | 41 % |
+  | crop + region | 26 | 0.512 | 52 % |
+  | crop + region + zone | 30 | 0.518 | 49 % |
+  | crop + region + irrigated factor | 27 | 0.500 | 53 % |
+  | crop + region + crop×region (ridge) + irrigated | ~140 | 0.488 | 57 % |
+  | crop + region × crop sensitivity (+ irrigated) | 41 (42) | 0.495 (0.487) | 52 % (55 %) |
+  | **anchored crop + region × crop sensitivity** (adopted) | **38** | **0.501** | **54 %** |
+  | anchored, + irrigated factor | 39 | 0.496 | 54 % |
+
+  - Region beats climate zone. Once the region is known, a zone term adds nothing: management, not climate, explains the residual level.
+  - The unanchored structures score marginally better on average, but fail where the demo farms are. They put U.S. maize at 6.7–7.3 t/ha (FAOSTAT 10.0) and Spanish maize at 6–7 (10.8): low-input pairs (maize in sub-Saharan Africa at 20 % of the simulated level) pull the shared crop factor down.
+  - The anchored structure works in two stages:
+    1. crop potential factors are fitted only in the reference regions that `typical_yield_t_ha` was built from;
+    2. regional yield gaps, scaled per crop, are fitted on the rest.
+  - The global irrigated factor (×1.37) was dropped. It mainly corrected irrigated rice and wheat, and inflated irrigated U.S. maize.
+- **Honest caveat:** the candidate list grew after seeing results (irrigated factor, sensitivity, anchoring). Each candidate is still scored on countries its factors never saw, but choosing among nine structures on the same benchmark makes the 0.50 slightly optimistic.
+- **Decision:** adopted (ADR-021). Factors are in `config/yield_calibration.yaml` and unit-tested (`tests/test_yieldcal.py`).
+
 ## EXP-10 Field boundary detection: superpixel growing vs. field-scale graph segmentation
 - **v1:** SLIC superpixels (~1,600) + colour/edge region growing at native resolution. It under-segmented badly: Fallon 1.6 of ~5.5 ha, Machakos one stripe, Córdoba 0.03 ha (the tap was on a hedge).
 - **v2 (adopted):**

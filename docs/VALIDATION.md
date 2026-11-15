@@ -38,14 +38,14 @@ _run: 2026-11-14T18:28:15+00:00_
 | Ames, IA | 1045 | 0.63 | 0.70 | 0.65 | 0.66 | 0.74 | 0.68 | 0.37 |
 
 ### V5 · Documented drought years in simulated rain-fed yields
-_run: 2026-11-14T18:28:15+00:00_
+_run: 2026-11-15T00:33:32+00:00_
 
 | Site / season | years simulated | documented drought year | rank (1 = worst) |
 |---|---|---|---|
 | Ames, IA maize | 40 | 2012 | **1** |
 | Ames, IA maize | 40 | 1988 | **2** |
-| Machakos, KE maize (short rains) | 34 | 2016 | **6** |
-| Machakos, KE maize (short rains) | 34 | 2005 | **8** |
+| Machakos, KE maize (short rains) | 34 | 2016 | **4** |
+| Machakos, KE maize (short rains) | 34 | 2005 | **3** |
 
 ### V6 · Irrigated alfalfa ET at the Fallon field: model vs NASA ECOSTRESS (70 m) and MODIS MOD16 (500 m)
 _run: 2026-11-14T15:44:56+00:00_
@@ -201,6 +201,135 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
 
 <!-- RESULTS:END -->
 
+### V9 · Global yield benchmark: simulated vs. FAOSTAT national yields, 41 countries, 2000–2024
+_run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation/yield_benchmark/`](validation/yield_benchmark/) · EXP-12, ADR-021_
+
+**Design.**
+- **Reference:** FAOSTAT national yields (QCL, t/ha, 2000–2024) for 13 crops. Cotton is lint: lint production / seed-cotton area. Beans are "Beans, dry".
+- **Pairs:** 263 country × crop pairs in 41 countries spanning all four Köppen–Geiger main groups. A pair is included when FAOSTAT harvested area averages ≥ 100,000 ha.
+- **Sites:** 761 cropland sites. Each pair gets up to 3 MIRCA2000 0.5° cells with the largest harvested area, at least 2.5° apart. Each site carries MIRCA2000's irrigated share.
+- **Sowing and harvest dates**, in order of preference:
+  - Sacks et al. (2010) observed calendars: 480 sites;
+  - Sacks climate-extrapolated calendars: 198 sites;
+  - winter- vs. spring-type wheat/barley decided by a coldest-month rule on the site's POWER climate (< −10 °C → spring type): 39 sites;
+  - MIRCA2000 condensed calendars: 2 sites;
+  - sugarcane (Jan–Dec in MIRCA2000): rainy-season onset, or the month after the coldest month below 600 mm/yr: 42 sites.
+- **Simulation:** the FieldShift season model runs every season 2000–2024 with NASA POWER weather and the loam default soil, both rain-fed and with full irrigation. The two are mixed by the irrigated share and area-weighted to a national value. Alfalfa is not benchmarked: FAOSTAT publishes no forage yields.
+- **Level metric:** RMSLE of the 2000–2024 mean (log of simulated/observed), the median ratio and the share of pairs within ±30 %.
+- **Calibration check:** **leave-one-country-out**. All factors are refitted without the country, then applied to it.
+- **Year-to-year metric:** Pearson r of the linearly detrended series. National trends are mostly technology, which the model does not have.
+
+**Level, before and after calibration** (after = held-out countries):
+
+| Calibration | RMSLE | median sim/obs | mean bias (t/ha) | within ±30 % |
+|---|---|---|---|---|
+| none (before) | 0.843 | 1.37 | 0.65 | 36% |
+| crop (held-out) | 0.631 | 0.96 | -0.37 | 37% |
+| crop+zone (held-out) | 0.596 | 0.97 | -0.33 | 41% |
+| crop+region (held-out) | 0.512 | 1.0 | -0.1 | 52% |
+| crop+region+zone (held-out) | 0.518 | 0.99 | -0.18 | 49% |
+| crop+region+irrigation (held-out) | 0.5 | 1.01 | 0.09 | 53% |
+| crop+region×crop (ridge)+irrigation (held-out) | 0.488 | 0.99 | -0.01 | 57% |
+| crop+region×sensitivity (held-out) | 0.495 | 0.98 | -0.13 | 52% |
+| crop+region×sensitivity+irrigation (held-out) | 0.487 | 0.99 | 0.04 | 55% |
+| anchored crop+region×sensitivity (held-out) | 0.501 | 1.02 | -0.57 | 54% |
+| anchored crop+region×sensitivity+irrigation (held-out) | 0.496 | 1.02 | -0.39 | 54% |
+
+**By crop** (after = held-out country, adopted model; anomaly r = detrended year-to-year correlation, uncalibrated):
+
+| | pairs | sim/obs before | RMSLE before | sim/obs after | RMSLE after | within ±30 % after | anomaly r (median) |
+|---|---|---|---|---|---|---|---|
+| barley | 14 | 1.54 | 0.637 | 1.1 | 0.47 | 71% | 0.28 |
+| cassava | 13 | 0.78 | 0.435 | 0.81 | 0.463 | 38% | 0.02 |
+| cotton | 18 | 1.37 | 0.816 | 0.84 | 0.381 | 72% | 0.18 |
+| dry_bean | 19 | 1.42 | 0.723 | 1.02 | 0.543 | 42% | -0.02 |
+| groundnut | 17 | 1.79 | 0.831 | 0.91 | 0.359 | 65% | 0.22 |
+| maize | 37 | 2.33 | 1.202 | 1.04 | 0.653 | 57% | 0.25 |
+| pearl_millet | 15 | 1.88 | 0.953 | 1.02 | 0.444 | 67% | 0.22 |
+| potato | 22 | 1.04 | 0.632 | 0.93 | 0.561 | 41% | 0.11 |
+| rice | 22 | 1.03 | 0.549 | 1.09 | 0.467 | 41% | -0.02 |
+| sorghum | 18 | 5.83 | 1.584 | 1.02 | 0.596 | 44% | 0.23 |
+| soybean | 18 | 1.5 | 0.713 | 1.0 | 0.509 | 56% | 0.45 |
+| spring_wheat | 16 | 1.02 | 0.401 | 1.05 | 0.47 | 31% | 0.25 |
+| sugarcane | 15 | 0.87 | 0.46 | 0.87 | 0.478 | 60% | -0.01 |
+| winter_barley | 7 | 1.18 | 0.34 | 1.0 | 0.128 | 86% | 0.17 |
+| winter_wheat | 12 | 1.19 | 0.354 | 1.03 | 0.318 | 58% | 0.17 |
+
+**By Köppen–Geiger main climate group** (of the pair's largest site, from its POWER record):
+
+| | pairs | sim/obs before | RMSLE before | sim/obs after | RMSLE after | within ±30 % after | anomaly r (median) |
+|---|---|---|---|---|---|---|---|
+| arid | 59 | 1.43 | 0.964 | 0.91 | 0.664 | 49% | 0.19 |
+| continental | 25 | 1.28 | 0.406 | 1.1 | 0.323 | 60% | 0.22 |
+| temperate | 106 | 1.1 | 0.672 | 0.98 | 0.474 | 56% | 0.13 |
+| tropical | 73 | 2.2 | 1.046 | 1.02 | 0.432 | 52% | 0.07 |
+
+**By region** (UN M49 based):
+
+| | pairs | sim/obs before | RMSLE before | sim/obs after | RMSLE after | within ±30 % after | anomaly r (median) |
+|---|---|---|---|---|---|---|---|
+| east_asia | 13 | 0.95 | 0.291 | 1.21 | 0.313 | 54% | -0.02 |
+| eastern_europe_central_asia | 25 | 1.37 | 0.426 | 1.02 | 0.324 | 60% | 0.23 |
+| latin_america | 34 | 1.13 | 0.503 | 0.95 | 0.399 | 56% | 0.11 |
+| middle_east_north_africa | 17 | 0.84 | 0.978 | 0.59 | 1.042 | 18% | 0.19 |
+| northern_america | 18 | 0.92 | 0.342 | 0.96 | 0.293 | 78% | 0.52 |
+| oceania | 5 | 1.14 | 0.462 | 1.37 | 0.387 | 40% | 0.48 |
+| south_asia | 34 | 1.47 | 0.718 | 1.04 | 0.551 | 47% | 0.11 |
+| southeast_asia | 23 | 1.59 | 0.697 | 1.08 | 0.293 | 61% | -0.01 |
+| southern_europe | 9 | 1.09 | 0.305 | 1.07 | 0.248 | 78% | 0.48 |
+| sub_saharan_africa | 74 | 2.77 | 1.291 | 1.01 | 0.554 | 45% | 0.11 |
+| western_europe | 11 | 1.04 | 0.155 | 0.96 | 0.185 | 100% | 0.25 |
+
+**Documented national drought seasons** (harvest year; rank 1 = worst season of 2000–2024 in the linearly detrended series):
+
+| Event | Country | Crop | Year | Rank simulated | Rank FAOSTAT | Sim. anomaly | FAOSTAT anomaly |
+|---|---|---|---|---|---|---|---|
+| 2012 U.S. Corn Belt drought (USDA ERS) | United States | maize | 2012 | 1/25 | 1/25 | -51 % | -23 % |
+| 2012 U.S. drought (USDA ERS) | United States | soybean | 2012 | 1/25 | 2/25 | -44 % | -11 % |
+| 2010 Russian heatwave and drought (FAO GIEWS) | Russia | wheat | 2010 | 1/25 | 2/25 | -53 % | -15 % |
+| 2012 Kazakhstan drought (FAO GIEWS) | Kazakhstan | wheat | 2012 | 3/25 | 2/25 | -50 % | -28 % |
+| 2006 Millennium Drought (ABARES) | Australia | wheat | 2006 | 3/25 | 2/25 | -24 % | -38 % |
+| 2018–19 eastern Australia drought (ABARES) | Australia | wheat | 2019 | 7/25 | 1/25 | -16 % | -42 % |
+| 2015–16 El Niño drought, southern Africa (FAO GIEWS) | South Africa | maize | 2016 | 2/25 | 2/25 | -38 % | -26 % |
+| 2015–16 El Niño drought (FAO GIEWS) | Zambia | maize | 2016 | 7/25 | 15/25 | -6 % | +3 % |
+| 2015–16 El Niño drought (FAO GIEWS) | Zimbabwe | maize | 2016 | 2/25 | 2/25 | -29 % | -52 % |
+| 2015–16 El Niño drought (FAO GIEWS) | Malawi | maize | 2016 | 6/25 | 2/25 | -10 % | -29 % |
+| 2008–09 Pampas drought (Bolsa de Cereales) | Argentina | soybean | 2009 | 13/25 | 2/25 | -0 % | -30 % |
+| 2017–18 Pampas drought (Bolsa de Cereales) | Argentina | soybean | 2018 | 3/25 | 3/25 | -18 % | -16 % |
+| 2022–23 Pampas drought (Bolsa de Cereales) | Argentina | soybean | 2023 | 2/25 | 1/25 | -23 % | -39 % |
+| 2015–16 Morocco drought (FAO GIEWS) | Morocco | wheat | 2016 | 4/25 | 5/25 | -9 % | -35 % |
+| 2007 Morocco drought (FAO GIEWS) | Morocco | wheat | 2007 | 3/25 | 2/25 | -10 % | -54 % |
+| 2004–05 Iberian drought (AEMET) | Spain | barley | 2005 | 3/25 | 2/25 | -25 % | -45 % |
+| 2011–12 Iberian drought (AEMET) | Spain | barley | 2012 | 5/25 | 4/25 | -18 % | -24 % |
+| 2022–23 Iberian drought (AEMET) | Spain | wheat | 2023 | 8/25 | 1/25 | -8 % | -43 % |
+| 2018 central-European drought (DWD) | Germany | wheat | 2018 | 6/25 | 2/25 | +0 % | -11 % |
+| 2003 European heatwave (Ciais et al., 2005) | France | wheat | 2003 | 4/25 | 3/25 | -3 % | -11 % |
+| 2002 monsoon failure (IMD) | India | rice | 2002 | 1/25 | 1/25 | -5 % | -6 % |
+| 2009 monsoon failure (IMD) | India | rice | 2009 | 6/25 | 2/25 | -2 % | -5 % |
+| 2011 Mexico drought and Sinaloa freeze (SIAP) | Mexico | maize | 2011 | 4/25 | 2/25 | -3 % | -11 % |
+| 2020 Ukraine drought (FAO GIEWS) | Ukraine | maize | 2020 | 10/25 | 1/25 | +1 % | -23 % |
+| 2008–09 Kenya long-rains failure (FEWS NET) | Kenya | maize | 2009 | 2/25 | 1/25 | -16 % | -20 % |
+
+**Year-to-year signal** (independent of the calibration, which only scales the level):
+- Median detrended r = **0.14**. r is positive for 66 % of the pairs and above 0.4 for 23 %.
+- 13 of 25 documented national drought seasons are among the 3 worst simulated seasons, and 17 of 25 among the 5 worst. FAOSTAT itself has 22 of 25 in its worst 3.
+- The skill is concentrated in rain-fed, water-limited systems: U.S. maize and soybean, Russian and Kazakh wheat, Australian wheat, southern-African maize, Pampas soybean and Iberian cereals.
+- It is near zero for irrigated or humid-tropical crops (rice, sugarcane, cassava, East and Southeast Asia), where national yields are driven by management, pests, prices and irrigation supply that the model does not see.
+
+**Interpretation.**
+- **The uncalibrated model:**
+  - It is near the level of high-input systems: Northern America, Western and Southern Europe, RMSLE 0.16–0.34.
+  - It overestimates low-input systems by a factor of 2–6: sub-Saharan Africa median ×2.8, sorghum ×5.8.
+  - This is expected: `typical_yield_t_ha` describes well-managed fields.
+- **The calibration** (15 crop potential factors with 15 yield-gap sensitivities, and 8 regional gap factors; reference regions fixed at 1):
+  - It cuts held-out RMSLE from **0.84 to 0.50**. Pairs within ±30 % rise from **36 % to 54 %**.
+  - Sub-Saharan Africa goes from ×2.77 to ×1.01 (RMSLE 1.29 → 0.55).
+- **Still weak after calibration:**
+  - Middle East & North Africa: RMSLE 1.04, worse than before. Irrigated Egypt and rain-fed Morocco and Türkiye share one factor. MIRCA's site choice puts Morocco's maize on an irrigated cell, while national maize is rain-fed.
+  - East Asia and Oceania (one country each): the held-out level is ×1.2–1.4 too high.
+  - Sugarcane, cassava, potato and rice: the yield-gap structure explains little for these crops.
+- **Not adopted:** a Köppen-zone factor. It made held-out errors worse once the region was known: 0.518 vs. 0.512 (EXP-12).
+
 ## Interpretation
 
 ### Where the models are strong
@@ -210,6 +339,9 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
   - At Fallon, POWER's ET₀ is ~11 % lower than ERA5's. The two grids mix desert and irrigated valley differently, and the true field value is unknown. Irrigation amounts carry this uncertainty, which is why the cards say "~50 km grid".
 - **Drought years (V5).** The season model, driven only by NASA POWER weather, ranks the documented Iowa droughts of **2012 and 1988** at the very bottom of 40 seasons.
 - **Drought status (V4), Iowa.** In the rain-fed Corn Belt, the blended status tracks the U.S. Drought Monitor closely (ρ ≈ 0.74).
+- **Yield level worldwide (V9).**
+  - After the FAOSTAT calibration, simulated national yields are within ±30 % for 54 % of 263 country × crop pairs in countries the calibration never saw (36 % before).
+  - Documented national droughts appear among the worst simulated seasons in water-limited systems: U.S. 2012, Russia 2010, Kazakhstan 2012, southern Africa 2016, Pampas 2018 and 2023, Morocco 2007, Iberia 2005.
 
 ### Where they are weak, and why
 - **Drought in Nevada (V4).**
@@ -234,9 +366,16 @@ _cold: 102 sites (US 39, EU 48, SAS 3, EAS 12)_
   - The ML classifier therefore stays U.S.-only, and the rules serve the rest of the world.
   - The weak SMIA labels agree with USDM and CDI only moderately (Spearman 0.49 / 0.54), so those regional numbers are indicative.
 
+- **Year-to-year yields outside water-limited systems (V9).**
+  - The median detrended correlation with FAOSTAT is only 0.14.
+  - Irrigated and humid-tropical crops show almost no year-to-year skill: rice, sugarcane, cassava, East and Southeast Asia.
+  - The model has no pests, prices, irrigation-supply cuts or technology. National averages also mix many fields, which three 50 km weather cells cannot represent.
+- **Middle East & North Africa yield level (V9):** irrigated and rain-fed systems share one regional factor, and the held-out error is not reduced.
+
 ### What was not validated (and why)
 - Field-level irrigation timing: this needs farm irrigation logs.
-- Absolute yields against county statistics: the NASS API needs a key (ROADMAP #4).
+- Absolute yields against sub-national (county/district) statistics: V9 uses national FAOSTAT yields. NASS county data needs an API key (ROADMAP #4).
+- Alfalfa and other forages: FAOSTAT publishes no forage yields.
 - Rotation scores against field trials: no open dataset fits.
 
 See also [`EXPERIMENTS.md`](EXPERIMENTS.md) for the experiments that changed the code, and [`LIMITATIONS.md`](LIMITATIONS.md).
