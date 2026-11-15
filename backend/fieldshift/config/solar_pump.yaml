@@ -1,0 +1,32 @@
+# Solar irrigation pump advisor — indicative assumptions (edit locally; all costs USD, not a quote).
+defaults:
+  static_head_m: 15          # water level to field (shallow tube well / canal lift); user can override
+  area_ha: 1.0               # when no field polygon or area is given
+  eta_mp: 0.45               # motor-pump subsystem (wire-to-water) efficiency, 0.35–0.55 for small DC/AC submersibles (GIZ/FAO SPIS Toolbox)
+  other_losses: 0.88         # soiling 3 %, wiring 2 %, mismatch 2 %, controller/MPPT 5 % (PR without temperature)
+  capex_usd_kwp: 1000        # installed PV + pump + controller per kWp, small systems 2022–24 (IRENA 2016 solar pumping brief; FAO & GIZ 2018; PM-KUSUM benchmark ~650–900 USD/kWp in India)
+  om_frac: 0.02              # annual O&M as fraction of capex (incl. pump replacement after ~10 years)
+  lifetime_y: 20
+  discount: 0.08
+  diesel_eta: 0.15           # fuel-to-water efficiency of small diesel pump sets, 0.10–0.20 (engine ~25 % × pump ~60 %)
+  diesel_price_usd_l: 1.10   # world average retail 2024 ~1.1–1.3 USD/L (GlobalPetrolPrices.com); override locally
+  diesel_om_frac: 0.25       # maintenance + lubricants as fraction of fuel cost
+# Operating pressure head of the field application system (m), plus 10 % friction on the total
+pressure_head_m:
+  drip: 10
+  sprinkler: 30
+  pivot: 25
+  furrow: 1
+  flood: 1
+  none: 1
+friction_frac: 0.10
+sources:
+  - "FAO & GIZ 2018. The benefits and risks of solar-powered irrigation – a global overview. Rome. https://www.fao.org/3/I9047EN/i9047en.pdf"
+  - "GIZ & FAO 2017/2020. Toolbox on Solar Powered Irrigation Systems (SPIS), module DESIGN. https://energypedia.info/wiki/Toolbox_on_SPIS"
+  - "Kelley L.C. et al. 2010. On the feasibility of solar-powered irrigation. Renew. Sustain. Energy Rev. 14:2669–2682. https://doi.org/10.1016/j.rser.2010.07.061"
+  - "IRENA 2016. Solar pumping for irrigation: improving livelihoods and sustainability. https://www.irena.org/publications/2016/Jun/Solar-Pumping-for-Irrigation-Improving-livelihoods-and-sustainability"
+  - "Skoplaki E. & Palyvos J.A. 2009. Operating temperature of photovoltaic modules: a survey of pertinent correlations. Solar Energy 83:614–624. https://doi.org/10.1016/j.solener.2008.10.008"
+  - "Allen R.G. et al. 1998. FAO-56 Crop evapotranspiration (Kc curve). https://www.fao.org/3/x0490e/x0490e00.htm"
+  - "Smith M. 1992. CROPWAT – A computer program for irrigation planning and management, FAO Irrigation and Drainage Paper 46 (USDA-SCS effective rainfall)"
+  - "IPCC 2006 Guidelines for National GHG Inventories, vol. 2 ch. 3 (diesel 74.1 t CO2/TJ)"
+  - "NASA POWER ALLSKY_SFC_SW_DWN, T2M_MAX and FAO-56 ET0 climatology. https://power.larc.nasa.gov/"

@@ -41,6 +41,7 @@ class FieldContext:
     statuses: dict[str, str] = field(default_factory=dict)
     enrich: dict[str, list[tuple[dt.date, float]]] = field(default_factory=dict)
     forecast_et0: np.ndarray | None = None
+    power: Any = None  # raw NASA POWER Daily (radiation, wind, humidity climatology for heat/solar advice)
 
     @property
     def taw_per_m(self) -> float:
@@ -164,7 +165,7 @@ def _build(lat: float, lon: float, today: dt.date, enrich: bool) -> FieldContext
     # extend with climatology for long simulations beyond the forecast horizon (marked provenance 3)
     w = Weather(dates, tmax, tmin, np.where(np.isfinite(rain), rain, 0.0), et0)
     ctx = FieldContext(
-        lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0
+        lat, lon, today, w, prov, rh, hourly, power_last, elev, slope, soil, statuses, forecast_et0=fet0, power=power
     )
     if enrich:
         ctx.enrich = enrichment(lat, lon, today)

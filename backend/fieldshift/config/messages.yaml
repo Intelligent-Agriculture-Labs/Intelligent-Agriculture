@@ -182,3 +182,100 @@ drought_detail_12m:
   sw: "Mvua ya siku 90 iko kati ya {pct}% ya miaka kavu zaidi tangu 1984, na mizani ya maji ya miezi 12 kati ya {pct12}%. Panga matumizi ya maji."
   hi: "पिछले 90 दिनों की वर्षा 1984 के बाद के सबसे सूखे {pct}% वर्षों में है, और 12 महीने का जल संतुलन सबसे सूखे {pct12}% में।"
   de: "Der Regen der letzten 90 Tage gehört zu den trockensten {pct}% der Jahre seit 1984, die 12-Monats-Wasserbilanz zu den trockensten {pct12}%."
+# ---- heat stress for people and livestock (heat_cards.py)
+heat_level_moderate: {en: Moderate, es: Moderado, fr: Modéré, sw: Wastani, hi: मध्यम, de: Mäßiger}
+heat_level_high: {en: High, es: Alto, fr: Fort, sw: Mkubwa, hi: अधिक, de: Hoher}
+heat_level_severe: {en: Very high, es: Muy alto, fr: Très fort, sw: Mkubwa sana, hi: बहुत अधिक, de: Sehr hoher}
+heat_stress_title:
+  en: "{level} heat stress {days} {start}–{end}: field work only before {safe}"
+  es: "Estrés por calor {level} {days} {start}–{end}: trabajo de campo solo antes de las {safe}"
+  fr: "Stress thermique {level} {days} {start}–{end} : travaux aux champs avant {safe} seulement"
+  sw: "Msongo wa joto {level} {days} {start}–{end}: kazi shambani kabla ya saa {safe} tu"
+  hi: "{level} गर्मी का तनाव {days} {start}–{end}: खेत का काम केवल {safe} से पहले"
+  de: "{level} Hitzestress {days} {start}–{end}: Feldarbeit nur vor {safe}"
+heat_title_animals:
+  en: ", shade and water for animals"
+  es: ", sombra y agua para los animales"
+  fr: ", ombre et eau pour les animaux"
+  sw: ", kivuli na maji kwa mifugo"
+  hi: ", पशुओं के लिए छाया और पानी"
+  de: ", Schatten und Wasser für Tiere"
+heat_stress_detail:
+  en: "Peak WBGT {wbgt} °C. In the hot hours rest about {rest} min per hour in shade and drink a cup of water every 15–20 min; resume heavy work after {after}."
+  es: "WBGT máximo {wbgt} °C. En las horas de calor descanse unos {rest} min por hora a la sombra y beba un vaso de agua cada 15–20 min; trabajo pesado después de las {after}."
+  fr: "WBGT max {wbgt} °C. Aux heures chaudes, reposez-vous environ {rest} min par heure à l'ombre et buvez un verre d'eau toutes les 15–20 min ; travaux lourds après {after}."
+  sw: "WBGT ya juu {wbgt} °C. Saa za joto pumzika takriban dakika {rest} kila saa kivulini na unywe kikombe cha maji kila dakika 15–20; kazi nzito baada ya saa {after}."
+  hi: "अधिकतम WBGT {wbgt} °C। गर्म घंटों में हर घंटे लगभग {rest} मिनट छाया में आराम करें और हर 15–20 मिनट एक कप पानी पिएं; भारी काम {after} के बाद।"
+  de: "WBGT-Spitze {wbgt} °C. In den heißen Stunden etwa {rest} min pro Stunde im Schatten pausieren und alle 15–20 min einen Becher Wasser trinken; schwere Arbeit nach {after}."
+heat_animals_title:
+  en: "Heat stress for livestock {day}: give shade and water"
+  es: "Estrés por calor para el ganado {day}: dé sombra y agua"
+  fr: "Stress thermique du bétail {day} : ombre et eau"
+  sw: "Msongo wa joto kwa mifugo {day}: wape kivuli na maji"
+  hi: "{day} पशुओं में गर्मी का तनाव: छाया और पानी दें"
+  de: "Hitzestress für Nutztiere {day}: Schatten und Wasser geben"
+heat_animals_detail:
+  en: "Move and handle animals only in the cool early morning, keep water troughs full and ventilate poultry houses."
+  es: "Mueva y maneje los animales solo temprano por la mañana, mantenga los bebederos llenos y ventile los gallineros."
+  fr: "Déplacez et manipulez les animaux tôt le matin seulement, gardez les abreuvoirs pleins et aérez les poulaillers."
+  sw: "Hamisha na shughulikia mifugo asubuhi na mapema tu, jaza mabirika ya maji na upitishe hewa kwenye mabanda ya kuku."
+  hi: "पशुओं को केवल सुबह ठंडे समय में ले जाएं, पानी की नाद भरी रखें और मुर्गी घरों में हवा का प्रवाह रखें।"
+  de: "Tiere nur am kühlen frühen Morgen treiben und behandeln, Tränken voll halten und Geflügelställe lüften."
+# ---- solar irrigation pump (solar_service.py)
+solar_pump_title:
+  en: "Solar pump option: {kwp} kWp covers your peak water need"
+  es: "Bomba solar: {kwp} kWp cubren su máxima demanda de agua"
+  fr: "Pompe solaire : {kwp} kWc couvrent votre besoin d'eau de pointe"
+  sw: "Pampu ya jua: kWp {kwp} zinatosha mahitaji ya juu ya maji"
+  hi: "सोलर पंप विकल्प: {kwp} kWp आपकी अधिकतम पानी की ज़रूरत पूरी करता है"
+  de: "Solarpumpe: {kwp} kWp decken Ihren Spitzenwasserbedarf"
+solar_pump_detail:
+  en: "{m3} m³/day in {month} at {head} m head. Water costs ~{solar} USD/m³ vs ~{diesel} with diesel, and saves {co2} t CO₂ a year."
+  es: "{m3} m³/día en {month} con {head} m de altura. El agua cuesta ~{solar} USD/m³ frente a ~{diesel} con diésel y ahorra {co2} t de CO₂ al año."
+  fr: "{m3} m³/jour en {month} pour {head} m de hauteur. L'eau coûte ~{solar} USD/m³ contre ~{diesel} au diesel et évite {co2} t de CO₂ par an."
+  sw: "m³ {m3} kwa siku mwezi {month} kwa kimo cha m {head}. Maji yanagharimu ~{solar} USD/m³ dhidi ya ~{diesel} kwa dizeli, na huokoa t {co2} za CO₂ kwa mwaka."
+  hi: "{month} में {m3} m³/दिन, {head} मी हेड पर। पानी की लागत ~{solar} USD/m³, डीज़ल से ~{diesel}; हर साल {co2} t CO₂ की बचत।"
+  de: "{m3} m³/Tag im {month} bei {head} m Förderhöhe. Wasser kostet ~{solar} USD/m³ statt ~{diesel} mit Diesel und spart {co2} t CO₂ pro Jahr."
+# ---- fires and crop-residue burning (fire_cards.py)
+fire_near_title:
+  en: "{n} active fires within {km} km (last 48 h), nearest {d} km {dir}"
+  es: "{n} incendios activos a menos de {km} km (48 h), el más cercano a {d} km al {dir}"
+  fr: "{n} feux actifs à moins de {km} km (48 h), le plus proche à {d} km au {dir}"
+  sw: "Moto {n} hai ndani ya km {km} (saa 48), wa karibu km {d} {dir}"
+  hi: "{km} किमी के भीतर {n} सक्रिय आग (48 घंटे), सबसे निकट {d} किमी {dir}"
+  de: "{n} aktive Feuer im Umkreis von {km} km (48 h), das nächste {d} km {dir}"
+fire_near_detail:
+  en: "Keep a mown or ploughed firebreak around the field and stored hay, and protect workers from smoke (stay upwind, wear a mask)."
+  es: "Mantenga un cortafuegos segado o arado alrededor del campo y del heno, y proteja a los trabajadores del humo (a barlovento, mascarilla)."
+  fr: "Gardez un pare-feu fauché ou labouré autour du champ et du foin stocké, et protégez les travailleurs de la fumée (au vent, masque)."
+  sw: "Weka kizuia moto kilichokatwa au kulimwa kuzunguka shamba na nyasi zilizohifadhiwa, na walinde wafanyakazi dhidi ya moshi (vaa barakoa)."
+  hi: "खेत और रखे भूसे के चारों ओर कटी या जुती अग्निरोधी पट्टी रखें, और मज़दूरों को धुएं से बचाएं (हवा की दिशा के विपरीत रहें, मास्क पहनें)।"
+  de: "Halten Sie einen gemähten oder gepflügten Brandschutzstreifen um Feld und Heulager und schützen Sie Arbeiter vor Rauch (Maske, gegen den Wind)."
+residue_title:
+  en: "Don't burn the {crop} residue: incorporate or mulch it"
+  es: "No queme los rastrojos de {crop}: incorpórelos o úselos como acolchado"
+  fr: "Ne brûlez pas les résidus de {crop} : enfouissez-les ou paillez"
+  sw: "Usichome mabaki ya {crop}: yachanganye na udongo au yatumie kama matandazo"
+  hi: "{crop} की पराली न जलाएं: मिट्टी में मिलाएं या मल्च करें"
+  de: "{crop}-Reste nicht verbrennen: einarbeiten oder mulchen"
+residue_detail:
+  en: "Burning {res} t/ha of residue loses ~{n} kg N/ha and {c} t carbon/ha. Sowing into the mulch (e.g. Happy Seeder) keeps them in your soil."
+  es: "Quemar {res} t/ha de rastrojo pierde ~{n} kg N/ha y {c} t de carbono/ha. Sembrar sobre el acolchado (p. ej. Happy Seeder) los mantiene en su suelo."
+  fr: "Brûler {res} t/ha de résidus fait perdre ~{n} kg N/ha et {c} t de carbone/ha. Semer dans le paillis (p. ex. Happy Seeder) les garde dans votre sol."
+  sw: "Kuchoma t {res}/ha za mabaki hupoteza ~kg {n} N/ha na t {c} za kaboni/ha. Kupanda ndani ya matandazo (k.m. Happy Seeder) huvihifadhi udongoni."
+  hi: "{res} t/ha पराली जलाने से ~{n} kg N/ha और {c} t कार्बन/ha नष्ट होता है। मल्च में बुवाई (जैसे हैप्पी सीडर) इन्हें मिट्टी में रखती है।"
+  de: "Das Verbrennen von {res} t/ha Resten kostet ~{n} kg N/ha und {c} t Kohlenstoff/ha. Direktsaat in den Mulch (z. B. Happy Seeder) hält sie im Boden."
+heat_stress_title_allday:
+  en: "{level} heat stress {days} {start}–{end}: heavy work only at dawn or after {end}"
+  es: "Estrés por calor {level} {days} {start}–{end}: trabajo pesado solo al amanecer o después de las {end}"
+  fr: "Stress thermique {level} {days} {start}–{end} : travaux lourds à l'aube ou après {end} seulement"
+  sw: "Msongo wa joto {level} {days} {start}–{end}: kazi nzito alfajiri au baada ya saa {end} tu"
+  hi: "{level} गर्मी का तनाव {days} {start}–{end}: भारी काम केवल भोर में या {end} के बाद"
+  de: "{level} Hitzestress {days} {start}–{end}: schwere Arbeit nur im Morgengrauen oder nach {end}"
+heat_stress_detail_stop:
+  en: "Peak WBGT {wbgt} °C: stop heavy field work from {start} to {end}, rest in shade and drink a cup of water every 15–20 min. Check each other for dizziness or confusion."
+  es: "WBGT máximo {wbgt} °C: suspenda el trabajo de campo de {start} a {end}, descanse a la sombra y beba un vaso de agua cada 15–20 min. Vigílense mareos o confusión."
+  fr: "WBGT max {wbgt} °C : arrêtez les travaux de {start} à {end}, reposez-vous à l'ombre et buvez un verre d'eau toutes les 15–20 min. Surveillez vertiges et confusion."
+  sw: "WBGT ya juu {wbgt} °C: simamisha kazi shambani kuanzia {start} hadi {end}, pumzika kivulini na unywe kikombe cha maji kila dakika 15–20. Angalianeni kizunguzungu."
+  hi: "अधिकतम WBGT {wbgt} °C: {start} से {end} तक खेत का काम रोकें, छाया में आराम करें और हर 15–20 मिनट एक कप पानी पिएं। चक्कर या भ्रम पर ध्यान दें।"
+  de: "WBGT-Spitze {wbgt} °C: Feldarbeit von {start} bis {end} einstellen, im Schatten ruhen und alle 15–20 min einen Becher Wasser trinken. Auf Schwindel oder Verwirrtheit achten."

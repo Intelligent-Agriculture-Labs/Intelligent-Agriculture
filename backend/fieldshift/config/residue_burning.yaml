@@ -1,0 +1,41 @@
+# Regions where open burning of crop residue is common, the crops concerned and the burning months.
+# Boxes are coarse [west, south, east, north]; months are calendar months when burning peaks.
+regions:
+  nw_indo_gangetic:
+    name: "North-west Indo-Gangetic Plain (Punjab, Haryana, W. Uttar Pradesh; Pakistani Punjab)"
+    bbox: [69.5, 27.0, 80.0, 33.5]
+    crops: {rice: [10, 11], winter_wheat: [4, 5], spring_wheat: [4, 5], durum_wheat: [4, 5], sugarcane: [2, 3, 4, 11, 12]}
+    ref: "Jethva et al. 2019, Front. Earth Sci. 7:144 (VIIRS/MODIS fire counts Oct–Nov); Shyamsundar et al. 2019, Science 365:536"
+  east_indo_gangetic:
+    name: "Eastern Indo-Gangetic Plain and Bangladesh"
+    bbox: [80.0, 21.0, 92.7, 28.0]
+    crops: {rice: [11, 12, 4, 5], winter_wheat: [3, 4], spring_wheat: [3, 4], maize: [4, 5], sugarcane: [2, 3, 4]}
+    ref: "Venkataraman et al. 2006, Global Biogeochem. Cycles 20:GB2013"
+  mainland_southeast_asia:
+    name: "Mainland South-East Asia (Myanmar, Thailand, Laos, Cambodia, Vietnam)"
+    bbox: [92.0, 8.0, 110.0, 24.0]
+    crops: {rice: [1, 2, 3, 4], maize: [2, 3, 4], sugarcane: [12, 1, 2, 3, 4]}
+    ref: "Vadrevu et al. 2019, Environ. Pollut. 254:113118"
+  north_east_china:
+    name: "North-east China Plain"
+    bbox: [118.0, 40.0, 135.0, 50.0]
+    crops: {maize: [10, 11, 3, 4], rice: [10, 11], soybean: [10, 11]}
+    ref: "Zhuang et al. 2018, Sci. Total Environ. 640:1072 (straw burning, NE China)"
+# Residue amounts and nutrient contents (per tonne dry residue); burning losses as fractions.
+residue:
+  rice: {rgr: 1.2, n_kg_t: 6.5, p_kg_t: 1.0, k_kg_t: 15.0, s_kg_t: 0.8, c_frac: 0.40}
+  winter_wheat: {rgr: 1.3, n_kg_t: 5.0, p_kg_t: 0.8, k_kg_t: 10.0, s_kg_t: 0.9, c_frac: 0.42}
+  spring_wheat: {rgr: 1.3, n_kg_t: 5.0, p_kg_t: 0.8, k_kg_t: 10.0, s_kg_t: 0.9, c_frac: 0.42}
+  durum_wheat: {rgr: 1.3, n_kg_t: 5.0, p_kg_t: 0.8, k_kg_t: 10.0, s_kg_t: 0.9, c_frac: 0.42}
+  maize: {rgr: 1.0, n_kg_t: 7.0, p_kg_t: 1.0, k_kg_t: 12.0, s_kg_t: 0.8, c_frac: 0.43}
+  sugarcane: {rgr: 0.12, n_kg_t: 5.0, p_kg_t: 0.6, k_kg_t: 8.0, s_kg_t: 0.7, c_frac: 0.42}  # trash per t cane
+  soybean: {rgr: 1.5, n_kg_t: 8.0, p_kg_t: 0.9, k_kg_t: 10.0, s_kg_t: 0.9, c_frac: 0.42}
+burn_loss: {n: 0.9, p: 0.25, k: 0.2, s: 0.5, c: 0.9}
+humification: 0.12   # fraction of incorporated/mulched residue C that becomes stable soil organic C (first year)
+sources:
+  - "Dobermann A. & Fairhurst T.H. 2002. Rice straw management. Better Crops International 16 (Special Suppl.):7–11 — straw nutrients; burning loses nearly all N, ~25 % P, ~20 % K, 5–60 % S"
+  - "Shyamsundar P. et al. 2019. Fields on fire: Alternatives to crop residue burning in India. Science 365(6453):536–538. https://doi.org/10.1126/science.aaw4085 — Happy Seeder is the most profitable option"
+  - "Sidhu H.S. et al. 2015. Development and evaluation of the Turbo Happy Seeder for sowing wheat into heavy rice residues in NW India. Field Crops Res. 184:201–212. https://doi.org/10.1016/j.fcr.2015.07.025"
+  - "Jain N., Bhatia A. & Pathak H. 2014. Emission of air pollutants from crop residue burning in India. Aerosol Air Qual. Res. 14:422–430. https://doi.org/10.4209/aaqr.2013.01.0031 — residue-to-grain ratios"
+  - "Lal R. 2005. World crop residues production and implications of its use as a biofuel. Environ. Int. 31:575–584 — residue C ≈ 40–45 %"
+  - "Powlson D.S. et al. 2008. Carbon sequestration in European soils through straw incorporation: limitations and alternatives. Waste Management 28:741–746. https://doi.org/10.1016/j.wasman.2007.09.024 — only ~10–15 % of straw C stays in soil"
