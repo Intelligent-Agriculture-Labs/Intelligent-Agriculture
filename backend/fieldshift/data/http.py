@@ -203,7 +203,17 @@ def cached_call(
     raise DataUnavailable(f"no live data and no cache for {url}")
 
 
-DATE_KEYS = {"start", "end", "start_date", "end_date", "startDate", "endDate", "past_days", "time"}
+DATE_KEYS = {
+    "start",
+    "end",
+    "start_date",
+    "end_date",
+    "startDate",
+    "endDate",
+    "past_days",
+    "time",
+    "temporal",
+}
 
 
 def _index_path(d: Path) -> Path:
@@ -233,7 +243,7 @@ def _fuzzy_lookup(url: str, params: dict[str, Any] | None) -> Fetched | None:
                 p.get("end")
                 or p.get("end_date")
                 or p.get("endDate")
-                or str(p.get("time") or "").split("/")[-1]
+                or str(p.get("time") or p.get("temporal") or "").replace(",", "/").split("/")[-1]
             )
             if best is None or end > best[0]:
                 best = (end, d / f"{key}.json.gz", status)

@@ -43,7 +43,9 @@ The same engine serves a rain-fed smallholder in **Machakos, Kenya** (in Swahili
 |---|---|
 | **NASA POWER** daily agroclimatology, 1984→now | FAO-56 Penman–Monteith ET₀ → daily root-zone water balance → irrigation timing and amount. Crop stages and pest degree-days. SPI/SPEI and AI-drought features. 40-year climate trends. Every simulated season (rotations, What-if, planner). RUSLE rain erosivity |
 | **NASA POWER hourly** | Disease infection-risk models (Hutton late blight, stripe rust, …) in replay/back-tests |
-| **SMAP** L3E + L4 (via NASA AppEEARS) | Root-zone soil-moisture percentile in the drought status; validation of the water balance |
+| **SMAP** L4 (NSIDC cloud OPeNDAP, Earthdata Login) | Root-zone soil-moisture percentile in the drought status; satellite-vs-model soil-water check; validation of the water balance (V3) |
+| **GPM IMERG** Late/Early and **GRACE-FO data assimilation** (NASA GES DISC via Giovanni) | Near-real-time rain for the weeks IMERG Final has not reached (V13b); weekly groundwater percentile next to the GRACE trend |
+| **ECOSTRESS** 70 m ET (LP DAAC) | Field-scale ET shown next to the model's crop ET (V6) |
 | **MODIS** NDVI / ET / LST | Vegetation-condition index; NDVI anomaly → "scout this field"; ET cross-check |
 | **SRTM** (NASA) elevation | Slope, wetness index, frost-prone hollows, RUSLE LS, management zones |
 | **NASA GIBS** | MODIS true-colour / NDVI layers |
@@ -70,7 +72,7 @@ Equations and references: [`docs/MODELS.md`](docs/MODELS.md).
 
 **Validation** against independent data ([`docs/VALIDATION.md`](docs/VALIDATION.md)):
 - ET₀ vs. ERA5: monthly r up to 0.997.
-- Water balance vs. ERA5-Land. The SMAP and ECOSTRESS/MOD16 checks are pending; see VALIDATION.md (V3, V6).
+- Water balance vs. ERA5-Land and NASA SMAP L4 (median per-season r 0.64–0.92, V3). Field ET vs. ECOSTRESS disagrees at the Fallon alfalfa field and is reported as such (V6).
 - Drought vs. USDM.
 - The documented droughts of 2012 and 1988 come out as the two worst of 40 simulated Iowa seasons.
 
@@ -80,7 +82,7 @@ Weak spots are reported, not hidden.
 ```mermaid
 flowchart LR
   App["Expo app (web · iOS · Android)<br/>fields · offline cache · sync"] -->|JSON / PNG| API["FastAPI: engine + science + ML"]
-  API --> POWER[(NASA POWER)] & SAT[(SMAP · MODIS<br/>AppEEARS / ORNL)] & S2[(Sentinel-2 COGs)] & DEM[(SRTM terrain tiles)] & IMG[(sub-metre imagery)] & FC[(Forecast / ERA5)]
+  API --> POWER[(NASA POWER)] & SAT[(SMAP · ECOSTRESS · MODIS<br/>Earthdata OPeNDAP / ORNL)] & S2[(Sentinel-2 COGs)] & DEM[(SRTM terrain tiles)] & IMG[(sub-metre imagery)] & FC[(Forecast / ERA5)]
   API --> DB[(farm sync SQLite)] & Demo[(pre-cached demo data)]
 ```
 Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · API: [`docs/API.md`](docs/API.md) · decisions: [`docs/DECISIONS.md`](docs/DECISIONS.md)
@@ -123,7 +125,7 @@ Code: [Apache-2.0](LICENSE).
 
 Data:
 - NASA POWER (NASA LaRC);
-- NASA SMAP, MODIS (NSIDC / LP DAAC via AppEEARS and ORNL DAAC);
+- NASA SMAP L4 (GMAO / NSIDC), ECOSTRESS and MODIS (LP DAAC, ORNL DAAC), GPM IMERG Late/Early and GRACE-FO data assimilation (GES DISC);
 - NASA/USGS SRTM via AWS Terrain Tiles; NASA GIBS;
 - Copernicus Sentinel-2 (ESA) via Element 84 Earth Search;
 - Esri World Imagery (Esri, Maxar, Earthstar Geographics); USDA NAIP;

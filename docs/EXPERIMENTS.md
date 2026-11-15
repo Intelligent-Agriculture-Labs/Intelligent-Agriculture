@@ -61,8 +61,10 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
 - **Result:** median 14.4 t/ha with full irrigation and 1,114 mm ET. This is of the order commonly reported for irrigated alfalfa in western Nevada (~1 m/yr). It will be cross-checked in EXP-06 (MOD16).
 - **Decision:** adopted. Absolute alfalfa yields remain indicative; the rotation explorer uses them only relative to alternatives.
 
-## EXP-06 Model ET vs. MODIS MOD16 (pending)
-- ORNL DAAC returned 502/503 during the first run. It will be rerun after the satellite cache job completes (see VALIDATION.md for the final status).
+## EXP-06 Model ET vs. MODIS MOD16 and ECOSTRESS
+- ORNL DAAC returned 502/503 during the first run, and the AppEEARS route never finished. Rerun on 2026-11-15 with LP DAAC data read directly (ADR-027).
+- **Result (V6):** MOD16 240–470 mm/yr vs. model 1,070–1,220 mm/yr (expected: no irrigation in MOD16). ECOSTRESS 70 m at the field: 2.3 vs 6.2 mm/day on 110 clear summer overpasses, r −0.01, even at midday overpasses and with the pixel inside the field.
+- **Decision:** ECOSTRESS is displayed but does not drive advice; the planned "ET low" card was not adopted. Simulating alfalfa cutting cycles is the first model change to test against it.
 
 ## EXP-07 Late-blight risk in a documented epidemic year
 - **Hypothesis:** Hutton criteria computed from NASA POWER hourly T/RH flag 2009 as a high-risk season in the U.S. Northeast. 2009 had a region-wide late-blight epidemic (Fry et al., 2013).

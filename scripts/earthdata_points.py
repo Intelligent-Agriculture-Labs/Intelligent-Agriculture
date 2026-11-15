@@ -11,7 +11,7 @@ smap → backend/fieldshift/data/smap_points/<site>.json.gz
        keys: dates, l4_rootzone, l4_surface, l4_rootzone_pctl (+ l3e_sm = null: the L3E product is not extracted)
 et   → backend/fieldshift/data/et_points/<preset>.json.gz
        ECO_L3T_JET.002 ETdaily (70 m, every clear overpass 2018-07 → today, LP DAAC COGs) and
-       MOD16A2GF.061 ET_500m (500 m, 8-day, 2015 →, ORNL DAAC subsets, no login)
+       MOD16A2GF.061 ET_500m (500 m, 8-day, 2015 →, LP DAAC cloud OPeNDAP)
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from fieldshift.data import earthdata, sources  # noqa: E402
+from fieldshift.data import earthdata  # noqa: E402
 from fieldshift.data.http import DataUnavailable  # noqa: E402
 
 DATA = ROOT / "backend" / "fieldshift" / "data"
@@ -99,8 +99,8 @@ def et() -> None:
             )
             y0 = y1 + dt.timedelta(days=1)
         mod: dict[str, float] = {}
-        try:
-            for d, v in sources.ornl_series("mod16", lat, lon, dt.date(2015, 1, 1), end, max_requests=200):
+        try:  # LP DAAC cloud OPeNDAP (ORNL's subset service returned HTTP 503 on 2026-11-15)
+            for d, v in earthdata.mod16_8day(lat, lon, dt.date(2015, 1, 1), end, max_workers=12):
                 mod[d.isoformat()] = round(v, 2)
         except DataUnavailable as e:
             print(site, "MOD16 unavailable:", e, flush=True)
@@ -110,7 +110,7 @@ def et() -> None:
             "site": site,
             "lat": lat,
             "lon": lon,
-            "source": "NASA ECOSTRESS ECO_L3T_JET.002 ETdaily (LP DAAC) + MODIS MOD16A2GF.061 (ORNL DAAC)",
+            "source": "NASA ECOSTRESS ECO_L3T_JET.002 ETdaily (LP DAAC) + MODIS MOD16A2GF.061 (LP DAAC OPeNDAP)",
             "dates": dates,
             "eco_et_daily": [eco.get(d) for d in dates],
             "mod16_et_8day": [mod.get(d) for d in dates],

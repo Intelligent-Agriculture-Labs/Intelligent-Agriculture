@@ -29,7 +29,6 @@ SMAP_DRY_PCT, SMAP_WET_PCT = 20.0, 80.0
 MODEL_DRY_PCT, MODEL_WET_PCT = 40.0, 70.0
 SMAP_MAX_AGE_DAYS = 10
 ET_RECENT_DAYS = 30
-ET_LOW_RATIO = 0.6
 GW_LOW_PCT = 10.0
 
 SMAP_CAVEATS = [
@@ -100,8 +99,9 @@ def smap_check(
             f"FieldShift's water balance for your crop: {model_pct_left:.0f} % of available root-zone water left."
         )
     steps.append(
-        "Check against SMAP over 2015–2024 growing seasons (VALIDATION V3): the model's rain-fed root-zone water moved "
-        "with SMAP L4 root-zone moisture (see the numbers there); SMAP is independent of the NASA POWER rain that drives the model."
+        "Check against SMAP L4 over 9 growing seasons (VALIDATION V3): the model's rain-fed root-zone water moved with "
+        "SMAP's root zone with a median per-season correlation of 0.92 in Iowa, 0.66 in Córdoba and 0.64 in Machakos. "
+        "SMAP is independent of the NASA POWER rain that drives the model."
     )
     if agreement == "satellite_drier":
         steps.append(
@@ -173,12 +173,14 @@ def et_check(
     today: dt.date,
     in_season: bool,
 ) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
-    """(block, card). Card: irrigated field in season whose recent clear overpasses show ET well below the model."""
+    """(block, None). Shown as evidence only, never as a card: at the Fallon alfalfa field (VALIDATION V6) ECOSTRESS
+    reads ~40 % of the model's ET on almost every overpass, so a "crop uses less water" alarm would fire nearly always
+    and its threshold cannot be set from one validated field."""
     from .service import _why
 
-    pairs = [(d, v, model_eta[d]) for d, v in eco if d in model_eta and d <= today]
     if not eco:
         return None, None
+    pairs = [(d, v, model_eta[d]) for d, v in eco if d in model_eta and d <= today]
     last_d, last_v = eco[-1]
     recent = [(d, v, m) for d, v, m in pairs if (today - d).days <= ET_RECENT_DAYS and m >= 1.5]
     ratio = float(np.mean([v for _, v, _ in recent]) / np.mean([m for _, _, m in recent])) if recent else None
@@ -191,14 +193,11 @@ def et_check(
             f"Clear overpasses in the last {ET_RECENT_DAYS} days: {len(recent)}; satellite / model ET = {ratio:.2f}."
         )
     steps.append(
-        "Check at the Fallon alfalfa field (VALIDATION V6): ECOSTRESS daily ET and the model's ET on 2018–2024 overpass days."
+        "Check at the Fallon alfalfa field (VALIDATION V6): on 110 clear summer overpasses 2018–2024 ECOSTRESS averaged "
+        "2.3 mm/day and the model 6.2 mm/day, with no day-to-day agreement. The model assumes a well-watered crop without "
+        "cutting cycles; ECOSTRESS's daily total is scaled from one instant. Which is closer on your field cannot be told "
+        "from one check, so this comparison is shown but does not trigger advice."
     )
-    low = bool(irrigated and in_season and ratio is not None and len(recent) >= 2 and ratio < ET_LOW_RATIO)
-    if low:
-        steps.append(
-            "Your crop used clearly less water than a well-watered crop would. Common causes: water stress (irrigation "
-            "not reaching the whole field), a thin or damaged stand, or recent cutting/harvest."
-        )
     why = _why(
         f"NASA ECOSTRESS measured field ET {last_v:.1f} mm/day on {last_d.isoformat()}"
         + (
@@ -210,8 +209,8 @@ def et_check(
         ["ecostress_et", "eta_model"],
         "ECOSTRESS L3T JET ensemble ET vs. FAO-56 crop ET",
         "evapotranspiration",
-        0.5,
-        "Field-scale satellite measurement, but only on clear overpass days.",
+        0.35,
+        "Field-scale satellite measurement, but on clear overpass days only and in large disagreement with the model at the validation field.",
         ET_CAVEATS,
         ["ecostress", "nasa_power"],
     )
@@ -223,20 +222,7 @@ def et_check(
         "recent_ratio": round(ratio, 2) if ratio is not None else None,
         "why": why,
     }
-    card = None
-    if low and ratio is not None:
-        card = {
-            "id": "et_low",
-            "category": "water",
-            "risk": "moderate",
-            "icon": "leaf",
-            "title": t("et_low_title", lang, pct=round(100 * ratio)),
-            "detail": t("et_low_detail", lang),
-            "due": None,
-            "amount": None,
-            "why": why,
-        }
-    return block, card
+    return block, None
 
 
 # --------------------------------------------------------------------------- GRACE-DA weekly drought percentiles

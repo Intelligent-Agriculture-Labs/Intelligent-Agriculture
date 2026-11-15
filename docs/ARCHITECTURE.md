@@ -23,7 +23,7 @@ flowchart LR
   SATJ --> S2[(Earth Search STAC<br/>Sentinel-2 L2A COGs)]
   E --> FARM[(Farm sync<br/>SQLite)]
   E --> IMG[(Sub-metre imagery<br/>Esri / NAIP)]
-  E --> AE[(AppEEARS batch extracts<br/>SMAP, ECOSTRESS, MOD16)]
+  E --> AE[(Earthdata Login point reads<br/>Giovanni: IMERG Late, GRACE-DA<br/>OPeNDAP: SMAP L4 · COG: ECOSTRESS)]
   Client -- JSON (gzip) --> R
   W -. map tiles .-> GIBS[(NASA GIBS)]
 ```

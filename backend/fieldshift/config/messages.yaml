@@ -490,17 +490,3 @@ smap_wetter_detail:
   sw: "NASA SMAP inapima udongo wenye unyevu eneo lako wakati hesabu yetu ya maji inasema ni {model}% tu ya maji yamebaki. Huenda kulikuwa na mvua ya eneo dogo: kagua udongo kabla ya kuchukua hatua."
   hi: "NASA SMAP आपके क्षेत्र में नम मिट्टी माप रहा है, जबकि हमारा जल संतुलन कहता है कि केवल {model}% पानी बचा है। स्थानीय बारिश छूट गई हो सकती है: कुछ करने से पहले मिट्टी जांचें।"
   de: "NASA SMAP misst in Ihrer Gegend feuchten Boden, unsere Wasserbilanz rechnet nur noch mit {model} % Wasser. Vielleicht gab es lokalen Regen: prüfen Sie den Boden, bevor Sie handeln."
-et_low_title:
-  en: "Crop uses less water than expected ({pct}% of normal)"
-  es: "El cultivo usa menos agua de lo esperado ({pct}% de lo normal)"
-  fr: "La culture consomme moins d'eau que prévu ({pct} % de la normale)"
-  sw: "Zao linatumia maji kidogo kuliko ilivyotarajiwa ({pct}% ya kawaida)"
-  hi: "फसल अनुमान से कम पानी ले रही है (सामान्य का {pct}%)"
-  de: "Kultur verbraucht weniger Wasser als erwartet ({pct} % des Normalen)"
-et_low_detail:
-  en: "NASA ECOSTRESS measured your field's water use well below that of a well-watered crop. Check for dry patches, uneven irrigation or a thin stand."
-  es: "ECOSTRESS de la NASA midió un consumo de agua de su parcela muy por debajo del de un cultivo bien regado. Busque zonas secas, riego desigual o una población rala."
-  fr: "ECOSTRESS (NASA) a mesuré une consommation d'eau de votre parcelle bien inférieure à celle d'une culture bien arrosée. Cherchez des zones sèches, une irrigation inégale ou un peuplement clairsemé."
-  sw: "NASA ECOSTRESS imepima matumizi ya maji ya shamba lako chini sana kuliko zao lililomwagiliwa vizuri. Angalia sehemu kavu, umwagiliaji usio sawa au mimea michache."
-  hi: "NASA ECOSTRESS ने आपके खेत का पानी उपयोग अच्छी सिंचित फसल से काफी कम मापा। सूखे हिस्से, असमान सिंचाई या विरल फसल की जांच करें।"
-  de: "NASA ECOSTRESS hat den Wasserverbrauch Ihres Feldes deutlich unter dem eines gut bewässerten Bestands gemessen. Prüfen Sie auf trockene Stellen, ungleichmäßige Bewässerung oder lückigen Bestand."

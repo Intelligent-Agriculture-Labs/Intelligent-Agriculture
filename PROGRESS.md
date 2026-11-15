@@ -1,5 +1,10 @@
 # PROGRESS
 
+## Live NASA Earthdata feeds (2026-11-15 afternoon, branch `earthdata-live-feeds`, ADR-027)
+- **GES DISC unlocked** (EULA approved): IMERG **Late/Early** fill the ~2 months IMERG Final lacks (V13b: beats the old bridge at 8/12 gauges on daily r, 9/12 on KGE); **GRACE-DA** weekly groundwater percentile next to the GRACE trend (+ card for irrigated fields at ≤ 10th percentile).
+- **SMAP L4 and ECOSTRESS** read directly (NSIDC cloud OPeNDAP, LP DAAC COGs) after the AppEEARS jobs sat queued > 24 h; live for any field with an Earthdata Login on the server, demo fields offline.
+- **V3 done:** model root-zone water vs SMAP L4, median per-season r 0.92 Iowa, 0.66 Córdoba, 0.64 Machakos. **V6 done:** large unresolved model–ECOSTRESS gap at Fallon (6.2 vs 2.3 mm/day) → ECOSTRESS shown, never acted on.
+
 ## v1.1.0: worldwide accuracy release (2026-11-15, ~03:40 CET)
 Six validated work streams, each adopted only if it beat the previous version on held-out data:
 - **Rain-season onset and false-start advisor** (V9): India IMD normals MAE 3.6 days; Sahel season length MAE 12.5 days.

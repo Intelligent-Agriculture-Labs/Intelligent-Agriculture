@@ -162,7 +162,8 @@ def test_advice_shows_live_smap_grace_da_and_ecostress(monkeypatch):
     assert sat["smap"]["agreement"] in ("agree", "satellite_drier", "satellite_wetter")
     assert not any(c["id"] == "smap_check" for c in a["cards"])  # irrigated: SMAP shown for context only
     assert sat["et"]["last_et_mm"] == pytest.approx(1.0) and sat["et"]["recent_overpasses"] >= 2
-    assert any(c["id"] == "et_low" for c in a["cards"])  # 1 mm/day on a flood-irrigated field in season
+    assert not any(c["id"] == "et_low" for c in a["cards"])  # evidence only (VALIDATION V6), never a card
+    assert sat["et"]["recent_ratio"] is not None and any("V6" in st for st in sat["et"]["why"]["steps"])
     g = a["drought"]["grace_da"]
     assert g["groundwater_pct"] == 4.0 and g["groundwater_class"] == "extremely_dry"
     assert any(c["id"] == "groundwater_low" for c in a["cards"])
@@ -210,7 +211,5 @@ def test_new_message_keys_in_all_languages():
         "smap_drier_detail",
         "smap_wetter_title",
         "smap_wetter_detail",
-        "et_low_title",
-        "et_low_detail",
     ):
         assert set(msgs[key]) == {"en", "es", "fr", "sw", "hi", "de"}, key

@@ -67,7 +67,7 @@ export interface WhyBlock {
 export interface ActionCard {
   id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat", "rain_onset",
   //             "heat_stress" (people + livestock), "solar_pump", "fire_nearby", "residue_no_burn", "groundwater_trend",
-  //             "groundwater_low" (GRACE-DA), "smap_check" (SMAP vs model, rain-fed), "et_low" (ECOSTRESS vs model, irrigated)
+  //             "groundwater_low" (GRACE-DA), "smap_check" (SMAP vs model, rain-fed)
   category: "water" | "drought" | "disease" | "pest" | "planning" | "weather";
   priority: number; // 1 = most urgent
   risk: Risk;

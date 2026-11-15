@@ -439,6 +439,61 @@ def ecostress_et(
     return sorted((d, sum(v) / len(v)) for d, v in by.items()), _merge_status(statuses)
 
 
+# --------------------------------------------------------------------------- MODIS MOD16A2GF via LP DAAC cloud OPeNDAP
+MOD16GF = ("MOD16A2GF", "061")
+_SIN_R, _SIN_T = 6371007.181, 1111950.5197665  # MODIS sinusoidal sphere radius, tile size (m)
+
+
+def modis_sin_500m(lat: float, lon: float) -> tuple[int, int, int, int]:
+    """(h, v, row, col) of the 500 m MODIS sinusoidal pixel (2400 × 2400 per tile)."""
+    px = _SIN_T / 2400
+    x = _SIN_R * math.radians(lon) * math.cos(math.radians(lat))
+    y = _SIN_R * math.radians(lat)
+    h, v = int((x + 18 * _SIN_T) // _SIN_T), int((9 * _SIN_T - y) // _SIN_T)
+    col = int(((x + 18 * _SIN_T) - h * _SIN_T) // px)
+    row = int(((9 * _SIN_T - y) - v * _SIN_T) // px)
+    return h, v, min(2399, row), min(2399, col)
+
+
+def mod16_8day(
+    lat: float, lon: float, start: dt.date, end: dt.date, *, max_workers: int = 8
+) -> list[tuple[dt.date, float]]:
+    """MOD16A2GF 8-day ET sums (mm per composite, 500 m) at the point, one OPeNDAP read per composite."""
+    h, v, row, col = modis_sin_500m(lat, lon)
+    tile = f".h{h:02d}v{v:02d}."
+    grans = cmr_granules(*MOD16GF, start, end, point=(lat, lon), ttl_s=30 * 86400)
+    jobs = []
+    for g in grans:
+        od = next((u for u in g["links"] if u.startswith("https://opendap.earthdata.nasa.gov/")), None)
+        if od and tile in g["title"]:
+            jobs.append((g["start"], od))
+    ce = f"/MOD_Grid_MOD16A2/Data_Fields/ET_500m[{row}][{col}]"
+
+    def one(item: tuple[str, str]) -> tuple[dt.date, float] | None:
+        day, od = item
+
+        def fetch() -> dict[str, Any]:
+            r = edl_get(f"{od}.ascii?{quote(ce, safe='/,')}", timeout=60)
+            if r.status_code != 200:
+                raise DataUnavailable(f"OPeNDAP HTTP {r.status_code}")
+            vals = parse_dap_ascii(r.text)
+            raw = next(iter(vals.values()), None) if vals else None
+            return {"raw": raw}
+
+        try:
+            f = cached_call(od, {"row": row, "col": col}, fetch, ttl_s=365 * 86400, fuzzy=False)
+        except DataUnavailable:
+            return None
+        raw = f.data.get("raw")
+        if raw is None or raw > 32000:  # 32761–32767: water, barren, urban, fill
+            return None
+        return dt.date.fromisoformat(day), raw * 0.1
+
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        got = [x for x in ex.map(one, jobs) if x is not None]
+    return sorted(got)
+
+
 def submit(fn: Callable[..., Any], *a: Any, **k: Any) -> Any:
     """Run an Earthdata request on the module's thread pool (callers bound it with a timeout)."""
     return _pool.submit(fn, *a, **k)

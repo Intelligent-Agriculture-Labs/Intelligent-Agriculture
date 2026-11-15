@@ -63,6 +63,7 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
 - ORNL's no-auth SMAP subsets return "no data" for every demo site, so the user provided an Earthdata Login. It is stored only on the VPS (`~/.config/fieldshift/earthdata`, mode 600) and never committed.
 - `scripts/appeears_smap.py` extracts SMAP L3E surface and L4 surface/root-zone/percentile series for the demo sites. They are committed as small gz files and used for the drought status (L4 root-zone percentile) and for validation (V3).
 - Arbitrary new locations get no SMAP. AppEEARS is asynchronous, so live per-request extraction is on the roadmap.
+- **Superseded by ADR-027 (2026-11-15):** the AppEEARS requests never finished; SMAP L4 and ECOSTRESS are now read directly (NSIDC OPeNDAP, LP DAAC COGs), live for any field when Earthdata Login is configured.
 
 ## ADR-013 Single container (17:20)
 - Podman's DNS (aardvark) on the Linux test host refused queries, so the nginx → api proxy failed. FastAPI now serves the exported web app itself.
@@ -240,3 +241,24 @@ Format: decision · alternatives · reason. Newest at the bottom. Times are CET 
   - Retraining is scripted (`scripts/fieldedge/`, about 1 h, mostly orthophoto download).
   - The models are versioned in `backend/fieldshift/models/`.
   - Smallholder plots and > 100 ha fields remain the weakest cases (LIMITATIONS).
+
+## ADR-027 Live Earthdata layers: IMERG Late/Early, GRACE-DA, SMAP L4, ECOSTRESS (2026-11-15)
+- **Context:**
+  - The GES DISC EULA and the other Earthdata applications were approved on the project account (15 Nov).
+  - The AppEEARS point requests for SMAP and ECOSTRESS/MOD16 (ADR-012) had been `processing`/`pending` for > 24 h, so V3 and V6 were still open, and SMAP/ECOSTRESS existed only as planned files for the demo fields.
+  - IMERG Final reaches the app ~2–3 months late (POWER), so the most recent, decision-relevant rain used a climatological bridge.
+- **Routes chosen (all point reads, no batch queue):**
+  - GES DISC through the **Giovanni time-series API** (one request per variable and field, ~2.5 s): IMERG Late and Early daily rain, GRACE-DA weekly groundwater/root-zone/surface percentiles. Giovanni needs its own token from `/signin` via Earthdata Login; an EDL bearer token is rejected. Per-day OPeNDAP reads of IMERG would have cost ~60 requests per field.
+  - **SMAP L4** (`SPL4SMGP.008`) through NSIDC **cloud OPeNDAP**: CMR finds the granules (no login), one `.ascii` request reads root zone, surface and percentile at the 9 km EASE-Grid 2.0 cell (computed analytically, `ease2_m09`). One 10:30 UTC analysis per day.
+  - **ECOSTRESS** (`ECO_L3T_JET.002` `ETdaily`): CMR point search, then one pixel of each Cloud-Optimized GeoTIFF via an EDL bearer token → signed S3 URL → GDAL range read (rasterio was already a dependency).
+  - **MOD16A2GF** for V6 through LP DAAC cloud OPeNDAP (ORNL subsets answered HTTP 503).
+  - No new Python dependencies: DAP2 `.ascii` and Giovanni CSV are parsed in a few lines.
+- **Credentials:** env `EARTHDATA_USER/PASS`, `~/.config/fieldshift/earthdata` (mode 600, only on the data box) or `~/.netrc`; `FIELDSHIFT_EARTHDATA=off` disables. Credentials and tokens are never logged, never part of a cache key, and never committed; the committed demo-cache entries hold URL + parameters + data only.
+- **Fallbacks:** every layer goes through `http.cached_call` (disk cache → committed demo cache → fuzzy offline match → unavailable). `/api/advice` fetches them in parallel within a 15 s budget (`engine/live_layers.py`); anything missing is simply left out, and the app behaves as before without an Earthdata account.
+- **Decisions on use, from the validations:**
+  - **IMERG Late/Early** fill the days after the last IMERG Final day with the same 50/50 blend (V13b: better than the old climatological bridge at 8/12 gauges on daily r and 9/12 on monthly KGE). Final replaces Late automatically once POWER serves it.
+  - **SMAP L4** root-zone percentile feeds `drought.sm_percentile` (where L4 has no percentile, the rank of today's value within the same ±30 days of the site record; no level changed at the four demo fields). `water.satellite.smap` compares it with the model; a low-risk `smap_check` card appears for **rain-fed** fields when they clearly disagree (SMAP ≤ 20th percentile while the model has ≥ 70 % water left, or ≥ 80th while ≤ 40 %). Irrigated fields get the comparison as context only (a 9 km cell does not see one field's irrigation). Basis: V3 (median per-season r 0.64–0.92).
+  - **GRACE-DA** groundwater percentile is shown next to the mascon trend (`drought.grace_da`, context only, not part of the level). Irrigated fields at ≤ 10th percentile get a `groundwater_low` planning card. Not validated beyond what GSFC publishes for the product; the card says "check your well".
+  - **ECOSTRESS** is shown, never acted on: V6 found the model and ECOSTRESS far apart at the Fallon alfalfa field (6.2 vs 2.3 mm/day, r ≈ 0), so a planned "crop uses less water than expected" card was not adopted.
+- **Demo fields:** `data/smap_points` (2015 → today) and `data/et_points` hold the pre-extracted series; `scripts/cache_earthdata_demo.py` adds the live-layer responses for the four presets (live and replay dates) to `backend/demo_cache`, so the offline demo shows them.
+- **Not done:** AppEEARS remains in `scripts/appeears_smap.py` for reference; the SMAP L3E product is not extracted (L4 replaces it); OpenET (API key) and flux-tower data that could settle V6 are not integrated.
