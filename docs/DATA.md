@@ -21,6 +21,10 @@ All sources were verified reachable on 2026-11-14 from both the Mac and the VPS.
 | Drought severity (D0–D4 % area by county) | **U.S. Drought Monitor** | NDMC/USDA/NOAA | county, weekly | weekly | `usdmdataservices.unl.edu` | Training labels (AI drought classifier) and validation | — |
 | Drought class (Watch / Warning / Alert / recovery) | **EDO Combined Drought Indicator v4.1** | European Commission JRC, Copernicus EMS; © European Union, **CC BY 4.0** | 0.0417°, dekadal, Europe, 2012– | dekadal | `drought.emergency.copernicus.eu/data/Drought_Observatories_datasets/EDO_Combined_Drought_Indicator/` (netCDF, no login) | Training labels and held-out validation for Europe (offline, data box only) | — |
 | Soil-moisture index anomaly (z) | **GDO Soil Moisture Index Anomaly v3.0.1** (LISFLOOD) | European Commission JRC, Copernicus EMS; © European Union, **CC BY 4.0** | 0.05°, dekadal, global, 1995– | dekadal | `…/Drought_Observatories_datasets/GDO_Soil_Moisture_Index_Anomaly/` (netCDF, no login) | *Weak* training labels and validation for Australia, South America, Africa, South and East Asia (offline, data box only) | — |
+| National crop yields and harvested areas, 2000–2024 | **FAOSTAT QCL** (bulk download) | FAO, **CC BY 4.0** | national, annual | yearly | `bulks-faostat.fao.org/production/` (no key) | Global yield benchmark and calibration (V10; data box, derived table committed) | — |
+| Irrigated / rain-fed harvested area per crop, crop calendars, calendar units | **MIRCA2000 v1.1** (Portmann, Siebert & Döll 2010) | Goethe Univ. Frankfurt / Univ. Bonn, **CC BY 4.0** (Zenodo 10.5281/zenodo.7422506) | 0.5° / 5′ | static (~2000) | Zenodo | Benchmark site choice, irrigated share; 0.5° region grid committed in `config/` | — |
+| Sowing and harvest dates | **Sacks et al. 2010 crop calendar** | SAGE, Univ. of Wisconsin–Madison (free; cite the paper) | 0.5° | static | `sage-public-files.s3.amazonaws.com/crop-calendar-dataset/` | Benchmark sowing dates | MIRCA2000 calendars |
+| Country → sub-region | **UN M49** (via the `lukes/ISO-3166-Countries-with-Regional-Codes` table, CC BY-SA 4.0) | UN Statistics Division | country | static | GitHub raw CSV | Regional yield-gap factors | — |
 | Crop coefficients, stage lengths, root depth, p, Ky | **FAO-56 / FAO-33** | FAO | — | — | literature | Season model | — |
 | Prices / costs | USDA NASS prices received, extension budgets (2023–24, indicative) | USDA (public domain) | national | — | literature, in `config/crops.yaml` | Indicative gross margin | User-editable config |
 
@@ -45,7 +49,7 @@ NASA GIBS WMTS tiles (MODIS Terra true colour / NDVI), `gibs.earthdata.nasa.gov`
 
 ## Not used (yet) and why
 - **GPM IMERG, GRACE-FO, full ECOSTRESS, HLS (30 m NDVI):** need Earthdata Login (no token was available). The ORNL ECOSTRESS subsets returned "no data" for the demo sites. These are the first upgrades in ROADMAP.md.
-- **OpenET:** needs an API key. **NASS QuickStats:** needs an API key. Yield validation therefore uses documented drought years (VALIDATION.md).
+- **OpenET:** needs an API key. **NASS QuickStats:** needs an API key. Yield validation therefore uses national FAOSTAT yields (V10) and documented drought years (V5). County-level checks are on the roadmap.
 - **Other drought labels considered for the global drought classifier (EXP-11):**
   - Australian Bureau of Meteorology rainfall-deficiency maps. They are rainfall-only, so as labels for a rainfall-driven model they would be close to circular. The BoM copyright terms are also not a blanket open licence.
   - Global SPEIbase (CSIC, ODbL). Climatic and monthly, computed from CRU, and again close to the model's own SPEI features.

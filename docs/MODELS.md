@@ -29,6 +29,12 @@ ET₀ = [0.408 Δ (Rₙ − G) + γ (900 / (T + 273)) u₂ (eₛ − eₐ)] / [�
 - RAW = p·TAW, with p adjusted by p + 0.04(5 − ETc) (Table 22 note).
 - Kₛ = (TAW − Dᵣ)/((1 − p) TAW) when Dᵣ > RAW (eq. 84). ETc,adj = Kₛ·Kc·ET₀. Overflow becomes deep percolation.
 - Mass closure is unit-tested.
+- **Antecedent soil water (EXP-12).** By default (`antecedent_days=180`, annual crops), a fallow bucket over the full root zone runs from 180 days before sowing:
+  - it starts at 60 % depletion (left by the previous crop);
+  - evaporation is 0.3·ET₀·(1 − D/TAW_max) (stage-2 drying, FAO-56 Ch. 7);
+  - rain refills it, and the excess drains.
+  
+  Its relative depletion sets the initial root-zone depletion. Soil reached by growing roots enters at that depletion instead of at field capacity, so a dry winter carries over into the season. With `antecedent_days=0`, or when the record is too short, the FAO-56 default applies: 30 % initial depletion, deeper soil at field capacity.
 
 **Irrigation strategies.**
 - *Full:* refill to field capacity when Dᵣ ≥ RAW.
@@ -43,6 +49,14 @@ ET₀ = [0.408 Δ (Rₙ − G) + γ (900 / (T + 273)) u₂ (eₛ − eₐ)] / [�
 - Heat: −3 % per day with Tmax ≥ T_heat in mid-season (cap −50 %).
 - Frost before 80 % progress: −5 % (initial), −15 % (development), −35 % (mid-season). Frost after 80 % ends the season.
 - Diagnostic biomass in the AquaCrop style: B = WP*·Σ(Tr/ET₀) (Steduto et al., 2009), reported for comparison (EXPERIMENTS.md).
+- **Global calibration** (`science/yieldcal.py`, ADR-022, VALIDATION V10): Yₐ is multiplied by f_crop × f_region^s_crop from `config/yield_calibration.yaml`.
+  - The factors are fitted to FAOSTAT national yields (263 country × crop pairs, 41 countries) and validated leave-one-country-out.
+  - f_crop corrects the potential level per crop. It is fitted in Northern America, Western and Southern Europe, where f_region = 1.
+  - f_region is the regional yield gap: sub-Saharan Africa 0.39, Southeast Asia 0.50, South Asia 0.62, Latin America 0.78, Eastern Europe & Central Asia 0.79, East Asia 0.86, MENA 0.88, Oceania 0.88.
+  - s_crop scales the gap per crop: maize 1.68 and sorghum 1.96 (large gaps), cassava 0.60 and sugarcane 0.20 (small).
+  - The region comes from a 0.5° country grid (MIRCA2000 units → UN M49). A location outside the grid, or a `Weather` without a region, is uncalibrated.
+  - Annual crops without FAOSTAT series get f_region only; perennials, forages and cover crops get no factor.
+  - Water use, irrigation and the year-to-year pattern are not calibrated, only the level.
 
 **Assimilation hook.** `simulate(..., assimilate={date: Dᵣ_obs}, assimilation_weight=α)` nudges the state with Dᵣ ← (1 − α) Dᵣ + α Dᵣ_obs. It is used in the experiments with ERA5-Land; it is not on by default (EXPERIMENTS.md explains why).
 

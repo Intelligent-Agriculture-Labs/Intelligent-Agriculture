@@ -73,7 +73,7 @@ def _crop_stats(
         elif (
             c["typical_yield_t_ha"] > 0
             and slot.yields
-            and np.median(slot.yields) < 0.35 * c["typical_yield_t_ha"]
+            and np.median(slot.yields) < 0.35 * c["typical_yield_t_ha"] * w.yield_factor(cid, irrigated)
         ):
             issue = (
                 "The local season is too short, cold or dry: simulated yields are below a third of normal."
