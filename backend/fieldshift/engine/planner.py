@@ -12,6 +12,7 @@ import numpy as np
 from ..science import pests as pst
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, gdd, gdd_requirement, simulate
 from .context import build
+from .rain_season import onset_ok, planner_season
 
 STAGE_NAMES = ["Establishment complete", "Full canopy / flowering", "Start of ripening", "Maturity / harvest"]
 
@@ -62,12 +63,26 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
                 continue
         return out
 
+    # ---- rain-fed tropics: the scan must respect the rainy-season onset climatology (engine/rain_season.py)
+    rain_lim = planner_season(ctx, c, cid, p_next, today, irrigated)
+    cands = [p_next + dt.timedelta(days=7 * k) for k in range(-6, 7)]
+    if rain_lim is not None:
+        # make sure the scan covers the onset-based window even if the entered date is far from it
+        d0 = dt.date.fromisoformat(rain_lim["onset_median"])
+        d1 = dt.date.fromisoformat(rain_lim["latest_sowing"]) if rain_lim["latest_sowing"] else d0
+        k = 0
+        while d0 + dt.timedelta(days=7 * k) <= d1 and k < 13:
+            d = d0 + dt.timedelta(days=7 * k)
+            if all(abs((d - x).days) > 3 for x in cands):
+                cands.append(d)
+            k += 1
+        cands.sort()
+
     # ---- sowing-date scan (annuals)
     scan: list[dict[str, Any]] = []
     window = None
     if not perennial:
-        for k in range(-6, 7):
-            p = p_next + dt.timedelta(days=7 * k)
+        for p in cands:
             res = run(p, False)
             if len(res) < 8:
                 continue
@@ -81,15 +96,22 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
                     "frost_risk_pct": round(100 * float(np.mean([r.frost_events > 0 for r in res]))),
                     "heat_days_median": round(float(np.median([r.heat_days for r in res])), 1),
                     "score": round(float(np.median(ys) - 0.5 * (np.median(ys) - np.percentile(ys, 10))), 3),
+                    **({"onset_ok": onset_ok(p, rain_lim)} if rain_lim is not None else {}),
                 }
             )
-        if scan:
-            best = max(scan, key=lambda s: s["score"])
-            good = [s for s in scan if s["score"] >= 0.97 * best["score"]]
+        pool = scan
+        if rain_lim is not None and any(s["onset_ok"] for s in scan):
+            pool = [s for s in scan if s["onset_ok"]]  # rain-fed: never recommend sowing before the rains
+        if pool:
+            best = max(pool, key=lambda s: s["score"])
+            good = [s for s in pool if s["score"] >= 0.97 * best["score"]]
             ws, we = min(s["date"] for s in good), max(s["date"] for s in good)
+            we = max(we, (dt.date.fromisoformat(ws) + dt.timedelta(days=7)).isoformat())
+            if rain_lim is not None and rain_lim["latest_sowing"] and pool is not scan:
+                we = max(min(we, rain_lim["latest_sowing"]), ws)
             window = {
                 "start": ws,
-                "end": max(we, (dt.date.fromisoformat(ws) + dt.timedelta(days=7)).isoformat()),
+                "end": we,
                 "best": best["date"],
             }
 
@@ -284,6 +306,7 @@ def planner_api(req: dict[str, Any]) -> dict[str, Any]:
         "water_budget": budget,
         "water": water,
         "risk_calendar": risk_cal,
+        "rain_season": rain_lim,
         "why": (
             "Every number here comes from re-running the FieldShift season model for each of the last 15 seasons of NASA POWER weather "
             "at your field: dates are medians, 'spread' is the 10–90 % range between years."

@@ -592,6 +592,25 @@ def planner_ep(req: PlannerRequest) -> dict[str, Any]:
     return planner.planner_api(req.model_dump())
 
 
+@app.get("/api/rain-season")
+def rain_season_ep(
+    lat: float = Query(ge=-60, le=75),
+    lon: float = Query(ge=-180, le=180),
+    crop: str | None = None,
+    as_of: str | None = None,
+    lang: Lang = "en",
+) -> dict[str, Any]:
+    """Rainy-season onset/cessation climatology (1984 →), trends, false-start odds, this season's status and
+    sowing windows per crop (agroclimatic onset criteria; docs/MODELS.md#rain-onset)."""
+    import datetime as dt
+
+    from .engine import rain_season
+
+    if crop:
+        _check_crop(crop)
+    return rain_season.rain_season_api(lat, lon, crop, dt.date.fromisoformat(as_of) if as_of else None, lang)
+
+
 class TerrainRequest(BaseModel):
     lat: float = Field(ge=-60, le=60)
     lon: float = Field(ge=-180, le=180)

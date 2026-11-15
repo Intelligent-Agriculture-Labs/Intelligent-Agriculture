@@ -1,0 +1,40 @@
+# Rainy-season onset / cessation / false-start parameters (docs/MODELS.md#rain-onset, ADR-021).
+# Every threshold is a published agroclimatic criterion; change them here, not in code.
+version: "1.0.0"
+criteria:
+  # Onset (Sivakumar 1988; Stern, Dennett & Garbutt 1981): the first day of a 3-day period with
+  # >= 20 mm of rain, with no dry spell longer than 7 days in the following 30 days.
+  onset_mm: 20.0
+  onset_days: 3
+  dry_day_mm: 1.0          # a day with < 1 mm counts as dry (gridded-rain convention, e.g. Dunning et al. 2016)
+  max_dry_spell_days: 7    # a longer dry spell inside the check period makes the onset "false"
+  check_days: 30
+  # Cessation (Stern et al. 1981; FAO Frère & Popov 1979 water balance): the first day after the
+  # earliest possible end date on which a 100 mm soil store, losing ET0 each day, is empty.
+  awc_mm: 100.0
+  min_season_days: 20      # cessation is not searched before onset + this ...
+  earliest_end_before_clim_end: 21  # ... nor earlier than 3 weeks before the climatological end of the rains
+                                    # (Stern/Instat practice: a fixed 'earliest end' date shortly before the usual end)
+# Climatological seasons (Liebmann et al. 2012 anomalous accumulation; Dunning et al. 2016 harmonic test):
+seasons:
+  smooth_days: 31          # moving average of the daily climatology
+  bimodal_ratio: 1.0       # amplitude of 2nd / 1st harmonic > 1 -> two rainy seasons per year
+  merge_gap_unimodal: 45   # wet runs closer than this are one season (unimodal)
+  merge_gap_bimodal: 20
+  min_run_days: 30
+  search_before_days: 45   # per-year onset search starts this long before the climatological onset
+  search_after_days: 60    # ... and ends at most this long after it
+# Where onset advice is offered: tropics/subtropics with a real dry season (P < 0.5 ET0, FAO AEZ growing-period rule)
+applicability:
+  max_abs_lat: 35.0
+  min_dry_days: 60
+# Live advice
+advice:
+  sow_now_max_false_pct: 20     # below: sow now
+  wait_min_false_pct: 40        # at/above: wait for more rain
+  reliability: 0.8              # sowing windows must fit the season in 8 of 10 years
+  conditional_window_days: 20   # historic apparent onsets within +-N days of today are used for the false-start odds
+  min_events: 12
+  trend_split_year: 2005
+# Rain-fed crops considered for sowing windows (ids from crops.yaml/crops_extra.yaml); the field's crop is always added.
+crops: [maize, sorghum, pearl_millet, cowpea, dry_bean, groundnut, mung_bean, rice, cassava, sweet_potato, teff, sunflower]
