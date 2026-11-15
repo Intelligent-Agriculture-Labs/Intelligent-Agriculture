@@ -448,3 +448,11 @@ groundwater_detail:
   sw: "Satelaiti za NASA GRACE zinaona maji ya ardhini na akiba nyingine za maji za eneo lako yakipungua. Chagua mzunguko wa mazao unaookoa maji na umwagiliaji bora; pima kina cha kisima chako."
   hi: "NASA के GRACE उपग्रह आपके क्षेत्र में भूजल और अन्य जल भंडार घटते देख रहे हैं। पानी बचाने वाले फसल चक्र और कुशल सिंचाई अपनाएं; अपने कुएं का जल स्तर जांचें।"
   de: "Die NASA-GRACE-Satelliten sehen Grundwasser und andere Wasservorräte Ihrer Region sinken. Wählen Sie wassersparende Fruchtfolgen und effiziente Bewässerung; prüfen Sie Ihren Brunnenpegel."
+# ---- country economics (ADR-027): same as solar_pump_detail, in the field's local currency
+solar_pump_detail_cur:
+  en: "{m3} m³/day in {month} at {head} m head. Water costs ~{solar} {cur}/m³ vs ~{diesel} {cur} with diesel, and saves {co2} t CO₂ a year."
+  es: "{m3} m³/día en {month} con {head} m de altura. El agua cuesta ~{solar} {cur}/m³ frente a ~{diesel} {cur} con diésel y ahorra {co2} t de CO₂ al año."
+  fr: "{m3} m³/jour en {month} pour {head} m de hauteur. L'eau coûte ~{solar} {cur}/m³ contre ~{diesel} {cur} au diesel et évite {co2} t de CO₂ par an."
+  sw: "m³ {m3} kwa siku mwezi {month} kwa kimo cha m {head}. Maji yanagharimu ~{solar} {cur}/m³ dhidi ya ~{diesel} {cur} kwa dizeli, na huokoa t {co2} za CO₂ kwa mwaka."
+  hi: "{month} में {m3} m³/दिन, {head} मी हेड पर। पानी की लागत ~{solar} {cur}/m³, डीज़ल से ~{diesel} {cur}; हर साल {co2} t CO₂ की बचत।"
+  de: "{m3} m³/Tag im {month} bei {head} m Förderhöhe. Wasser kostet ~{solar} {cur}/m³ statt ~{diesel} {cur} mit Diesel und spart {co2} t CO₂ pro Jahr."

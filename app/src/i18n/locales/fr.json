@@ -347,6 +347,7 @@
       "water": "Eau",
       "nitrogen": "Azote restant",
       "expert": "Marge ≈ {{margin}} USD/ha · sol nu {{bare}} jours · effet rotation {{effect}} % · érosion {{erosion}} t/ha",
+      "expertMoney": "Marge ≈ {{margin}}/ha · sol nu {{bare}} jours · effet rotation {{effect}} % · érosion {{erosion}} t/ha",
       "tapYear": "Touchez une année pour voir ce qui va bien et ce qu'il faut changer.",
       "diseaseTitle": "Accumulation de maladies et ravageurs",
       "diseaseSubtitle": "Quels problèmes du sol augmentent au fil des années",
@@ -733,5 +734,10 @@
     "copy": "Copier le texte",
     "copied": "Copié — collez-le dans un SMS ou WhatsApp",
     "share": "Partager…"
+  },
+  "economics": {
+    "source": "Prix et coûts pour {{country}} (prix à la production FAOSTAT, coûts modélisés) en {{currency}} · 1 USD = {{rate}} {{currency}} (Banque mondiale {{year}})",
+    "sourceUsd": "Prix et coûts pour {{country}} (prix à la production FAOSTAT, coûts modélisés) en USD",
+    "fallback": "Pays non reconnu — prix et coûts de référence en USD"
   }
 }

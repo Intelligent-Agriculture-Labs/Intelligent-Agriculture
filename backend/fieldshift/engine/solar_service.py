@@ -13,6 +13,7 @@ import yaml
 
 from ..science import solarpump as sp
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop
+from ..science.economics import econ_for
 from .context import FieldContext, build
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
@@ -198,6 +199,20 @@ def solar_pump(
     pressure = float(conf["pressure_head_m"][method])
     head = (static + pressure) * (1 + float(conf["friction_frac"]))
     eff = IRRIGATION_EFFICIENCY.get(method, 0.75) if method != "none" else 0.75
+    # the field's country diesel price and installed PV-pump cost (ADR-027); a user value overrides
+    econ = econ_for(lat, lon)
+    diesel_info: dict[str, Any] = (
+        econ.diesel()
+        if not diesel_price_usd_l
+        else {"usd_l": diesel_price_usd_l, "scope": "user", "source": "entered by the user"}
+    )
+    capex_info: dict[str, Any] = (
+        econ.solar_capex()
+        if not capex_usd_kwp
+        else {"usd_kwp": capex_usd_kwp, "scope": "user", "source": "entered by the user"}
+    )
+    cur = econ.currency
+    code = cur["code"]
     clim = monthly_climatology(ctx)
     kcm = season_month_kc(c, pd_)
     months = [
@@ -214,12 +229,12 @@ def solar_pump(
         eff,
         eta_mp=float(d["eta_mp"]),
         other_losses=float(d["other_losses"]),
-        capex_usd_kwp=float(capex_usd_kwp or d["capex_usd_kwp"]),
+        capex_usd_kwp=float(capex_info["usd_kwp"]),
         om_frac=float(d["om_frac"]),
         lifetime_y=int(d["lifetime_y"]),
         discount=float(d["discount"]),
         diesel_eta=float(d["diesel_eta"]),
-        diesel_price_usd_l=float(diesel_price_usd_l or d["diesel_price_usd_l"]),
+        diesel_price_usd_l=float(diesel_info["usd_l"]),
         diesel_om_frac=float(d["diesel_om_frac"]),
     )
     dm = next(r for r in des.months if r.month == des.design_month)
@@ -236,9 +251,18 @@ def solar_pump(
         f"PV performance ratio {dm.pr:.2f} (module temperature at {dm.t_air_c:.0f} °C air: ×{sp.pv_temperature_factor(dm.t_air_c):.2f}; other losses ×{d['other_losses']}).",
         f"PV size = E / (sun hours × pump efficiency {d['eta_mp']} × PR) = {des.kwp:.2f} kWp; pump rated ~{des.flow_m3_h:.1f} m³/h.",
         f"Over the season the pump lifts {des.annual_m3:,.0f} m³. Solar water cost {des.solar_usd_m3:.3f} USD/m³ "
-        f"(capex {des.solar_capex_usd:,.0f} USD annualised over {d['lifetime_y']} years at {d['discount']:.0%} + {d['om_frac']:.0%} O&M).",
-        f"Diesel pump set (fuel-to-water efficiency {d['diesel_eta']:.0%}): {des.diesel_l_m3 * 1000:.0f} mL fuel per m³ → "
+        f"(capex {des.solar_capex_usd:,.0f} USD = {float(capex_info['usd_kwp']):,.0f} USD/kWp, annualised over {d['lifetime_y']} years "
+        f"at {d['discount']:.0%} + {d['om_frac']:.0%} O&M).",
+        f"Diesel pump set (fuel-to-water efficiency {d['diesel_eta']:.0%}): {des.diesel_l_m3 * 1000:.0f} mL fuel per m³ × "
+        f"{float(diesel_info['usd_l']):.2f} USD/L → "
         f"{des.diesel_usd_m3:.3f} USD/m³ fuel + maintenance (purchase not included); {des.diesel_l_year:,.0f} L/yr = {des.co2_t_year:.1f} t CO₂/yr avoided.",
+        f"Prices for {econ.name or 'an unknown country'}: diesel {diesel_info['source']}; PV pump {capex_info['source']}."
+        + (
+            f" In {code}: solar {econ.local(des.solar_usd_m3):,.2f} vs diesel {econ.local(des.diesel_usd_m3):,.2f} per m³, "
+            f"capex {econ.local(des.solar_capex_usd):,.0f} (1 USD = {cur['per_usd']:,.2f} {code}, {cur.get('year')})."
+            if code != "USD"
+            else ""
+        ),
     ]
     monthly = [
         {
@@ -274,6 +298,12 @@ def solar_pump(
         "season_volume_m3": round(des.annual_m3),
         "season_pv_kwh": round(des.annual_pv_kwh),
         "solar_capex_usd": round(des.solar_capex_usd),
+        "currency": code,
+        "solar_capex_local": round(econ.local(des.solar_capex_usd)),
+        "solar_local_per_m3": round(econ.local(des.solar_usd_m3), 3),
+        "diesel_local_per_m3": round(econ.local(des.diesel_usd_m3), 3),
+        "diesel_price_usd_l": round(float(diesel_info["usd_l"]), 3),
+        "capex_usd_kwp": round(float(capex_info["usd_kwp"])),
         "solar_usd_per_m3": round(des.solar_usd_m3, 3),
         "diesel_l_per_m3": round(des.diesel_l_m3, 4),
         "diesel_usd_per_m3": round(des.diesel_usd_m3, 3),
@@ -282,12 +312,15 @@ def solar_pump(
         "monthly": monthly,
         "assumptions": {
             **d,
+            "capex_usd_kwp": round(float(capex_info["usd_kwp"])),
+            "diesel_price_usd_l": round(float(diesel_info["usd_l"]), 3),
             "static_head_m": static,
             "pressure_head_m": pressure,
             "friction_frac": conf["friction_frac"],
         },
         "steps": steps,
         "sources": conf["sources"],
+        "economics": {**econ.provenance(), "diesel": diesel_info, "solar_capex": capex_info},
     }
 
 
@@ -322,13 +355,14 @@ def solar_pump_cards(
             "icon": "sunny-outline",
             "title": t("solar_pump_title", lang, kwp=f"{r['pv_kwp']:.1f}"),
             "detail": t(
-                "solar_pump_detail",
+                "solar_pump_detail_cur",
                 lang,
                 m3=round(r["peak_volume_m3_day"]),
                 month=month,
                 head=round(r["head_m"]),
-                solar=f"{r['solar_usd_per_m3']:.2f}",
-                diesel=f"{r['diesel_usd_per_m3']:.2f}",
+                solar=f"{r['solar_local_per_m3']:,.2f}",
+                diesel=f"{r['diesel_local_per_m3']:,.2f}",
+                cur=r["currency"],
                 co2=f"{r['co2_avoided_t_per_season']:.1f}",
             ),
             "due": None,
@@ -345,7 +379,12 @@ def solar_pump_cards(
                 "Climatology is robust; pumping head, well yield and local prices dominate the uncertainty.",
                 [
                     "Static lift assumed 15 m — set your well/canal depth in the planner for a real quote.",
-                    "Costs are indicative world averages (USD); check local prices and subsidies (e.g. PM-KUSUM in India).",
+                    "Diesel and PV-pump prices are for "
+                    + (
+                        (r["economics"].get("country") or {}).get("name")
+                        or "an unknown country (world averages)"
+                    )
+                    + f" ({r['currency']}); check local quotes and subsidies (e.g. PM-KUSUM in India).",
                     "Check that your well can deliver the pump flow; solar pumps work in daylight — a storage tank smooths supply.",
                     "Paddy rice also needs water for puddling and percolation, which is not included.",
                 ],

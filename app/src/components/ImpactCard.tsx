@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import type { RotationPlanResponse } from "@/api/types";
 import { Disclosure } from "@/components/kit";
 import { Card, Txt } from "@/components/ui";
+import { formatMoney } from "@/lib/money";
 import { radius, space, useTheme } from "@/lib/theme";
 
 type Impact = NonNullable<RotationPlanResponse["impact"]>;
@@ -29,7 +30,13 @@ export function impactMetrics(impact: Impact): ImpactMetric[] {
     { key: "water", value: ft ? ft.water_saved_m3_per_yr : ph.water_saved_m3_per_ha_per_yr, unit: ft ? "m³" : "m³/ha", icon: "water" },
     { key: "co2e", value: ft ? ft.co2e_avoided_kg : ph.co2e_avoided_kg_ha, unit: ft ? "kg CO₂e" : "kg CO₂e/ha", icon: "leaf" },
     { key: "soil", value: ft ? ft.soil_kept_t : ph.soil_kept_t_ha, unit: ft ? "t" : "t/ha", icon: "layers" },
-    { key: "margin", value: ft ? ft.margin_gain_usd : ph.margin_gain_usd_ha, unit: ft ? "$" : "$/ha", icon: "cash" },
+    {
+      key: "margin",
+      // local currency when the backend sent it (ADR-027), else USD
+      value: ft ? (ft.margin_gain_local ?? ft.margin_gain_usd) : (ph.margin_gain_local_ha ?? ph.margin_gain_usd_ha),
+      unit: ft ? (impact.currency ?? "USD") : `${impact.currency ?? "USD"}/ha`,
+      icon: "cash",
+    },
     { key: "nitrogen", value: ft ? ft.n_fertiliser_saved_kg : ph.n_fertiliser_saved_kg_ha, unit: ft ? "kg N" : "kg N/ha", icon: "flask" },
     { key: "bare", value: ph.bare_days_fewer_per_yr, unit: "", icon: "sunny" },
   ];
@@ -46,7 +53,11 @@ export function formatImpact(v: number, lang: string): string {
 export function impactValue(m: ImpactMetric, lang: string): string {
   const num = formatImpact(m.value, lang);
   const good = m.value > 0;
-  if (m.key === "margin") return `${good ? "+" : "−"}$${num}${m.unit === "$/ha" ? "/ha" : ""}`;
+  if (m.key === "margin") {
+    const perHa = m.unit.endsWith("/ha");
+    const code = m.unit.replace("/ha", "") || "USD";
+    return `${good ? "+" : "−"}${formatMoney(Math.abs(m.value), code, lang)}${perHa ? "/ha" : ""}`;
+  }
   if (m.key === "bare") return num;
   return `${good ? "" : "+"}${num} ${m.unit}`;
 }

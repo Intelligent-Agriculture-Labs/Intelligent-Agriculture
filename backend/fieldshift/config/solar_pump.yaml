@@ -1,4 +1,6 @@
 # Solar irrigation pump advisor — indicative assumptions (edit locally; all costs USD, not a quote).
+# capex_usd_kwp and diesel_price_usd_l below are only the world fallbacks: the app uses the field's country values
+# (science/economics.py, config/economics.yaml, country_data.json; ADR-027).
 defaults:
   static_head_m: 15          # water level to field (shallow tube well / canal lift); user can override
   area_ha: 1.0               # when no field polygon or area is given

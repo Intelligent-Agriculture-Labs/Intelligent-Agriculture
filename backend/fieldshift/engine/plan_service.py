@@ -13,6 +13,7 @@ from ..science import climate as climmod
 from ..science import rotation as rot
 from ..science import rotation_plan as rp
 from ..science.cropmodel import crop, crops
+from ..science.economics import econ_for
 from .context import build
 
 _cache: dict[tuple[Any, ...], tuple[dict[str, dict[str, Any]], list[str]]] = {}
@@ -58,6 +59,7 @@ def _crop_stats(
                 None,
                 None,
                 med,
+                lon,
             )
         except Exception:  # a crop with incomplete parameters must not break the planner
             continue
@@ -172,7 +174,11 @@ def _area_ha(poly: list[list[float]] | None) -> float | None:
 
 
 def plan_impact(
-    cur: list[dict[str, Any]], new: list[dict[str, Any]], poly: list[list[float]] | None, label: str
+    cur: list[dict[str, Any]],
+    new: list[dict[str, Any]],
+    poly: list[list[float]] | None,
+    label: str,
+    econ: Any | None = None,
 ) -> dict[str, Any]:
     """Current plan vs. improved plan over the planning horizon (per hectare and, with an outline, for the field)."""
     n = max(1, len(cur))
@@ -195,8 +201,11 @@ def plan_impact(
         "co2e_avoided_kg_ha": round(n_saved * CO2E_PER_KG_N),
         "soil_kept_t_ha": round(soil, 1),
         "margin_gain_usd_ha": round(margin),
+        "margin_gain_local_ha": round(econ.local(margin)) if econ is not None else round(margin),
         "bare_days_fewer_per_yr": round(bare),
     }
+    cur_code = econ.currency["code"] if econ is not None else "USD"
+    symbol = (econ.currency.get("symbol") or cur_code) if econ is not None else "$"
     field_total: dict[str, int] | None = None
     if area:
         field_total = {
@@ -205,6 +214,7 @@ def plan_impact(
             "co2e_avoided_kg": round(n_saved * CO2E_PER_KG_N * area),
             "soil_kept_t": round(soil * area),
             "margin_gain_usd": round(margin * area),
+            "margin_gain_local": round((econ.local(margin) if econ is not None else margin) * area),
         }
     gains: list[str] = []
     costs: list[str] = []
@@ -220,10 +230,11 @@ def plan_impact(
         gains.append(f"{soil:.1f} t/ha more topsoil kept")
     elif soil < -0.5:
         costs.append(f"{-soil:.1f} t/ha more soil loss")
+    m_local = econ.local(margin) if econ is not None else margin
     if margin > 20:
-        gains.append(f"+${margin:.0f}/ha indicative margin")
+        gains.append(f"+{symbol}{m_local:,.0f}/ha indicative margin")
     elif margin < -20:
-        costs.append(f"${-margin:.0f}/ha less indicative margin")
+        costs.append(f"{symbol}{-m_local:,.0f}/ha less indicative margin")
     headline = (
         ("Over these years the " + label + " would give " + "; ".join(gains) + ".")
         if gains
@@ -238,8 +249,10 @@ def plan_impact(
         "field_area_ha": round(area, 2) if area else None,
         "field_total": field_total,
         "headline": headline,
+        "currency": cur_code,
         "method": "Differences between the two plans as simulated at this field (FieldShift season model, NASA POWER weather). CO₂e counts only the "
-        "direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted.",
+        "direct N₂O emissions of fertiliser not applied (IPCC 2019, EF1 = 1 %, GWP100 = 273, AR6); manufacturing emissions are not counted. "
+        "Margins use this country's producer prices and modelled costs (see economics).",
     }
 
 
@@ -280,6 +293,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     from ..science.pests import region_of
 
     rp.set_region(region_of(lat, lon))
+    econ = econ_for(lat, lon)
     from collections import Counter
 
     main_crop = Counter(own).most_common(1)[0][0] if own else None
@@ -290,6 +304,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
         "irrigated": irrigation != "none",
         "water_allocation_mm": alloc,
         "r_k_ls": _field_rkls(req, plan[0]["crop"]),
+        "econ": econ,
     }
     years, summary = rp.evaluate_plan(history, plan, stats, field, pri)
 
@@ -298,7 +313,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     sugg: list[dict[str, Any]] = []
     ranked_candidates = sorted(
         regional_filter(farm_type_filter(feasible, own), own, system),
-        key=lambda c: -stats[c]["yield_median"] * float(crop(c).get("price_usd_t", 0)),
+        key=lambda c: -stats[c]["yield_median"] * econ.price_usd_t(c),
     )[:20]
     for idx, y in enumerate(years):
         if y["verdict"] == "good":
@@ -351,12 +366,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     if req.get("optimize", True):
         cands = sorted(
             feasible,
-            key=lambda c: (
-                -(
-                    stats[c]["yield_median"] * float(crop(c).get("price_usd_t", 0))
-                    - float(crop(c).get("cost_usd_ha", 0))
-                )
-            ),
+            key=lambda c: -(stats[c]["yield_median"] * econ.price_usd_t(c) - econ.cost_usd_ha(c)),
         )[:16]
         # always allow the farmer's own crops as candidates
         cands = list(dict.fromkeys([*[p["crop"] for p in plan], *cands]))
@@ -400,7 +410,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
     if better:
         y2, _ = rp.evaluate_plan(history, better, stats, field, pri)
         impact = plan_impact(
-            years, y2, req.get("polygon"), "optimised plan" if optimized else "suggested change"
+            years, y2, req.get("polygon"), "optimised plan" if optimized else "suggested change", econ
         )
     return {
         "impact": impact,
@@ -409,6 +419,7 @@ def plan_api(req: dict[str, Any]) -> dict[str, Any]:
         "suggestions": sugg,
         "optimized": optimized,
         "crops_available": feasible,
+        "economics": econ.provenance(sorted({y["crop"] for y in years} | {c for c in own})),
         "sources": [
             source_ref("nasa_power", "live"),
             source_ref("srtm", "live"),

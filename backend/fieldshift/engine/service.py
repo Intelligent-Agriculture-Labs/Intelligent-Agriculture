@@ -23,6 +23,7 @@ from ..science import drought_ml
 from ..science import pests as pst
 from ..science import rotation as rot
 from ..science.cropmodel import IRRIGATION_EFFICIENCY, crop, crops, gdd_requirement, simulate
+from ..science.economics import econ_for
 from . import risk_cards
 from . import water_supply as wsup
 from .context import FieldContext, build, enrichment
@@ -1477,6 +1478,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
     normals = climmod.monthly_normals(pd_, w.tmax, w.tmin, w.rain, w.et0, 1991, 2020)
     onset = rot.rainy_onset(normals) if abs(lat) < 20 else None
     med = rot.is_mediterranean(normals, lat)
+    econ = econ_for(lat, lon)  # the field's country prices, costs and currency (ADR-027)
 
     # erosive rain share per month (heavy-rain days ≥ 95th pct of wet days, NASA POWER)
     rain = w.rain[: len(pd_)]
@@ -1513,6 +1515,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                 s.get("plant"),
                 s.get("irrigate_until"),
                 med,
+                lon,
             )
         return slot_cache[key]
 
@@ -1547,7 +1550,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         zone = "tropical" if abs(lat) < 20 else "temperate"
         if tpl["id"] != "current" and zone not in tpl.get("zones", ["temperate", "tropical"]):
             continue
-        sc = rot.score_strategy(tpl, st, erosive_share, ctx.slope_pct, irrigated, smallholder=abs(lat) < 20)
+        sc = rot.score_strategy(tpl, st, erosive_share, ctx.slope_pct, irrigated, econ=econ)
         evaluated.append((tpl, st, sc, notes))
 
     raws = [e[2]["raw"] for e in evaluated]
@@ -1588,10 +1591,10 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
             },
             {
                 "id": "income",
-                "label": "Gross margin (indicative)"
-                if abs(lat) >= 20
-                else "Net revenue after ~30 % input costs (indicative)",
+                "label": "Gross margin (indicative)",
                 "value": round(raw["income"]),
+                "value_local": round(econ.local(raw["income"])),
+                "currency": econ.currency["code"],
                 "unit": "USD/ha/yr",
                 "score": scores["income"],
                 "vs_current": round(scores["income"] - cs["income"], 1),
@@ -1661,6 +1664,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
                         "crop": s["crop"],
                         "season": _season_name(s, crop(s["crop"])),
                         "start_month": ss.plant.month,
+                        "sowing_source": ss.plant_source,
                         "end_month": ((ss.plant.month - 1 + max(1, ss.length // 30)) % 12) + 1,
                     }
                     for s, ss in zip(tpl["slots"], st, strict=True)
@@ -1688,6 +1692,7 @@ def rotations_api(req: dict[str, Any]) -> dict[str, Any]:
         "disclaimer": "FieldShift compares rotations under the last 15 seasons of NASA weather at your location. It supports, but does not replace, "
         "your judgement and local agronomic advice. Prices and costs are indicative and must be checked against your market.",
         "years_simulated": [years[0], years[-1]],
+        "economics": econ.provenance(sorted({s["crop"] for o in chosen for s in o[0]["slots"]})),
     }
 
 
@@ -1764,7 +1769,8 @@ def _benefits(mets: list[dict[str, Any]]) -> list[str]:
 
 def _gaps(tpl: dict[str, Any]) -> list[str]:
     gaps = [
-        "Prices and costs are national averages — local market access (hay buyers, elevators) is not known to FieldShift."
+        "Prices are national producer prices (FAOSTAT) for this field's country and costs are modelled from its yield and price "
+        "level — local market access (hay buyers, elevators) is not known to FieldShift."
     ]
     if any(crop(s["crop"]).get("low_confidence") for s in tpl["slots"]):
         gaps.append(

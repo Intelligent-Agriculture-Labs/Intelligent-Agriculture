@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "@/api/client";
 import { useQuery } from "@/lib/useQuery";
 import type { Priorities, RotationRequest, RotationResponse, RotationStrategy } from "@/api/types";
-import { CoverCalendar, MetricBar, ScoreRing, cropName, useCrops } from "@/components/domain";
+import { CoverCalendar, EconomicsNote, MetricBar, ScoreRing, cropName, useCrops } from "@/components/domain";
 import { BackLink, CropPicker } from "@/components/kit";
 import { Button, Card, Chip, ErrorView, IconButton, LabeledSlider, Loading, OriginBanner, RiskBadge, Screen, Section, Txt } from "@/components/ui";
 import { space, useTheme } from "@/lib/theme";
@@ -229,6 +229,7 @@ export default function Rotations() {
             {sorted.map((s, i) => (
               <StrategyCard key={s.id} s={s} idx={i} />
             ))}
+            <EconomicsNote e={data.economics} />
           </Section>
           <Card alt>
             <View style={{ flexDirection: "row", gap: space.sm }}>

@@ -29,7 +29,21 @@ describe("impactMetrics", () => {
       field_total: { water_saved_m3_per_yr: 660, n_fertiliser_saved_kg: -495, co2e_avoided_kg: 0, soil_kept_t: 6.8, margin_gain_usd: 6165 },
     });
     expect(m.find((x) => x.key === "water")).toMatchObject({ value: 660, unit: "m³" });
-    expect(m.find((x) => x.key === "margin")).toMatchObject({ value: 6165, unit: "$" });
+    expect(m.find((x) => x.key === "margin")).toMatchObject({ value: 6165, unit: "USD" });
+  });
+  it("shows the margin in the field's local currency when the backend sends it (ADR-027)", () => {
+    const m = impactMetrics({
+      ...base,
+      currency: "KES",
+      per_ha: { ...perHa, margin_gain_local_ha: 144_900 },
+    });
+    const mm = m.find((x) => x.key === "margin")!;
+    expect(mm).toMatchObject({ value: 144_900, unit: "KES/ha" });
+    const txt = impactValue(mm, "en");
+    expect(txt.startsWith("+")).toBe(true);
+    expect(txt).toMatch(/144,900/);
+    expect(txt).toMatch(/KES|Ksh/);
+    expect(txt.endsWith("/ha")).toBe(true);
   });
 });
 

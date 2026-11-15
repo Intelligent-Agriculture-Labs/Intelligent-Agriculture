@@ -70,6 +70,8 @@ class Weather:
     # location for the global yield calibration (science/yieldcal.py); None = uncalibrated
     region: str | None = None
     _zone: str | None = field(default=None, repr=False)
+    # ISO 3166 alpha-3 of the field's country (country yield factor, ADR-027); None = region only
+    country: str | None = None
 
     def index(self, d: dt.date) -> int:
         return (d - self.dates[0]).days
@@ -89,7 +91,7 @@ class Weather:
         from .yieldcal import calibration, factor
 
         zone = self.climate_zone() if calibration().get("zones") else None
-        return factor(crop_id, self.region, zone, irrigated)
+        return factor(crop_id, self.region, zone, irrigated, self.country)
 
     def perturbed(self, delta_t: float = 0.0, rain_factor: float = 1.0) -> Weather:
         """Simple delta-change climate scenario. ET0 scaled with the FAO-56 temperature sensitivity
@@ -106,6 +108,7 @@ class Weather:
             self.et0 * (1 + 0.03 * delta_t),
             self.region,
             zone,
+            self.country,
         )
 
 

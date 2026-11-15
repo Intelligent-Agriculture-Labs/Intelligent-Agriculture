@@ -347,6 +347,7 @@
       "water": "Wasser",
       "nitrogen": "Verbleibender Stickstoff",
       "expert": "Marge ≈ {{margin}} USD/ha · nackter Boden {{bare}} Tage · Fruchtfolgeeffekt {{effect}} % · Erosion {{erosion}} t/ha",
+      "expertMoney": "Marge ≈ {{margin}}/ha · nackter Boden {{bare}} Tage · Fruchtfolgeeffekt {{effect}} % · Erosion {{erosion}} t/ha",
       "tapYear": "Tippen Sie auf ein Jahr, um zu sehen, was gut ist und was Sie ändern sollten.",
       "diseaseTitle": "Aufbau von Krankheiten und Schädlingen",
       "diseaseSubtitle": "Welche bodenbürtigen Probleme über die Jahre wachsen",
@@ -733,5 +734,10 @@
     "copy": "Text kopieren",
     "copied": "Kopiert — in SMS oder WhatsApp einfügen",
     "share": "Teilen…"
+  },
+  "economics": {
+    "source": "Preise und Kosten für {{country}} (FAOSTAT-Erzeugerpreise, modellierte Kosten) in {{currency}} · 1 USD = {{rate}} {{currency}} (Weltbank {{year}})",
+    "sourceUsd": "Preise und Kosten für {{country}} (FAOSTAT-Erzeugerpreise, modellierte Kosten) in USD",
+    "fallback": "Land nicht erkannt — Referenzpreise und -kosten in USD"
   }
 }

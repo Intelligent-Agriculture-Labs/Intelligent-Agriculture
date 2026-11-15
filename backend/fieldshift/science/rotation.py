@@ -5,7 +5,8 @@ simulate every crop slot over the last N seasons of NASA POWER weather with the 
 then score 7 indicators on a 0–100 scale (higher = better for the farmer):
 
   water     mean gross irrigation (irrigated) or ET deficit (rainfed), mm/yr
-  income    mean gross margin, USD/ha/yr (indicative prices/costs from config; rotation effects applied)
+  income    mean gross margin, USD/ha/yr with the field's country prices and costs (science/economics.py,
+            ADR-027; rotation effects applied)
   soil      soil-health index: living-root months, residue return, N fixation, rooting-depth diversity
   erosion   RUSLE-inspired relative index Σ_month (bare_fraction × erosive-rain share) × slope factor
   pests     pest-cycle disruption: family diversity, longest same-family run, host breaks
@@ -31,7 +32,7 @@ import yaml
 from .cropmodel import Weather, crop, gdd_requirement, simulate
 
 CONFIG = Path(__file__).resolve().parents[1] / "config"
-N_PRICE_USD_KG = 1.3  # indicative fertilizer-N price for valuing legume N credits
+N_PRICE_USD_KG = 1.3  # reference fertilizer-N price (only without a country: see economics.Econ.n_price)
 SAME_FAMILY_PENALTY = 0.08  # monoculture yield penalty (literature range ~5–15 %)
 AFTER_LEGUME_BONUS = 0.05
 SMALLHOLDER_INPUT_SHARE = 0.3  # share of gross revenue spent on inputs in low-input tropical systems (indicative)  # "rotation effect" after a legume (literature range ~5–15 %)
@@ -85,6 +86,99 @@ def is_mediterranean(normals: list[dict[str, float]], lat: float) -> bool:
     return abs(lat) >= 20 and p_cool > 2 * p_warm and p_cool + p_warm < 1000 and mild_winter
 
 
+# Sacks et al. (2010) calendars used for each FieldShift crop (same table as scripts/build_country_data.py)
+SACKS_CALENDARS: dict[str, tuple[str, ...]] = {
+    "maize": ("Maize",),
+    "maize_silage": ("Maize",),
+    "sweet_corn": ("Maize",),
+    "winter_wheat": ("Wheat_Winter",),
+    "spelt": ("Wheat_Winter",),
+    "spring_wheat": ("Wheat",),
+    "durum_wheat": ("Wheat_Winter", "Wheat"),
+    "barley": ("Barley",),
+    "winter_barley": ("Barley_Winter",),
+    "oats": ("Oats",),
+    "winter_rye": ("Rye_Winter",),
+    "triticale_forage": ("Wheat_Winter",),
+    "rice": ("Rice",),
+    "sorghum": ("Sorghum",),
+    "sorghum_sudan": ("Sorghum",),
+    "pearl_millet": ("Millet",),
+    "soybean": ("Soybeans",),
+    "dry_bean": ("Pulses",),
+    "cowpea": ("Pulses",),
+    "mung_bean": ("Pulses",),
+    "pigeon_pea": ("Pulses",),
+    "field_pea": ("Pulses",),
+    "lentil": ("Pulses",),
+    "chickpea": ("Pulses",),
+    "faba_bean": ("Pulses",),
+    "groundnut": ("Groundnuts",),
+    "sunflower": ("Sunflower",),
+    "winter_rapeseed": ("Rapeseed_Winter",),
+    "cotton": ("Cotton",),
+    "potato": ("Potatoes",),
+    "sweet_potato": ("Sweet_Potatoes",),
+    "cassava": ("Cassava",),
+    "sugar_beet": ("Sugarbeets",),
+}
+
+
+@lru_cache
+def _sacks_grids() -> dict[str, np.ndarray]:
+    path = CONFIG / "crop_calendar_30mn.npz"
+    if not path.exists():
+        return {}
+    z = np.load(path, allow_pickle=False)
+    return {k: z[k] for k in z.files}
+
+
+@lru_cache(maxsize=4096)
+def local_sowing(crop_id: str, lat: float, lon: float) -> tuple[str, str] | None:
+    """Observed sowing date ("MM-DD", source) for a crop at a location (ADR-027).
+
+    Sacks et al. (2010) 0.5° crop calendar at the field's cell (or a neighbour within one cell), else the
+    median of the field's country (country_data.json), else None (the climate rules below apply)."""
+    names = SACKS_CALENDARS.get(crop_id)
+    if not names or not (math.isfinite(lat) and math.isfinite(lon)):
+        return None
+    grids = _sacks_grids()
+    row = int(np.clip((90.0 - lat) // 0.5, 0, 359))
+    col = int(np.clip((lon + 180.0) // 0.5, 0, 719))
+    for n in names:
+        g = grids.get(n)
+        if g is None:
+            continue
+        for dr, dc in ((0, 0), (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+            r, c = row + dr, (col + dc) % 720
+            if 0 <= r < 360 and 0 < int(g[r, c]) <= 366:
+                d = dt.date(2001, 1, 1) + dt.timedelta(days=min(364, int(g[r, c]) - 1))
+                return d.strftime(
+                    "%m-%d"
+                ), f"Sacks et al. 2010 crop calendar ({n.replace('_', ' ')}, 0.5° cell)"
+    from .economics import country_of, data
+
+    iso = country_of(lat, lon)
+    e = (data()["countries"].get(iso or "") or {}).get("sowing", {}).get(crop_id) if iso else None
+    if e:
+        d = dt.date(2001, 1, 1) + dt.timedelta(days=min(364, int(e["doy"]) - 1))
+        name = data()["countries"][iso]["name"]
+        return d.strftime("%m-%d"), f"Sacks et al. 2010 crop calendar, median of {name}"
+    return None
+
+
+def planting_source(
+    crop_id: str, lat: float, lon: float | None, override: str | None = None, mediterranean: bool = False
+) -> str:
+    if override:
+        return "rotation template"
+    if lon is not None and local_sowing(crop_id, lat, lon):
+        return local_sowing(crop_id, lat, lon)[1]  # type: ignore[index]
+    if mediterranean and crop_id in MEDITERRANEAN_PLANTING:
+        return "Mediterranean calendar rule"
+    return "FieldShift climate rule (temperate calendar shifted by hemisphere / rainy-season onset)"
+
+
 def planting_date_for(
     crop_id: str,
     year: int,
@@ -92,7 +186,13 @@ def planting_date_for(
     rainy_onset_month: int | None,
     override: str | None = None,
     mediterranean: bool = False,
+    lon: float | None = None,
 ) -> dt.date:
+    if override is None and lon is not None:
+        loc = local_sowing(crop_id, lat, lon)
+        if loc:  # observed local calendar: already in local seasons, no hemisphere shift
+            m, d = (int(x) for x in loc[0].split("-"))
+            return dt.date(year, m, min(d, 28))
     md = (
         override
         or (MEDITERRANEAN_PLANTING.get(crop_id) if mediterranean else None)
@@ -126,6 +226,7 @@ class SlotStats:
         self.crop_id = crop_id
         self.results = results
         self.plant = plant
+        self.plant_source = ""
         self.c = crop(crop_id)
         ok = [r for r in results if r is not None]
         self.n = len(ok)
@@ -156,9 +257,10 @@ def evaluate_slot(
     plant_override: str | None,
     irrigate_until: str | None,
     mediterranean: bool = False,
+    lon: float | None = None,
 ) -> SlotStats:
     c = crop(crop_id)
-    first = planting_date_for(crop_id, years[0], lat, onset, plant_override, mediterranean)
+    first = planting_date_for(crop_id, years[0], lat, onset, plant_override, mediterranean, lon)
     req = gdd_requirement(c, w, first, years)
     iu: tuple[int, int] | None = None
     if irrigate_until:
@@ -166,7 +268,7 @@ def evaluate_slot(
         iu = (mm, dd)
     res: list[Any] = []
     for y in years:
-        p = planting_date_for(crop_id, y, lat, onset, plant_override, mediterranean)
+        p = planting_date_for(crop_id, y, lat, onset, plant_override, mediterranean, lon)
         if w.index(p) < 0 or w.index(p) + 30 >= len(w.dates):
             res.append(None)
             continue
@@ -187,7 +289,9 @@ def evaluate_slot(
             )
         except (ValueError, IndexError):
             res.append(None)
-    return SlotStats(crop_id, res, first)
+    out = SlotStats(crop_id, res, first)
+    out.plant_source = planting_source(crop_id, lat, lon, plant_override, mediterranean)
+    return out
 
 
 def _calendar(slots: list[dict[str, Any]], stats: list[SlotStats], n_years: int) -> list[dict[str, Any]]:
@@ -229,7 +333,10 @@ def score_strategy(
     slope_pct: float | None,
     irrigated: bool,
     smallholder: bool = False,
+    econ: Any | None = None,
 ) -> dict[str, Any]:
+    """Score one rotation. `econ` (economics.Econ) supplies the field's country prices and costs; without it the
+    crop-table reference values are used (and `smallholder` switches to a revenue-share cost, legacy)."""
     slots = tpl["slots"]
     n_years = max(s["year"] for s in slots)
     cal = _calendar(slots, stats, n_years)
@@ -265,10 +372,13 @@ def score_strategy(
         yld = (
             np.array(st.yields) * factor
         )  # typical yields in config are already in marketed (fresh/hay) weight
-        price = c["price_usd_t"]
+        price = econ.price_usd_t(s["crop"]) if econ is not None else c["price_usd_t"]
+        n_price = econ.n_price_usd_kg() if econ is not None else N_PRICE_USD_KG
         # fertilizer saved on a non-legume following a legume (≈ 40 kg N/ha credit, valued at N price)
-        n_saving = N_PRICE_USD_KG * 40 if (prev_legume and c["family"] != "Fabaceae") else 0.0
-        if smallholder:
+        n_saving = n_price * 40 if (prev_legume and c["family"] != "Fabaceae") else 0.0
+        if econ is not None:
+            margin = yld * price - econ.cost_usd_ha(s["crop"]) + n_saving
+        elif smallholder:
             # config costs are U.S. high-input budgets; for tropical smallholder systems use a uniform
             # input-cost share instead so crops are compared on one basis (documented in MODELS.md §Rotations)
             margin = yld * price * (1 - SMALLHOLDER_INPUT_SHARE) + n_saving
