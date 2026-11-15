@@ -1,4 +1,4 @@
-Pairs: 263 country × crop, 41 countries, 761 sites. Adopted structure: **anchored crop+region×sensitivity** (ADR-021). After = leave-one-country-out (factors fitted without the country).
+Pairs: 263 country × crop, 41 countries, 761 sites. Adopted structure: **anchored crop+region×sensitivity** (ADR-022). After = leave-one-country-out (factors fitted without the country).
 
 | Calibration | RMSLE | median sim/obs | mean bias (t/ha) | within ±30 % |
 |---|---|---|---|---|

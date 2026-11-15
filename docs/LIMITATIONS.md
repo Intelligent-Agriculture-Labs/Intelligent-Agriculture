@@ -3,7 +3,19 @@
 ## Data
 - **Spatial scale.** Weather comes from NASA POWER's ~50 km grid, the forecast from ~10–25 km, SMAP at 9 km, MODIS NDVI at 250 m. None of them resolves a 1–10 ha field. Every card says so. Microclimates (frost hollows, valley winds, irrigated-canopy humidity) are not captured.
 - **Irrigation history is unknown.** The model assumes the farmer irrigated when needed unless they enter their last irrigation (ADR-009). Satellite soil moisture cannot see irrigation on small fields in arid regions.
-- **No Earthdata Login.** GPM IMERG, GRACE-FO, full ECOSTRESS and HLS 30 m NDVI are not used yet (ADR-004). Rain comes from POWER's MERRA-2 bias-corrected precipitation.
+- **Rain (POWER + GPM IMERG).**
+  - The 50/50 blend is served only between 45° S and 45° N; the 18 validation gauges span 35° S–42° N. Poleward, POWER's MERRA-2 rain is served unchanged.
+  - IMERG Final arrives ~2–3 months late. For the most recent weeks the app uses POWER scaled by the local IMERG/POWER climatological ratio, which fixes the average amount but not the timing of individual storms.
+  - Mountains: at Bogotá (2,550 m) both POWER and IMERG overestimate rain by +84 % / +98 % and the blend does not help; at Pune (lee of the Western Ghats) both overestimate strongly. Steep orographic rain is beyond both products.
+  - The gauge test is not fully independent: IMERG Final is calibrated to GPCC monthly gauge analyses and MERRA-2's corrected rain to CPC gauges, and GHCN stations feed both.
+  - Several tropical GHCN records are patchy (Nairobi 41, Bamako 38 usable months); their per-site numbers are indicative.
+- **Regional water storage (GRACE/GRACE-FO).**
+  - The footprint is ~300 km (one 3° mascon). It measures total water (groundwater + soil + surface water + snow), not the aquifer under the field.
+  - A local well can disagree: at Fallon, 257 USGS wells are flat on median while GRACE's region is falling (irrigation recharge keeps the shallow aquifer up while the wider Great Basin dries). The card therefore says "regional water reserves" and asks the farmer to check their well.
+  - Data arrive 2–3 months late, and there is no data from Jul 2017 to May 2018.
+  - The asset is a snapshot (through Sep 2026); refreshing it needs Earthdata Login on the data box (`scripts/grace_extract.py`).
+  - No current groundwater *percentile* yet (GRACE data-assimilation product blocked by the GES DISC EULA step).
+- **Still without Earthdata-based products:** full ECOSTRESS and HLS 30 m NDVI (ROADMAP #1).
 - **The ORNL subset API is slow and was intermittently down** during the build. Satellite layers (NDVI, MOD16, SMAP) may be missing for new locations. The cards degrade gracefully, and the demo farms are pre-cached.
 - **SoilGrids is a 250 m estimate.** It is not a soil test. When it is unavailable, a loam default is used and labelled.
 - **Prices and costs are national indicative values.** Gross margins are for comparing rotations, not for budgeting.
@@ -24,7 +36,7 @@
   - Scenario differences remain more meaningful than absolute yields (EXP-05).
 - **Validation:**
   - Soil-water dynamics are weaker in East Africa (EXP-02).
-  - Drought status at Fallon only moderately matches the USDM, because Nevada's farm drought is a water-supply (snowpack) drought (EXP-03).
+  - Drought status at Fallon only moderately matches the USDM, because Nevada's farm drought is a water-supply (snowpack) drought (EXP-03). GRACE storage now gives regional water-supply context, but it does not enter the drought level (ADR-025).
   - The late-blight model ranked the 2009 epidemic year 3rd of 11 (EXP-07).
 - **Disease models** use RH ≥ 90 % as a leaf-wetness proxy, from gridded data. They indicate *favourable weather*, not disease presence.
 - **Global pest and disease models** (MODELS §5b, VALIDATION V11):

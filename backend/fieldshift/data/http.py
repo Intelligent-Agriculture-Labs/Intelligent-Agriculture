@@ -88,7 +88,9 @@ def _read(path: Path) -> Any | None:
 
 def _write(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp")  # unique per process: parallel writers must not collide
+    tmp = path.with_suffix(
+        f".{os.getpid()}.{threading.get_ident()}.tmp"
+    )  # unique per process: parallel writers must not collide
     with gzip.open(tmp, "wt", encoding="utf-8") as f:
         json.dump(payload, f, separators=(",", ":"))
     tmp.replace(path)

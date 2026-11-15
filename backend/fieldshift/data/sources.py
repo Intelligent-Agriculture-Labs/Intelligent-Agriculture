@@ -111,6 +111,22 @@ SOURCES: dict[str, dict[str, Any]] = {
         latency="~days",
         is_nasa=True,
     ),
+    "gpm_imerg": dict(
+        name="GPM IMERG Final daily precipitation (via NASA POWER)",
+        provider="NASA GES DISC / GPM; served by NASA LaRC POWER",
+        url="https://gpm.nasa.gov/data/imerg",
+        resolution="0.1° (~10 km), daily (UTC)",
+        latency="~2–3 months (Final run)",
+        is_nasa=True,
+    ),
+    "grace_fo": dict(
+        name="GRACE / GRACE-FO terrestrial water storage (JPL RL06.3 CRI mascons)",
+        provider="NASA JPL / PO.DAAC",
+        url="https://podaac.jpl.nasa.gov/dataset/TELLUS_GRAC-GRFO_MASCON_CRI_GRID_RL06.3_V4",
+        resolution="3° equal-area mascons (~300 km), monthly",
+        latency="~2–3 months",
+        is_nasa=True,
+    ),
     "era5_land": dict(
         name="ERA5 / ERA5-Land reanalysis soil moisture (via Open-Meteo archive)",
         provider="Copernicus C3S / ECMWF",
@@ -183,6 +199,41 @@ def power_daily(lat: float, lon: float, start: dt.date, end: dt.date) -> Daily:
         out[k] = arr
     elev = f.data.get("geometry", {}).get("coordinates", [None, None, None])
     return Daily(dates, out, f.status, {"power_elevation_m": elev[2] if len(elev) > 2 else None})
+
+
+IMERG_START = dt.date(1998, 1, 1)
+
+
+def imerg_daily(lat: float, lon: float, start: dt.date, end: dt.date) -> tuple[np.ndarray, str] | None:
+    """GPM IMERG Final daily rain (mm/day) from the NASA POWER point API, aligned on start..end (NaN = missing).
+    POWER serves IMERG only on UTC days (LST requests return fill values). Returns (series, fetch status), or None
+    if the source is unavailable (the caller then serves POWER rain unchanged)."""
+    s0 = max(start, IMERG_START)
+    n = (end - start).days + 1
+    if s0 > end:
+        return None
+    params = {
+        "parameters": "IMERG_PRECTOT",
+        "community": "AG",
+        "latitude": _r(lat, 3),
+        "longitude": _r(lon, 3),
+        "start": s0.strftime("%Y%m%d"),
+        "end": end.strftime("%Y%m%d"),
+        "format": "JSON",
+        "time-standard": "UTC",
+    }
+    ttl = 30 * 86400 if (dt.date.today() - end).days > 120 else 3 * 86400
+    try:
+        f = get_json(POWER_URL, params, ttl_s=ttl, timeout_s=120, retries=2)
+        series = f.data["properties"]["parameter"]["IMERG_PRECTOT"]
+    except (DataUnavailable, KeyError, TypeError):
+        return None
+    out = np.full(n, np.nan)
+    for ds, v in series.items():
+        i = (dt.date(int(ds[:4]), int(ds[4:6]), int(ds[6:8])) - start).days
+        if 0 <= i < n and v is not None and v > -998:
+            out[i] = float(v)
+    return (out, f.status) if np.isfinite(out).any() else None
 
 
 # --------------------------------------------------------------------------- Open-Meteo forecast

@@ -19,6 +19,8 @@ def _card_class(animal: str, cls: str) -> str:
     if hs.LIVESTOCK[animal]["index"] == "marai":
         return {"emergency": "danger", "danger": "alert"}.get(cls, "none" if cls == "none" else "alert")
     return cls
+
+
 DAY_HOURS = range(6, 21)  # outdoor working day considered for the advice (local time)
 ANIMAL_LABEL = {
     "dairy_cattle": "dairy cattle",
@@ -68,7 +70,9 @@ def heat_assessment(ctx: Any, today: dt.date, days: int = 7) -> dict[str, Any] |
     if wx is None:
         return None
     p = hs.pressure_hpa(ctx.elevation_m)
-    rows = hs.assess_hours(ctx.lat, ctx.lon, wx.times, wx.t, wx.rh, wx.wind2, wx.ghi, wx.utc_offset_h, p, wx.direct)
+    rows = hs.assess_hours(
+        ctx.lat, ctx.lon, wx.times, wx.t, wx.rh, wx.wind2, wx.ghi, wx.utc_offset_h, p, wx.direct
+    )
     rows = [r for r in rows if today <= r.time.date() <= end]
     if not rows:
         return None
@@ -168,9 +172,17 @@ def heat_stress_cards(
             safe=f"{start_h:02d}:00",
         )
         if pk.work_frac < 0.25:
-            detail = t("heat_stress_detail_stop", lang, wbgt=round(pk.wbgt, 1), start=f"{start_h:02d}:00", end=f"{end_h:02d}:00")
+            detail = t(
+                "heat_stress_detail_stop",
+                lang,
+                wbgt=round(pk.wbgt, 1),
+                start=f"{start_h:02d}:00",
+                end=f"{end_h:02d}:00",
+            )
         else:
-            detail = t("heat_stress_detail", lang, rest=rest_min, wbgt=round(pk.wbgt, 1), after=f"{end_h:02d}:00")
+            detail = t(
+                "heat_stress_detail", lang, rest=rest_min, wbgt=round(pk.wbgt, 1), after=f"{end_h:02d}:00"
+            )
         due = run[0].isoformat()
         steps += [
             f"Hourly weather ({a['origin'].replace('+', ' + ')}): peak on {peak_day.isoformat()} around "
@@ -187,7 +199,9 @@ def heat_stress_cards(
             f"Hours with restricted work on {_days_label(run, 'en')}: {start_h:02d}:00–{end_h:02d}:00 (local time).",
         ]
     else:
-        an, (v, cls, d0) = max(serious.items(), key=lambda kv: hs.LIVESTOCK_CLASSES.index(_card_class(kv[0], kv[1][1])))
+        an, (v, cls, d0) = max(
+            serious.items(), key=lambda kv: hs.LIVESTOCK_CLASSES.index(_card_class(kv[0], kv[1][1]))
+        )
         title = t("heat_animals_title", lang, day=_days_label([d0], lang))
         detail = t("heat_animals_detail", lang)
         due = d0.isoformat()

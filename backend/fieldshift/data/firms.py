@@ -160,7 +160,9 @@ def _get_csv(url: str, cache_tag: str, ttl_s: float, timeout_s: float = 30.0) ->
             return f.read(), "cache"
     if not offline_mode():
         try:
-            r = httpx.get(url, timeout=timeout_s, follow_redirects=True, headers={"User-Agent": "FieldShift/1.0"})
+            r = httpx.get(
+                url, timeout=timeout_s, follow_redirects=True, headers={"User-Agent": "FieldShift/1.0"}
+            )
             if r.status_code == 200 and r.text.startswith("latitude"):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 tmp = path.with_suffix(f".{os.getpid()}.tmp")
@@ -184,7 +186,9 @@ def _bbox(lat: float, lon: float, km: float) -> tuple[float, float, float, float
     return (round(lon - dlon, 3), round(lat - dlat, 3), round(lon + dlon, 3), round(lat + dlat, 3))
 
 
-def fetch_api(lat: float, lon: float, start: dt.date, end: dt.date, radius_km: float, key: str) -> tuple[list[Fire], str]:
+def fetch_api(
+    lat: float, lon: float, start: dt.date, end: dt.date, radius_km: float, key: str
+) -> tuple[list[Fire], str]:
     w, s, e, n = _bbox(lat, lon, radius_km)
     days = max(1, min(5, (end - start).days + 1))
     recent = (dt.date.today() - end).days <= 60
@@ -256,13 +260,24 @@ def fetch_demo(lat: float, lon: float, start: dt.date, end: dt.date) -> list[Fir
         for row in ds["fires"]:
             r = dict(zip(cols, row, strict=True))
             fires.append(
-                Fire(r["lat"], r["lon"], dt.date.fromisoformat(r["date"]), r["time"], r["sat"], r["conf"], r["frp"], r["dn"])
+                Fire(
+                    r["lat"],
+                    r["lon"],
+                    dt.date.fromisoformat(r["date"]),
+                    r["time"],
+                    r["sat"],
+                    r["conf"],
+                    r["frp"],
+                    r["dn"],
+                )
             )
         return fires
     return None
 
 
-def nearby_fires(lat: float, lon: float, today: dt.date, radius_km: float = 50.0, days: int = 2) -> FireResult:
+def nearby_fires(
+    lat: float, lon: float, today: dt.date, radius_km: float = 50.0, days: int = 2
+) -> FireResult:
     """Active-fire detections within `radius_km` of the field in the `days` days up to `today`."""
     end = today
     start = today - dt.timedelta(days=days - 1)
@@ -290,7 +305,15 @@ def nearby_fires(lat: float, lon: float, today: dt.date, radius_km: float = 50.0
             fires, status, used = demo, "demo", "demo"
             note = "Recorded FIRMS detections (demo data)."
     if fires is None:
-        return FireResult([], "unavailable", "none", radius_km, start, end, "No FIRMS data (offline, no key, or historic date)")
+        return FireResult(
+            [],
+            "unavailable",
+            "none",
+            radius_km,
+            start,
+            end,
+            "No FIRMS data (offline, no key, or historic date)",
+        )
     out = []
     for f in fires:
         if not (start <= f.date <= end) or f.confidence == "low":

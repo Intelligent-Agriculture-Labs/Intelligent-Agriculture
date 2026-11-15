@@ -434,3 +434,17 @@ heat_stress_detail_stop:
   sw: "WBGT ya juu {wbgt} °C: simamisha kazi shambani kuanzia {start} hadi {end}, pumzika kivulini na unywe kikombe cha maji kila dakika 15–20. Angalianeni kizunguzungu."
   hi: "अधिकतम WBGT {wbgt} °C: {start} से {end} तक खेत का काम रोकें, छाया में आराम करें और हर 15–20 मिनट एक कप पानी पिएं। चक्कर या भ्रम पर ध्यान दें।"
   de: "WBGT-Spitze {wbgt} °C: Feldarbeit von {start} bis {end} einstellen, im Schatten ruhen und alle 15–20 min einen Becher Wasser trinken. Auf Schwindel oder Verwirrtheit achten."
+groundwater_title:
+  en: "Regional water reserves falling: −{cm} cm since 2003"
+  es: "Reservas de agua de la región en descenso: −{cm} cm desde 2003"
+  fr: "Réserves d'eau régionales en baisse : −{cm} cm depuis 2003"
+  sw: "Akiba ya maji ya eneo inapungua: −{cm} cm tangu 2003"
+  hi: "क्षेत्र का जल भंडार घट रहा है: 2003 से −{cm} सेमी"
+  de: "Wasserreserven der Region sinken: −{cm} cm seit 2003"
+groundwater_detail:
+  en: "NASA GRACE satellites see groundwater and other stored water in your region dropping. Prefer water-saving rotations and efficient irrigation; check your well levels."
+  es: "Los satélites GRACE de la NASA ven bajar el agua subterránea y otras reservas de la región. Prefiera rotaciones que ahorren agua y riego eficiente; controle el nivel de su pozo."
+  fr: "Les satellites GRACE de la NASA voient baisser les nappes et autres réserves d'eau de la région. Préférez des rotations économes en eau et une irrigation efficace ; surveillez votre puits."
+  sw: "Satelaiti za NASA GRACE zinaona maji ya ardhini na akiba nyingine za maji za eneo lako yakipungua. Chagua mzunguko wa mazao unaookoa maji na umwagiliaji bora; pima kina cha kisima chako."
+  hi: "NASA के GRACE उपग्रह आपके क्षेत्र में भूजल और अन्य जल भंडार घटते देख रहे हैं। पानी बचाने वाले फसल चक्र और कुशल सिंचाई अपनाएं; अपने कुएं का जल स्तर जांचें।"
+  de: "Die NASA-GRACE-Satelliten sehen Grundwasser und andere Wasservorräte Ihrer Region sinken. Wählen Sie wassersparende Fruchtfolgen und effiziente Bewässerung; prüfen Sie Ihren Brunnenpegel."

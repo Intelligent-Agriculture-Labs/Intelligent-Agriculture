@@ -188,12 +188,18 @@ def wet_bulb_temperature(
         h = _h_cylinder(tref, p_hpa, speed if natural else max(speed, 4.0))
         fatm = STEFANB * EMIS_WICK * (0.5 * (emis_air * ta**4 + EMIS_SFC * tsfc**4) - tw_prev**4) + (
             1.0 - ALB_WICK
-        ) * solar * ((1.0 - fdir) * (1.0 + 0.25 * D_WICK / L_WICK) + fdir * (tan_term + 0.25 * D_WICK / L_WICK) + ALB_SFC)
+        ) * solar * (
+            (1.0 - fdir) * (1.0 + 0.25 * D_WICK / L_WICK)
+            + fdir * (tan_term + 0.25 * D_WICK / L_WICK)
+            + ALB_SFC
+        )
         ewick = esat_hpa(tw_prev, p_hpa)
         density = p_hpa * 100.0 / (R_AIR * tref)
         sc = _viscosity(tref) / (density * _diffusivity(tref, p_hpa))
         tw_new = (
-            ta - _evap(tref) / RATIO * (ewick - eair) / (p_hpa - ewick) * (PR / sc) ** WICK_A + (fatm / h) * rad
+            ta
+            - _evap(tref) / RATIO * (ewick - eair) / (p_hpa - ewick) * (PR / sc) ** WICK_A
+            + (fatm / h) * rad
         )
         if abs(tw_new - tw_prev) < CONVERGENCE:
             return tw_new - 273.15
@@ -260,7 +266,11 @@ def cos_zenith(lat: float, lon: float, day: dt.date, solar_hour: float) -> float
 def equation_of_time_min(day: dt.date) -> float:
     g = 2.0 * math.pi / 365.0 * (day.timetuple().tm_yday - 1)
     return 229.18 * (
-        0.000075 + 0.001868 * math.cos(g) - 0.032077 * math.sin(g) - 0.014615 * math.cos(2 * g) - 0.040849 * math.sin(2 * g)
+        0.000075
+        + 0.001868 * math.cos(g)
+        - 0.032077 * math.sin(g)
+        - 0.014615 * math.cos(2 * g)
+        - 0.040849 * math.sin(2 * g)
     )
 
 
@@ -397,5 +407,9 @@ def assess_hours(
         w = wbgt_liljegren(float(tk), float(min(max(rk, 1.0), 100.0)), wk, gk, cza, p_hpa, fdir)
         if not math.isfinite(w.wbgt):
             continue
-        out.append(HourRow(tm, float(tk), float(rk), wk, gk, cza, w.wbgt, worker_level(w.wbgt), max_work_fraction(w.wbgt)))
+        out.append(
+            HourRow(
+                tm, float(tk), float(rk), wk, gk, cza, w.wbgt, worker_level(w.wbgt), max_work_fraction(w.wbgt)
+            )
+        )
     return out

@@ -28,7 +28,7 @@ export interface FieldInput {
 }
 
 export interface SourceRef {
-  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm", "firms"
+  id: string; // "nasa_power", "smap_l3e", "modis_ndvi", "mod16", "ecostress_esi", "openmeteo_forecast", "era5", "srtm", "soilgrids", "usdm", "firms", "gpm_imerg", "grace_fo"
   name: string;
   provider: string; // "NASA LaRC", "NASA/ORNL DAAC", ...
   url: string;
@@ -67,7 +67,7 @@ export interface WhyBlock {
 
 export interface ActionCard {
   id: string; // "irrigate", "drought", "disease_late_blight", "pest_alfalfa_weevil", "sowing", "frost", "heat", "rain_onset",
-  //             "heat_stress" (people + livestock), "solar_pump", "fire_nearby", "residue_no_burn"
+  //             "heat_stress" (people + livestock), "solar_pump", "fire_nearby", "residue_no_burn", "groundwater_trend"
   category: "water" | "drought" | "disease" | "pest" | "planning" | "weather";
   priority: number; // 1 = most urgent
   risk: Risk;
@@ -97,7 +97,39 @@ export interface DroughtStatus {
     heldout_spearman: number;
     n_counties: number;
   } | null;
+  /** NASA GRACE/GRACE-FO regional water-storage trend (~300 km); context only, does not change `level` */
+  groundwater?: GroundwaterStatus | null;
+  /** where the rain behind SPI/SPEI and the water balance comes from (NASA POWER, or POWER + GPM IMERG blend) */
+  rain_source?: RainSource | null;
   why: WhyBlock;
+}
+
+export interface GroundwaterStatus {
+  status: "declining" | "likely_declining" | "stable" | "likely_rising" | "rising";
+  slope_cm_yr: number; // trend of water storage, cm liquid-water equivalent per year
+  slope_se_cm_yr: number; // autocorrelation-adjusted standard error
+  p_value: number;
+  significant: boolean; // p < 0.05
+  change_cm: number; // fitted change since 2003
+  recent_slope_cm_yr: number | null; // last 5 years
+  anomaly_cm: number; // last 3 months, seasonal cycle removed, vs 2004–2009 mean
+  percentile: number; // 0..100 within the record
+  n_months: number;
+  n_eff: number;
+  first: string; // "2002-04"
+  last: string; // latest GRACE-FO month used
+  trend_cm_per_year: number;
+  resolution_km: number; // ~300 (3° mascons)
+  cell: [number, number];
+  why: WhyBlock;
+}
+
+export interface RainSource {
+  method: "power" | "blend_50_50";
+  imerg_used: boolean;
+  imerg_last: string | null; // last IMERG Final day used; later days use POWER × climatological ratio
+  annual_power_mm: number | null;
+  annual_imerg_mm: number | null;
 }
 
 export interface AdviceResponse {
@@ -248,6 +280,8 @@ export interface RotationResponse {
   strategies: RotationStrategy[]; // current first, then ranked alternatives (>= 3 total)
   climate_context: string[]; // key local signals: "Frost-free season lengthened 11 days since 1985"
   vulnerable_periods: { month: number; issue: string; risk: Risk }[];
+  /** irrigated fields where NASA GRACE shows regional water storage falling: water use is weighted higher */
+  groundwater_note?: string | null;
   sources: SourceRef[];
   disclaimer: string;
 }

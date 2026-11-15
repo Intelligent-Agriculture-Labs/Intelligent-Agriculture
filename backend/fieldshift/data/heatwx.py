@@ -147,7 +147,10 @@ def from_context(ctx: Any, start: dt.date, end: dt.date) -> HourlyHeatWeather | 
         u = _doy_clim(ctx.power, "WS2M", day) or 2.0
         h_mj = _doy_clim(ctx.power, "ALLSKY_SFC_SW_DWN", day)
         czas = [
-            max(0.0, hs.cos_zenith(ctx.lat, ctx.lon, day, hs.solar_hour(day, times[k].hour - 0.5, ctx.lon, off)))
+            max(
+                0.0,
+                hs.cos_zenith(ctx.lat, ctx.lon, day, hs.solar_hour(day, times[k].hour - 0.5, ctx.lon, off)),
+            )
             for k in ks
         ]
         tot = sum(czas)

@@ -285,7 +285,7 @@ Season length over 17 stations: water balance (used in the app) bias +9.8 days, 
 FieldShift median onset 02 Nov (NDJFMA, n = 41); BoM's 50 mm rule computed on the same POWER rain: 22 Oct; BoM: the western Top End usually reaches onset by late October or early November. Error vs. 1 Nov: **+1 days**.
 
 ### V10 · Global yield benchmark: simulated vs. FAOSTAT national yields, 41 countries, 2000–2024
-_run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation/yield_benchmark/`](validation/yield_benchmark/) · EXP-12, ADR-021_
+_run: 2026-11-15 · `scripts/yield_benchmark.py` · outputs in [`docs/validation/yield_benchmark/`](validation/yield_benchmark/) · EXP-12, ADR-022_
 
 **Design.**
 - **Reference:** FAOSTAT national yields (QCL, t/ha, 2000–2024) for 13 crops. Cotton is lint: lint production / seed-cotton area. Beans are "Beans, dry".
@@ -470,11 +470,127 @@ Six of these cases are frozen as unit tests (`tests/test_heat_solar_fire.py`). T
 - The card therefore lowers its confidence to 0.45 on the fallback and says so in the caveats.
 - A 0.5 m/s floor on the 2 m grid wind (KNMI/ECMWF operational practice) was added after this check. It removed single calm hours with WBGT jumps of +5 °C in POWER hourly data, which are not credible at a 50 km grid.
 
+### V13 · Rain: NASA POWER vs. GPM IMERG vs. their blend, against 18 rain gauges on 6 continents (2001–2025)
+_run: 2026-11-15 · `scripts/validate_imerg.py` → `docs/validation/imerg.json`_
 
+**Question.** Does GPM IMERG rain, or a POWER/IMERG blend, describe rain at the field better than the NASA POWER (MERRA-2) rain FieldShift used so far? Adopt it only where it helps.
+
+**Design.**
+- Reference: GHCN-Daily station precipitation (NOAA NCEI), QC-flagged values dropped. 18 stations: the four demo regions (Fallon, Ames, Córdoba, Nairobi for Machakos), plus Jaén, West Africa (Niamey, Ouagadougou, Bamako, Dakar), India (Delhi, Pune, Hyderabad, Nagpur), Bangkok, Darwin, Wagga Wagga, San Juan and Bogotá. 12 are tropical (|lat| ≤ 23.5°).
+- Products extracted at each station from the anonymous NASA POWER point API: POWER `PRECTOTCORR` (as served, local solar time) and IMERG Final `IMERG_PRECTOT` (UTC days).
+- Only days with a gauge value count. One common lag (−1/0/+1 day) per station is chosen on the mean of POWER and IMERG, so neither is favoured (many gauges report the 24 h ending in the morning).
+- Metrics: daily Pearson r; wet-day critical success index (≥ 1 mm); monthly totals over the same gauge days (months with ≥ 20 gauge days): r, bias, Kling–Gupta efficiency (KGE); r of 3-month anomalies (an SPI-3 proxy, what the drought indicators see).
+- The blend weight (0.5) was fixed before the run; 0.3 and 0.7 and three alternative designs are reported for sensitivity.
+
+**Per station (POWER → adopted blend):**
+
+| Site (GHCN station) | Continent | Zone | gauge months | daily r POWER → blend | monthly KGE POWER → blend | 3-month anomaly r POWER → blend | monthly bias POWER / IMERG / blend |
+|---|---|---|---|---|---|---|---|
+| Fallon Exp. Stn, Nevada (demo field) (USC00262780) | North America | extratropics | 273 | 0.62 → **0.66** | 0.35 → **0.63** | 0.80 → **0.86** | +51 % / +13 % / +32 % |
+| Ames 8 WSW, Iowa (demo field) (USC00130200) | North America | extratropics | 300 | 0.59 → **0.73** | 0.81 → **0.87** | 0.89 → **0.89** | -7 % / +9 % / +1 % |
+| Córdoba airport, Spain (demo field) (SP000008410) | Europe | extratropics | 300 | 0.83 → **0.81** | 0.74 → **0.83** | 0.97 → **0.96** | -16 % / -0 % / -8 % |
+| Jaén, Spain (SPE00120170) | Europe | extratropics | 300 | 0.77 → **0.77** | 0.71 → **0.83** | 0.94 → **0.94** | -16 % / +3 % / -6 % |
+| Nairobi JKIA, Kenya (Machakos demo) (KE000063740) | Africa | tropics | 41 | 0.25 → **0.34** | 0.44 → **0.67** | 0.82 → **0.85** | -36 % / +1 % / -18 % |
+| Niamey, Niger (NG000001052) | Africa | tropics | 52 | 0.32 → **0.48** | 0.93 → **0.96** | 0.98 → **0.99** | +4 % / +3 % / +4 % |
+| Ouagadougou, Burkina Faso (UVM00065503) | Africa | tropics | 59 | 0.26 → **0.39** | 0.88 → **0.91** | 0.96 → **0.97** | +1 % / +4 % / +2 % |
+| Bamako-Sénou, Mali (MLM00061291) | Africa | tropics | 38 | 0.20 → **0.34** | 0.73 → **0.88** | 0.87 → **0.93** | +5 % / +3 % / +4 % |
+| Dakar-Yoff, Senegal (SG000061641) | Africa | tropics | 49 | 0.36 → **0.49** | 0.70 → **0.71** | 0.94 → **0.96** | -2 % / -5 % / -4 % |
+| New Delhi Safdarjung, India (IN022021900) | Asia | extratropics | 53 | 0.65 → **0.68** | 0.78 → **0.72** | 0.97 → **0.98** | -8 % / -13 % / -11 % |
+| Pune, India (IN012190100) | Asia | tropics | 100 | 0.67 → **0.71** | -0.90 → **-0.38** | 0.92 → **0.92** | +137 % / +64 % / +100 % |
+| Hyderabad Begumpet, India (IN001080500) | Asia | tropics | 88 | 0.75 → **0.75** | 0.90 → **0.93** | 0.96 → **0.97** | -2 % / +10 % / +4 % |
+| Nagpur Sonegaon, India (IN012141800) | Asia | tropics | 66 | 0.65 → **0.67** | 0.85 → **0.93** | 0.98 → **0.98** | -9 % / +9 % / +0 % |
+| Bangkok Don Muang, Thailand (TH000048456) | Asia | tropics | 156 | 0.56 → **0.56** | 0.68 → **0.70** | 0.81 → **0.84** | -11 % / -8 % / -10 % |
+| Darwin airport, Australia (ASN00014015) | Australia | tropics | 300 | 0.67 → **0.79** | 0.84 → **0.89** | 0.76 → **0.87** | -7 % / -1 % / -4 % |
+| Wagga Wagga, Australia (ASN00072150) | Australia | extratropics | 292 | 0.70 → **0.84** | 0.86 → **0.88** | 0.93 → **0.95** | +5 % / +11 % / +8 % |
+| San Juan, Puerto Rico (RQW00011641) | North America | tropics | 300 | 0.44 → **0.58** | 0.48 → **0.69** | 0.52 → **0.70** | -25 % / -6 % / -16 % |
+| Bogotá El Dorado, Colombia (CO000080222) | South America | tropics | 133 | 0.38 → **0.34** | 0.07 → **0.03** | 0.66 → **0.69** | +84 % / +98 % / +91 % |
+
+**By zone:**
+
+| Zone (sites) | Product | daily r | wet-day CSI | monthly r | monthly KGE | 3-month anomaly r | mean abs. bias | beats POWER (daily r / KGE / anomaly r) |
+|---|---|---|---|---|---|---|---|---|
+| tropics (12) | POWER (served before) | 0.459 | 0.518 | 0.818 | 0.551 | 0.849 | 26.9 % | — |
+| tropics (12) | IMERG alone | 0.479 | 0.504 | 0.863 | 0.698 | 0.890 | 17.7 % | 7/12 / 10/12 / 8/12 |
+| tropics (12) | **Blend 50/50 (adopted)** | 0.537 | 0.523 | 0.865 | 0.660 | 0.889 | 21.3 % | 11/12 / 11/12 / 11/12 |
+| tropics (12) | POWER rescaled monthly to IMERG | 0.477 | 0.517 | 0.864 | 0.697 | 0.889 | 17.7 % | 10/12 / 11/12 / 8/12 |
+| tropics (12) | Bridge: POWER × (0.5 + 0.5·ratio) | 0.460 | 0.518 | 0.823 | 0.619 | 0.852 | 22.6 % | 7/12 / 8/12 / 6/12 |
+| tropics (12) | Blend 30 % IMERG | 0.529 | 0.523 | 0.852 | 0.622 | 0.878 | 23.5 % | 12/12 / 11/12 / 11/12 |
+| tropics (12) | Blend 70 % IMERG | 0.521 | 0.526 | 0.870 | 0.687 | 0.894 | 19.8 % | 8/12 / 11/12 / 10/12 |
+| tropics (12) | Blend, rescaled to IMERG monthly | 0.534 | 0.523 | 0.867 | 0.700 | 0.891 | 17.5 % | 11/12 / 11/12 / 9/12 |
+| extratropics (6) | POWER (served before) | 0.693 | 0.531 | 0.916 | 0.709 | 0.918 | 17.0 % | — |
+| extratropics (6) | IMERG alone | 0.676 | 0.512 | 0.913 | 0.837 | 0.920 | 8.3 % | 2/6 / 4/6 / 3/6 |
+| extratropics (6) | **Blend 50/50 (adopted)** | 0.749 | 0.554 | 0.929 | 0.793 | 0.931 | 11.0 % | 5/6 / 5/6 / 4/6 |
+| extratropics (6) | POWER rescaled monthly to IMERG | 0.685 | 0.526 | 0.910 | 0.825 | 0.921 | 9.1 % | 1/6 / 4/6 / 3/6 |
+| extratropics (6) | Bridge: POWER × (0.5 + 0.5·ratio) | 0.693 | 0.529 | 0.918 | 0.780 | 0.920 | 11.5 % | 1/6 / 4/6 / 3/6 |
+| extratropics (6) | Blend 30 % IMERG | 0.745 | 0.553 | 0.927 | 0.762 | 0.928 | 13.2 % | 5/6 / 5/6 / 4/6 |
+| extratropics (6) | Blend 70 % IMERG | 0.731 | 0.546 | 0.927 | 0.818 | 0.930 | 9.5 % | 4/6 / 5/6 / 3/6 |
+| extratropics (6) | Blend, rescaled to IMERG monthly | 0.738 | 0.547 | 0.913 | 0.831 | 0.921 | 8.7 % | 4/6 / 4/6 / 3/6 |
+| all (18) | POWER (served before) | 0.537 | 0.522 | 0.851 | 0.604 | 0.872 | 23.6 % | — |
+| all (18) | IMERG alone | 0.545 | 0.507 | 0.880 | 0.744 | 0.900 | 14.6 % | 9/18 / 14/18 / 11/18 |
+| all (18) | **Blend 50/50 (adopted)** | 0.608 | 0.534 | 0.886 | 0.705 | 0.903 | 17.9 % | 16/18 / 16/18 / 15/18 |
+| all (18) | POWER rescaled monthly to IMERG | 0.546 | 0.520 | 0.879 | 0.740 | 0.900 | 14.8 % | 11/18 / 15/18 / 11/18 |
+| all (18) | Bridge: POWER × (0.5 + 0.5·ratio) | 0.538 | 0.521 | 0.855 | 0.673 | 0.875 | 18.9 % | 8/18 / 12/18 / 9/18 |
+| all (18) | Blend 30 % IMERG | 0.601 | 0.533 | 0.877 | 0.669 | 0.895 | 20.1 % | 17/18 / 16/18 / 15/18 |
+| all (18) | Blend 70 % IMERG | 0.591 | 0.533 | 0.889 | 0.730 | 0.906 | 16.4 % | 12/18 / 16/18 / 13/18 |
+| all (18) | Blend, rescaled to IMERG monthly | 0.602 | 0.531 | 0.882 | 0.744 | 0.901 | 14.5 % | 15/18 / 15/18 / 12/18 |
+
+**Decision (ADR-025).** The 50/50 daily blend beat POWER alone on daily correlation at **16/18** stations (mean r 0.537 → 0.608), on monthly KGE at **16/18** (0.604 → 0.705) and on 3-month anomaly correlation at **15/18** (0.872 → 0.903), and reduced the mean absolute bias from 23.6 % to 17.9 %. It helped in the tropics (11/12 on each of daily r, KGE, anomaly r) and outside them (5/6 on daily r and KGE). It is therefore adopted in both zones, but only inside the validated band |lat| ≤ 45°. IMERG alone has the best monthly amounts (KGE 0.744) but loses on daily timing at half the stations, and the water balance needs daily timing. For IMERG's ~2-month latency the bridge POWER × (0.5 + 0.5·ratio) improves amounts (KGE better at 12/18) without changing timing.
+
+**Where it did not help.** Bogotá (tropical Andes, 2,550 m): both products overestimate by ~+90 % and the blend is no better. Delhi: KGE fell slightly (0.78 → 0.72) because IMERG is drier there; daily r still rose. Pune (lee side of the Western Ghats): POWER +137 %, IMERG +64 %; the blend halves the error but is still poor (LIMITATIONS).
+
+**Caveat.** IMERG Final is calibrated to GPCC monthly gauge analyses and MERRA-2's corrected rain to CPC gauges; GHCN stations feed both, so this is not a fully independent test, and the monthly scores flatter both products more than the daily ones. Tropical GHCN records are patchy (38–156 usable months at 10 of the 12 tropical stations).
+
+### V14 · Regional water storage (GRACE/GRACE-FO) vs. USGS groundwater wells and published GRACE trends
+_run: 2026-11-15 · `scripts/validate_grace.py` → `docs/validation/grace.json`_
+
+**Question.** Does FieldShift's water-storage indicator (JPL RL06.3 mascons at the field's cell, harmonic trend model with AR(1)-adjusted significance) move with groundwater where wells exist, and does it reproduce published GRACE trends elsewhere?
+
+**Design.**
+- Wells: USGS groundwater-level field measurements (parameter 72019, depth to water), anonymous USGS Water Data OGC API, in a 2° × 2° box (≈ one mascon) around 12 U.S. aquifer regions incl. the Fallon and Ames demo fields. Wells with ≥ 12 years of data in 2003–2025 are kept; the regional index is the median of annual water-level anomalies across wells (≥ 5 wells per year).
+- Wells measure hydraulic head (m) and GRACE measures mass (cm of water); without the aquifer's specific yield only co-variation and trend direction are comparable, not magnitude.
+- Metrics: r of annual means; agreement of trend sign; agreement of FieldShift's class (declining/likely/stable/rising) with the wells' trend class (OLS on the annual index, same p-value thresholds).
+
+| Region | USGS wells (≥ 12 yrs) | years | r (annual) | well level trend (head) | FieldShift GRACE storage trend | agrees: sign / class |
+|---|---|---|---|---|---|---|
+| Fallon / Carson Desert, NV (demo field) | 257 | 21 | +0.56 | +0.00 m/yr (stable, p = 0.844) | -0.38 cm/yr (declining, p = 0.015) | no / no |
+| Ames, IA (demo field) | 3 | 0 | — | too few long well records | — | — |
+| Tulare Basin, Central Valley, CA | 35 | 16 | +0.86 | -0.52 m/yr (declining, p = 0.001) | -1.22 cm/yr (likely declining, p = 0.074) | yes / yes |
+| Southern High Plains (Ogallala), TX | 382 | 13 | +0.90 | -0.22 m/yr (declining, p = 0.000) | -1.90 cm/yr (declining, p = 0.000) | yes / yes |
+| Central High Plains (Ogallala), KS | 345 | 14 | +0.87 | -0.42 m/yr (declining, p = 0.000) | -2.16 cm/yr (declining, p = 0.004) | yes / yes |
+| Platte valley / northern High Plains, NE | 1296 | 21 | +0.52 | +0.00 m/yr (stable, p = 0.947) | +0.39 cm/yr (stable, p = 0.319) | yes / yes |
+| Mississippi Embayment (Delta), AR | 653 | 21 | +0.23 | -0.02 m/yr (declining, p = 0.056) | +0.09 cm/yr (stable, p = 0.541) | no / no |
+| Phoenix basins, AZ | 17 | 16 | +0.23 | -0.04 m/yr (declining, p = 0.129) | -0.43 cm/yr (declining, p = 0.018) | yes / yes |
+| Eastern Snake River Plain, ID | 62 | 21 | +0.35 | -0.04 m/yr (declining, p = 0.076) | -0.36 cm/yr (likely declining, p = 0.089) | yes / yes |
+| Columbia Plateau, WA | 52 | 21 | +0.56 | -0.04 m/yr (declining, p = 0.044) | -0.49 cm/yr (declining, p = 0.000) | yes / yes |
+| Central Florida (Floridan aquifer) | 64 | 21 | +0.75 | +0.01 m/yr (stable, p = 0.604) | +0.76 cm/yr (rising, p = 0.002) | yes / no |
+| Long Island, NY | 628 | 21 | +0.07 | -0.01 m/yr (declining, p = 0.164) | +0.29 cm/yr (stable, p = 0.000) | no / no |
+
+**Summary.** GRACE's annual storage co-varied positively with the regional well index in **11/11** usable regions (median r = **0.56**; 0.86–0.90 in the Central Valley and the Ogallala). The trend direction agreed in **8/11** and the FieldShift class in **7/11**. The declining Ogallala, Central Valley, Snake River Plain, Columbia Plateau and Phoenix basins are all called declining or likely declining. Ames had too few long well records in the USGS database.
+
+**Disagreements, and what we changed because of them.**
+- **Fallon (demo field):** 257 wells are flat on median while GRACE's region is falling (−0.38 cm/yr, p = 0.015). The shallow aquifer under the Newlands Project is recharged by flood irrigation and canal seepage, while the ~300 km mascon also sees the drying Great Basin (soil, snow, lakes). We therefore renamed the card from "groundwater falling" to **"regional water reserves falling"**, added "check your well", and state the Fallon disagreement in every GRACE Why.
+- **Mississippi Embayment, Long Island:** wells decline slightly, GRACE is flat or rising — the wet humid-climate signal (soil and surface water) dominates the mascon. Central Florida: GRACE rising, wells flat.
+
+**Literature check outside the U.S.** (same period as each study, sign and order of magnitude only — the studies used other solutions and corrections):
+
+| Region | Published GRACE trend | Period | FieldShift, same period | FieldShift, 2002–2026 | Reference |
+|---|---|---|---|---|---|
+| NW India (Punjab, Haryana, Rajasthan) | -4.0 cm/yr | 2002–2008 | -6.57 cm/yr | -5.48 cm/yr (declining) | Rodell et al. 2009, Nature |
+| North China Plain | -2.2 cm/yr | 2003–2010 | -2.81 cm/yr | -1.39 cm/yr (likely declining) | Feng et al. 2013, WRR (groundwater) |
+| Tigris–Euphrates–western Iran | -2.7 cm/yr | 2003–2009 | -1.86 cm/yr | -0.55 cm/yr (stable) | Voss et al. 2013, WRR |
+| Northern Saudi Arabia aquifers | -0.9 cm/yr | 2002–2016 | -0.50 cm/yr | -0.44 cm/yr (declining) | Rodell et al. 2018, Nature |
+| Niger / central Sahel | +1.0 cm/yr | 2002–2016 | +0.76 cm/yr | +1.32 cm/yr (rising) | Rodell et al. 2018, Nature (wetting) |
+| California Central Valley | -2.0 cm/yr | 2003–2010 | -1.87 cm/yr | -1.22 cm/yr (likely declining) | Famiglietti et al. 2011, GRL |
+{"regions_usable": 11, "median_r_annual": 0.56, "r_positive": "11/11", "trend_sign_agrees": "8/11", "class_agrees": "7/11", "literature_sign_agrees": "6/6"}
+
+
+Sign agrees **6/6**; magnitudes are within a factor of ~2 of the published values (CRI mascons with JPL scale factors are expected to differ from the spherical-harmonic and GLDAS-corrected numbers of the older studies).
 
 ## Interpretation
 
 ### Where the models are strong
+- **Rain (V13).** Blending NASA POWER with GPM IMERG improved daily correlation with gauges at 16 of 18 stations on 6 continents, with the largest gains (+0.12 to +0.16) at Niamey, Bamako, Ouagadougou, Dakar, San Juan, Darwin, Ames and Wagga Wagga.
+- **Regional water storage (V14).** GRACE storage moved with groundwater levels in 11/11 U.S. aquifer regions and reproduced the sign of 6/6 published depletion or wetting trends.
 - **ET₀ (V1).**
   - At the temperate sites, ET₀ from NASA POWER agrees with ERA5 at daily r ≈ 0.97–0.98 and monthly r ≈ 0.99–1.00.
   - The water-balance driver is therefore robust.
@@ -503,7 +619,7 @@ Six of these cases are frozen as unit tests (`tests/test_heat_solar_fire.py`). T
   - Agreement with the USDM is only moderate.
   - Farm drought in the Lahontan Valley is a **water-supply** drought: Sierra snowpack and Lahontan Reservoir deliveries. Local rain cannot capture that.
   - Adding a 12-month SPEI helped (EXP-03).
-  - The proper fix is snowpack and reservoir data plus GRACE-FO storage (ROADMAP #1–2).
+  - The proper fix is snowpack and reservoir data plus GRACE-FO storage (ROADMAP #1–2). GRACE storage is now shown as regional context (V14), but it does not set the drought level.
 - **East Africa soil water (V2/V3).**
   - Correlations in Machakos are lower. The causes: bimodal short rains, 50 km rain grids missing convective storms, and known reanalysis biases.
   - Advice there carries lower confidence. Local rain-gauge input would help most.
@@ -535,6 +651,8 @@ Six of these cases are frozen as unit tests (`tests/test_heat_solar_fire.py`). T
 - **Middle East & North Africa yield level (V9):** irrigated and rain-fed systems share one regional factor, and the held-out error is not reduced.
 
 ### What was not validated (and why)
+- The GRACE indicator outside the U.S. against wells: open long well records were not found in time for India, the Sahel or Spain; only published GRACE trends were compared (V14).
+- IMERG above 45° latitude (snow) and in mountains beyond Bogotá: the blend is switched off poleward of 45°.
 - Field-level irrigation timing: this needs farm irrigation logs.
 - Absolute yields against sub-national (county/district) statistics: V9 uses national FAOSTAT yields. NASS county data needs an API key (ROADMAP #4).
 - Alfalfa and other forages: FAOSTAT publishes no forage yields.

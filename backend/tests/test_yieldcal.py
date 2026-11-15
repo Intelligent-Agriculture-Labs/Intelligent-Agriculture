@@ -1,4 +1,4 @@
-"""Global yield calibration (ADR-021, VALIDATION V9): factors, regions, climate zones, model wiring."""
+"""Global yield calibration (ADR-022, VALIDATION V10): factors, regions, climate zones, model wiring."""
 
 import datetime as dt
 import math

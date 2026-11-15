@@ -32,6 +32,7 @@ flowchart LR
 1. **Context.** `engine/context.build(lat, lon, as_of)` assembles one daily weather record:
    - NASA POWER from 1984 → latest;
    - the Open-Meteo past 14 days bridge POWER's latency;
+   - GPM IMERG daily rain (also from the POWER API) is fetched in parallel and blended 50/50 with POWER rain between 45° S and 45° N (`science/rainblend.py`); a POWER-only copy is kept for the AI drought classifier and the climate trends;
    - 16 forecast days on top.
    Each day carries a provenance flag (observed, bridge or forecast). Elevation and slope come from SRTM, soil from SoilGrids. In replay mode (`as_of` in the past), later POWER days act as a perfect forecast, and hourly T/RH come from POWER hourly.
 2. **Satellite enrichment** runs in parallel with a timeout: MODIS NDVI, MOD16, SMAP and LST from ORNL. If it is slow, advice goes out without those layers, and the sources list says "unavailable".
@@ -72,7 +73,7 @@ One image (root `Dockerfile`). Stage 1 exports the Expo web bundle; stage 2 is t
 ## Repository layout
 ```
 backend/            FastAPI app (fieldshift/), tests/, demo_cache/, Dockerfile
-  fieldshift/data/      http.py (cache/fallbacks), sources.py (adapters)
+  fieldshift/data/      http.py (cache/fallbacks), sources.py (adapters, incl. GPM IMERG via POWER), grace.py + grace/ (global GRACE-FO asset)
   fieldshift/science/   et0, soil, cropmodel, drought, drought_ml, disease, pests, climate, rotation, terrain, satellite, fielddetect
   fieldshift/models/    trained drought classifier (joblib + metadata)
   fieldshift/engine/    context, service, messages, maps (terrain), planner, satellite_service, fields (detect), farms (sync)

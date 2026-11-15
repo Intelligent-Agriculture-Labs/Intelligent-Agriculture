@@ -21,8 +21,26 @@ COMPASS = {
     "es": {"N": "N", "NE": "NE", "E": "E", "SE": "SE", "S": "S", "SW": "SO", "W": "O", "NW": "NO"},
     "fr": {"N": "N", "NE": "NE", "E": "E", "SE": "SE", "S": "S", "SW": "SO", "W": "O", "NW": "NO"},
     "de": {"N": "N", "NE": "NO", "E": "O", "SE": "SO", "S": "S", "SW": "SW", "W": "W", "NW": "NW"},
-    "sw": {"N": "kaskazini", "NE": "kaskazini-mashariki", "E": "mashariki", "SE": "kusini-mashariki", "S": "kusini", "SW": "kusini-magharibi", "W": "magharibi", "NW": "kaskazini-magharibi"},
-    "hi": {"N": "उत्तर", "NE": "उत्तर-पूर्व", "E": "पूर्व", "SE": "दक्षिण-पूर्व", "S": "दक्षिण", "SW": "दक्षिण-पश्चिम", "W": "पश्चिम", "NW": "उत्तर-पश्चिम"},
+    "sw": {
+        "N": "kaskazini",
+        "NE": "kaskazini-mashariki",
+        "E": "mashariki",
+        "SE": "kusini-mashariki",
+        "S": "kusini",
+        "SW": "kusini-magharibi",
+        "W": "magharibi",
+        "NW": "kaskazini-magharibi",
+    },
+    "hi": {
+        "N": "उत्तर",
+        "NE": "उत्तर-पूर्व",
+        "E": "पूर्व",
+        "SE": "दक्षिण-पूर्व",
+        "S": "दक्षिण",
+        "SW": "दक्षिण-पश्चिम",
+        "W": "पश्चिम",
+        "NW": "उत्तर-पश्चिम",
+    },
 }
 
 
@@ -170,7 +188,9 @@ def fire_cards(
         "(Super-SMS on the combine), or incorporate with a mulcher + disc 2–3 weeks before sowing. Shyamsundar et al. (2019, Science) found Happy Seeder sowing the most profitable option.",
     ]
     if fires:
-        steps.append(f"NASA FIRMS currently shows {len(fires)} fires within {SMOKE_KM:.0f} km — burning is happening around you now.")
+        steps.append(
+            f"NASA FIRMS currently shows {len(fires)} fires within {SMOKE_KM:.0f} km — burning is happening around you now."
+        )
     out.append(
         {
             "id": "residue_no_burn",

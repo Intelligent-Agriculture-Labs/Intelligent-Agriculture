@@ -37,7 +37,9 @@ def effective_rain_mm(p_month_mm: float) -> float:
     return p * (125.0 - 0.2 * p) / 125.0 if p <= 250.0 else 125.0 + 0.1 * p
 
 
-def pv_temperature_factor(t_air_c: float, gamma: float = -0.004, ross_k: float = 0.03, g_wm2: float = 800.0) -> float:
+def pv_temperature_factor(
+    t_air_c: float, gamma: float = -0.004, ross_k: float = 0.03, g_wm2: float = 800.0
+) -> float:
     tc = t_air_c + ross_k * g_wm2
     return min(1.0, 1.0 + gamma * (tc - 25.0))
 
@@ -123,7 +125,9 @@ def size_system(
         vol = gross / nd * 10.0 * area_ha  # 1 mm on 1 ha = 10 m³
         eh = hydraulic_kwh(vol, head_m)
         pr = pv_temperature_factor(tmax) * other_losses
-        rows.append(Month(m, et0, kc, rain, peff, net, gross, vol, eh, psh, tmax, pr, pv_kwp(eh, psh, eta_mp, pr)))
+        rows.append(
+            Month(m, et0, kc, rain, peff, net, gross, vol, eh, psh, tmax, pr, pv_kwp(eh, psh, eta_mp, pr))
+        )
     if not rows:
         raise ValueError("no season months")
     dm = max(rows, key=lambda r: r.kwp_needed)

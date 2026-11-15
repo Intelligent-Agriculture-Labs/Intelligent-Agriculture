@@ -1,8 +1,8 @@
 # Roadmap
 
 1. **Earthdata Login integration** (token in env):
-   - GPM IMERG rain (replace or blend with POWER);
-   - GRACE-FO groundwater/storage anomaly in the drought status;
+   - ✅ GPM IMERG rain, blended with POWER where validated (ADR-025, V13). Next: IMERG **Late** (~14 h latency) to replace the climatological bridge for the last 2 months, once the GES DISC EULA is approved on the project's Earthdata account; validate above 45° (snow) and in mountains (Bogotá was the one clear failure).
+   - ✅ GRACE/GRACE-FO regional water-storage trend (ADR-025, V14). Next: the weekly GRACE data-assimilation groundwater and root-zone **percentiles** (`GRACEDADM_CLSM025GL_7D`, GES DISC, same EULA) as a *current* groundwater-drought indicator; subtract modelled soil moisture and snow (GLDAS) to isolate groundwater; refresh the asset monthly with `scripts/grace_extract.py`.
    - HLS 30 m NDVI for field-scale scouting maps;
    - full ECOSTRESS ET/ESI for stress hotspots.
 2. **Snowpack and water-supply drought for irrigated basins:**

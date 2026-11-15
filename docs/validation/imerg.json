@@ -1,0 +1,1948 @@
+{
+ "generated": "2026-11-15",
+ "period": [
+  "2001-01-01",
+  "2025-12-31"
+ ],
+ "reference": "GHCN-Daily (NOAA NCEI), QC-flagged values dropped",
+ "caveat": "IMERG Final is calibrated with GPCC monthly gauge analyses and MERRA-2 corrected precipitation with CPC gauges; GHCN stations contribute to both, so the test is not fully independent.",
+ "sites": [
+  {
+   "site": "fallon_nv",
+   "station": "USC00262780",
+   "name": "Fallon Exp. Stn, Nevada (demo field)",
+   "continent": "North America",
+   "lat": 39.4567,
+   "lon": -118.7781,
+   "zone": "extratropics",
+   "lag_days": 0,
+   "gauge_days": 8285,
+   "months": 273,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.616,
+     "wet_day_csi": 0.349,
+     "monthly_r": 0.772,
+     "monthly_bias_pct": 51.0,
+     "monthly_kge": 0.35,
+     "anom3_r": 0.804
+    },
+    "I": {
+     "daily_r": 0.553,
+     "wet_day_csi": 0.304,
+     "monthly_r": 0.83,
+     "monthly_bias_pct": 13.0,
+     "monthly_kge": 0.785,
+     "anom3_r": 0.881
+    },
+    "B50": {
+     "daily_r": 0.66,
+     "wet_day_csi": 0.359,
+     "monthly_r": 0.836,
+     "monthly_bias_pct": 32.0,
+     "monthly_kge": 0.626,
+     "anom3_r": 0.863
+    },
+    "MR": {
+     "daily_r": 0.645,
+     "wet_day_csi": 0.346,
+     "monthly_r": 0.828,
+     "monthly_bias_pct": 14.0,
+     "monthly_kge": 0.777,
+     "anom3_r": 0.878
+    },
+    "CR": {
+     "daily_r": 0.625,
+     "wet_day_csi": 0.349,
+     "monthly_r": 0.788,
+     "monthly_bias_pct": 14.0,
+     "monthly_kge": 0.747,
+     "anom3_r": 0.816
+    },
+    "CR50": {
+     "daily_r": 0.625,
+     "wet_day_csi": 0.349,
+     "monthly_r": 0.791,
+     "monthly_bias_pct": 32.5,
+     "monthly_kge": 0.586,
+     "anom3_r": 0.817
+    },
+    "B30": {
+     "daily_r": 0.655,
+     "wet_day_csi": 0.362,
+     "monthly_r": 0.815,
+     "monthly_bias_pct": 39.6,
+     "monthly_kge": 0.525,
+     "anom3_r": 0.841
+    },
+    "B70": {
+     "daily_r": 0.637,
+     "wet_day_csi": 0.35,
+     "monthly_r": 0.847,
+     "monthly_bias_pct": 24.4,
+     "monthly_kge": 0.709,
+     "anom3_r": 0.88
+    },
+    "BMR": {
+     "daily_r": 0.658,
+     "wet_day_csi": 0.36,
+     "monthly_r": 0.829,
+     "monthly_bias_pct": 13.1,
+     "monthly_kge": 0.783,
+     "anom3_r": 0.88
+    }
+   }
+  },
+  {
+   "site": "ames_ia",
+   "station": "USC00130200",
+   "name": "Ames 8 WSW, Iowa (demo field)",
+   "continent": "North America",
+   "lat": 41.9894,
+   "lon": -93.6883,
+   "zone": "extratropics",
+   "lag_days": 0,
+   "gauge_days": 9122,
+   "months": 300,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.593,
+     "wet_day_csi": 0.506,
+     "monthly_r": 0.933,
+     "monthly_bias_pct": -6.7,
+     "monthly_kge": 0.815,
+     "anom3_r": 0.894
+    },
+    "I": {
+     "daily_r": 0.735,
+     "wet_day_csi": 0.552,
+     "monthly_r": 0.904,
+     "monthly_bias_pct": 8.7,
+     "monthly_kge": 0.865,
+     "anom3_r": 0.863
+    },
+    "B50": {
+     "daily_r": 0.735,
+     "wet_day_csi": 0.546,
+     "monthly_r": 0.926,
+     "monthly_bias_pct": 1.0,
+     "monthly_kge": 0.87,
+     "anom3_r": 0.889
+    },
+    "MR": {
+     "daily_r": 0.581,
+     "wet_day_csi": 0.506,
+     "monthly_r": 0.905,
+     "monthly_bias_pct": 8.8,
+     "monthly_kge": 0.865,
+     "anom3_r": 0.864
+    },
+    "CR": {
+     "daily_r": 0.591,
+     "wet_day_csi": 0.503,
+     "monthly_r": 0.929,
+     "monthly_bias_pct": 8.8,
+     "monthly_kge": 0.879,
+     "anom3_r": 0.896
+    },
+    "CR50": {
+     "daily_r": 0.592,
+     "wet_day_csi": 0.505,
+     "monthly_r": 0.931,
+     "monthly_bias_pct": 1.0,
+     "monthly_kge": 0.877,
+     "anom3_r": 0.895
+    },
+    "B30": {
+     "daily_r": 0.7,
+     "wet_day_csi": 0.539,
+     "monthly_r": 0.931,
+     "monthly_bias_pct": -2.1,
+     "monthly_kge": 0.851,
+     "anom3_r": 0.894
+    },
+    "B70": {
+     "daily_r": 0.746,
+     "wet_day_csi": 0.548,
+     "monthly_r": 0.919,
+     "monthly_bias_pct": 4.1,
+     "monthly_kge": 0.878,
+     "anom3_r": 0.881
+    },
+    "BMR": {
+     "daily_r": 0.725,
+     "wet_day_csi": 0.537,
+     "monthly_r": 0.904,
+     "monthly_bias_pct": 8.7,
+     "monthly_kge": 0.865,
+     "anom3_r": 0.863
+    }
+   }
+  },
+  {
+   "site": "cordoba_es",
+   "station": "SP000008410",
+   "name": "C\u00f3rdoba airport, Spain (demo field)",
+   "continent": "Europe",
+   "lat": 37.8442,
+   "lon": -4.8486,
+   "zone": "extratropics",
+   "lag_days": 0,
+   "gauge_days": 8843,
+   "months": 300,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.831,
+     "wet_day_csi": 0.646,
+     "monthly_r": 0.978,
+     "monthly_bias_pct": -15.5,
+     "monthly_kge": 0.736,
+     "anom3_r": 0.973
+    },
+    "I": {
+     "daily_r": 0.724,
+     "wet_day_csi": 0.548,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": -0.5,
+     "monthly_kge": 0.91,
+     "anom3_r": 0.931
+    },
+    "B50": {
+     "daily_r": 0.807,
+     "wet_day_csi": 0.641,
+     "monthly_r": 0.968,
+     "monthly_bias_pct": -8.0,
+     "monthly_kge": 0.828,
+     "anom3_r": 0.96
+    },
+    "MR": {
+     "daily_r": 0.805,
+     "wet_day_csi": 0.624,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": -0.3,
+     "monthly_kge": 0.909,
+     "anom3_r": 0.932
+    },
+    "CR": {
+     "daily_r": 0.828,
+     "wet_day_csi": 0.639,
+     "monthly_r": 0.97,
+     "monthly_bias_pct": -0.1,
+     "monthly_kge": 0.911,
+     "anom3_r": 0.968
+    },
+    "CR50": {
+     "daily_r": 0.83,
+     "wet_day_csi": 0.642,
+     "monthly_r": 0.974,
+     "monthly_bias_pct": -7.8,
+     "monthly_kge": 0.83,
+     "anom3_r": 0.971
+    },
+    "B30": {
+     "daily_r": 0.828,
+     "wet_day_csi": 0.648,
+     "monthly_r": 0.974,
+     "monthly_bias_pct": -11.0,
+     "monthly_kge": 0.791,
+     "anom3_r": 0.968
+    },
+    "B70": {
+     "daily_r": 0.777,
+     "wet_day_csi": 0.61,
+     "monthly_r": 0.961,
+     "monthly_bias_pct": -5.0,
+     "monthly_kge": 0.864,
+     "anom3_r": 0.95
+    },
+    "BMR": {
+     "daily_r": 0.789,
+     "wet_day_csi": 0.623,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": -0.4,
+     "monthly_kge": 0.909,
+     "anom3_r": 0.931
+    }
+   }
+  },
+  {
+   "site": "jaen_es",
+   "station": "SPE00120170",
+   "name": "Ja\u00e9n, Spain",
+   "continent": "Europe",
+   "lat": 37.7781,
+   "lon": -3.8092,
+   "zone": "extratropics",
+   "lag_days": 0,
+   "gauge_days": 9077,
+   "months": 300,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.767,
+     "wet_day_csi": 0.612,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": -15.7,
+     "monthly_kge": 0.713,
+     "anom3_r": 0.94
+    },
+    "I": {
+     "daily_r": 0.693,
+     "wet_day_csi": 0.523,
+     "monthly_r": 0.939,
+     "monthly_bias_pct": 3.2,
+     "monthly_kge": 0.919,
+     "anom3_r": 0.93
+    },
+    "B50": {
+     "daily_r": 0.77,
+     "wet_day_csi": 0.606,
+     "monthly_r": 0.951,
+     "monthly_bias_pct": -6.3,
+     "monthly_kge": 0.833,
+     "anom3_r": 0.944
+    },
+    "MR": {
+     "daily_r": 0.759,
+     "wet_day_csi": 0.603,
+     "monthly_r": 0.938,
+     "monthly_bias_pct": 3.2,
+     "monthly_kge": 0.918,
+     "anom3_r": 0.93
+    },
+    "CR": {
+     "daily_r": 0.765,
+     "wet_day_csi": 0.602,
+     "monthly_r": 0.943,
+     "monthly_bias_pct": 3.2,
+     "monthly_kge": 0.903,
+     "anom3_r": 0.937
+    },
+    "CR50": {
+     "daily_r": 0.767,
+     "wet_day_csi": 0.608,
+     "monthly_r": 0.946,
+     "monthly_bias_pct": -6.2,
+     "monthly_kge": 0.825,
+     "anom3_r": 0.939
+    },
+    "B30": {
+     "daily_r": 0.785,
+     "wet_day_csi": 0.621,
+     "monthly_r": 0.952,
+     "monthly_bias_pct": -10.1,
+     "monthly_kge": 0.785,
+     "anom3_r": 0.946
+    },
+    "B70": {
+     "daily_r": 0.742,
+     "wet_day_csi": 0.581,
+     "monthly_r": 0.948,
+     "monthly_bias_pct": -2.5,
+     "monthly_kge": 0.878,
+     "anom3_r": 0.94
+    },
+    "BMR": {
+     "daily_r": 0.757,
+     "wet_day_csi": 0.596,
+     "monthly_r": 0.939,
+     "monthly_bias_pct": 3.2,
+     "monthly_kge": 0.919,
+     "anom3_r": 0.93
+    }
+   }
+  },
+  {
+   "site": "nairobi_ke",
+   "station": "KE000063740",
+   "name": "Nairobi JKIA, Kenya (Machakos demo)",
+   "continent": "Africa",
+   "lat": -1.319,
+   "lon": 36.928,
+   "zone": "tropics",
+   "lag_days": 0,
+   "gauge_days": 2863,
+   "months": 41,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.248,
+     "wet_day_csi": 0.509,
+     "monthly_r": 0.704,
+     "monthly_bias_pct": -36.2,
+     "monthly_kge": 0.439,
+     "anom3_r": 0.825
+    },
+    "I": {
+     "daily_r": 0.33,
+     "wet_day_csi": 0.51,
+     "monthly_r": 0.775,
+     "monthly_bias_pct": 1.0,
+     "monthly_kge": 0.769,
+     "anom3_r": 0.838
+    },
+    "B50": {
+     "daily_r": 0.34,
+     "wet_day_csi": 0.535,
+     "monthly_r": 0.765,
+     "monthly_bias_pct": -17.6,
+     "monthly_kge": 0.67,
+     "anom3_r": 0.846
+    },
+    "MR": {
+     "daily_r": 0.269,
+     "wet_day_csi": 0.529,
+     "monthly_r": 0.758,
+     "monthly_bias_pct": -0.9,
+     "monthly_kge": 0.749,
+     "anom3_r": 0.812
+    },
+    "CR": {
+     "daily_r": 0.246,
+     "wet_day_csi": 0.522,
+     "monthly_r": 0.704,
+     "monthly_bias_pct": 7.0,
+     "monthly_kge": 0.649,
+     "anom3_r": 0.822
+    },
+    "CR50": {
+     "daily_r": 0.247,
+     "wet_day_csi": 0.516,
+     "monthly_r": 0.705,
+     "monthly_bias_pct": -14.6,
+     "monthly_kge": 0.664,
+     "anom3_r": 0.824
+    },
+    "B30": {
+     "daily_r": 0.329,
+     "wet_day_csi": 0.534,
+     "monthly_r": 0.75,
+     "monthly_bias_pct": -25.1,
+     "monthly_kge": 0.583,
+     "anom3_r": 0.844
+    },
+    "B70": {
+     "daily_r": 0.338,
+     "wet_day_csi": 0.529,
+     "monthly_r": 0.773,
+     "monthly_bias_pct": -10.1,
+     "monthly_kge": 0.74,
+     "anom3_r": 0.844
+    },
+    "BMR": {
+     "daily_r": 0.342,
+     "wet_day_csi": 0.538,
+     "monthly_r": 0.773,
+     "monthly_bias_pct": 0.2,
+     "monthly_kge": 0.767,
+     "anom3_r": 0.829
+    }
+   }
+  },
+  {
+   "site": "niamey_ne",
+   "station": "NG000001052",
+   "name": "Niamey, Niger",
+   "continent": "Africa",
+   "lat": 13.481,
+   "lon": 2.17,
+   "zone": "tropics",
+   "lag_days": 0,
+   "gauge_days": 2573,
+   "months": 52,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.32,
+     "wet_day_csi": 0.396,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": 4.1,
+     "monthly_kge": 0.931,
+     "anom3_r": 0.979
+    },
+    "I": {
+     "daily_r": 0.444,
+     "wet_day_csi": 0.424,
+     "monthly_r": 0.973,
+     "monthly_bias_pct": 2.9,
+     "monthly_kge": 0.96,
+     "anom3_r": 0.994
+    },
+    "B50": {
+     "daily_r": 0.477,
+     "wet_day_csi": 0.45,
+     "monthly_r": 0.975,
+     "monthly_bias_pct": 3.5,
+     "monthly_kge": 0.957,
+     "anom3_r": 0.992
+    },
+    "MR": {
+     "daily_r": 0.328,
+     "wet_day_csi": 0.402,
+     "monthly_r": 0.967,
+     "monthly_bias_pct": 4.9,
+     "monthly_kge": 0.934,
+     "anom3_r": 0.988
+    },
+    "CR": {
+     "daily_r": 0.321,
+     "wet_day_csi": 0.397,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": 2.5,
+     "monthly_kge": 0.941,
+     "anom3_r": 0.98
+    },
+    "CR50": {
+     "daily_r": 0.32,
+     "wet_day_csi": 0.396,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": 3.3,
+     "monthly_kge": 0.938,
+     "anom3_r": 0.979
+    },
+    "B30": {
+     "daily_r": 0.441,
+     "wet_day_csi": 0.437,
+     "monthly_r": 0.967,
+     "monthly_bias_pct": 3.7,
+     "monthly_kge": 0.95,
+     "anom3_r": 0.989
+    },
+    "B70": {
+     "daily_r": 0.476,
+     "wet_day_csi": 0.457,
+     "monthly_r": 0.978,
+     "monthly_bias_pct": 3.3,
+     "monthly_kge": 0.96,
+     "anom3_r": 0.994
+    },
+    "BMR": {
+     "daily_r": 0.473,
+     "wet_day_csi": 0.454,
+     "monthly_r": 0.975,
+     "monthly_bias_pct": 3.7,
+     "monthly_kge": 0.951,
+     "anom3_r": 0.993
+    }
+   }
+  },
+  {
+   "site": "ouaga_bf",
+   "station": "UVM00065503",
+   "name": "Ouagadougou, Burkina Faso",
+   "continent": "Africa",
+   "lat": 12.353,
+   "lon": -1.512,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 2870,
+   "months": 59,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.259,
+     "wet_day_csi": 0.451,
+     "monthly_r": 0.884,
+     "monthly_bias_pct": 0.9,
+     "monthly_kge": 0.881,
+     "anom3_r": 0.96
+    },
+    "I": {
+     "daily_r": 0.361,
+     "wet_day_csi": 0.472,
+     "monthly_r": 0.916,
+     "monthly_bias_pct": 4.0,
+     "monthly_kge": 0.9,
+     "anom3_r": 0.97
+    },
+    "B50": {
+     "daily_r": 0.388,
+     "wet_day_csi": 0.463,
+     "monthly_r": 0.918,
+     "monthly_bias_pct": 2.4,
+     "monthly_kge": 0.91,
+     "anom3_r": 0.973
+    },
+    "MR": {
+     "daily_r": 0.277,
+     "wet_day_csi": 0.447,
+     "monthly_r": 0.932,
+     "monthly_bias_pct": 2.2,
+     "monthly_kge": 0.919,
+     "anom3_r": 0.978
+    },
+    "CR": {
+     "daily_r": 0.255,
+     "wet_day_csi": 0.449,
+     "monthly_r": 0.879,
+     "monthly_bias_pct": 5.3,
+     "monthly_kge": 0.863,
+     "anom3_r": 0.957
+    },
+    "CR50": {
+     "daily_r": 0.258,
+     "wet_day_csi": 0.45,
+     "monthly_r": 0.882,
+     "monthly_bias_pct": 3.1,
+     "monthly_kge": 0.875,
+     "anom3_r": 0.959
+    },
+    "B30": {
+     "daily_r": 0.363,
+     "wet_day_csi": 0.464,
+     "monthly_r": 0.908,
+     "monthly_bias_pct": 1.8,
+     "monthly_kge": 0.905,
+     "anom3_r": 0.97
+    },
+    "B70": {
+     "daily_r": 0.384,
+     "wet_day_csi": 0.474,
+     "monthly_r": 0.922,
+     "monthly_bias_pct": 3.1,
+     "monthly_kge": 0.908,
+     "anom3_r": 0.974
+    },
+    "BMR": {
+     "daily_r": 0.388,
+     "wet_day_csi": 0.462,
+     "monthly_r": 0.928,
+     "monthly_bias_pct": 3.4,
+     "monthly_kge": 0.911,
+     "anom3_r": 0.975
+    }
+   }
+  },
+  {
+   "site": "bamako_ml",
+   "station": "MLM00061291",
+   "name": "Bamako-S\u00e9nou, Mali",
+   "continent": "Africa",
+   "lat": 12.534,
+   "lon": -7.95,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 2397,
+   "months": 38,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.204,
+     "wet_day_csi": 0.508,
+     "monthly_r": 0.768,
+     "monthly_bias_pct": 5.3,
+     "monthly_kge": 0.733,
+     "anom3_r": 0.871
+    },
+    "I": {
+     "daily_r": 0.321,
+     "wet_day_csi": 0.505,
+     "monthly_r": 0.918,
+     "monthly_bias_pct": 3.3,
+     "monthly_kge": 0.911,
+     "anom3_r": 0.963
+    },
+    "B50": {
+     "daily_r": 0.339,
+     "wet_day_csi": 0.521,
+     "monthly_r": 0.89,
+     "monthly_bias_pct": 4.3,
+     "monthly_kge": 0.882,
+     "anom3_r": 0.929
+    },
+    "MR": {
+     "daily_r": 0.27,
+     "wet_day_csi": 0.509,
+     "monthly_r": 0.924,
+     "monthly_bias_pct": -2.7,
+     "monthly_kge": 0.892,
+     "anom3_r": 0.966
+    },
+    "CR": {
+     "daily_r": 0.209,
+     "wet_day_csi": 0.506,
+     "monthly_r": 0.776,
+     "monthly_bias_pct": 9.0,
+     "monthly_kge": 0.7,
+     "anom3_r": 0.873
+    },
+    "CR50": {
+     "daily_r": 0.207,
+     "wet_day_csi": 0.506,
+     "monthly_r": 0.773,
+     "monthly_bias_pct": 7.1,
+     "monthly_kge": 0.72,
+     "anom3_r": 0.872
+    },
+    "B30": {
+     "daily_r": 0.301,
+     "wet_day_csi": 0.519,
+     "monthly_r": 0.848,
+     "monthly_bias_pct": 4.7,
+     "monthly_kge": 0.838,
+     "anom3_r": 0.908
+    },
+    "B70": {
+     "daily_r": 0.345,
+     "wet_day_csi": 0.527,
+     "monthly_r": 0.916,
+     "monthly_bias_pct": 3.9,
+     "monthly_kge": 0.905,
+     "anom3_r": 0.948
+    },
+    "BMR": {
+     "daily_r": 0.355,
+     "wet_day_csi": 0.522,
+     "monthly_r": 0.929,
+     "monthly_bias_pct": 0.8,
+     "monthly_kge": 0.916,
+     "anom3_r": 0.966
+    }
+   }
+  },
+  {
+   "site": "dakar_sn",
+   "station": "SG000061641",
+   "name": "Dakar-Yoff, Senegal",
+   "continent": "Africa",
+   "lat": 14.733,
+   "lon": -17.5,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 2114,
+   "months": 49,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.363,
+     "wet_day_csi": 0.454,
+     "monthly_r": 0.831,
+     "monthly_bias_pct": -2.1,
+     "monthly_kge": 0.7,
+     "anom3_r": 0.943
+    },
+    "I": {
+     "daily_r": 0.462,
+     "wet_day_csi": 0.453,
+     "monthly_r": 0.908,
+     "monthly_bias_pct": -4.9,
+     "monthly_kge": 0.738,
+     "anom3_r": 0.975
+    },
+    "B50": {
+     "daily_r": 0.489,
+     "wet_day_csi": 0.457,
+     "monthly_r": 0.89,
+     "monthly_bias_pct": -3.5,
+     "monthly_kge": 0.715,
+     "anom3_r": 0.965
+    },
+    "MR": {
+     "daily_r": 0.398,
+     "wet_day_csi": 0.451,
+     "monthly_r": 0.917,
+     "monthly_bias_pct": -4.8,
+     "monthly_kge": 0.751,
+     "anom3_r": 0.964
+    },
+    "CR": {
+     "daily_r": 0.365,
+     "wet_day_csi": 0.451,
+     "monthly_r": 0.835,
+     "monthly_bias_pct": -6.5,
+     "monthly_kge": 0.675,
+     "anom3_r": 0.945
+    },
+    "CR50": {
+     "daily_r": 0.364,
+     "wet_day_csi": 0.452,
+     "monthly_r": 0.833,
+     "monthly_bias_pct": -4.3,
+     "monthly_kge": 0.688,
+     "anom3_r": 0.944
+    },
+    "B30": {
+     "daily_r": 0.461,
+     "wet_day_csi": 0.457,
+     "monthly_r": 0.871,
+     "monthly_bias_pct": -2.9,
+     "monthly_kge": 0.708,
+     "anom3_r": 0.958
+    },
+    "B70": {
+     "daily_r": 0.489,
+     "wet_day_csi": 0.454,
+     "monthly_r": 0.902,
+     "monthly_bias_pct": -4.0,
+     "monthly_kge": 0.722,
+     "anom3_r": 0.971
+    },
+    "BMR": {
+     "daily_r": 0.489,
+     "wet_day_csi": 0.456,
+     "monthly_r": 0.914,
+     "monthly_bias_pct": -5.2,
+     "monthly_kge": 0.739,
+     "anom3_r": 0.972
+    }
+   }
+  },
+  {
+   "site": "delhi_in",
+   "station": "IN022021900",
+   "name": "New Delhi Safdarjung, India",
+   "continent": "Asia",
+   "lat": 28.583,
+   "lon": 77.2,
+   "zone": "extratropics",
+   "lag_days": 1,
+   "gauge_days": 2820,
+   "months": 53,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.646,
+     "wet_day_csi": 0.529,
+     "monthly_r": 0.964,
+     "monthly_bias_pct": -8.5,
+     "monthly_kge": 0.778,
+     "anom3_r": 0.971
+    },
+    "I": {
+     "daily_r": 0.577,
+     "wet_day_csi": 0.591,
+     "monthly_r": 0.934,
+     "monthly_bias_pct": -13.0,
+     "monthly_kge": 0.675,
+     "anom3_r": 0.974
+    },
+    "B50": {
+     "daily_r": 0.684,
+     "wet_day_csi": 0.582,
+     "monthly_r": 0.961,
+     "monthly_bias_pct": -10.7,
+     "monthly_kge": 0.721,
+     "anom3_r": 0.978
+    },
+    "MR": {
+     "daily_r": 0.622,
+     "wet_day_csi": 0.532,
+     "monthly_r": 0.929,
+     "monthly_bias_pct": -17.5,
+     "monthly_kge": 0.626,
+     "anom3_r": 0.98
+    },
+    "CR": {
+     "daily_r": 0.628,
+     "wet_day_csi": 0.531,
+     "monthly_r": 0.965,
+     "monthly_bias_pct": -18.3,
+     "monthly_kge": 0.648,
+     "anom3_r": 0.971
+    },
+    "CR50": {
+     "daily_r": 0.639,
+     "wet_day_csi": 0.529,
+     "monthly_r": 0.965,
+     "monthly_bias_pct": -13.4,
+     "monthly_kge": 0.713,
+     "anom3_r": 0.971
+    },
+    "B30": {
+     "daily_r": 0.689,
+     "wet_day_csi": 0.559,
+     "monthly_r": 0.965,
+     "monthly_bias_pct": -9.9,
+     "monthly_kge": 0.742,
+     "anom3_r": 0.977
+    },
+    "B70": {
+     "daily_r": 0.652,
+     "wet_day_csi": 0.594,
+     "monthly_r": 0.953,
+     "monthly_bias_pct": -11.6,
+     "monthly_kge": 0.701,
+     "anom3_r": 0.978
+    },
+    "BMR": {
+     "daily_r": 0.663,
+     "wet_day_csi": 0.574,
+     "monthly_r": 0.935,
+     "monthly_bias_pct": -15.5,
+     "monthly_kge": 0.645,
+     "anom3_r": 0.979
+    }
+   }
+  },
+  {
+   "site": "pune_in",
+   "station": "IN012190100",
+   "name": "Pune, India",
+   "continent": "Asia",
+   "lat": 18.533,
+   "lon": 73.85,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 3567,
+   "months": 100,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.67,
+     "wet_day_csi": 0.599,
+     "monthly_r": 0.843,
+     "monthly_bias_pct": 136.7,
+     "monthly_kge": -0.902,
+     "anom3_r": 0.917
+    },
+    "I": {
+     "daily_r": 0.628,
+     "wet_day_csi": 0.556,
+     "monthly_r": 0.841,
+     "monthly_bias_pct": 64.2,
+     "monthly_kge": 0.072,
+     "anom3_r": 0.897
+    },
+    "B50": {
+     "daily_r": 0.714,
+     "wet_day_csi": 0.619,
+     "monthly_r": 0.864,
+     "monthly_bias_pct": 100.5,
+     "monthly_kge": -0.378,
+     "anom3_r": 0.916
+    },
+    "MR": {
+     "daily_r": 0.675,
+     "wet_day_csi": 0.614,
+     "monthly_r": 0.851,
+     "monthly_bias_pct": 64.5,
+     "monthly_kge": 0.093,
+     "anom3_r": 0.904
+    },
+    "CR": {
+     "daily_r": 0.681,
+     "wet_day_csi": 0.61,
+     "monthly_r": 0.862,
+     "monthly_bias_pct": 66.4,
+     "monthly_kge": 0.125,
+     "anom3_r": 0.922
+    },
+    "CR50": {
+     "daily_r": 0.676,
+     "wet_day_csi": 0.605,
+     "monthly_r": 0.852,
+     "monthly_bias_pct": 101.6,
+     "monthly_kge": -0.384,
+     "anom3_r": 0.92
+    },
+    "B30": {
+     "daily_r": 0.712,
+     "wet_day_csi": 0.611,
+     "monthly_r": 0.858,
+     "monthly_bias_pct": 115.0,
+     "monthly_kge": -0.581,
+     "anom3_r": 0.917
+    },
+    "B70": {
+     "daily_r": 0.692,
+     "wet_day_csi": 0.637,
+     "monthly_r": 0.863,
+     "monthly_bias_pct": 86.0,
+     "monthly_kge": -0.186,
+     "anom3_r": 0.911
+    },
+    "BMR": {
+     "daily_r": 0.708,
+     "wet_day_csi": 0.628,
+     "monthly_r": 0.849,
+     "monthly_bias_pct": 64.4,
+     "monthly_kge": 0.088,
+     "anom3_r": 0.902
+    }
+   }
+  },
+  {
+   "site": "hyderabad_in",
+   "station": "IN001080500",
+   "name": "Hyderabad Begumpet, India",
+   "continent": "Asia",
+   "lat": 17.45,
+   "lon": 78.467,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 3498,
+   "months": 88,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.747,
+     "wet_day_csi": 0.613,
+     "monthly_r": 0.943,
+     "monthly_bias_pct": -1.5,
+     "monthly_kge": 0.896,
+     "anom3_r": 0.965
+    },
+    "I": {
+     "daily_r": 0.655,
+     "wet_day_csi": 0.57,
+     "monthly_r": 0.938,
+     "monthly_bias_pct": 9.8,
+     "monthly_kge": 0.878,
+     "anom3_r": 0.965
+    },
+    "B50": {
+     "daily_r": 0.754,
+     "wet_day_csi": 0.596,
+     "monthly_r": 0.95,
+     "monthly_bias_pct": 4.2,
+     "monthly_kge": 0.927,
+     "anom3_r": 0.97
+    },
+    "MR": {
+     "daily_r": 0.755,
+     "wet_day_csi": 0.602,
+     "monthly_r": 0.951,
+     "monthly_bias_pct": 7.6,
+     "monthly_kge": 0.91,
+     "anom3_r": 0.969
+    },
+    "CR": {
+     "daily_r": 0.744,
+     "wet_day_csi": 0.606,
+     "monthly_r": 0.953,
+     "monthly_bias_pct": 9.0,
+     "monthly_kge": 0.894,
+     "anom3_r": 0.97
+    },
+    "CR50": {
+     "daily_r": 0.747,
+     "wet_day_csi": 0.612,
+     "monthly_r": 0.95,
+     "monthly_bias_pct": 3.8,
+     "monthly_kge": 0.931,
+     "anom3_r": 0.969
+    },
+    "B30": {
+     "daily_r": 0.77,
+     "wet_day_csi": 0.601,
+     "monthly_r": 0.95,
+     "monthly_bias_pct": 1.9,
+     "monthly_kge": 0.922,
+     "anom3_r": 0.97
+    },
+    "B70": {
+     "daily_r": 0.721,
+     "wet_day_csi": 0.596,
+     "monthly_r": 0.947,
+     "monthly_bias_pct": 6.4,
+     "monthly_kge": 0.916,
+     "anom3_r": 0.969
+    },
+    "BMR": {
+     "daily_r": 0.752,
+     "wet_day_csi": 0.593,
+     "monthly_r": 0.948,
+     "monthly_bias_pct": 8.7,
+     "monthly_kge": 0.897,
+     "anom3_r": 0.968
+    }
+   }
+  },
+  {
+   "site": "nagpur_in",
+   "station": "IN012141800",
+   "name": "Nagpur Sonegaon, India",
+   "continent": "Asia",
+   "lat": 21.1,
+   "lon": 79.05,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 2760,
+   "months": 66,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.652,
+     "wet_day_csi": 0.623,
+     "monthly_r": 0.958,
+     "monthly_bias_pct": -9.2,
+     "monthly_kge": 0.848,
+     "anom3_r": 0.979
+    },
+    "I": {
+     "daily_r": 0.581,
+     "wet_day_csi": 0.587,
+     "monthly_r": 0.936,
+     "monthly_bias_pct": 9.2,
+     "monthly_kge": 0.886,
+     "anom3_r": 0.968
+    },
+    "B50": {
+     "daily_r": 0.671,
+     "wet_day_csi": 0.606,
+     "monthly_r": 0.961,
+     "monthly_bias_pct": 0.0,
+     "monthly_kge": 0.927,
+     "anom3_r": 0.98
+    },
+    "MR": {
+     "daily_r": 0.642,
+     "wet_day_csi": 0.618,
+     "monthly_r": 0.936,
+     "monthly_bias_pct": 8.8,
+     "monthly_kge": 0.89,
+     "anom3_r": 0.971
+    },
+    "CR": {
+     "daily_r": 0.648,
+     "wet_day_csi": 0.621,
+     "monthly_r": 0.957,
+     "monthly_bias_pct": 6.0,
+     "monthly_kge": 0.909,
+     "anom3_r": 0.979
+    },
+    "CR50": {
+     "daily_r": 0.651,
+     "wet_day_csi": 0.622,
+     "monthly_r": 0.958,
+     "monthly_bias_pct": -1.6,
+     "monthly_kge": 0.945,
+     "anom3_r": 0.979
+    },
+    "B30": {
+     "daily_r": 0.683,
+     "wet_day_csi": 0.617,
+     "monthly_r": 0.964,
+     "monthly_bias_pct": -3.7,
+     "monthly_kge": 0.899,
+     "anom3_r": 0.981
+    },
+    "B70": {
+     "daily_r": 0.641,
+     "wet_day_csi": 0.602,
+     "monthly_r": 0.953,
+     "monthly_bias_pct": 3.7,
+     "monthly_kge": 0.932,
+     "anom3_r": 0.977
+    },
+    "BMR": {
+     "daily_r": 0.655,
+     "wet_day_csi": 0.605,
+     "monthly_r": 0.937,
+     "monthly_bias_pct": 9.1,
+     "monthly_kge": 0.888,
+     "anom3_r": 0.97
+    }
+   }
+  },
+  {
+   "site": "bangkok_th",
+   "station": "TH000048456",
+   "name": "Bangkok Don Muang, Thailand",
+   "continent": "Asia",
+   "lat": 13.917,
+   "lon": 100.6,
+   "zone": "tropics",
+   "lag_days": 0,
+   "gauge_days": 5219,
+   "months": 156,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.555,
+     "wet_day_csi": 0.605,
+     "monthly_r": 0.767,
+     "monthly_bias_pct": -10.8,
+     "monthly_kge": 0.681,
+     "anom3_r": 0.805
+    },
+    "I": {
+     "daily_r": 0.456,
+     "wet_day_csi": 0.572,
+     "monthly_r": 0.816,
+     "monthly_bias_pct": -8.4,
+     "monthly_kge": 0.718,
+     "anom3_r": 0.855
+    },
+    "B50": {
+     "daily_r": 0.557,
+     "wet_day_csi": 0.598,
+     "monthly_r": 0.802,
+     "monthly_bias_pct": -9.6,
+     "monthly_kge": 0.7,
+     "anom3_r": 0.839
+    },
+    "MR": {
+     "daily_r": 0.569,
+     "wet_day_csi": 0.604,
+     "monthly_r": 0.809,
+     "monthly_bias_pct": -8.8,
+     "monthly_kge": 0.709,
+     "anom3_r": 0.854
+    },
+    "CR": {
+     "daily_r": 0.558,
+     "wet_day_csi": 0.604,
+     "monthly_r": 0.767,
+     "monthly_bias_pct": -8.8,
+     "monthly_kge": 0.691,
+     "anom3_r": 0.804
+    },
+    "CR50": {
+     "daily_r": 0.557,
+     "wet_day_csi": 0.604,
+     "monthly_r": 0.767,
+     "monthly_bias_pct": -9.8,
+     "monthly_kge": 0.686,
+     "anom3_r": 0.805
+    },
+    "B30": {
+     "daily_r": 0.575,
+     "wet_day_csi": 0.6,
+     "monthly_r": 0.791,
+     "monthly_bias_pct": -10.1,
+     "monthly_kge": 0.693,
+     "anom3_r": 0.827
+    },
+    "B70": {
+     "daily_r": 0.522,
+     "wet_day_csi": 0.596,
+     "monthly_r": 0.81,
+     "monthly_bias_pct": -9.1,
+     "monthly_kge": 0.707,
+     "anom3_r": 0.848
+    },
+    "BMR": {
+     "daily_r": 0.557,
+     "wet_day_csi": 0.597,
+     "monthly_r": 0.814,
+     "monthly_bias_pct": -8.6,
+     "monthly_kge": 0.714,
+     "anom3_r": 0.856
+    }
+   }
+  },
+  {
+   "site": "darwin_au",
+   "station": "ASN00014015",
+   "name": "Darwin airport, Australia",
+   "continent": "Australia",
+   "lat": -12.4239,
+   "lon": 130.8925,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 9131,
+   "months": 300,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.668,
+     "wet_day_csi": 0.524,
+     "monthly_r": 0.934,
+     "monthly_bias_pct": -7.4,
+     "monthly_kge": 0.845,
+     "anom3_r": 0.764
+    },
+    "I": {
+     "daily_r": 0.772,
+     "wet_day_csi": 0.617,
+     "monthly_r": 0.964,
+     "monthly_bias_pct": -0.6,
+     "monthly_kge": 0.945,
+     "anom3_r": 0.909
+    },
+    "B50": {
+     "daily_r": 0.786,
+     "wet_day_csi": 0.559,
+     "monthly_r": 0.958,
+     "monthly_bias_pct": -4.0,
+     "monthly_kge": 0.894,
+     "anom3_r": 0.873
+    },
+    "MR": {
+     "daily_r": 0.682,
+     "wet_day_csi": 0.527,
+     "monthly_r": 0.965,
+     "monthly_bias_pct": -0.5,
+     "monthly_kge": 0.942,
+     "anom3_r": 0.913
+    },
+    "CR": {
+     "daily_r": 0.669,
+     "wet_day_csi": 0.525,
+     "monthly_r": 0.937,
+     "monthly_bias_pct": -0.6,
+     "monthly_kge": 0.929,
+     "anom3_r": 0.764
+    },
+    "CR50": {
+     "daily_r": 0.669,
+     "wet_day_csi": 0.525,
+     "monthly_r": 0.936,
+     "monthly_bias_pct": -4.0,
+     "monthly_kge": 0.893,
+     "anom3_r": 0.764
+    },
+    "B30": {
+     "daily_r": 0.76,
+     "wet_day_csi": 0.544,
+     "monthly_r": 0.951,
+     "monthly_bias_pct": -5.4,
+     "monthly_kge": 0.874,
+     "anom3_r": 0.836
+    },
+    "B70": {
+     "daily_r": 0.79,
+     "wet_day_csi": 0.588,
+     "monthly_r": 0.962,
+     "monthly_bias_pct": -2.6,
+     "monthly_kge": 0.915,
+     "anom3_r": 0.898
+    },
+    "BMR": {
+     "daily_r": 0.79,
+     "wet_day_csi": 0.561,
+     "monthly_r": 0.965,
+     "monthly_bias_pct": -0.5,
+     "monthly_kge": 0.943,
+     "anom3_r": 0.911
+    }
+   }
+  },
+  {
+   "site": "wagga_au",
+   "station": "ASN00072150",
+   "name": "Wagga Wagga, Australia",
+   "continent": "Australia",
+   "lat": -35.1583,
+   "lon": 147.4573,
+   "zone": "extratropics",
+   "lag_days": 1,
+   "gauge_days": 8768,
+   "months": 292,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.705,
+     "wet_day_csi": 0.543,
+     "monthly_r": 0.9,
+     "monthly_bias_pct": 4.7,
+     "monthly_kge": 0.865,
+     "anom3_r": 0.926
+    },
+    "I": {
+     "daily_r": 0.772,
+     "wet_day_csi": 0.557,
+     "monthly_r": 0.926,
+     "monthly_bias_pct": 11.4,
+     "monthly_kge": 0.865,
+     "anom3_r": 0.944
+    },
+    "B50": {
+     "daily_r": 0.841,
+     "wet_day_csi": 0.59,
+     "monthly_r": 0.932,
+     "monthly_bias_pct": 8.0,
+     "monthly_kge": 0.88,
+     "anom3_r": 0.95
+    },
+    "MR": {
+     "daily_r": 0.7,
+     "wet_day_csi": 0.544,
+     "monthly_r": 0.91,
+     "monthly_bias_pct": 10.7,
+     "monthly_kge": 0.854,
+     "anom3_r": 0.945
+    },
+    "CR": {
+     "daily_r": 0.699,
+     "wet_day_csi": 0.539,
+     "monthly_r": 0.891,
+     "monthly_bias_pct": 11.2,
+     "monthly_kge": 0.831,
+     "anom3_r": 0.923
+    },
+    "CR50": {
+     "daily_r": 0.703,
+     "wet_day_csi": 0.541,
+     "monthly_r": 0.899,
+     "monthly_bias_pct": 8.0,
+     "monthly_kge": 0.851,
+     "anom3_r": 0.927
+    },
+    "B30": {
+     "daily_r": 0.813,
+     "wet_day_csi": 0.588,
+     "monthly_r": 0.924,
+     "monthly_bias_pct": 6.7,
+     "monthly_kge": 0.877,
+     "anom3_r": 0.944
+    },
+    "B70": {
+     "daily_r": 0.831,
+     "wet_day_csi": 0.594,
+     "monthly_r": 0.934,
+     "monthly_bias_pct": 9.4,
+     "monthly_kge": 0.879,
+     "anom3_r": 0.951
+    },
+    "BMR": {
+     "daily_r": 0.836,
+     "wet_day_csi": 0.593,
+     "monthly_r": 0.926,
+     "monthly_bias_pct": 11.1,
+     "monthly_kge": 0.864,
+     "anom3_r": 0.946
+    }
+   }
+  },
+  {
+   "site": "sanjuan_pr",
+   "station": "RQW00011641",
+   "name": "San Juan, Puerto Rico",
+   "continent": "North America",
+   "lat": 18.4319,
+   "lon": -66.0106,
+   "zone": "tropics",
+   "lag_days": 0,
+   "gauge_days": 9131,
+   "months": 300,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.439,
+     "wet_day_csi": 0.492,
+     "monthly_r": 0.592,
+     "monthly_bias_pct": -24.9,
+     "monthly_kge": 0.485,
+     "anom3_r": 0.519
+    },
+    "I": {
+     "daily_r": 0.562,
+     "wet_day_csi": 0.409,
+     "monthly_r": 0.756,
+     "monthly_bias_pct": -6.2,
+     "monthly_kge": 0.654,
+     "anom3_r": 0.72
+    },
+    "B50": {
+     "daily_r": 0.58,
+     "wet_day_csi": 0.484,
+     "monthly_r": 0.733,
+     "monthly_bias_pct": -15.6,
+     "monthly_kge": 0.689,
+     "anom3_r": 0.696
+    },
+    "MR": {
+     "daily_r": 0.487,
+     "wet_day_csi": 0.472,
+     "monthly_r": 0.754,
+     "monthly_bias_pct": -6.1,
+     "monthly_kge": 0.659,
+     "anom3_r": 0.721
+    },
+    "CR": {
+     "daily_r": 0.44,
+     "wet_day_csi": 0.483,
+     "monthly_r": 0.618,
+     "monthly_bias_pct": -6.2,
+     "monthly_kge": 0.596,
+     "anom3_r": 0.537
+    },
+    "CR50": {
+     "daily_r": 0.442,
+     "wet_day_csi": 0.487,
+     "monthly_r": 0.614,
+     "monthly_bias_pct": -15.6,
+     "monthly_kge": 0.581,
+     "anom3_r": 0.531
+    },
+    "B30": {
+     "daily_r": 0.565,
+     "wet_day_csi": 0.49,
+     "monthly_r": 0.697,
+     "monthly_bias_pct": -19.3,
+     "monthly_kge": 0.622,
+     "anom3_r": 0.647
+    },
+    "B70": {
+     "daily_r": 0.576,
+     "wet_day_csi": 0.47,
+     "monthly_r": 0.751,
+     "monthly_bias_pct": -11.8,
+     "monthly_kge": 0.717,
+     "anom3_r": 0.719
+    },
+    "BMR": {
+     "daily_r": 0.577,
+     "wet_day_csi": 0.466,
+     "monthly_r": 0.755,
+     "monthly_bias_pct": -6.2,
+     "monthly_kge": 0.655,
+     "anom3_r": 0.72
+    }
+   }
+  },
+  {
+   "site": "bogota_co",
+   "station": "CO000080222",
+   "name": "Bogot\u00e1 El Dorado, Colombia",
+   "continent": "South America",
+   "lat": 4.701,
+   "lon": -74.15,
+   "zone": "tropics",
+   "lag_days": 1,
+   "gauge_days": 4668,
+   "months": 133,
+   "metrics": {
+    "P_lst": {
+     "daily_r": 0.382,
+     "wet_day_csi": 0.441,
+     "monthly_r": 0.648,
+     "monthly_bias_pct": 83.9,
+     "monthly_kge": 0.074,
+     "anom3_r": 0.662
+    },
+    "I": {
+     "daily_r": 0.181,
+     "wet_day_csi": 0.371,
+     "monthly_r": 0.615,
+     "monthly_bias_pct": 97.7,
+     "monthly_kge": -0.056,
+     "anom3_r": 0.625
+    },
+    "B50": {
+     "daily_r": 0.343,
+     "wet_day_csi": 0.393,
+     "monthly_r": 0.673,
+     "monthly_bias_pct": 90.8,
+     "monthly_kge": 0.032,
+     "anom3_r": 0.686
+    },
+    "MR": {
+     "daily_r": 0.37,
+     "wet_day_csi": 0.432,
+     "monthly_r": 0.605,
+     "monthly_bias_pct": 100.7,
+     "monthly_kge": -0.085,
+     "anom3_r": 0.623
+    },
+    "CR": {
+     "daily_r": 0.385,
+     "wet_day_csi": 0.435,
+     "monthly_r": 0.671,
+     "monthly_bias_pct": 121.2,
+     "monthly_kge": -0.293,
+     "anom3_r": 0.694
+    },
+    "CR50": {
+     "daily_r": 0.384,
+     "wet_day_csi": 0.437,
+     "monthly_r": 0.664,
+     "monthly_bias_pct": 102.6,
+     "monthly_kge": -0.104,
+     "anom3_r": 0.684
+    },
+    "B30": {
+     "daily_r": 0.383,
+     "wet_day_csi": 0.403,
+     "monthly_r": 0.672,
+     "monthly_bias_pct": 88.1,
+     "monthly_kge": 0.055,
+     "anom3_r": 0.686
+    },
+    "B70": {
+     "daily_r": 0.279,
+     "wet_day_csi": 0.387,
+     "monthly_r": 0.659,
+     "monthly_bias_pct": 93.6,
+     "monthly_kge": 0.002,
+     "anom3_r": 0.672
+    },
+    "BMR": {
+     "daily_r": 0.325,
+     "wet_day_csi": 0.389,
+     "monthly_r": 0.616,
+     "monthly_bias_pct": 99.1,
+     "monthly_kge": -0.066,
+     "anom3_r": 0.629
+    }
+   }
+  }
+ ],
+ "summary": {
+  "tropics": {
+   "n_sites": 12,
+   "sites": [
+    "nairobi_ke",
+    "niamey_ne",
+    "ouaga_bf",
+    "bamako_ml",
+    "dakar_sn",
+    "pune_in",
+    "hyderabad_in",
+    "nagpur_in",
+    "bangkok_th",
+    "darwin_au",
+    "sanjuan_pr",
+    "bogota_co"
+   ],
+   "P_lst": {
+    "daily_r": 0.459,
+    "wet_day_csi": 0.518,
+    "monthly_r": 0.818,
+    "monthly_kge": 0.551,
+    "anom3_r": 0.849,
+    "abs_bias_pct": 26.9
+   },
+   "I": {
+    "daily_r": 0.479,
+    "daily_r_wins": "7/12",
+    "wet_day_csi": 0.504,
+    "wet_day_csi_wins": "4/12",
+    "monthly_r": 0.863,
+    "monthly_r_wins": "8/12",
+    "monthly_kge": 0.698,
+    "monthly_kge_wins": "10/12",
+    "anom3_r": 0.89,
+    "anom3_r_wins": "8/12",
+    "abs_bias_pct": 17.7
+   },
+   "B50": {
+    "daily_r": 0.537,
+    "daily_r_wins": "11/12",
+    "wet_day_csi": 0.523,
+    "wet_day_csi_wins": "7/12",
+    "monthly_r": 0.865,
+    "monthly_r_wins": "12/12",
+    "monthly_kge": 0.66,
+    "monthly_kge_wins": "11/12",
+    "anom3_r": 0.889,
+    "anom3_r_wins": "11/12",
+    "abs_bias_pct": 21.3
+   },
+   "MR": {
+    "daily_r": 0.477,
+    "daily_r_wins": "10/12",
+    "wet_day_csi": 0.517,
+    "wet_day_csi_wins": "5/12",
+    "monthly_r": 0.864,
+    "monthly_r_wins": "10/12",
+    "monthly_kge": 0.697,
+    "monthly_kge_wins": "11/12",
+    "anom3_r": 0.889,
+    "anom3_r_wins": "8/12",
+    "abs_bias_pct": 17.7
+   },
+   "CR": {
+    "daily_r": 0.46,
+    "daily_r_wins": "8/12",
+    "wet_day_csi": 0.517,
+    "wet_day_csi_wins": "4/12",
+    "monthly_r": 0.826,
+    "monthly_r_wins": "7/12",
+    "monthly_kge": 0.64,
+    "monthly_kge_wins": "7/12",
+    "anom3_r": 0.854,
+    "anom3_r_wins": "7/12",
+    "abs_bias_pct": 20.7
+   },
+   "CR50": {
+    "daily_r": 0.46,
+    "daily_r_wins": "7/12",
+    "wet_day_csi": 0.518,
+    "wet_day_csi_wins": "3/12",
+    "monthly_r": 0.823,
+    "monthly_r_wins": "8/12",
+    "monthly_kge": 0.619,
+    "monthly_kge_wins": "8/12",
+    "anom3_r": 0.852,
+    "anom3_r_wins": "6/12",
+    "abs_bias_pct": 22.6
+   },
+   "B30": {
+    "daily_r": 0.529,
+    "daily_r_wins": "12/12",
+    "wet_day_csi": 0.523,
+    "wet_day_csi_wins": "7/12",
+    "monthly_r": 0.852,
+    "monthly_r_wins": "12/12",
+    "monthly_kge": 0.622,
+    "monthly_kge_wins": "11/12",
+    "anom3_r": 0.878,
+    "anom3_r_wins": "11/12",
+    "abs_bias_pct": 23.5
+   },
+   "B70": {
+    "daily_r": 0.521,
+    "daily_r_wins": "8/12",
+    "wet_day_csi": 0.526,
+    "wet_day_csi_wins": "6/12",
+    "monthly_r": 0.87,
+    "monthly_r_wins": "11/12",
+    "monthly_kge": 0.687,
+    "monthly_kge_wins": "11/12",
+    "anom3_r": 0.894,
+    "anom3_r_wins": "10/12",
+    "abs_bias_pct": 19.8
+   },
+   "BMR": {
+    "daily_r": 0.534,
+    "daily_r_wins": "11/12",
+    "wet_day_csi": 0.523,
+    "wet_day_csi_wins": "7/12",
+    "monthly_r": 0.867,
+    "monthly_r_wins": "10/12",
+    "monthly_kge": 0.7,
+    "monthly_kge_wins": "11/12",
+    "anom3_r": 0.891,
+    "anom3_r_wins": "9/12",
+    "abs_bias_pct": 17.5
+   }
+  },
+  "extratropics": {
+   "n_sites": 6,
+   "sites": [
+    "fallon_nv",
+    "ames_ia",
+    "cordoba_es",
+    "jaen_es",
+    "delhi_in",
+    "wagga_au"
+   ],
+   "P_lst": {
+    "daily_r": 0.693,
+    "wet_day_csi": 0.531,
+    "monthly_r": 0.916,
+    "monthly_kge": 0.709,
+    "anom3_r": 0.918,
+    "abs_bias_pct": 17.0
+   },
+   "I": {
+    "daily_r": 0.676,
+    "daily_r_wins": "2/6",
+    "wet_day_csi": 0.512,
+    "wet_day_csi_wins": "3/6",
+    "monthly_r": 0.913,
+    "monthly_r_wins": "2/6",
+    "monthly_kge": 0.837,
+    "monthly_kge_wins": "4/6",
+    "anom3_r": 0.92,
+    "anom3_r_wins": "3/6",
+    "abs_bias_pct": 8.3
+   },
+   "B50": {
+    "daily_r": 0.749,
+    "daily_r_wins": "5/6",
+    "wet_day_csi": 0.554,
+    "wet_day_csi_wins": "4/6",
+    "monthly_r": 0.929,
+    "monthly_r_wins": "3/6",
+    "monthly_kge": 0.793,
+    "monthly_kge_wins": "5/6",
+    "anom3_r": 0.931,
+    "anom3_r_wins": "4/6",
+    "abs_bias_pct": 11.0
+   },
+   "MR": {
+    "daily_r": 0.685,
+    "daily_r_wins": "1/6",
+    "wet_day_csi": 0.526,
+    "wet_day_csi_wins": "2/6",
+    "monthly_r": 0.91,
+    "monthly_r_wins": "2/6",
+    "monthly_kge": 0.825,
+    "monthly_kge_wins": "4/6",
+    "anom3_r": 0.921,
+    "anom3_r_wins": "3/6",
+    "abs_bias_pct": 9.1
+   },
+   "CR": {
+    "daily_r": 0.689,
+    "daily_r_wins": "1/6",
+    "wet_day_csi": 0.527,
+    "wet_day_csi_wins": "1/6",
+    "monthly_r": 0.914,
+    "monthly_r_wins": "2/6",
+    "monthly_kge": 0.82,
+    "monthly_kge_wins": "4/6",
+    "anom3_r": 0.918,
+    "anom3_r_wins": "2/6",
+    "abs_bias_pct": 9.3
+   },
+   "CR50": {
+    "daily_r": 0.693,
+    "daily_r_wins": "1/6",
+    "wet_day_csi": 0.529,
+    "wet_day_csi_wins": "0/6",
+    "monthly_r": 0.918,
+    "monthly_r_wins": "2/6",
+    "monthly_kge": 0.78,
+    "monthly_kge_wins": "4/6",
+    "anom3_r": 0.92,
+    "anom3_r_wins": "3/6",
+    "abs_bias_pct": 11.5
+   },
+   "B30": {
+    "daily_r": 0.745,
+    "daily_r_wins": "5/6",
+    "wet_day_csi": 0.553,
+    "wet_day_csi_wins": "6/6",
+    "monthly_r": 0.927,
+    "monthly_r_wins": "4/6",
+    "monthly_kge": 0.762,
+    "monthly_kge_wins": "5/6",
+    "anom3_r": 0.928,
+    "anom3_r_wins": "4/6",
+    "abs_bias_pct": 13.2
+   },
+   "B70": {
+    "daily_r": 0.731,
+    "daily_r_wins": "4/6",
+    "wet_day_csi": 0.546,
+    "wet_day_csi_wins": "4/6",
+    "monthly_r": 0.927,
+    "monthly_r_wins": "3/6",
+    "monthly_kge": 0.818,
+    "monthly_kge_wins": "5/6",
+    "anom3_r": 0.93,
+    "anom3_r_wins": "3/6",
+    "abs_bias_pct": 9.5
+   },
+   "BMR": {
+    "daily_r": 0.738,
+    "daily_r_wins": "4/6",
+    "wet_day_csi": 0.547,
+    "wet_day_csi_wins": "4/6",
+    "monthly_r": 0.913,
+    "monthly_r_wins": "2/6",
+    "monthly_kge": 0.831,
+    "monthly_kge_wins": "4/6",
+    "anom3_r": 0.921,
+    "anom3_r_wins": "3/6",
+    "abs_bias_pct": 8.7
+   }
+  },
+  "all": {
+   "n_sites": 18,
+   "sites": [
+    "fallon_nv",
+    "ames_ia",
+    "cordoba_es",
+    "jaen_es",
+    "nairobi_ke",
+    "niamey_ne",
+    "ouaga_bf",
+    "bamako_ml",
+    "dakar_sn",
+    "delhi_in",
+    "pune_in",
+    "hyderabad_in",
+    "nagpur_in",
+    "bangkok_th",
+    "darwin_au",
+    "wagga_au",
+    "sanjuan_pr",
+    "bogota_co"
+   ],
+   "P_lst": {
+    "daily_r": 0.537,
+    "wet_day_csi": 0.522,
+    "monthly_r": 0.851,
+    "monthly_kge": 0.604,
+    "anom3_r": 0.872,
+    "abs_bias_pct": 23.6
+   },
+   "I": {
+    "daily_r": 0.545,
+    "daily_r_wins": "9/18",
+    "wet_day_csi": 0.507,
+    "wet_day_csi_wins": "7/18",
+    "monthly_r": 0.88,
+    "monthly_r_wins": "10/18",
+    "monthly_kge": 0.744,
+    "monthly_kge_wins": "14/18",
+    "anom3_r": 0.9,
+    "anom3_r_wins": "11/18",
+    "abs_bias_pct": 14.6
+   },
+   "B50": {
+    "daily_r": 0.608,
+    "daily_r_wins": "16/18",
+    "wet_day_csi": 0.534,
+    "wet_day_csi_wins": "11/18",
+    "monthly_r": 0.886,
+    "monthly_r_wins": "15/18",
+    "monthly_kge": 0.705,
+    "monthly_kge_wins": "16/18",
+    "anom3_r": 0.903,
+    "anom3_r_wins": "15/18",
+    "abs_bias_pct": 17.9
+   },
+   "MR": {
+    "daily_r": 0.546,
+    "daily_r_wins": "11/18",
+    "wet_day_csi": 0.52,
+    "wet_day_csi_wins": "7/18",
+    "monthly_r": 0.879,
+    "monthly_r_wins": "12/18",
+    "monthly_kge": 0.74,
+    "monthly_kge_wins": "15/18",
+    "anom3_r": 0.9,
+    "anom3_r_wins": "11/18",
+    "abs_bias_pct": 14.8
+   },
+   "CR": {
+    "daily_r": 0.536,
+    "daily_r_wins": "9/18",
+    "wet_day_csi": 0.521,
+    "wet_day_csi_wins": "5/18",
+    "monthly_r": 0.855,
+    "monthly_r_wins": "9/18",
+    "monthly_kge": 0.7,
+    "monthly_kge_wins": "11/18",
+    "anom3_r": 0.875,
+    "anom3_r_wins": "9/18",
+    "abs_bias_pct": 16.9
+   },
+   "CR50": {
+    "daily_r": 0.538,
+    "daily_r_wins": "8/18",
+    "wet_day_csi": 0.521,
+    "wet_day_csi_wins": "3/18",
+    "monthly_r": 0.855,
+    "monthly_r_wins": "10/18",
+    "monthly_kge": 0.673,
+    "monthly_kge_wins": "12/18",
+    "anom3_r": 0.875,
+    "anom3_r_wins": "9/18",
+    "abs_bias_pct": 18.9
+   },
+   "B30": {
+    "daily_r": 0.601,
+    "daily_r_wins": "17/18",
+    "wet_day_csi": 0.533,
+    "wet_day_csi_wins": "13/18",
+    "monthly_r": 0.877,
+    "monthly_r_wins": "16/18",
+    "monthly_kge": 0.669,
+    "monthly_kge_wins": "16/18",
+    "anom3_r": 0.895,
+    "anom3_r_wins": "15/18",
+    "abs_bias_pct": 20.1
+   },
+   "B70": {
+    "daily_r": 0.591,
+    "daily_r_wins": "12/18",
+    "wet_day_csi": 0.533,
+    "wet_day_csi_wins": "10/18",
+    "monthly_r": 0.889,
+    "monthly_r_wins": "14/18",
+    "monthly_kge": 0.73,
+    "monthly_kge_wins": "16/18",
+    "anom3_r": 0.906,
+    "anom3_r_wins": "13/18",
+    "abs_bias_pct": 16.4
+   },
+   "BMR": {
+    "daily_r": 0.602,
+    "daily_r_wins": "15/18",
+    "wet_day_csi": 0.531,
+    "wet_day_csi_wins": "11/18",
+    "monthly_r": 0.882,
+    "monthly_r_wins": "12/18",
+    "monthly_kge": 0.744,
+    "monthly_kge_wins": "15/18",
+    "anom3_r": 0.901,
+    "anom3_r_wins": "12/18",
+    "abs_bias_pct": 14.5
+   }
+  }
+ }
+}

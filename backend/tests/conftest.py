@@ -60,6 +60,7 @@ def _synthetic_forecast(lat, lon, past_days=14, days=16):
 def offline_synthetic(monkeypatch):
     monkeypatch.setattr(sources, "power_daily", _synthetic_power)
     monkeypatch.setattr(sources, "forecast", _synthetic_forecast)
+    monkeypatch.setattr(sources, "imerg_daily", lambda lat, lon, start, end: None)  # no network in tests
     monkeypatch.setattr(sources, "elevation", lambda lat, lon: (1200.0, 1.5, "live"))
     monkeypatch.setattr(
         sources,
