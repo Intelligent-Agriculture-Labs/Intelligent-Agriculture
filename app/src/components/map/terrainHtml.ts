@@ -34,7 +34,7 @@ export function terrainHtml(initial: { lat: number; lon: number }): string {
     truecolor:L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/"+isoDaysAgo(2)+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg",{maxNativeZoom:9,maxZoom:17,attribution:"NASA GIBS / MODIS Terra"}),
     ndvi:L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/"+isoDaysAgo(20)+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",{maxNativeZoom:9,maxZoom:17,opacity:0.85,attribution:"NASA GIBS / MODIS NDVI 8-day"})
   };
-  var base=bases.street.addTo(map), ndviUnder=null, overlay=null, field=null, pin=null, opacity=0.75, fitted=false;
+  var base=bases.street.addTo(map), ndviUnder=null, overlay=null, field=null, pin=null, opacity=0.75, fitted=false, fieldKey=null;
   function setBase(id){
     map.removeLayer(base); if(ndviUnder){map.removeLayer(ndviUnder);ndviUnder=null;}
     if(id==="ndvi"){ndviUnder=bases.street.addTo(map);}
@@ -56,6 +56,9 @@ export function terrainHtml(initial: { lat: number; lon: number }): string {
     if(poly&&poly.length>=3){field=L.polygon(poly.map(function(p){return [p[1],p[0]];}),{color:"#ffffff",weight:3,fill:false,dashArray:"6,4"}).addTo(map);}
     else{field=L.circle([lat,lon],{radius:150,color:"#ffffff",weight:3,fill:false,dashArray:"6,4"}).addTo(map);}
     pin=L.circleMarker([lat,lon],{radius:6,color:"#ffffff",weight:2,fillColor:"#17241a",fillOpacity:1}).addTo(map);
+    // recentre whenever a different field is selected (first load included)
+    var key=lat.toFixed(5)+","+lon.toFixed(5);
+    if(key!==fieldKey){fieldKey=key; fitted=true; map.fitBounds(field.getBounds(),{padding:[20,20],maxZoom:17});}
   }
   function handle(m){ if(!m||!m.type)return;
     if(m.type==="base")setBase(m.id);
