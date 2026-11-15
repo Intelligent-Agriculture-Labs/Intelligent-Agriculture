@@ -2,7 +2,7 @@
 
 ## One command (any OS with Docker)
 ```bash
-git clone <repo> fieldshift && cd fieldshift
+git clone https://github.com/Intelligent-Agriculture-Labs/Intelligent-Agriculture.git fieldshift && cd fieldshift
 docker compose up --build
 # web app  → http://localhost:8080
 # API docs → http://localhost:8080/docs   (one container: FastAPI serves the API and the exported web app)
@@ -33,12 +33,15 @@ See DEV_ENVIRONMENT.md (uv + uvicorn for the backend; `npx expo start` for the c
 - **Store builds:** EAS (`npx eas-cli build`) with your own Apple/Google accounts. Not done in the hackathon.
 - Exact commands and versions used: media/BUILDS.md.
 
-## Public hosting (human step)
-The images are host-agnostic: any VM with Docker works, as do Fly.io, Render or Railway. On the team's VPS:
+## Public hosting
+
+Deploy the container on a host with Docker Compose:
+
 ```bash
-ssh fsvps 'cd ~/fieldshift && git pull && PORT=8090 podman-compose up -d --build'
+docker compose up -d --build
 ```
-Then expose port 8080 through a reverse proxy or a tunnel (e.g. Tailscale Funnel or Cloudflare Tunnel). Making it public is left to the owner, because it opens the machine to the internet.
+
+The default host port is 8080; set `PORT` to override it. Configure an HTTPS reverse proxy for public access and persistent volumes for application data. See `.env.example` for configuration.
 
 ## Windows
 Docker Desktop (WSL 2 backend): run `docker compose up --build` from PowerShell or WSL in the repo folder. For backend development without Docker, use WSL (Ubuntu) and follow the Linux steps. Native Windows also works with `uv venv` and `.venv\Scripts\uvicorn`.
@@ -46,9 +49,9 @@ Docker Desktop (WSL 2 backend): run `docker compose up --build` from PowerShell 
 ## Verification log
 | Date (CET) | Platform | Command | Result |
 |---|---|---|---|
-| 2026-11-14 20:15 | Windows 11 (SALE), native | `uv venv --python 3.13` + `pytest`, `ruff`, `mypy`; `npm ci`, `tsc`, `jest` | 47/47 backend, lint/types clean; 39/39 client tests |
-| 2026-11-14 20:15 | Windows 11 (SALE), WSL Fedora 43 (Python 3.14) | `python3 -m venv` + `pytest` | 47/47 |
-| 2026-11-14 20:15 | Windows 11 (SALE), Podman as `docker` | `docker compose build` | Failed: npm downloads timed out inside Podman's build network (the same `npm ci` works on the host). Mitigated with npm fetch retries/timeouts in the Dockerfile; see Troubleshooting |
+| 2026-11-14 20:15 | Windows 11, native | `uv venv --python 3.13` + `pytest`, `ruff`, `mypy`; `npm ci`, `tsc`, `jest` | 47/47 backend, lint/types clean; 39/39 client tests |
+| 2026-11-14 20:15 | Windows 11, WSL Fedora 43 (Python 3.14) | `python3 -m venv` + `pytest` | 47/47 |
+| 2026-11-14 20:15 | Windows 11, Podman as `docker` | `docker compose build` | Failed: npm downloads timed out inside Podman's build network (the same `npm ci` works on the host). Mitigated with npm fetch retries/timeouts in the Dockerfile; see Troubleshooting |
 | 2026-11-14 19:40 | Linux (Fedora, podman 5.8 + podman-compose) | `FIELDSHIFT_OFFLINE=1 PORT=8090 podman-compose up -d --build` | Image built; `/api/health` → `offline_mode: true`; web app 200; `/api/advice` for the Fallon field answered from the bundled demo cache |
 | 2026-11-14 18:12 | Linux (Fedora, podman) | `PORT=8090 podman-compose up -d` (live mode) | Web app, deep links, `/docs`, advice OK |
 | 2026-11-14 19:45 | macOS (Apple Silicon) | Dev setup: `uv` venv + `uvicorn`; `npx expo export -p web`; Playwright E2E | 47 backend tests, 39 client unit tests, 14/14 E2E (desktop + Pixel 7) |

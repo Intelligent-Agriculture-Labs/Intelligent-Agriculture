@@ -2,7 +2,7 @@
 
 Everything here can be re-run with two scripts:
 - `app/scripts/capture-native.sh`: iOS build plus captures on the Mac, and Android captures on the local emulator.
-- `app/scripts/build-android-remote.sh`: builds the Android APK on the Linux data box.
+- `app/scripts/build-android-remote.sh`: builds the Android APK on the Linux processing host.
 
 Prerequisite: the IA API must be running on the Mac at `:8000`:
 ```
@@ -36,7 +36,7 @@ CAPTURE=1 app/scripts/build-android-remote.sh   # -> app/build-artifacts/fieldsh
 app/scripts/build-android-remote.sh             # -> app/build-artifacts/fieldshift-v1.0.0.apk (normal release APK)
 app/scripts/capture-native.sh android           # installs the capture APK on the running emulator, screenshots + video
 ```
-The build runs on the VPS (`ssh fsvps`, fast internet): the Mac's ~150 KB/s link could not download the ~1 GB NDK within the job time limits.
+The optional remote-build script runs on a Linux build host. Configure its SSH target and build directory for your environment before use. For a local build, use the Android commands in [deployment](../docs/DEPLOYMENT.md).
 1. The script rsyncs the current `app/` working tree (no git push needed) to `~/android-build/app`.
 2. First run only: it installs Temurin JDK 17 and the Android cmdline-tools into `~/android-build`. Gradle installs the NDK, CMake and platforms automatically.
 3. It runs `npm ci`, `expo prebuild -p android --clean`, then `./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,x86_64`.
@@ -62,7 +62,7 @@ The release APK is signed with the template debug keystore, which is fine for em
 | `web-*.png`, `web-replay-*.png` | Web captures (Playwright: `app/e2e/screenshots.ts`, `app/e2e/screenshots-replay.ts`) |
 
 ## How the UI is driven (and why not Maestro/XCUITest)
-- `app/e2e/maestro/core-flow.yaml` is the mobile E2E flow (Maestro 2.12.1 installed in `~/.maestro/maestro/bin`). On this machine the **XCUITest runner hangs** with the Xcode 27 beta toolchain ("test runner hung before establishing connection", DTServiceHub/lockdown errors on both the iOS 26.4 and iOS 27.0 runtimes). So Maestro cannot drive iOS here; it should work with a stable Xcode, and with Android (`maestro test app/e2e/maestro/core-flow.yaml -e PLATFORM=android`).
+- `app/e2e/maestro/core-flow.yaml` is the mobile E2E flow (Maestro 2.12.1 installed in `~/.maestro/maestro/bin`). With the tested Xcode 27 beta toolchain, the **XCUITest runner hangs** ("test runner hung before establishing connection", DTServiceHub/lockdown errors on both the iOS 26.4 and iOS 27.0 runtimes). Use a stable Xcode version for Maestro iOS automation, or run it on Android (`maestro test app/e2e/maestro/core-flow.yaml -e PLATFORM=android`).
 - `simctl openurl` deep links (`fieldshift://onboarding?preset=fallon_nv&replay=1`, handled in `onboarding.tsx`) trigger a system "Open in IA?" confirmation that can't be dismissed headlessly (this Xcode beta has no Simulator.app GUI).
 - So captures use a **capture tour**: builds made with `EXPO_PUBLIC_CAPTURE_TOUR=1` run a scripted, timing-based walk through the screens (`app/src/lib/captureTour.tsx`), and the script takes screenshots at matching offsets. Normal builds never contain the tour (the flag is inlined at bundle time).
 - To change the steps or their timings, edit `captureTour.tsx` and the `SHOTS` offsets in `capture-native.sh` together.

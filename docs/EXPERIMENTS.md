@@ -246,7 +246,7 @@ Each entry: hypothesis · method · data · metric · result · decision. Number
   - Fallon and Córdoba are lower against their stored presets (0.93, 0.79). Those presets *are* v2 outputs, so that comparison is circular.
   - Checked by eye, Fallon is the same field (5.52 vs. 5.53 ha) and v3 fixes v2's cut through the Córdoba field (VALIDATION V15 figure).
 - **Speed (CPU):**
-  - On the data box, one process with cached tiles: median 0.2 s per tap, 95th percentile 1.0 s (v2: 0.4 s and 1.7 s).
+  - On the processing host, one process with cached tiles: median 0.2 s per tap, 95th percentile 1.0 s (v2: 0.4 s and 1.7 s).
   - On a laptop (Apple silicon, numpy): median 0.5 s per window, max ≈ 2 s. A tap needs two windows only when the field touches the zoom-17 window edge.
   - Model files: 1.0 MB (U-Net) + 58 KB (trees). No new dependency: inference is plain numpy.
 - **Not adopted:**

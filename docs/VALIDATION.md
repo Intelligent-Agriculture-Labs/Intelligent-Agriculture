@@ -1,6 +1,6 @@
 # Validation
 
-Every IA output that drives advice is compared with an **independent** reference. Tables are generated from `docs/validation/results.json` by `scripts/validation_report.py`, after running `scripts/validate.py` on the data box. The numbers below therefore match the code at the time of the run. Figures (`docs/validation/*.png`) are produced by the same run.
+Every IA output that drives advice is compared with an **independent** reference. Tables are generated from `docs/validation/results.json` by `scripts/validation_report.py`, after running `scripts/validate.py` on the processing host. The numbers below therefore match the code at the time of the run. Figures (`docs/validation/*.png`) are produced by the same run.
 
 How to read this page:
 - Good agreement means the inputs and physics are sound. It does **not** prove the advice is right on a given field: the references are themselves models or coarse data.

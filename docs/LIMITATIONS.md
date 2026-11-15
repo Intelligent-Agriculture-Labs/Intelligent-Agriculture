@@ -13,7 +13,7 @@
   - The footprint is ~300 km (one 3° mascon). It measures total water (groundwater + soil + surface water + snow), not the aquifer under the field.
   - A local well can disagree: at Fallon, 257 USGS wells are flat on median while GRACE's region is falling (irrigation recharge keeps the shallow aquifer up while the wider Great Basin dries). The card therefore says "regional water reserves" and asks the farmer to check their well.
   - Data arrive 2–3 months late, and there is no data from Jul 2017 to May 2018.
-  - The asset is a snapshot (through Sep 2026); refreshing it needs Earthdata Login on the data box (`scripts/grace_extract.py`).
+  - The asset is a snapshot (through Sep 2026); refreshing it needs Earthdata Login on the processing host (`scripts/grace_extract.py`).
   - No current groundwater *percentile* yet (GRACE data-assimilation product blocked by the GES DISC EULA step).
 - **Still without Earthdata-based products:** full ECOSTRESS and HLS 30 m NDVI (ROADMAP #1).
 - **The ORNL subset API is slow and was intermittently down** during the build. Satellite layers (NDVI, MOD16, SMAP) may be missing for new locations. The cards degrade gracefully, and the demo farms are pre-cached.
@@ -96,5 +96,5 @@
 ## Product
 - The step-by-step "Why?" reasoning and pest event labels are English; card titles and details and the whole UI are translated into 6 languages.
 - No user accounts or sync. Field data stays on the device.
-- **Not deployed publicly** (requires the owner's decision; see DEPLOYMENT.md).
+- **Application hosting:** the app is self-hosted; see DEPLOYMENT.md. The public showcase provides video and slides.
 - The tool supports, and does not replace, farmer judgement and local agronomic advice.

@@ -6,8 +6,6 @@
 
 **NASA Space Apps Challenge 2026 · "Field Shift: Adapting Farms with NASA Data"** · Web · iOS · Android · syncs phone ↔ PC · 6 languages · works offline
 
-> The product was renamed from IA to **IA (Intelligent Agriculture)**. The codebase keeps its code name: the Python package `fieldshift`, the app's npm package, bundle id `org.fieldshift.app`, API routes, env vars and storage keys are unchanged.
-
 IA is a free app for farmers that turns NASA Earth observations into plain-language decisions. Open it, tap inside your field on sub-metre satellite imagery (IA finds the boundary; you can drag the corners), and it answers four questions for every field:
 
 1. **"What should I do this week, and why?"** At most three action cards, such as *Irrigate 38 mm by Thursday*, *High stripe-rust risk from Friday: inspect leaves* or *Fall armyworm: new generation in ~4 days*. Each has a **Why?** view with the NASA data against normal, the model, its confidence, caveats and sources.
@@ -100,7 +98,7 @@ FIELDSHIFT_OFFLINE=1 docker compose up --build   # offline demo from the pre-cac
 Mobile builds and development setup: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md), [`docs/DEV_ENVIRONMENT.md`](docs/DEV_ENVIRONMENT.md), [`media/BUILDS.md`](media/BUILDS.md). User guide: [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md).
 
 ## Links
-- Live demo: not publicly hosted (owner's decision); run it with one command as above.
+- App: run locally with Docker using the quickstart above. The public showcase contains the video and slides.
 - Showcase: https://intelligent-agriculture-labs.github.io/
 - Demo video (30 s): [watch online](https://intelligent-agriculture-labs.github.io/assets/ia-demo-30s.mp4) · [source file](media/ia-demo-30s.mp4)
 - Slides: [view online](https://intelligent-agriculture-labs.github.io/deck.html) · [PDF](media/fieldshift-deck.pdf)
