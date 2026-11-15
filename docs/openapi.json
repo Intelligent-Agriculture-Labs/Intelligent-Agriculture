@@ -2,7 +2,7 @@
  "openapi": "3.1.0",
  "info": {
   "title": "FieldShift API",
-  "description": "NASA Earth observations \u2192 simple farm decisions on water, drought, pests, disease and crop rotations. NASA Space Apps Challenge 2026 \u2014 'Field Shift: Adapting Farms with NASA Data'.",
+  "description": "NASA Earth observations → simple farm decisions on water, drought, pests, disease and crop rotations. NASA Space Apps Challenge 2026 — 'Field Shift: Adapting Farms with NASA Data'.",
   "version": "1.0.0"
  },
  "paths": {
@@ -175,6 +175,47 @@
          "additionalProperties": true,
          "type": "object",
          "title": "Response Rotations Ep Api Rotations Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/solar-pump": {
+   "post": {
+    "summary": "Solar Pump Ep",
+    "description": "Size a solar PV irrigation pump from NASA POWER irradiance and the crop's FAO-56 peak water need.",
+    "operationId": "solar_pump_ep_api_solar_pump_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SolarPumpRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Solar Pump Ep Api Solar Pump Post"
         }
        }
       }
@@ -462,10 +503,1171 @@
      }
     }
    }
+  },
+  "/api/farms": {
+   "post": {
+    "summary": "Farm Create",
+    "description": "Create a synced farm; returns farm_id (keep secret) and a short sync code for other devices.",
+    "operationId": "farm_create_api_farms_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FarmCreate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Farm Create Api Farms Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/farms/join": {
+   "post": {
+    "summary": "Farm Join",
+    "operationId": "farm_join_api_farms_join_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FarmJoin"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Farm Join Api Farms Join Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/farms/{farm_id}": {
+   "get": {
+    "summary": "Farm Get",
+    "operationId": "farm_get_api_farms__farm_id__get",
+    "parameters": [
+     {
+      "name": "farm_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Farm Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Farm Get Api Farms  Farm Id  Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "summary": "Farm Push",
+    "operationId": "farm_push_api_farms__farm_id__put",
+    "parameters": [
+     {
+      "name": "farm_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Farm Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FarmPush"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Farm Push Api Farms  Farm Id  Put"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/satellite": {
+   "post": {
+    "summary": "Satellite Ep",
+    "description": "Field satellite analysis on Sentinel-2 (async: poll until status == 'done').",
+    "operationId": "satellite_ep_api_satellite_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SatelliteRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Satellite Ep Api Satellite Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/fields/detect": {
+   "post": {
+    "summary": "Detect Ep",
+    "description": "Tap-to-detect: returns an editable field polygon around the tapped point.",
+    "operationId": "detect_ep_api_fields_detect_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DetectRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Detect Ep Api Fields Detect Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/register": {
+   "post": {
+    "summary": "Auth Register",
+    "operationId": "auth_register_api_auth_register_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RegisterRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Auth Register Api Auth Register Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/login": {
+   "post": {
+    "summary": "Auth Login",
+    "operationId": "auth_login_api_auth_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Auth Login Api Auth Login Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/logout": {
+   "post": {
+    "summary": "Auth Logout",
+    "operationId": "auth_logout_api_auth_logout_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Auth Logout Api Auth Logout Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/me": {
+   "get": {
+    "summary": "Auth Me",
+    "operationId": "auth_me_api_auth_me_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Auth Me Api Auth Me Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Auth Delete",
+    "operationId": "auth_delete_api_auth_me_delete",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DeleteAccount"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Auth Delete Api Auth Me Delete"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/password": {
+   "post": {
+    "summary": "Auth Password",
+    "operationId": "auth_password_api_auth_password_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PasswordChange"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Auth Password Api Auth Password Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/farm": {
+   "get": {
+    "summary": "Me Farm",
+    "operationId": "me_farm_api_me_farm_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Me Farm Api Me Farm Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "summary": "Me Farm Push",
+    "operationId": "me_farm_push_api_me_farm_put",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FarmPush"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Me Farm Push Api Me Farm Put"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/rotations/plan": {
+   "post": {
+    "summary": "Rotation Plan Ep",
+    "description": "Per-field multi-year rotation plan: biological + agronomic checks per year, suggestions and an optimised plan.",
+    "operationId": "rotation_plan_ep_api_rotations_plan_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RotationPlanRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Rotation Plan Ep Api Rotations Plan Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/glossary": {
+   "get": {
+    "summary": "Glossary Ep",
+    "description": "Plain-language explanations of the terms used in the app.",
+    "operationId": "glossary_ep_api_glossary_get",
+    "parameters": [
+     {
+      "name": "lang",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "en",
+        "es",
+        "fr",
+        "sw",
+        "hi",
+        "de"
+       ],
+       "type": "string",
+       "default": "en",
+       "title": "Lang"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response Glossary Ep Api Glossary Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/advice/text": {
+   "post": {
+    "summary": "Advice Text Ep",
+    "description": "Low-bandwidth weekly advice as plain text (SMS / WhatsApp / radio scripts), in the farmer's language.\n\nLatin-script text is normalised to the GSM-7 alphabet; the least urgent cards are dropped until the\nmessage fits `max_parts` SMS and `max_chars` (header, the most urgent card and the footer are always kept).",
+    "operationId": "advice_text_ep_api_advice_text_post",
+    "parameters": [
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Name"
+      }
+     },
+     {
+      "name": "max_chars",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 1000,
+       "minimum": 120,
+       "default": 320,
+       "title": "Max Chars"
+      }
+     },
+     {
+      "name": "max_parts",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 6,
+       "minimum": 1,
+       "default": 2,
+       "title": "Max Parts"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FieldInput"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Advice Text Ep Api Advice Text Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/planner": {
+   "post": {
+    "summary": "Planner Ep",
+    "description": "Season planner: sowing-date scan, stage dates, operations timeline, monthly water budget, risk calendar.",
+    "operationId": "planner_ep_api_planner_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PlannerRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Planner Ep Api Planner Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/rain-season": {
+   "get": {
+    "summary": "Rain Season Ep",
+    "description": "Rainy-season onset/cessation climatology (1984 →), trends, false-start odds, this season's status and\nsowing windows per crop (agroclimatic onset criteria; docs/MODELS.md#rain-onset).",
+    "operationId": "rain_season_ep_api_rain_season_get",
+    "parameters": [
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 75,
+       "minimum": -60,
+       "title": "Lat"
+      }
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 180,
+       "minimum": -180,
+       "title": "Lon"
+      }
+     },
+     {
+      "name": "crop",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Crop"
+      }
+     },
+     {
+      "name": "as_of",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "As Of"
+      }
+     },
+     {
+      "name": "lang",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "en",
+        "es",
+        "fr",
+        "sw",
+        "hi",
+        "de"
+       ],
+       "type": "string",
+       "default": "en",
+       "title": "Lang"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Rain Season Ep Api Rain Season Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/terrain": {
+   "post": {
+    "summary": "Terrain Ep",
+    "description": "Computed terrain maps around the field: elevation, slope, RUSLE erosion, wetness, frost hollows, zones.",
+    "operationId": "terrain_ep_api_terrain_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TerrainRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Terrain Ep Api Terrain Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
   }
  },
  "components": {
   "schemas": {
+   "DeleteAccount": {
+    "properties": {
+     "password": {
+      "type": "string",
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "password"
+    ],
+    "title": "DeleteAccount"
+   },
+   "DetectRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 75.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "esri",
+         "naip"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon"
+    ],
+    "title": "DetectRequest"
+   },
+   "FarmCreate": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "fields": {
+      "anyOf": [
+       {
+        "items": {
+         "additionalProperties": true,
+         "type": "object"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fields"
+     },
+     "settings": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Settings"
+     }
+    },
+    "type": "object",
+    "title": "FarmCreate"
+   },
+   "FarmJoin": {
+    "properties": {
+     "sync_code": {
+      "type": "string",
+      "maxLength": 12,
+      "minLength": 8,
+      "title": "Sync Code"
+     }
+    },
+    "type": "object",
+    "required": [
+     "sync_code"
+    ],
+    "title": "FarmJoin"
+   },
+   "FarmPush": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "fields": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Fields",
+      "default": []
+     },
+     "settings": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Settings"
+     }
+    },
+    "type": "object",
+    "title": "FarmPush"
+   },
    "FieldInput": {
     "properties": {
      "lat": {
@@ -598,6 +1800,114 @@
     "type": "object",
     "title": "HTTPValidationError"
    },
+   "LoginRequest": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 3,
+      "title": "Email"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "LoginRequest"
+   },
+   "PasswordChange": {
+    "properties": {
+     "old_password": {
+      "type": "string",
+      "title": "Old Password"
+     },
+     "new_password": {
+      "type": "string",
+      "maxLength": 200,
+      "title": "New Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "old_password",
+     "new_password"
+    ],
+    "title": "PasswordChange"
+   },
+   "PlannerRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 75.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "crop": {
+      "type": "string",
+      "title": "Crop"
+     },
+     "planting_date": {
+      "type": "string",
+      "title": "Planting Date"
+     },
+     "irrigation": {
+      "type": "string",
+      "enum": [
+       "none",
+       "drip",
+       "sprinkler",
+       "pivot",
+       "furrow",
+       "flood"
+      ],
+      "title": "Irrigation",
+      "default": "sprinkler"
+     },
+     "water_allocation_mm": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Water Allocation Mm"
+     },
+     "as_of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "As Of"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon",
+     "crop",
+     "planting_date"
+    ],
+    "title": "PlannerRequest"
+   },
    "Priorities": {
     "properties": {
      "water": {
@@ -628,6 +1938,187 @@
     },
     "type": "object",
     "title": "Priorities"
+   },
+   "RegisterRequest": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 3,
+      "title": "Email"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Password"
+     },
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "fields": {
+      "anyOf": [
+       {
+        "items": {
+         "additionalProperties": true,
+         "type": "object"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fields"
+     },
+     "settings": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Settings"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "RegisterRequest"
+   },
+   "RotationPlanRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 75.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "polygon": {
+      "anyOf": [
+       {
+        "items": {
+         "items": {
+          "type": "number"
+         },
+         "type": "array"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Polygon"
+     },
+     "irrigation": {
+      "type": "string",
+      "enum": [
+       "none",
+       "drip",
+       "sprinkler",
+       "pivot",
+       "furrow",
+       "flood"
+      ],
+      "title": "Irrigation",
+      "default": "none"
+     },
+     "water_allocation_mm": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Water Allocation Mm"
+     },
+     "history": {
+      "items": {
+       "$ref": "#/components/schemas/RotationYearModel"
+      },
+      "type": "array",
+      "maxItems": 15,
+      "title": "History"
+     },
+     "plan": {
+      "items": {
+       "$ref": "#/components/schemas/RotationYearModel"
+      },
+      "type": "array",
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Plan"
+     },
+     "priorities": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Priorities"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "es",
+       "fr",
+       "sw",
+       "hi",
+       "de"
+      ],
+      "title": "Lang",
+      "default": "en"
+     },
+     "optimize": {
+      "type": "boolean",
+      "title": "Optimize",
+      "default": true
+     },
+     "as_of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "As Of"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon",
+     "plan"
+    ],
+    "title": "RotationPlanRequest"
    },
    "RotationRequest": {
     "properties": {
@@ -718,6 +2209,109 @@
      "current_rotation"
     ],
     "title": "RotationRequest"
+   },
+   "RotationYearModel": {
+    "properties": {
+     "year": {
+      "type": "integer",
+      "maximum": 2100.0,
+      "minimum": 1950.0,
+      "title": "Year"
+     },
+     "crop": {
+      "type": "string",
+      "title": "Crop"
+     },
+     "cover_crop": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cover Crop"
+     }
+    },
+    "type": "object",
+    "required": [
+     "year",
+     "crop"
+    ],
+    "title": "RotationYearModel"
+   },
+   "SatelliteRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 75.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "polygon": {
+      "anyOf": [
+       {
+        "items": {
+         "items": {
+          "type": "number"
+         },
+         "type": "array"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Polygon"
+     },
+     "crop": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Crop"
+     },
+     "start": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Start"
+     },
+     "end": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "End"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon"
+    ],
+    "title": "SatelliteRequest"
    },
    "SimulateRequest": {
     "properties": {
@@ -818,6 +2412,175 @@
      "planting_date"
     ],
     "title": "SimulateRequest"
+   },
+   "SolarPumpRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 75.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "crop": {
+      "type": "string",
+      "title": "Crop"
+     },
+     "planting_date": {
+      "type": "string",
+      "title": "Planting Date"
+     },
+     "irrigation": {
+      "type": "string",
+      "enum": [
+       "none",
+       "drip",
+       "sprinkler",
+       "pivot",
+       "furrow",
+       "flood"
+      ],
+      "title": "Irrigation",
+      "default": "drip"
+     },
+     "area_ha": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Area Ha"
+     },
+     "polygon": {
+      "anyOf": [
+       {
+        "items": {
+         "items": {
+          "type": "number"
+         },
+         "type": "array"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Polygon"
+     },
+     "static_head_m": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 300.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Static Head M"
+     },
+     "diesel_price_usd_l": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Diesel Price Usd L"
+     },
+     "capex_usd_kwp": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Capex Usd Kwp"
+     },
+     "as_of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "As Of"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon",
+     "crop",
+     "planting_date"
+    ],
+    "title": "SolarPumpRequest"
+   },
+   "TerrainRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 60.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "crop": {
+      "type": "string",
+      "title": "Crop",
+      "default": "maize"
+     },
+     "polygon": {
+      "anyOf": [
+       {
+        "items": {
+         "items": {
+          "type": "number"
+         },
+         "type": "array"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Polygon"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon"
+    ],
+    "title": "TerrainRequest"
    },
    "ValidationError": {
     "properties": {
