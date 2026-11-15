@@ -451,11 +451,11 @@ def faostat_yields(
 # ----------------------------------------------------------------------------------------------------- Sacks
 
 
-def read_sacks(sacks_raw: Path, name: str) -> np.ndarray | None:
+def read_sacks(sacks_raw: Path, name: str, var: str = "plant") -> np.ndarray | None:
     d = f"{name}.crop.calendar"
-    f = sacks_raw / "sacks" / d / d / "plant.asc"
+    f = sacks_raw / "sacks" / d / d / f"{var}.asc"
     if not f.exists():
-        hits = list((sacks_raw / "sacks").rglob(f"{d}/plant.asc"))
+        hits = list((sacks_raw / "sacks").rglob(f"{d}/{var}.asc"))
         if not hits:
             return None
         f = hits[0]
@@ -521,6 +521,7 @@ def build(raw: Path, qcl_raw: Path, sacks_raw: Path) -> None:
     qy = faostat_yields(qcl_raw, yield_items)
 
     sacks = {n: read_sacks(sacks_raw, n) for n in SACKS_NAMES}
+    harvest = {n: read_sacks(sacks_raw, n, "harvest") for n in SACKS_NAMES}
     sacks = {n: a for n, a in sacks.items() if a is not None}
     print("sacks calendars:", sorted(sacks))
     # 0.5° cell → country: majority of the 6×6 five-minute cells
@@ -532,6 +533,10 @@ def build(raw: Path, qcl_raw: Path, sacks_raw: Path) -> None:
             if v.size:
                 cell_country[r, c] = np.bincount(v).argmax()
     cal_grid = {n: np.nan_to_num(a, nan=0).round().astype(np.uint16) for n, a in sacks.items()}
+    # harvest day of year under "<name>_h" (season length = harvest − sowing, used for the thermal-time target)
+    for n, a in harvest.items():
+        if a is not None and n in sacks:
+            cal_grid[n + "_h"] = np.where(np.isfinite(sacks[n]), np.nan_to_num(a, nan=0), 0).round().astype(np.uint16)
     np.savez_compressed(
         CONFIG / "crop_calendar_30mn.npz", **{n.replace(".", "_"): a for n, a in cal_grid.items()}
     )
@@ -620,9 +625,17 @@ def build(raw: Path, qcl_raw: Path, sacks_raw: Path) -> None:
                     if a is None:
                         continue
                     v = a[mask]
-                    v = v[np.isfinite(v)]
+                    ok = np.isfinite(v)
+                    v = v[ok]
                     if v.size >= 1:
                         sow[cid] = {"doy": circ_median_doy(v), "calendar": n, "cells": int(v.size)}
+                        h = harvest.get(n)
+                        if h is not None:
+                            hv = h[mask][ok]
+                            season = (hv - v) % 365
+                            season = season[np.isfinite(season) & (season > 30)]
+                            if season.size:
+                                sow[cid]["season_days"] = int(round(float(np.median(season))))
                         break
         entry["sowing"] = sow
         countries[code] = entry

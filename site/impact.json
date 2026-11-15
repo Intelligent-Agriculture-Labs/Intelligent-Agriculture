@@ -1,18 +1,18 @@
 [
  {
-  "value": "15,485 m³/yr",
+  "value": "9,263 m³/yr",
   "label": "less irrigation on a 5.5 ha Nevada alfalfa field (trade-off shown in the app: lower margin)"
  },
  {
-  "value": "481 t",
+  "value": "532 t",
   "label": "topsoil kept over 4 years on a 48 ha Iowa field vs. continuous maize"
  },
  {
-  "value": "−105 kg N/ha",
-  "label": "fertiliser over 4 years on a Kenyan smallholder field (≈ 450 kg CO₂e/ha avoided)"
+  "value": "−50 kg N/ha",
+  "label": "fertiliser over 4 years on a Kenyan smallholder field (≈ 214 kg CO₂e/ha avoided)"
  },
  {
-  "value": "+71 days/yr",
+  "value": "+136 days/yr",
   "label": "soil covered on a Spanish wheat field (fewer bare days)"
  }
 ]

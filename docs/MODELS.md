@@ -167,7 +167,7 @@ Yearly indicators from POWER (1984 → last complete year):
 Trend: Theil–Sen slope per decade, with Mann–Kendall significance (Kendall's τ). An insight is shown only when p < 0.1.
 
 ## <a id="rotations"></a>8. Rotation explorer (`rotation.py`)
-Candidates are the farmer's current rotation plus ten templates (`config/rotations.yaml`). Each slot is simulated over the last 15 seasons with the farmer's irrigation method, strategy and allocation. Planting dates are hemisphere- and tropics-aware: in the tropics, planting starts with the wettest 4-month window.
+Candidates are the farmer's current rotation plus ten templates (`config/rotations.yaml`). Each slot is simulated over the last 15 seasons with the farmer's irrigation method, strategy and allocation. Planting dates: in the tropics, planting starts with the wettest 4-month window of the field's own NASA rainfall; in Mediterranean climates spring crops and barley follow the winter-rain calendar. Everywhere else the observed crop calendar where the field is (Sacks et al. 2010, 0.5° cell or the country median; [§22](#country-economics)) replaces the old northern-temperate default, also over a template's generic "10-01"; only crops without calendar data keep the default shifted by hemisphere. Each slot reports `sowing_source`.
 
 **Feasibility filter.** A strategy is dropped if any slot:
 - has < 60 % valid seasons;
@@ -176,7 +176,7 @@ Candidates are the farmer's current rotation plus ten templates (`config/rotatio
 
 **Metrics.**
 - **Water:** mean gross irrigation (irrigated) or ETₘ − ETₐ shortfall (rain-fed), mm/yr. Scored relative to the other candidates (lower is better).
-- **Income:** mean gross margin = yield × price − cost + 40 kg N/ha × $1.3 after a legume. Rotation effects:
+- **Income:** mean gross margin = yield × price − cost + 40 kg N/ha × N price after a legume, with the field's **country** producer price, modelled country cost and the world-market N price ([§22](#country-economics)); shown in USD and in the local currency. Rotation effects:
   - −8 % yield for the same family in consecutive slots;
   - +5 % after a legume;
   - alfalfa seeding year × 0.7, then −10 %/yr after year 4 (stand decline / autotoxicity).
@@ -484,9 +484,10 @@ Card `heat_stress` (category `weather`). Applies to every field, whatever the cr
   - PR = [1 − 0.004 (T_cell − 25)] × 0.88, with T_cell = mean Tmax + 0.03·800 (Ross coefficient; Skoplaki & Palyvos 2009). The 0.88 covers soiling, wiring, mismatch and controller losses.
   - The **design month** is the month needing the largest array. This is normally the peak-need month, unless that month is unusually cloudy. Both months are reported.
   - Pump flow ≈ V / G (m³/h).
-- **Economics** (indicative, `config/solar_pump.yaml`, all editable):
-  - Solar: 1,000 USD/kWp installed, annualised with CRF(8 %, 20 y) plus 2 %/yr O&M, divided by the season's pumped volume.
-  - Diesel: L/m³ = 0.002725·H / (0.15 × 9.96 kWh/L), at 1.10 USD/L plus 25 % maintenance. The pump-set purchase is excluded, so the comparison is conservative for solar.
+- **Economics** (indicative; the field's country, [§22](#country-economics); user values in the request override):
+  - Solar: installed cost per kWp = 1,000 USD world small-system price × (0.65 + 0.35 × country price level / world median price level), annualised with CRF(8 %, 20 y) plus 2 %/yr O&M, divided by the season's pumped volume.
+  - Diesel: L/m³ = 0.002725·H / (0.15 × 9.96 kWh/L), at the country's pump price (World Bank, latest reported year brought forward with the Brent crude cost per litre; else the sub-region median, else 1.10 USD/L) plus 25 % maintenance. The pump-set purchase is excluded, so the comparison is conservative for solar.
+  - Costs are reported in USD and in the local currency (`*_local`, `currency`).
   - CO₂: 2.68 kg/L (IPCC 2006).
 - **Card** `solar_pump`: category `planning`, risk `low`. It is shown only for irrigated fields.
 - References: FAO & GIZ (2018); GIZ/FAO SPIS Toolbox; Kelley et al. (2010); IRENA (2016); Smith (1992).
@@ -508,6 +509,17 @@ Quantities per hectare:
 - soil-carbon gain when retained = 12 % of residue C in the first year (Powlson et al. 2008).
 
 Recommended practice: Happy Seeder / Super Seeder direct sowing into the residue (Sidhu et al. 2015; most profitable option per Shyamsundar et al. 2019, *Science*), or chop-and-spread and incorporation.
+
+## <a id="country-economics"></a>22. Country-specific prices, costs, currency, sowing dates and yield level (`science/economics.py`, ADR-027)
+Every money value and every location default uses data for **the country the field is in**; a single U.S. or world number is used only as a labelled last fallback.
+- **Country.** Offline 5 arc-min grid (~9 km) rasterised from Natural Earth 1:10m admin-0 (`config/country_grid_5mn.npz`, 111 KB, 252 countries/territories). A point on a water cell takes the nearest land cell within 2 cells. At sea → `fallback: true`.
+- **Crop prices (USD/t).** FAOSTAT producer prices, mean of the latest 3 years ≥ 2017, per FieldShift crop (`config/economics.yaml` maps crops to FAOSTAT items; cotton: seed-cotton price ÷ 0.38 lint turnout). Countries that stopped reporting USD prices but still report the FAOSTAT producer price index (e.g. India after 2008) get the last local-currency price carried forward with that index and converted at the World Bank rate of the index year. Ladder: country → UN M49 sub-region median → world median → crop-table reference × the country's farm-price index (median ratio of its FAOSTAT prices to the world median, relative to the reference country). `price_scope` says which step was used.
+- **Production costs (USD/ha).** No open dataset has per-crop costs for all countries, so they are modelled: cost = reference budget × intensity × (0.6 + 0.4 × price level). Intensity = the country's FAOSTAT national yield of the crop / the crop table's typical yield (clipped 0.1–1.3; else the country's median over crops): input use scales with the yield level achieved. Price level = World Bank PPP conversion factor ÷ market exchange rate (USA = 1), applied to the 40 % non-traded share (labour, services, land). Example: maize in Kenya ≈ 140 USD/ha instead of the 1,500 USD/ha U.S. budget.
+- **Fertiliser N.** World Bank Pink Sheet urea (world market, latest annual average) ÷ 0.46 × 1.6 farm-gate mark-up (≈ 1.5 USD/kg N in 2025). No open country series exists, so this is the one input labelled `scope: "world"`.
+- **Currency.** CLDR territory currency (Babel); World Bank official exchange rate (PA.NUS.FCRF, period average, latest year). Calculations and scores stay in USD; responses add `*_local` values and an `economics` block (country, currency, rate, year, source, per-crop price/cost scope and years, national FAOSTAT yield, yield-calibration factor). Without an exchange rate the amounts are shown in USD and the block says why.
+- **Sowing dates.** Sacks et al. (2010) crop calendars: the field's 0.5° cell (or a neighbour), else the country median (`config/crop_calendar_30mn.npz`, 130 KB; `country_data.json`). They replace the generic temperate default calendar. The field-weather rules (tropical rainy-season onset, Mediterranean winter-rain calendar; ADR-021) are kept where they apply: they come from the field's own rainfall, while many tropical Sacks entries are national-level. The observed season length (harvest − sowing) sets the thermal-time target when it is within 0.5–1.15 × the FAO-56 season; otherwise the FAO-56 length is used (calendar cells can mix crop types). Without this, a late local sowing (Córdoba wheat, 28 Nov) was stretched over the 240-day FAO-56 season into August.
+- **Yield level.** On top of the crop × macro-region calibration (§2, ADR-022), a country factor (`config/yield_country_factors.yaml`): the mean residual of the 41 benchmarked countries (V10), shrunk n/(n+2), clipped 0.5–2; for 150 other countries half the median log ratio of their FAOSTAT yields to their macro region's median, shrunk n/(n+2), clipped 0.67–1.5 (half, because part of a national difference is climate, already simulated).
+- **Rebuild.** `scripts/build_country_data.py download|build|yieldcal` (data box; ≈ 30 MB of downloads, < 1 min to build).
 
 ## Optional LLM phrasing layer
 Behind the flag `FIELDSHIFT_LLM_EXPLAIN` (off by default; not required). It is not implemented in v1; see ROADMAP.md. All texts are template-generated from computed numbers, so nothing is invented.

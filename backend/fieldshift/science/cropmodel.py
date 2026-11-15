@@ -175,8 +175,11 @@ class SeasonResult:
     final_stage: str = ""
 
 
-def gdd_requirement(c: dict[str, Any], w: Weather, planting: dt.date, years: list[int]) -> float:
-    """Location-calibrated thermal time to maturity: mean ΣGDD over the FAO-56 season length."""
+def gdd_requirement(
+    c: dict[str, Any], w: Weather, planting: dt.date, years: list[int], season_days: int | None = None
+) -> float:
+    """Location-calibrated thermal time to maturity: mean ΣGDD over the FAO-56 season length, or over the
+    observed local season (`season_days`, sowing → harvest from the Sacks et al. 2010 calendar, ADR-027)."""
     tot = []
     md = (planting.month, min(planting.day, 28))
     for y in years:
@@ -185,7 +188,7 @@ def gdd_requirement(c: dict[str, Any], w: Weather, planting: dt.date, years: lis
         except ValueError:
             continue
         i0 = w.index(s)
-        i1 = i0 + int(sum(c["stages"]))
+        i1 = i0 + int(season_days or sum(c["stages"]))
         if i0 < 0 or i1 > len(w.dates):
             continue
         g = gdd(w.tmax[i0:i1], w.tmin[i0:i1], c["t_base"])

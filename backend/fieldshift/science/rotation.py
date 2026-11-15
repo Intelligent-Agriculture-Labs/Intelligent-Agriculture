@@ -133,12 +133,20 @@ def _sacks_grids() -> dict[str, np.ndarray]:
     return {k: z[k] for k in z.files}
 
 
-@lru_cache(maxsize=4096)
 def local_sowing(crop_id: str, lat: float, lon: float) -> tuple[str, str] | None:
-    """Observed sowing date ("MM-DD", source) for a crop at a location (ADR-027).
+    """Observed sowing date ("MM-DD", source) for a crop at a location (ADR-027); see local_calendar."""
+    cal = local_calendar(crop_id, lat, lon)
+    return (cal[0], cal[1]) if cal else None
+
+
+@lru_cache(maxsize=4096)
+def local_calendar(crop_id: str, lat: float, lon: float) -> tuple[str, str, int | None] | None:
+    """Observed sowing date ("MM-DD", source, season length in days or None) for a crop at a location.
 
     Sacks et al. (2010) 0.5° crop calendar at the field's cell (or a neighbour within one cell), else the
-    median of the field's country (country_data.json), else None (the climate rules below apply)."""
+    median of the field's country (country_data.json), else None (the climate rules below apply). The season
+    length (harvest − sowing) sets the thermal-time target, so a late local sowing is not stretched over the
+    FAO-56 default season into midsummer."""
     names = SACKS_CALENDARS.get(crop_id)
     if not names or not (math.isfinite(lat) and math.isfinite(lon)):
         return None
@@ -153,9 +161,13 @@ def local_sowing(crop_id: str, lat: float, lon: float) -> tuple[str, str] | None
             r, c = row + dr, (col + dc) % 720
             if 0 <= r < 360 and 0 < int(g[r, c]) <= 366:
                 d = dt.date(2001, 1, 1) + dt.timedelta(days=min(364, int(g[r, c]) - 1))
-                return d.strftime(
-                    "%m-%d"
-                ), f"Sacks et al. 2010 crop calendar ({n.replace('_', ' ')}, 0.5° cell)"
+                h = grids.get(n + "_h")
+                season = int((int(h[r, c]) - int(g[r, c])) % 365) if h is not None and int(h[r, c]) > 0 else 0
+                return (
+                    d.strftime("%m-%d"),
+                    f"Sacks et al. 2010 crop calendar ({n.replace('_', ' ')}, 0.5° cell)",
+                    season if season > 30 else None,
+                )
     from .economics import country_of, data
 
     iso = country_of(lat, lon)
@@ -163,20 +175,63 @@ def local_sowing(crop_id: str, lat: float, lon: float) -> tuple[str, str] | None
     if e:
         d = dt.date(2001, 1, 1) + dt.timedelta(days=min(364, int(e["doy"]) - 1))
         name = data()["countries"][iso]["name"]
-        return d.strftime("%m-%d"), f"Sacks et al. 2010 crop calendar, median of {name}"
+        return d.strftime("%m-%d"), f"Sacks et al. 2010 crop calendar, median of {name}", e.get("season_days")
     return None
 
 
+def _field_rule(crop_id: str, lat: float, rainy_onset_month: int | None, mediterranean: bool) -> str | None:
+    """The field-weather sowing rule that applies, if any: these are derived from the field's own NASA rainfall
+    (tropical rainy-season onset; Mediterranean winter-rain calendar) and are kept over the observed calendar,
+    whose tropical entries are often national-level (Sacks et al. 2010 `political.level`)."""
+    if climate_zone(lat) == "tropical" and rainy_onset_month and crop(crop_id)["type"] != "perennial":
+        return "FieldShift rainy-season onset rule (field's NASA rainfall)"
+    if mediterranean and crop_id in MEDITERRANEAN_PLANTING:
+        return "Mediterranean calendar rule (field's NASA rainfall)"
+    return None
+
+
+def observed_calendar(
+    crop_id: str,
+    lat: float,
+    lon: float | None,
+    rainy_onset_month: int | None = None,
+    mediterranean: bool = False,
+) -> tuple[str, str, int | None] | None:
+    """The observed local calendar where it replaces the generic temperate default (ADR-027), else None.
+
+    The season length is used only within 0.5–1.15 × the FAO-56 season (calendar cells can mix
+    sowing and harvest of different crop types)."""
+    if (
+        lon is None
+        or crop(crop_id)["type"] == "perennial"
+        or _field_rule(crop_id, lat, rainy_onset_month, mediterranean)
+    ):
+        return None
+    cal = local_calendar(crop_id, lat, lon)
+    if not cal:
+        return None
+    fao = sum(crop(crop_id)["stages"])
+    season = cal[2] if cal[2] and 0.5 * fao <= cal[2] <= 1.15 * fao else None
+    return cal[0], cal[1], season
+
+
 def planting_source(
-    crop_id: str, lat: float, lon: float | None, override: str | None = None, mediterranean: bool = False
+    crop_id: str,
+    lat: float,
+    lon: float | None,
+    override: str | None = None,
+    mediterranean: bool = False,
+    rainy_onset_month: int | None = None,
 ) -> str:
+    obs = observed_calendar(crop_id, lat, lon, rainy_onset_month, mediterranean)
+    if obs:
+        return obs[1]
+    rule = _field_rule(crop_id, lat, rainy_onset_month, mediterranean)
+    if rule:
+        return rule
     if override:
         return "rotation template"
-    if lon is not None and local_sowing(crop_id, lat, lon):
-        return local_sowing(crop_id, lat, lon)[1]  # type: ignore[index]
-    if mediterranean and crop_id in MEDITERRANEAN_PLANTING:
-        return "Mediterranean calendar rule"
-    return "FieldShift climate rule (temperate calendar shifted by hemisphere / rainy-season onset)"
+    return "FieldShift temperate calendar (shifted by hemisphere); no observed calendar for this crop here"
 
 
 def planting_date_for(
@@ -188,11 +243,12 @@ def planting_date_for(
     mediterranean: bool = False,
     lon: float | None = None,
 ) -> dt.date:
-    if override is None and lon is not None:
-        loc = local_sowing(crop_id, lat, lon)
-        if loc:  # observed local calendar: already in local seasons, no hemisphere shift
-            m, d = (int(x) for x in loc[0].split("-"))
-            return dt.date(year, m, min(d, 28))
+    # observed local calendar where it replaces the generic temperate default — also over a template's generic
+    # "10-01", so templates and the farmer's rotation are compared on the same local sowing date
+    obs = observed_calendar(crop_id, lat, lon, rainy_onset_month, mediterranean)
+    if obs:
+        m, d = (int(x) for x in obs[0].split("-"))
+        return dt.date(year, m, min(d, 28))
     md = (
         override
         or (MEDITERRANEAN_PLANTING.get(crop_id) if mediterranean else None)
@@ -261,7 +317,9 @@ def evaluate_slot(
 ) -> SlotStats:
     c = crop(crop_id)
     first = planting_date_for(crop_id, years[0], lat, onset, plant_override, mediterranean, lon)
-    req = gdd_requirement(c, w, first, years)
+    # with an observed local calendar the thermal-time target spans the observed sowing → harvest season
+    obs = observed_calendar(crop_id, lat, lon, onset, mediterranean)
+    req = gdd_requirement(c, w, first, years, obs[2] if obs else None)
     iu: tuple[int, int] | None = None
     if irrigate_until:
         mm, dd = (int(x) for x in irrigate_until.split("-"))
@@ -290,7 +348,7 @@ def evaluate_slot(
         except (ValueError, IndexError):
             res.append(None)
     out = SlotStats(crop_id, res, first)
-    out.plant_source = planting_source(crop_id, lat, lon, plant_override, mediterranean)
+    out.plant_source = planting_source(crop_id, lat, lon, plant_override, mediterranean, onset)
     return out
 
 
